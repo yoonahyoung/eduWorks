@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<annotation-driven />
+
+	<resources mapping="/resources/**" location="/resources/" />
+
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"> <!-- 포워딩할 응답뷰를 찾아주는 역할 -->
+		<beans:property name="prefix" value="/WEB-INF/views/" /> <!-- 접두어 -->
+		<beans:property name="suffix" value=".jsp" /> <!-- 접미어 -->
+	</beans:bean>
+	
+	<context:component-scan base-package="com.br.spring" />
+	
+	<!-- 
+		* servlet-context.xml 파일
+		url로 요청시 DispatcherServlet 객체가 생성되어 모든 요청을 받아줌
+		이때 servlet-context.xml 파일이 읽혀짐
+		
+		각각 요청마다 처리할 내용이 다르기 때문에 그 요청을 처리해주는 Controller 클래스 별도로 만들긴 해야함
+		어떤 url로 요청시 어떤 Controller 실행시킬건지
+		"HandlerMapping" 등록 (xml방식 / 어노테이션방식)
+	-->
+	
+	<!-- xml방식 (장점:관리의 편의성 높음 / 단점:다수의 개발자가 수정시 문제발생) -->
+	<!-- 1) Controller 클래스들을 bean으로 등록하기 
+	<beans:bean id="LoginController" class="com.br.spring.member.controller.LoginController" />
+	<beans:bean id="logoutController" class="com.br.spring.member.controller.LogoutController" />
+	-->
+	
+	<!-- 2) HandlerMapping 등록 (url요청과 매핑되는 controller지정) 
+	<beans:bean class="org.springframwork.web.servlet.handler.SimpleUrlHandlerMapping">
+		<beans:property name="mappings">
+			<beans:props>
+				<beans:prop key="login.me">loginController</beans:prop>
+				<beans:prop key="logout.me">logoutController</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+	-->
+	<!-- xml방식 끝 -->
+	
+	
+</beans:beans>

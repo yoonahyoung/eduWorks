@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+	
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL" />
+	</settings>
+	
+	<typeAliases> <!-- 아직 클래스를 만들지도 않고 등록할 수는 없다. 즉, 미리 작성 불가 꼭 클래스 생성 후 등록 -->
+	</typeAliases>
+	<!-- 유의사항 : 미리등록해두려면 해당 클래스가 진짜 존재해야 함 -->
+	
+	<!-- 
+		spring 사용 전 : 여기에 environment태그로 dataSource(연결할 db정보) 등록
+		spring 사용 후 : root-context.xml 파일에서 dataSource 등록 
+	 -->
+	 
+	 <mappers>
+	 	
+	 </mappers>
+	 <!-- 유의사항 : 미리등록해두려면 해당 mapper 파일이 진짜 존재해야 함 (뿐만 아니라 namespace까지도 지정되어있어야 함) -->
+	
+</configuration>

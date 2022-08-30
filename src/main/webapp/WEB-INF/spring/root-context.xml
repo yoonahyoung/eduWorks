@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- 
+		* root-context.xml
+		  서버구동과 동시에 web.xml을 거쳐서 바로 로딩되는 문서(pre-loading)
+		  => 서버구동과 동시에 바로 세팅해야되는 내용들을 작성하면 됨
+		  	 주로 DB연결 설정, 트랜잭션처리, 내외부모듈연동 등등
+	 -->
+	
+	<!-- 
+		스프링이 제어권을 가짐. 스프링이 모든 객체들의 생명주기를 관리함 (IOC == 제어반전)
+		개발자가 직접 객체를 생성할 필요 없음
+		개발자가 어떤 객체가 필요할 경우 의존성 주입을 통해서 스프링 생성해둔 객체를 주입받아서 이용 (DI == 의존성주입)
+		
+		해당 객체들을 스프링이 관리하게끔 하고자 한다면
+		해당 클래스를 "빈 Bean"으로 등록해야됨 
+		
+		* 빈으로 등록하는 방법
+		1) xml 방식 - xml파일에 직접 기술해서 등록
+		2) 어노테이션 방식 - 해당 클래스에 어노테이션 기술해서 등록
+		
+		단순히 => 내가 만든 클래스 => 어노테이션 방식
+				 외부 클래스 => xml 방식
+	 -->
+	 
+	 <!-- * dataSource 등록 -->
+	 <bean class="org.apache.commons.dbcp.BasicDataSource" id="dataSource" destroy-method="close"> <!-- 외부클래스이기 때문에 xml 방식 -->
+	 	<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+	 	<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+	 	<property name="username" value="EDUWORKS"/>
+	 	<property name="password" value="EDUWORKS"/>
+	 </bean>
+	 
+	 <!-- 
+	 	BasicDataSource dataSource = new BasicDataSource();
+	 	dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+	 	dataSource.setUrl("jdbc:oracle:thin:@localhost:1521:xe");
+	 	dataSource.setUsername("spring");
+	 	dataSource.setPassword("spring");
+	  -->
+	  
+	 <!-- * sqlSessionFactoryBean 등록 -->
+	 <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+	 	<property name="configLocation" value="classpath:config/mybatis-config.xml" />
+	 	<property name="dataSource" ref="dataSource" />
+	 </bean>
+	 
+	 <!-- 
+	 	SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
+	 	sqlSessionFactory.setConfigLoacation("classpath:config/mybatis-config.xml");
+	 	sqlSessionFactory.setDataSource(dataSource);
+	 -->
+	 
+	 <!-- * sqlSession 등록 -->
+	 <bean class="org.mybatis.spring.SqlSessionTemplate" id="sqlSession">
+	 	<constructor-arg ref="sqlSessionFactory"/>
+	 </bean>
+	 
+	 <!-- 
+	 	SqlSessionTemplate sqlSession = new SqlSessionTemplate(sqlSessionFactory);
+	 -->
+	 
+	 <!-- 파일업로드 관련 빈 등록 (파일용량제한값) -->
+	 <bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver">
+	 	<property name="maxUploadSize" value="100000000" />
+	 	<property name="maxInMemorySize" value="100000000" />
+	 </bean>
+	 
+	 
+</beans>
