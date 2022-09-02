@@ -108,7 +108,7 @@
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">근태관리 항목명</h6>
+                        <h6 class="collapse-header">근태 관리</h6>
                         <a class="collapse-item" href="">출퇴근/근무내역관리</a>
                         <a class="collapse-item" href="">내 연차내역</a>
                         <a class="collapse-item" href="">내 인사정보</a>
@@ -129,7 +129,7 @@
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">게시판 항목명</h6>
+                        <h6 class="collapse-header">게시판</h6>
                         <a class="collapse-item" href="">전사 공지</a>
                         <a class="collapse-item" href="">부서 게시판</a>
                         <a class="collapse-item" href="">익명 게시판</a>
@@ -191,7 +191,7 @@
                 <div id="collapsesix" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">전자결재 항목명</h6>
+                        <h6 class="collapse-header">전자결재</h6>
                         <a class="collapse-item" href="">새 결재 진행</a>
                         <a class="collapse-item" href="">결재하기</a>
                         <a class="collapse-item" href="">개인 문서함</a>
