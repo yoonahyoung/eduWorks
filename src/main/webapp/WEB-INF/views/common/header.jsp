@@ -333,7 +333,7 @@
                                         <span class="font-weight-bold">[진짜 재밌네요..]에 댓글이 달렸습니다.</span>
                                     </div>
                                 </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#" style="background-color:rgb(239, 240, 238);">
+                                <a class="dropdown-item d-flex align-items-center" href="#" style="background-color:rgb(243, 243, 243);">
                                     <div class="mr-3">
                                         <div class="icon-circle" style="border:1px solid">
                                             <i class="fas fa-comments"></i>
@@ -345,7 +345,7 @@
                                         <span class="font-weight-bold">[결재 확인할 때 혹시..]에 댓글이 달렸습니다.</span>
                                     </div>
                                 </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#" style="background-color:rgb(239, 240, 238);">
+                                <a class="dropdown-item d-flex align-items-center" href="#" style="background-color:rgb(243, 243, 243);">
                                     <div class="mr-3">
                                         <div class="icon-circle" style="border:1px solid yellow;">
                                             <span class="material-symbols-outlined" style="color:rgb(250, 71, 71); font-size: 24px;">E911_Emergency</span>
@@ -353,7 +353,7 @@
                                     </div>
                                     <div>
                                         <div class="small text-gray-500">2022-05-03</div>
-                                        <span class="font-weight-bold">[어쩌라고 미친 ㅋㅋ장난하세요?] 글에 대한 신고 제재가 완료되었습니다.</span>
+                                        <span class="font-weight-bold">[어쩌라고 미친 ㅋㅋ장난하세요?] 글에 대한 신고 규제가 완료되었습니다.</span>
                                     </div>
                                 </a>
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
