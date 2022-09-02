@@ -130,10 +130,10 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">게시판 항목명</h6>
-                        <a class="collapse-item" href="">게시판 항목</a>
-                        <a class="collapse-item" href="">게시판 항목</a>
-                        <a class="collapse-item" href="">게시판 항목</a>
-                        <a class="collapse-item" href="">게시판 항목</a>
+                        <a class="collapse-item" href="">전사 공지</a>
+                        <a class="collapse-item" href="">부서 게시판</a>
+                        <a class="collapse-item" href="">익명 게시판</a>
+                        <a class="collapse-item" href="">자료실</a>
                     </div>
                 </div>
             </li>
@@ -147,11 +147,11 @@
                 <div id="collapsethree" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">메일 항목명</h6>
-                        <a class="collapse-item" href="">메일 항목</a>
-                        <a class="collapse-item" href="">메일 항목</a>
-                        <a class="collapse-item" href="">메일 항목</a>
-                        <a class="collapse-item" href="">메일 항목</a>
+                        <h6 class="collapse-header">메일</h6>
+                        <a class="collapse-item" href="">메일 작성</a>
+                        <a class="collapse-item" href="">보낸 메일함</a>
+                        <a class="collapse-item" href="">받은 메일함</a>
+                        <a class="collapse-item" href="">중요 메일함</a>
                     </div>
                 </div>
             </li>
@@ -165,11 +165,10 @@
                 <div id="collapsefour" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">주소록 항목명</h6>
-                        <a class="collapse-item" href="">주소록 항목</a>
-                        <a class="collapse-item" href="">주소록 항목</a>
-                        <a class="collapse-item" href="">주소록 항목</a>
-                        <a class="collapse-item" href="">주소록 항목</a>
+                        <h6 class="collapse-header">주소록</h6>
+                        <a class="collapse-item" href="">전사 주소록</a>
+                        <a class="collapse-item" href="">개인 주소록</a>
+                        <a class="collapse-item" href="">학생 주소록</a>
                     </div>
                 </div>
             </li>
@@ -180,16 +179,7 @@
                     <i class="fa-solid fa-calendar-check"></i>
                     <span>캘린더</span>
                 </a>
-                <div id="collapsefive" class="collapse" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">캘린더 항목명</h6>
-                        <a class="collapse-item" href="">캘린더 항목</a>
-                        <a class="collapse-item" href="">캘린더 항목</a>
-                        <a class="collapse-item" href="">캘린더 항목</a>
-                        <a class="collapse-item" href="">캘린더 항목</a>
-                    </div>
-                </div>
+                
             </li>
 
             <li class="nav-item">
@@ -202,10 +192,9 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">전자결재 항목명</h6>
-                        <a class="collapse-item" href="">전자결재 항목</a>
-                        <a class="collapse-item" href="">전자결재 항목</a>
-                        <a class="collapse-item" href="">전자결재 항목</a>
-                        <a class="collapse-item" href="">전자결재 항목</a>
+                        <a class="collapse-item" href="">새 결재 진행</a>
+                        <a class="collapse-item" href="">결재하기</a>
+                        <a class="collapse-item" href="">개인 문서함</a>
                     </div>
                 </div>
             </li>
@@ -216,20 +205,45 @@
                     <i class="fa-solid fa-building-circle-check"></i>
                     <span>시설예약</span>
                 </a>
-                <div id="collapseseven" class="collapse" aria-labelledby="headingUtilities"
+                
+            </li>
+            
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+            
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseeig"
+                    aria-expanded="true" aria-controls="collapseUtilities">
+					<i class="fas fa-light fa-network-wired"></i>
+                    <span>행정 관리</span>
+                </a>
+                <div id="collapseeig" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">시설예약 항목명</h6>
-                        <a class="collapse-item" href="">시설예약 항목</a>
-                        <a class="collapse-item" href="">시설예약 항목</a>
-                        <a class="collapse-item" href="">시설예약 항목</a>
-                        <a class="collapse-item" href="">시설예약 항목</a>
+                        <h6 class="collapse-header">행정 관리</h6>
+                        <a class="collapse-item" href="">강의 관리</a>
+                        <a class="collapse-item" href="">학생 관리</a>
+                    </div>
+                </div>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsenine"
+                    aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-light fa-rectangle-ad"></i>
+                    <span>홍보 관리</span>
+                </a>
+                <div id="collapsenine" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">홍보 관리</h6>
+                        <a class="collapse-item" href="">홍보물 관리</a>
+                        <a class="collapse-item" href="">상담 일정 관리</a>
+                        <a class="collapse-item" href="">상담 내역 관리</a>
                     </div>
                 </div>
             </li>
            
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
 
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
@@ -364,8 +378,8 @@
 
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_1.svg"
-                                            alt="...">
+                                        <img class="rounded-circle" src=""
+                                            alt="">
                                         <div class="status-indicator bg-success"></div>
                                     </div>
                                     <div class="font-weight-bold">
@@ -386,8 +400,8 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">사무보조님</span>
-                                <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
+                                <img class=""
+                                    src="">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
