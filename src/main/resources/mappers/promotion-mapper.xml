@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mappers namespace="promotionMapper">
-
+<mapper namespace="promotionMapper">
 	<resultMap id="promotionResult" type="Promotion">
-	
+		<result column="promo_no" property="promoNo" />
+		<result column="promo_title" property="promoTitle" />
+		<result column="promo_cate_no" property="promoCateNo" />
+		<result column="promo_writer" property="promoWriter" />
+		<result column="promo_content" property="promoContent" />
+		<result column="promo_create_date" property="promoContentDate" />
 	</resultMap>
 	
 	<select id="selectListCount" resultType="_int">
@@ -12,4 +16,14 @@
 		 where promo_status = 'Y'
 	</select>
 	
-</mappers>
+	<select id="selectPromoList" resultMap="promotionResult">
+		select promo_no
+			 , promo_title
+			 , promo_cate_no
+			 , promo_writer
+			 , to_char(promo_create_date, 'YYYY-MM-DD') as "promo_create_date"
+		  from tb_promo
+		 where promo_status = 'Y'
+	</select>
+  
+</mapper>
