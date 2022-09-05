@@ -77,6 +77,11 @@
         padding-left:20px;
 		margin-bottom: 30px;
     }
+    #wrapper #content-wrapper {
+	  background-color: white !important;
+	  width: 100%;
+	  overflow-x: hidden;
+	}
 </style>
 </head>
 <body id="page-top">
