@@ -31,6 +31,17 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
 
+<!-- fullcalender -->
+<link href='${pageContext.request.contextPath}/resources/fullcalendar-5.6.0/packages/core/su_main.css' rel='stylesheet' />
+<link href='${pageContext.request.contextPath}/resources/fullcalendar-5.6.0/packages/daygrid/su_main.css' rel='stylesheet' />
+<link href='${pageContext.request.contextPath}/resources/fullcalendar-5.6.0/packages/timegrid/main.css' rel='stylesheet' />
+<link href='${pageContext.request.contextPath}/resources/fullcalendar-5.6.0/packages/list/main.css' rel='stylesheet' />
+<script src='${pageContext.request.contextPath}/resources/fullcalendar-5.6.0/packages/core/main.js'></script>
+<script src='${pageContext.request.contextPath}/resources/fullcalendar-5.6.0/packages/interaction/main.js'></script>
+<script src='${pageContext.request.contextPath}/resources/fullcalendar-5.6.0/packages/daygrid/main.js'></script>
+<script src='${pageContext.request.contextPath}/resources/fullcalendar-5.6.0/packages/timegrid/main.js'></script>
+<script src='${pageContext.request.contextPath}/resources/fullcalendar-5.6.0/packages/list/main.js'></script>
+    
 <!-- jQuery 라이브러리 -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
