@@ -2,9 +2,12 @@ package com.finalProject.eduWorks.promotion.model.service;
 
 import java.util.ArrayList;
 
+import org.springframework.stereotype.Service;
+
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.promotion.model.vo.Promotion;
 
+@Service
 public interface PromotionService {
 	
 	// 리스트 페이지 조회 서비스 (페이징)

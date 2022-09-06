@@ -119,9 +119,9 @@
 	                                
 	                                <!--Body-->
 	                                <div class="modal-body text-center modal_alert_child">
-	                                    <div>
+	                                    <div style="margin-top: 1.5rem;">
 	                    
-	                                        <h5 class="mt-1 mb-2">필수 사항을 입력해주세요.</h5>
+	                                        <h5 class="mt-1 mb-2" style="color: black;">필수 사항을 입력해주세요.</h5>
 	                                        <br>                                
 	                                        <div class="text-center mt-4"> 
 	                                            <button type="button" class="btn su_btn_all su_btn_medium" data-dismiss="modal">확인</button>
