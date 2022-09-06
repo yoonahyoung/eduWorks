@@ -108,7 +108,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar" >
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="${ pageContext.servletContext.contextPath }">
                 <div class="sidebar-brand-icon">
                     <i class="fas fa-pencil-alt"></i>
                 </div>
@@ -198,8 +198,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="list.ca" data-toggle="collapse" data-target="#collapsefive"
-                    aria-expanded="true" aria-controls="collapseUtilities">
+                <a class="nav-link collapsed" href="list.ca">
                     <i class="fa-solid fa-calendar-check"></i>
                     <span>캘린더</span>
                 </a>
