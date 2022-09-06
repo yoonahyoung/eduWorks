@@ -5,59 +5,41 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>전사 공지 조회</title>
 
-	<!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
-    <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.css" rel="stylesheet">
+<!-- css  -->
+<link href="${pageContext.request.contextPath}/resources/css/sumin.css" rel="stylesheet" type="text/css">
+<link href="${pageContext.request.contextPath}/resources/css/board.css" rel="stylesheet" type="text/css">
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/brands.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
-
-
-    <!-- jQuery 라이브러리 -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-    <!-- suit 글꼴 -->
-    <link href="https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/static/woff2/SUIT.css" rel="stylesheet">
-
+<title>부서 게시판 조회</title>
 </head>
 <body>
-
 	<jsp:include page="../common/header.jsp" />
 	<!-- Begin Page Content -->
-	<div class="container-fluid">
+	<div>
 	    <div class="row">
 	        <!-- 게시판 영역 -->
-	        <div class="col-12" style="padding:0;">
+	        <div class="col-12" >
 	            <!-- Page Heading -->
 	            <div class="d-sm-flex align-items-center mb-4" id="boardHeader">
-	                <h2>전사 공지</h2>
+	                <h2>부서 게시판</h2><!-- 로그인한 유저의 부서 넣기. -->
 	            </div>
 	
 	            <br>
 	
-	            <div class="tableOption" style="display:flex; justify-content: space-between;">
+	            <div class="tableOption">
 	                <div class="btn_two_spacing">
 	                    <button id="importantNotice">공지등록</button><i class="fas fa-flag"></i>
 	                    <button id="delNotice">삭제</button><i class="fas fa-trash"></i>
 	                </div>
 	                <div class="filterHead">
 	                    <div class="searchbar">
-	                        <b>검색</b>　
+	                        <b id="searchB">검색</b>　
 	                        <input type="text" placeholder="텍스트 검색" style="height:25px;">
 	                        <i class="fas fa-search fa-fw"></i>
 	                    </div>
 	                </div>
 	                <div class="board-write-btn">
-	                    <button type="button" class="btn bWrite-btn">글작성</button>
+	                    <button type="button" class="btn" id="bWrite-btn">글작성</button>
 	                </div>
 	            </div>
 	            
@@ -88,7 +70,7 @@
 	                        <tr>
 	                            <td><input type="checkbox"></td>
 	                            <td>5</td>
-	                            <td>상품 품질이 별로네요. 교환신청합니다.</td>
+	                            <td>부서게시판 입니다!</td>
 	                            <td>user01</td>
 	                            <td>2021-09-22</td>
 	                            <td>5</td>
@@ -100,7 +82,7 @@
 	                
 	                
 	            </div>
-	            <div style="margin:30px 0 30px 0">
+	            <div id="n-pagingBar">
 	                <nav aria-label="Page navigation example">
 	                    <ul class="pagination justify-content-center">
 	                    <li class="page-item">
@@ -124,7 +106,7 @@
 	    </div>
 	   
 	</div>
-	<!-- /.container-fluid -->
-
+	
+	<jsp:include page="../common/footer.jsp" />
 </body>
 </html>

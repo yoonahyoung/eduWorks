@@ -1,0 +1,163 @@
+/* 공통요소 */
+
+#boardHeader {
+    margin:25px 15px 25px 15px; 
+}
+
+#boardHeader *{
+    font-weight: 600;
+    color : black !important;
+}
+
+#bWrite-btn{
+    background-color: white;
+    border: 2px solid #5e7e9b !important;
+    color: black;
+    height:35px;
+    line-height: 20px;
+    margin-bottom:5px;
+    margin-right:10px;
+}
+
+.btn_two_spacing{
+	margin: 0 0 10px 20px
+}
+	
+.searchbar{
+	margin-left:20px;
+}
+
+.tableOption{
+    display:flex; 
+    justify-content: space-between;
+}
+
+.btn_two_spacing button{
+    background-color: white;
+    border:0; 
+}
+
+.btn_two_spacing i{
+    padding-right:15px;
+}
+
+h2{
+    font-weight: 600;
+}
+
+#serarchB{
+    font-size:20px; 
+    color:black
+}
+
+tbody tr:hover{
+    background-color:rgb(236, 233, 233);
+}
+
+#n-pagingBar{
+	margin:30px 0;
+}
+
+
+/* noticeListView, deptBoardListView */
+
+.board-content td, table th{
+    color:black;
+    text-align:center;
+    cursor: pointer;
+}
+
+.main_width{
+    display:flex; 
+    align-items: center;
+    width:100%;
+}
+
+.board-tbody td{
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.tableOption, .filterHead{
+	display:flex;
+	justify-content:space-between;
+}
+
+
+/* blindListView */
+
+#w-day{
+	color:grey;
+}
+.boardTable{
+	width:100%;
+	}
+#boardTitle{
+    color:black;
+    font-weight: 700;
+    font-size: 17px;
+}
+.boardTable td{
+    padding-left:15px;
+    margin:30px 0 30px 0;
+    border-top:1px solid gainsboro;
+    border-bottom:1px solid gainsboro;
+    cursor:pointer;
+}
+.boardTable span{
+    font-size: 15px;
+}
+.boardTable td:hover{
+    background-color: rgb(236, 233, 233);
+}
+.bestTable td{
+    padding:5px 10px 5px 10px;
+    cursor:pointer;
+}
+.bestTable a{
+    color:black;
+    text-decoration: none;
+}
+.bestTable{
+    color:black;
+    width:270px;
+}
+.side_side{
+    display: flex;
+    justify-content:space-between;
+}
+#likeReply span{
+    margin:0 10px 0 10px;
+}
+#likeReply{
+    float:left; 
+    display:flex;
+}
+#likeReply i{
+    text-align:center;
+    font-weight: 500; 
+    font-size: 17px;
+}
+#col-10{
+	margin-left:0.5px;
+}
+#col-2{
+	padding:0;
+	margin-left:-13px;
+	border-left:1px solid grey
+}
+.bestTable tr:hover{
+	background:none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
