@@ -1,11 +1,9 @@
 @charset "UTF-8";
 /* ================================= 수민 ================================ */
-/* =================== 캘린더 =================== */
-/* .su_calendar_size{
-  padding: 30px;
-  margin: auto;
-  width: 90%;
-} */
+/* =================== 추가 =================== */
+body{
+	color: black !important;
+}
 
 
 
@@ -107,14 +105,14 @@ margin-left: 27px;
 
 /* =================== 버튼 =================== */
 .su_btn_border{
-  background-color: white;
-  border: 2px solid #5e7e9b;
-  color: black;
+  background-color: white !important;
+  border: 2px solid #5e7e9b !important;
+  color: black !important;
 }
 .su_btn_all{
-  color: #fff;
-  background-color: #5e7e9b;
-  border: 2px solid #5e7e9b;
+  color: #fff !important;
+  background-color: #5e7e9b !important;
+  border: 2px solid #5e7e9b !important;
 }
 .su_btn_all:hover{
   color: #fff;
@@ -144,16 +142,16 @@ margin-left: 27px;
   margin-right: 10px;
 }
 .su_page_btn{
-  background-color: white;
-  border: 2px solid #5e7e9b;
-  color: black;
+  background-color: white !important;
+  border: 2px solid #5e7e9b !important;
+  color: black !important;
   font-weight: bold;
   margin: 0px 2px;
 }
 .su_page_btn:hover{
-  background-color: white;
-  border: 2px solid #5e7e9b;
-  color: black;
+  background-color: white !important;
+  border: 2px solid #5e7e9b !important;
+  color: black !important;
   font-weight: bold;
 }
 .su_prenext{
@@ -297,7 +295,7 @@ input[type=checkbox]{
 }
 
 .su_contentArea{
-  padding: 25px 20px;
+  padding: 25px 20px !important;
 }
 .su_contentArea h4{
   color: black;
@@ -422,7 +420,6 @@ input[type=checkbox]{
 .su_table_hover tbody tr:hover{
   background-color:rgb(236, 233, 233) !important;
 }
-
 
 /* ================== 게시글 ======================== */
 .su_board_body{

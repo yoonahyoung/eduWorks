@@ -27,7 +27,10 @@ public class PromotionController {
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 3, 5);
 		ArrayList<Promotion> list = pService.selectPromoList(pi);
 		
-		
+		mv.addObject("pi", pi)
+		  .addObject("list", list)
+		  .setViewName("promotion/promotionListView");
+		  
 		return mv;
 	}
 

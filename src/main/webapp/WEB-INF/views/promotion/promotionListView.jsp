@@ -6,6 +6,12 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+	.su_content_body h2, h3, h4, h5, h6{
+		color: black !important;
+	}
+	
+</style>
 
 <!-- css -->
 <link href="${pageContext.request.contextPath}/resources/css/promotion.css" rel="stylesheet" type="text/css">
@@ -13,11 +19,12 @@
 </head>
 <body>
 
-	<jsp:include page="../common/header.jsp">
-	
-	<div style="display: flex" class="su_content_body">
+	<jsp:include page="../common/header.jsp" />
 
-	    <div class="container-fluid su_contentArea">
+	
+	<div class="su_content_body">
+
+	    <div class=" su_contentArea">
 	        <div class="su_content_header">
 	            <h2 class="su_sub_menu_name">홍보물 관리</h2>
 	
@@ -32,11 +39,11 @@
 	
 	                <div class="selectOption su_btn_area" align="right">
 	                    <select style="width: 150px;">
-	                        <option value="">전체</option>
-	                        <option value="">배너</option>
-	                        <option value="">블로그</option>
-	                        <option value="">포스터</option>
-	                        <option value="">SNS</option>
+	                        <option value="0">전체</option>
+	                        <option value="1">배너</option>
+	                        <option value="2">블로그</option>
+	                        <option value="3">포스터</option>
+	                        <option value="4">SNS</option>
 	                    </select>
 	                </div>
 	
@@ -56,7 +63,7 @@
 	                            <!-- 값은 다 DB와 연결될 것 -->
 	                            <tr>
 	                                <td width="5%"><input type="checkbox" name="deleteList"></td>
-	                                <td>3</td>
+	                                <td class="no">3</td>
 	                                <td>SNS</td>
 	                                <td>9월 할인 이벤트</td>
 	                                <td>한유리 대리</td>
@@ -108,7 +115,14 @@
 	                                }
 	                                
 	                            });
-	                        });
+	                            
+	                            // 각 게시글의 행을 클릭하면 게시글 상세보기 페이지로 이동
+	                            $("#suTable>tbody>tr").on("click", "td:not(:first-child)", function(){
+	                            	// console.log($(this).parent().children(".no").text());
+	                            	location.href = "detail.pr?no=" + $(this).parent().children(".no").text();
+	                            });
+	                            
+	                        })
 	                    
 	                    </script>
 	
@@ -131,7 +145,7 @@
 	                            
 	                            <!--Body-->
 	                            <div class="modal-body text-center modal_alert_child">
-	                                <div>
+	                                <div style="margin-top: 1.5rem;">
 	                
 	                                    <h5 class="mt-1 mb-2">정말 삭제하시겠습니까?</h5>
 	                                    <br>                                
@@ -155,7 +169,7 @@
 	                            
 	                            <!--Body-->
 	                            <div class="modal-body text-center modal_alert_child">
-	                                <div>
+	                                <div style="margin-top: 1.5rem;">
 	                
 	                                    <h5 class="mt-1 mb-2">삭제할 게시글을 선택해주세요.</h5>
 	                                    <br>                                
@@ -222,18 +236,38 @@
 	                    <nav aria-label="Page navigation example">
 	                        <ul class="pagination justify-content-center">
 	                            <li class="page-item">
-	                                <a class="page-link su_page_btn su_prenext" href="#" aria-label="Previous">
-	                                <span aria-hidden="true">&laquo;</span>
-	                                </a>
-	                            </li>
-	                            <li class="page-item"><a class="page-link su_page_btn" href="#">1</a></li>
-	                            <li class="page-item"><a class="page-link su_page_btn" href="#">2</a></li>
-	                            <li class="page-item"><a class="page-link su_page_btn" href="#">3</a></li>
+	                            	<c:choose>
+	                            		<c:when test="${ pi.currentPage eq 1 }">
+			                                <a class="page-link su_page_btn su_prenext diabled" aria-label="Previous">
+			                                <span aria-hidden="true">&laquo;</span></a>
+			                            </c:when>
+			                            <c:otherwise>
+			                            	<a class="page-link su_page_btn su_prenext" href="list.pr?ppage=${ pi.currentPage - 1 }" aria-label="Previous">
+			                                <span aria-hidden="true">&laquo;</span></a>
+			                            </c:otherwise>
+			                        </c:choose>
+			                     </li>
+			                        
+		                        <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+		                        	<li class="page-item"><a class="page-link su_page_btn" href="list.pr?ppage=${ p }">${ p }</a></li>
+		                        </c:forEach>
+			                        
+	                                
+	                           
+	                            
 	                            <li class="page-item">
-	                                <a class="page-link su_page_btn su_prenext" href="#" aria-label="Next">
-	                                <span aria-hidden="true">&raquo;</span>
-	                                </a>
+	                            	<c:choose>
+	                            		<c:when test="${ pi.currentPage eq pi.endPage }">
+			                                <a class="page-link su_page_btn su_prenext disabled" aria-label="Next">
+	                                		<span aria-hidden="true">&raquo;</span></a>
+			                            </c:when>
+			                            <c:otherwise>
+			                            	<a class="page-link su_page_btn su_prenext" href="list.pr?ppage=${ pi.currentPage + 1 }" aria-label="Next">
+	                                		<span aria-hidden="true">&raquo;</span></a>
+			                            </c:otherwise>
+			                        </c:choose>
 	                            </li>
+	                            
 	                        </ul>
 	                    </nav>
 	                </div>
@@ -244,6 +278,7 @@
 	
 	</div>
 	
+	<jsp:include page="../common/footer.jsp" />
 	
 
 </body>
