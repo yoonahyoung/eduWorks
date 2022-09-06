@@ -1,17 +1,13 @@
 package com.finalProject.eduWorks.board.controller;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.finalProject.eduWorks.board.model.service.NoticeServiceImpl;
-import com.finalProject.eduWorks.board.model.vo.Board;
-import com.finalProject.eduWorks.common.model.vo.PageInfo;
-import com.finalProject.eduWorks.common.template.Pagination;
 
 @Controller
 public class NoticeController {
@@ -33,6 +29,11 @@ public class NoticeController {
 		mv.setViewName("board/noticeListView");
 		
 		return mv;
+	}
+	
+	@RequestMapping("enrollForm.no")
+	public String noticeEnrollFOrm(Model model) {
+		return "board/noticeEnrollForm";
 	}
 	
 	

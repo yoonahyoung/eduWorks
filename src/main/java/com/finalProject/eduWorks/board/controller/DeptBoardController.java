@@ -1,11 +1,9 @@
 package com.finalProject.eduWorks.board.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.finalProject.eduWorks.board.model.service.DeptBoardServiceImpl;
 
 @Controller
 public class DeptBoardController {
@@ -17,6 +15,11 @@ public class DeptBoardController {
 	public ModelAndView selectDeptBoardList(ModelAndView mv) {
 		mv.setViewName("board/deptBoardListView");
 		return mv;
+	}
+	
+	@RequestMapping("enrollForm.de")
+	public String enrollFormDeptBoard(Model model) {
+		return "board/deptBoardEnrollForm";
 	}
 
 }

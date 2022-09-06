@@ -39,7 +39,7 @@
 	                    </div>
 	                </div>
 	                <div class="board-write-btn">
-	                    <button type="button" class="btn" id="bWrite-btn">글작성</button>
+	                    <button type="button" class="btn" id="bWrite-btn" onclick="location.href='enrollForm.de'">글작성</button>
 	                </div>
 	            </div>
 	            

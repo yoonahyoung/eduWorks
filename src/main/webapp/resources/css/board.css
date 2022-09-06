@@ -43,6 +43,7 @@
 
 h2{
     font-weight: 600;
+    color: black !important;
 }
 
 #serarchB{
@@ -58,7 +59,12 @@ tbody tr:hover{
 	margin:30px 0;
 }
 
+.n-btn{
+	border-radius: 0.35rem;
+	padding: 0.375rem 0.75rem;
+}
 
+/*------------------ notice, deptBoard ------------------  */
 /* noticeListView, deptBoardListView */
 
 .board-content td, table th{
@@ -84,6 +90,24 @@ tbody tr:hover{
 }
 
 
+/* noticeEnrollForm, deptBoardEnrollForm */
+#n-btn-border{
+    background-color: white;
+    border: 2px solid #5e7e9b;
+    color: black;
+    display: inline;
+    float:right;
+}
+.hr_line{
+	margin-top: 25px;
+}
+.su_dropBox{
+        color:grey;
+}
+
+
+
+/*-------------------- blind ------------------ */
 /* blindListView */
 
 #w-day{
@@ -149,7 +173,6 @@ tbody tr:hover{
 .bestTable tr:hover{
 	background:none;
 }
-
 
 
 
