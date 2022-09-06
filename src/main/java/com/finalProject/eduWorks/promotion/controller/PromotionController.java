@@ -19,6 +19,7 @@ public class PromotionController {
 	@Autowired
 	private PromotionService pService;
 	
+	// 게시글 리스트
 	@RequestMapping("list.pr")
 	public ModelAndView selectPromoList(@RequestParam(value="ppage", defaultValue="1") int currentPage, ModelAndView mv) {
 		
@@ -32,6 +33,12 @@ public class PromotionController {
 		  .setViewName("promotion/promotionListView");
 		  
 		return mv;
+	}
+	
+	// 글 작성 페이지 이동
+	@RequestMapping("enrollForm.pr")
+	public String enrollForm() {
+		return "promotion/promotionEnrollForm";
 	}
 
 }

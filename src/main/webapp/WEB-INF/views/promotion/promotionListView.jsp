@@ -133,8 +133,9 @@
 	                </div>
 	
 	                <div class="su_btn_two_area">
+	                	<!-- 삭제 버튼은 관리자(팀장?)만 보이게 -->
 	                    <button type="button" class="btn su_btn_all" id="delPromoBtn" data-toggle="modal" data-target="#nocheck">삭제 &nbsp;<span class="fas fa-trash"></span></button>
-	                    <button type="button" class="btn su_btn_all">글쓰기</button>
+	                    <button type="button" class="btn su_btn_all" onclick="location.href='enrollForm.pr';">글쓰기</button>
 	                </div>
 	                
 	                 <!-- 삭제 모달창 -->
