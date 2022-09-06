@@ -1,0 +1,548 @@
+@charset "UTF-8";
+@charset "UTF-8";
+/* ================================= 캘린더 ================================ */
+.su_calendar_size{
+  padding: 30px;
+  margin: auto;
+  width: 90%;
+}
+
+
+/* =================== 추가 =================== */
+body{
+	color: black !important;
+}
+
+/* =================== 서브 메뉴 =================== */
+.su_sub_menu_div{
+  /* width: 15%;
+  margin: 0px 10px;
+  padding: 15px 0px;
+  color: black; */
+  /* height: 100%; */
+  /* border-right: 2px solid rgba(0, 0, 0, .1); */
+}
+.su_sub_menu_div *:not(span){
+  /* font-weight: 500; */
+}
+.su_sub_menu_name,
+.su_board_title h3{
+  font-weight: 600 !important;
+}
+.su_sub_menu_div ul{
+  list-style: none;
+  padding-left: 0px;
+  margin-left: 27px;
+}
+
+.su_sub_menu_item [data-toggle="collapse"]::after {
+  width: 1rem;
+  text-align: center;
+  float: left;
+  vertical-align: 0;
+  border: 0;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 25px;
+  content: '\f107';
+  font-family: 'Font Awesome 5 Free';
+}
+/* 
+margin-left: 27px;
+  padding: 0.3rem; */
+.su_sub_menu_item [data-toggle="collapse"].collapsed::after {
+  content: '\f105';
+}
+.su_sub_menu_item{
+  width: 85%;
+}
+.su_sub_menu_item a{
+  color: black;
+  background-color: white;
+}
+.su_sub_menu_item span,
+.su_sub_menu_item i{
+  cursor: pointer;
+  font-size: 16px;
+}
+.su_sub_menu_item .fas{
+  color: rgba(0, 0, 0, 0.7);
+}
+.su_sub_menu_list{
+  padding: 10px 0px;;
+
+}
+.su_sub_menu_list *{
+  font-size: 16px;
+}
+.su_sub_menu_list div{
+  padding: 5px 10px;
+}
+
+.addCal{
+  padding: 10px 0px 10px 20px;
+}
+.addCal:hover{
+  text-decoration: none;
+}
+.calColor{
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+}
+.su_myCalX a{
+  font-size: 16px;
+}
+#myCalendar input[type='checkbox'],
+#attCalendar input[type='checkbox']{
+  width: 12px;
+}
+.colorPal{
+  margin: 10px;
+  float: right;
+}
+#colorArea{
+  background: white;
+  border: 0px;
+  vertical-align: middle;
+  height: 2.5rem;
+  width:80px;
+}
+
+/* =================== 버튼 =================== */
+.su_btn_border{
+  background-color: white !important;
+  border: 2px solid #5e7e9b !important;
+  color: black !important;
+}
+.su_btn_all{
+  color: #fff !important;
+  background-color: #5e7e9b !important;
+  border: 2px solid #5e7e9b !important;
+}
+.su_btn_all:hover{
+  color: #fff;
+}
+.su_btn_center{
+  text-align: center;
+}
+.dis_no{
+  display: none;
+}
+.dis_bl{
+  display: block
+}
+.su_btn_medium {
+  width: 40%;
+  margin: 5px;
+}
+.su_btn_area{
+  padding-bottom: 3rem;
+}
+.su_btn_two_area{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.su_btn_two_area .su_left_area button{
+  margin-right: 10px;
+}
+.su_page_btn{
+  background-color: white !important;
+  border: 2px solid #5e7e9b !important;
+  color: black !important;
+  font-weight: bold;
+  margin: 0px 2px;
+}
+.su_page_btn:hover{
+  background-color: white !important;
+  border: 2px solid #5e7e9b !important;
+  color: black !important;
+  font-weight: bold;
+}
+.su_prenext{
+  font-weight: bold;
+}
+.su_btn_two_center{
+  width: 100%;
+  text-align: center;
+}
+.su_btn_two{
+  width: 16%;
+  margin: 0px 10px;
+  font-size: 19px;
+}
+
+.su_btn_search{
+  margin: 0px 10px;
+}
+.su_btn_sm{
+  width: 80px;
+}
+
+
+/* =================== 모달 =================== */
+.modal_alert_child {
+  display: table-cell;
+  vertical-align: middle;
+}
+.modal_alert {
+  margin: auto;
+  width: 380px !important;
+  height: 200px !important;
+  display: table;
+}
+
+/*=================== 주소록 ===============*/
+#attCalList{
+  position: fixed;
+  z-index: 2;
+}
+/* #moveCal{
+  cursor: move;
+  z-index: 10;
+  text-align: center; 
+  position: static !important;
+} */
+.ph_aside{
+  position: static !important;
+}
+.ph_aside .su_ph_header{
+  /* cursor: move; */
+  position: static;
+  text-align: center;
+}
+.su_ph_header input{
+  z-index: 1000;
+}
+
+.su_ph_div{
+  border: 2px solid #5e7e9b;
+  padding: 15px 10px;
+  position: fixed;
+  left: 450px;
+  top: 210px;
+  width: 300px;
+  height: 600px;
+  border-radius: 1px;
+  background-color: white;
+  /* z-index: 2; */
+  overflow-y: auto;
+}
+.su_ph_header span{
+  float: right; 
+  line-height: 25px;
+}
+.su_ph_header input{
+  width: 210px;
+}
+
+.su_ph_body .fa-user{
+  font-size: 20px;
+  color: #5e7e9b;
+}
+.su_ph_body ul{
+  list-style: none;
+  padding-left: 0px;
+}
+.su_ph_body li{
+  list-style: none;
+}
+.div_left_line{
+  border-left: 2px solid;
+  margin-left: 20px; 
+  /* height: 165px; */
+}
+.ph_padding{
+  padding: 10px 0px;
+  cursor: pointer;
+}
+.collapse td{
+  cursor: pointer;
+}
+.attendeeOne{
+  cursor: pointer;
+  background:rgba(0, 0, 0, .1);
+  border-radius: 5px;
+}
+
+/* =================== 기타 =================== */
+#wrapper #content-wrapper {
+  background-color: white;
+  width: 100%;
+  overflow-x: hidden;
+}
+.su_content_body h2{
+  color: black;
+}
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color:black;
+}
+input[type=checkbox]{
+  accent-color: #5e7e9b;
+}
+
+.hr_line{
+  height: 2px;
+  background-color: rgba(0, 0, 0, .1);
+}
+.hr_line_top{
+  height: 2px;
+  background-color: rgba(0, 0, 0, .1);
+  margin-top: 25px;
+}
+
+.pen_icon{
+  float: right;
+  line-height: 44px !important;
+  font-size: 18px;
+}
+
+.su_contentArea{
+  padding: 25px 20px !important;
+}
+.su_contentArea h4{
+  color: black;
+}
+#suTable tr:hover{
+  background: white;
+}
+/* .su_Tb tr:hover{
+  background: white;
+} */
+#ceo{
+  padding-bottom: 10px;
+  padding-top: 1rem;
+  cursor: pointer;
+}
+#ceo:hover{
+  background-color:rgb(236, 233, 233);
+}
+.fontRed{
+  color: red;
+  font-size: 13px !important;
+}
+#eventForm{
+  margin: 20px;
+}
+#eventForm span{
+  font-size: 19px;
+}
+#eventForm tr textarea{
+  resize: none;
+  width: 95%;
+  height: 200px;
+  margin: 10px 0px;
+}
+#eventForm tr select{
+  margin: 10px 0px;
+  width: 150px;
+  font-size: 19px;
+}
+#eventForm tr:hover{
+  background: white;
+}
+#eventForm td{
+  height: 52px;
+}
+
+/* =================== 댓글 ======================= */
+.su_sub_menu_div_left{
+  width: 20%;
+  margin: 0px 10px;
+  padding: 15px 0px;
+  color: black;
+  /* height: 100%; */
+  border-left: 2px solid rgba(0, 0, 0, .1);
+}
+.reply_header *{
+  font-weight: bold;
+}
+.su_one_reply{
+  display: flex;
+}
+.su_one_reply img{
+  width: 45px;
+  margin: 0px 20px 0px 10px;
+}
+.su_insert_reply{
+  display: flex;
+  align-items: center;
+}
+.su_insert_reply img{
+  width: 45px;
+  margin: 0px 20px 0px 10px;
+}
+.su_reply_content{
+  width: 90%;
+}
+.su_reply_content p{
+  white-space: pre;
+}
+.su_reReply span{
+  transform: scaleY(-1);
+  font-size: 20px;
+  color: #5e7e9b;
+}
+.su_reply_input *{
+  vertical-align: middle;
+}
+.su_reply_input input{
+  width: 70%;
+}
+.su_reReply{
+  cursor: pointer;
+}
+.su_insert_reReply{
+  /* display: flex; */
+  align-items: center;
+}
+.su_insert_reReply img{
+  width: 30px;
+  margin: 0px 3px;
+}
+.su_reReply_input{
+  float: right;
+}
+.su_reReply_input input{
+  width: 35%;
+}
+.su_reReply_input button{
+  margin: 0px 2px;
+}
+.su_reReply_input .fa-xmark{
+  font-size: 13px; 
+  cursor:pointer;
+}
+.su_rreply_Barea{
+  margin-left: 50px;
+}
+/* ================= 테이블 스타일 수민 ================= */
+.su_table_pad{
+  padding-bottom: 1rem;
+}
+.su_table_hover tbody tr:hover{
+  background-color:rgb(236, 233, 233) !important;
+}
+
+/* ================== 게시글 ======================== */
+.su_board_body{
+  padding: 0px 20px;
+}
+.su_board_writer{
+  display: flex;
+  align-items: center;
+  margin: 20px 0px;
+}
+.su_board_writer img{
+  width: 40px;
+  margin: 0px 10px;
+}
+.su_board_writer span{
+  font-size: 17px;
+  margin: 0px 5px;
+}
+.su_board_content p{
+  white-space: pre;
+  font-size: 17px;
+  font-weight: 500;
+}
+.su_board_content{
+  padding: 30px;
+}
+.su_board_count{
+  display:flex;
+  margin: 20px;
+}
+.su_board_count .fas{
+  color: #5e7e9b;
+  margin: 0px 10px;
+}
+.su_board_count span{
+  font-size: 17px;
+  font-weight: 500;
+}
+.su_board_reply{
+  border: 2px solid #5e7e9b;
+  border-radius: 5px;
+  margin: 10px;
+  padding: 10px;
+}
+.su_reply_Barea{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+.su_board_reply .su_reply{
+  display: flex;
+  align-items: center;
+  /* flex-wrap: wrap; */
+}
+.su_reply img{
+  width: 40px;
+  margin-right: 10px;
+}
+.su_reply_Bcontent p{
+  white-space: pre;
+  margin: 0;
+}
+.su_reply_Barea #writeReplyBtn{
+  width: 95px;
+  margin-left: 10px;
+}
+
+.su_dropBox{
+  border: 4px dashed #5e7e9b;
+  height: 100px;
+  margin: 0px 20px 0px 166px;
+}
+.su_dropBox span{
+  font-size: 19px;
+  color: gray;
+}
+.summerArea{
+  margin: 0px 20px;
+}
+
+
+/* ================= 테이블 스타일 ================= */
+b{
+  font-size:20px; 
+  color:black
+}
+
+.tableOption{
+  display:flex; 
+  justify-content: space-between;
+}
+
+.board-content td, table th{
+  color:black;
+  text-align:center;
+  cursor: pointer;
+}
+
+/* tbody tr:hover{
+  background-color:rgb(236, 233, 233);
+} */
+
+.btn_two_spacing{
+  margin: 0 0 10px 20px;
+}
+
+.main_width{
+  display:flex; 
+  align-items: center;
+  width:100%;
+}
+
+.btn_two_spacing button{
+  background-color: white;
+  border:0; 
+}
+.btn_two_spacing i{
+  padding-right:15px;
+}

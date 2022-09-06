@@ -714,8 +714,8 @@ Lots taken from Flatly (MIT): https://bootswatch.com/4/flatly/bootstrap.css
 /* "primary" coloring */
 .fc-button-primary {
   color: #fff;
-  background-color: #5e7e9b;
-  border-color: #5e7e9b;
+  background-color: slategray;
+  border-color: slategray;
 }
 
 .fc-button-primary:hover {
@@ -738,8 +738,8 @@ Lots taken from Flatly (MIT): https://bootswatch.com/4/flatly/bootstrap.css
 .fc-button-primary:not(:disabled):active,
 .fc-button-primary:not(:disabled).fc-button-active {
   color: #fff;
-  background-color: #5e7e9b;
-  border-color: #5e7e9b;
+  background-color: slategray;
+  border-color: slategray;
 }
 
 .fc-button-primary:not(:disabled).fc-button-active:hover{
