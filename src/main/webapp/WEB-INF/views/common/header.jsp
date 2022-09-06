@@ -140,8 +140,8 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">게시판</h6>
                         <a class="collapse-item" href="list.no">전사 공지</a>
-                        <a class="collapse-item" href="">부서 게시판</a>
-                        <a class="collapse-item" href="">익명 게시판</a>
+                        <a class="collapse-item" href="list.de">부서 게시판</a>
+                        <a class="collapse-item" href="list.bl">익명 게시판</a>
                         <a class="collapse-item" href="">자료실</a>
                     </div>
                 </div>
