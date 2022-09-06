@@ -138,7 +138,7 @@
                         <a class="collapse-item" href="">내 인사정보</a>
                         <a class="collapse-item" href="">강사 관리</a>
                         <a class="collapse-item" href="">직원 관리</a>
-                        <a class="collapse-item" href="">큰태 관리</a>
+                        <a class="collapse-item" href="">근태 관리</a>
                     </div>
                 </div>
             </li>
@@ -157,7 +157,7 @@
                         <a class="collapse-item" href="list.no">전사 공지</a>
                         <a class="collapse-item" href="list.de">부서 게시판</a>
                         <a class="collapse-item" href="list.bl">익명 게시판</a>
-                        <a class="collapse-item" href="">자료실</a>
+                        <a class="collapse-item" href="list.do">자료실</a>
                     </div>
                 </div>
             </li>
