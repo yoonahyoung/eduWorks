@@ -51,45 +51,46 @@
 	<select id="selectPromoList" resultMap="promotionResult">
 		select *
 		  from (
-				select promo_no
-					 , promo_title
-					 , promo_cate_no
-					 , promo_writer
-					 , to_char(promo_create_date, 'YYYY-MM-DD') as "promo_create_date"
-					 , promo_status
-				  from tb_promo
-				 where 1 = 1
-				   <if test="no != null and no neq ''">
-				 		and promo_cate_no = #{no}
-				   </if>
-				   <if test="keyword != null and keyword neq ''">
-				      and promo_writer like '%' || #{keyword} || '%'
-				   </if>
-				 order
-				    by promo_no desc
-				 )
-		 where promo_status = 'Y'
-		 union
-		 select *
-		  from (
-				select promo_no
-					 , promo_title
-					 , promo_cate_no
-					 , promo_writer
-					 , to_char(promo_create_date, 'YYYY-MM-DD') as "promo_create_date"
-					 , promo_status
-				  from tb_promo
-				 where 1 = 1
-				   <if test="no != null and no neq ''">
-				 		and promo_cate_no = #{no}
-				   </if>
-				   <if test="keyword != null and keyword neq ''">
-				     and promo_title like '%' || #{keyword} || '%'
-				   </if>
-				 order
-				    by promo_no desc
-				 )
-		 where promo_status = 'Y'
+				select *
+				  from (
+						select promo_no
+							 , promo_title
+							 , promo_cate_no
+							 , promo_writer
+							 , to_char(promo_create_date, 'YYYY-MM-DD') as "promo_create_date"
+							 , promo_status
+						  from tb_promo
+						 where 1 = 1
+						   <if test="no != null and no neq ''">
+						 		and promo_cate_no = #{no}
+						   </if>
+						   <if test="keyword != null and keyword neq ''">
+						      and promo_writer like '%' || #{keyword} || '%'
+						   </if>
+						 )
+				 where promo_status = 'Y'
+				 union
+				 select *
+				  from (
+						select promo_no
+							 , promo_title
+							 , promo_cate_no
+							 , promo_writer
+							 , to_char(promo_create_date, 'YYYY-MM-DD') as "promo_create_date"
+							 , promo_status
+						  from tb_promo
+						 where 1 = 1
+						   <if test="no != null and no neq ''">
+						 		and promo_cate_no = #{no}
+						   </if>
+						   <if test="keyword != null and keyword neq ''">
+						     and promo_title like '%' || #{keyword} || '%'
+						   </if>
+						 )
+				 where promo_status = 'Y'
+				)
+			 order
+			    by promo_no desc
 	</select>
 	
 	<insert id="insertPromo">
@@ -111,5 +112,14 @@
 		  , #{promoContent}
 		  )
 	</insert>
+	
+	<update id="deletePromo">
+		update tb_promo
+		   set promo_status = 'N'
+		 where promo_no in 
+		 <foreach collection="array" item="arr" open="(" close=")" separator=",">
+		 	#{arr}
+		 </foreach>
+	</update>
   
 </mapper>

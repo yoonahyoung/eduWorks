@@ -25,7 +25,7 @@ public interface PromotionService {
 	int updatePromo(Promotion p);
 	
 	// 삭제 서비스
-	int deletePromo(Promotion p);
+	int deletePromo(String checkCnt);
 	
 	// 댓글 리스트 조회용 서비스 (AJAX)
 	

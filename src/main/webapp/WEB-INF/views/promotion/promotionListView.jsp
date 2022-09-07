@@ -71,7 +71,7 @@
 	                            		<c:forEach var="p" items="${ list }">
 	                            			<tr>
 				                                <td width="5%"><input type="checkbox" name="deleteList"></td>
-				                                <td>${ p.promoNo }</td>
+				                                <td class="no">${ p.promoNo }</td>
 				                                <c:choose>
 				                                	<c:when test="${ p.promoCateNo eq 1 }">
 				                                		<td>배너</td>
@@ -125,11 +125,11 @@
 	                            
 	                            // 각 게시글의 행을 클릭하면 게시글 상세보기 페이지로 이동
 	                            $("#suTable>tbody>tr").on("click", "td:not(:first-child)", function(){
-	                            	// console.log($(this).parent().children(".no").text());
-	                            	location.href = "detail.pr?no=" + $(this).parent().children(".no").text();
+	                            	 //console.log($(this).parent().children(".no").text());
+	                            	//location.href = "detail.pr?no=" + $(this).parent().children(".no").text();
 	                            });
 	                            
-	                            // 게시글 카테고리별 분류
+	                            // 
 	                           
 	                            
 	                            
@@ -159,7 +159,7 @@
 	                            			for(let i = 0; i < list.length; i++){
 	                            				nList += "<tr>"
 	                            				      + "<td width='5%'><input type='checkbox' name='deleteList'></td>"
-	                            				      + '<td>' + list[i].promoNo + '</td>';
+	                            				      + '<td class="no">' + list[i].promoNo + '</td>';
 	                            				
 	                            				if(list[i].promoCateNo == 1){
 	                            					nList += '<td>배너</td>';
@@ -284,16 +284,18 @@
 	                <script>
 	                    $(function(){
 	                        // 홍보물 삭제
-	                        var checkCnt = "";
+	                        let checkCnt = "";
 	                        
-	                        $("input:checkbox").change(function(){
+	                        $("input[type=checkbox]").change(function(){
 	                            checkCnt = "";
-	                            $("input:checkbox[name=deleteList]:checked").each(function(){
-	                                checkCnt += ($(this).val()) + ","; // 체크된 것만 게시글번호 뽑기 "2,3,4,"
-	                            })
+	                            $("input[name='deleteList']:checked").each(function(){
+	                            	
+	                            	//console.log($(this).parent().parent().children(".no").text());
+	                                checkCnt += ($(this).parent().parent().children(".no").text()) + ","; // 체크된 것만 게시글번호 뽑기 "2,3,4,"
+	                            });
 	                            
 	                            checkCnt = checkCnt.substring(0,checkCnt.lastIndexOf(",")); // 맨 뒤 콤마 삭제 "2,3,4"
-	                            console.log(checkCnt);
+                                
 	                            
 	                            // 선택된 체크박스 없이 삭제 버튼 누른 경우
 	                            if(checkCnt == ''){
@@ -306,23 +308,23 @@
 	                        });
 	
 	                        // 모달에서 삭제 확인 클릭시 DB에서 삭제
-	                        // $("#realDelete").click(function(){
+	                         $("#realDelete").click(function(){
 	                            
-	                        //     $.ajax({
-	                        //         url:, 
-	                        //         data:{"checkCnt":checkCnt},
-	                        //         success:function(result){
-	                        //             if(result > 0){
-	                        //                 location.reload();
-	                        //             } else{
-	                        //                 alert("회원 삭제에 실패하였습니다.");
-	                        //             }
-	                        //         },
-	                        //         error:function(){
-	                        //             console.log("ajax 게시글 삭제 실패")
-	                        //         }
-	                        //     });
-	                        // });
+	                             $.ajax({
+	                                 url:"delete.pr", 
+	                                 data:{"checkCnt":checkCnt},
+	                                 success:function(result){
+	                                     if(result == "success"){
+	                                         location.reload();
+	                                     } else{
+	                                         alert("홍보물 삭제에 실패하였습니다.");
+	                                     }
+	                                 },
+	                                 error:function(){
+	                                     console.log("ajax 게시글 삭제 실패")
+	                                 }
+	                             });
+	                         });
 	
 	                    })
 	                </script>

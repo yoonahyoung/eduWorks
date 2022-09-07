@@ -53,7 +53,14 @@ public class PromotionController {
 	
 	
 	
-	
+	// 게시글 삭제 기능
+	@ResponseBody
+	@RequestMapping("delete.pr")
+	public String ajaxDeletePromo(String checkCnt) {
+		int result = pService.deletePromo(checkCnt);
+		
+		return result > 0 ? "success" : "fail";
+	}
 	
 	
 	

@@ -50,8 +50,8 @@ public class PromotionServiceImpl implements PromotionService {
 	}
 
 	@Override
-	public int deletePromo(Promotion p) {
-		return 0;
+	public int deletePromo(String checkCnt) {
+		return pDao.deletePromo(sqlSession, checkCnt);
 	}
 
 }

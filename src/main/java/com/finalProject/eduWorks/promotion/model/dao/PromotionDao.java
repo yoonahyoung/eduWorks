@@ -33,5 +33,12 @@ public class PromotionDao {
 		
 		return (ArrayList) sqlSession.selectList("promotionMapper.selectPromoList", map, rowBounds);
 	}
+	
+	public int deletePromo(SqlSessionTemplate sqlSession, String checkCnt) {
+		
+		String[] cArr = checkCnt.split(",");	// ["3", "4"]
+		
+		return sqlSession.update("promotionMapper.deletePromo", cArr);
+	}
 
 }
