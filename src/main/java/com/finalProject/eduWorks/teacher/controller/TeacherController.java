@@ -20,4 +20,25 @@ public class TeacherController {
 		mv.setViewName("teacher/appLectureEnroll");
 		return mv;
 	}
+	
+	// (강사) 교재리스트
+	@RequestMapping("bookList.bk")
+	public ModelAndView bookListSelect(ModelAndView mv) {
+		mv.setViewName("teacher/bookList");
+		return mv;
+	}
+	
+	// (강사) 교재 등록
+	@RequestMapping("bookEnrollForm.bk")
+	public ModelAndView bookEnrollFormInsert(ModelAndView mv) {
+		mv.setViewName("teacher/bookEnrollForm");
+		return mv;
+	}
+	
+	// (강사) 교재 상세페이지
+	@RequestMapping("bookDetailView.bk")
+	public ModelAndView bookDetailViewSelect(ModelAndView mv) {
+		mv.setViewName("teacher/bookDetailView");
+		return mv;
+	}
 }

@@ -1,0 +1,19 @@
+@charset "UTF-8";
+	label{
+        color:black;
+        font-weight: 600;
+    }
+
+    .enrollForm label{
+        color:black;
+        font-weight: 600;
+    }
+
+    .clickbtn button{
+        width: 70px;
+        height: 30px;
+        color: slategray; 
+        background-color: whitesmoke; 
+        border-radius: 5px;
+        border:1px solid  #5e7e9b;
+    }
