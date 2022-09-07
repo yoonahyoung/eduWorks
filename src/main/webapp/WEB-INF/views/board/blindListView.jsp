@@ -30,7 +30,7 @@
                         <i class="fas fa-search fa-fw"></i>
                     </div>
                     <div class="board-write-btn">
-                        <button type="button" class="btn" id="bWrite-btn">글작성</button>
+                        <button type="button" class="btn" id="bWrite-btn" onclick="location.href='enrollForm.bl'">글작성</button>
                     </div>
                 </div>
                 

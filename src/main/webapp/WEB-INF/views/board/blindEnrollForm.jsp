@@ -14,7 +14,7 @@
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 
-<title>부서 게시판 등록</title>
+<title>익명 게시판 등록</title>
 </head>
 <body>
 	<jsp:include page="../common/header.jsp" />
@@ -23,7 +23,7 @@
         <div class="su_contentArea">
             <div class="su_content_header">
 
-                <h2 class="su_sub_menu_name">부서 게시판 등록</h2>
+                <h2 class="su_sub_menu_name">익명 게시판 등록</h2>
                 
                 <button class="btn" id="n-btn-border" type="button" onclick="history.back();">목록으로</button>
                 <hr class="hr_line">
