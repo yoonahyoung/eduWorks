@@ -136,7 +136,7 @@
                         <a class="collapse-item" href="">출퇴근/근무내역관리</a>
                         <a class="collapse-item" href="">내 연차내역</a>
                         <a class="collapse-item" href="">내 인사정보</a>
-                        <a class="collapse-item" href="">강사 관리</a>
+                        <a class="collapse-item" href="list.te">강사 관리</a>
                         <a class="collapse-item" href="">직원 관리</a>
                         <a class="collapse-item" href="">근태 관리</a>
                     </div>
