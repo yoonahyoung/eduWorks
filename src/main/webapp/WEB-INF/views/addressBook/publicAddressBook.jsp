@@ -27,18 +27,16 @@
                         
                         <div>
                             <span class="mailListCheck"><input type="checkbox"></span>
-                            <button type="button" class="reply-btn"><i class="fas fa-location-arrow"></i>&nbsp;&nbsp;메일 작성</button>
+                            <button type="button" class="reply-btn" onclick="writeMail();"><i class="fas fa-location-arrow"></i>&nbsp;&nbsp;메일 작성</button>
                         </div>
-
-                        <!-- <hr> -->
-
-                        <!-- 
-                        <div class="filterHead tableOption">
-                            <div class="searchbar" align="center">
-                                <input type="text" placeholder="검색">
-                                <i class="fas fa-search fa-lg address-search"></i>
-                            </div>
-                        </div> -->
+                        
+                        <script>
+                        
+                        		function writeMail() {
+                        			location.href="writeMailForm.ma";
+                        		}
+                        
+                        </script>
 
                         <div class="tableOption">
                             <div class="searchbar" align="center">
@@ -59,7 +57,7 @@
                                 <thead>
                                     <tr class="table_thead_border">
                                         <th width="3%"><input type="checkbox"></th>
-                                        <th width="7%">사번</th>
+                                        <th width="7%">번호</th>
                                         <th width="10%">이름</th>
                                         <th width="10%">부서명</th>
                                         <th width="10%">직급명</th>
