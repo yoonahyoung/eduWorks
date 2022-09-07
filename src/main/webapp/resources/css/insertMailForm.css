@@ -1,0 +1,410 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+/* ========== 메뉴바 전체(공통) ========== */
+
+.container-fluid .menu-sidebar{
+    width:15%;
+    min-height: 100vh;
+    border-right:2px solid lightgray;
+    text-decoration: none;
+    color:black;
+}
+
+.container-fluid .menu-sidebar h4{
+    padding: 1rem;
+    font-weight: 600;
+}
+
+.container-fluid .menu-sidebar h6{
+    margin-left: 27px;
+    padding: 0.3rem;
+    color:black;
+}
+
+a:hover{
+    text-decoration: none;
+}
+
+.menu-sidebar h6:hover{
+    color:slategray;
+}
+
+.menu-sidebar{
+    padding-top:20px;
+}
+
+.container-fluid{
+    display:flex;
+    padding-left:0px;
+}
+
+.insider{
+    padding-left:20px;
+    margin-bottom: 30px;
+}
+
+/* ============= 개인 =============== */
+
+/* ========== 사이브 메뉴바 제목(개인) =========== */
+.container-fluid .menu-sidebar h2{
+    padding-bottom:10px;
+    font-weight: 600;
+}
+
+.setup{
+    padding: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    color:black;
+    cursor: pointer;
+}
+
+.setup:hover{
+    color:black;
+}
+
+/* ========== 메뉴바 : 태그 =========== */
+#plus-tag{
+    margin-left: 27px;
+    color:gray;
+    cursor:pointer;
+}
+
+
+.tag-title{
+    display:flex;
+}
+
+.tag-title input[type=text]{
+    width:130px;
+}
+
+.tag-delete{
+    padding-top: 6px;
+    margin-left:70px;
+}
+
+.tag-modify, .tag-modify:hover{
+    color: lightgray;
+    margin-left: 80px;
+}
+
+
+
+/* ========= 휴지통 비우기 ============= */
+#empty{
+    float:right;
+    margin-right:20px;
+}
+
+/* ==========  메인콘텐츠 : 상위 제목  ========== */
+.sub-btn{
+    width:100px;
+    height:33px;
+    border:none;
+    background-color:white;
+}
+
+.tag-btn{
+    display:inline-block; 
+    padding:0;
+}
+
+.sub-btn:hover{
+    background-color:rgba(0, 0, 0, 0.1);
+}
+
+
+.reply-btn{
+    width:100px;
+    height:33px;
+    background-color:slategray; 
+    color:white; 
+    border:none;
+}
+
+
+.main-content{
+    width:85%;
+    color:black;
+    margin-left: 20px;
+}
+
+.main-list{ height:85%;}
+
+.second-title { 
+    height:10%;
+    padding-top:20px;
+    font-weight:bold;
+}
+
+.mail-count{
+    font-weight:lighter;
+    font-size:15px;
+    margin-left:20px;
+}
+
+.mail-list{height:65%;}
+.page-nav{height:10%;}
+
+.mail-list{
+    margin-left:15px;
+}
+
+.setupImg, #empty{
+    float: right;
+    margin-right:20px;
+}
+
+img{
+    width:20px;
+    height:20px;
+}
+
+.second-title>div{ margin-bottom: 10px; font-size:30px;}
+.mailListCheck{
+    display: inline-block;
+    border-color: #cbcbcb;
+    border: 1px solid #cbcbcb;
+    background-color: #ebebeb;
+    padding: 7px 7px 10px;
+    border-radius: 0;
+    margin-right: 6px;
+    font-size: 0;
+}
+
+
+.icon{
+    font-size:18px;
+    margin:0px 4px;
+    cursor: pointer;
+}
+
+.writeForm{
+    display:inline-block;
+    /* width:40%; */
+    /* height:50px; */
+    font-size:16px;
+    /* margin:5px 3px; */
+    background-color: white;
+    border:2px solid #5e7e9b;
+    /* font-weight: bold; */
+    /* border-radius: 10px; */
+}
+
+.key_btn-lg{
+	padding: 0.5rem 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.3rem;
+}
+
+.backBtn{
+    font-size:14px;
+    width:55px;
+    height:30px;
+    margin-left:3px;
+    background-color: white;
+    border:2px solid #5e7e9b;
+    border-radius: 5px;
+}
+
+.sendBtn{
+    font-size:14px;
+    width:55px;
+    height:30px;
+    margin-left:3px;
+    background-color: #5e7e9b;
+    border: none;
+    color:white;
+    border-radius: 5px;
+}
+
+.mailBtn{
+    font-size:13px;
+    width:50px;
+    height:30px;
+    margin-left:3px;
+    background-color: white;
+    border:2px solid #5e7e9b;
+    border-radius: 5px;
+}
+
+
+#empty{
+    font-size:11px;
+    width:45px;
+    height:25px;
+    background-color: #5e7e9b;
+    border:none;
+    color:white;
+    border-radius: 5px;
+}
+
+.setup-tag{
+    text-align: left;
+    /* margin: 20px 50px; */
+    padding: 10px 50px;
+}
+
+.modal-content div, .modal-content input{
+    margin-bottom:10px;
+    color:black;
+    font-size:19px;
+    font-weight: 600;
+}
+
+#select-tag i{
+    margin: 8px 10px;
+}
+  
+  /* 드롭 반응 */
+  .dropBox.active {
+    background: #ddd;
+  }
+  
+  .dropBox h1 {
+    font-size: 1.8rem;
+  }
+
+/* 메일 작성 */
+.form-group{display: flex;}
+
+.send-form table{width:100%;}
+
+.send-form th{
+    width: 13%;
+    height: 40px;
+    font-size: 18px;
+    color: black;
+    font-weight: 450;
+}
+
+.check{
+    /* display: flex; */
+    width:8%; 
+    /* border:1px solid black; */
+}
+
+.dropBox{
+    display:inline-block;
+    height:100px;
+    width:100%;
+    border:3px dotted slategray;
+    margin:10px 0px;
+}
+
+.dropBox span{
+    padding:10px;
+    color:gray;
+}
+
+.send-check{
+    margin-left:50px;
+    font-size:13px;
+    vertical-align: center;
+}
+
+.input-mail{width:100%;}
+
+.address-btn{
+    width:100%;
+    height:30px;
+    border:none;
+    border-radius: 2px;
+    background-color: slategray;
+    color:white;
+}
+
+/* ========== 주소록 모달 ============== */
+.address-tag{
+    text-align: left;
+    height:40x;
+    line-height: middle;
+    /* font-size:15px; */
+}
+
+.address-tag>span{
+    margin-right:28px;
+    font-size:17px;
+    font-weight: 500;
+    width:60px;
+    cursor: pointer;
+}
+
+.add-choice{
+    height:600px;
+    display:flex;
+    width:100%;
+    margin-left: 15px;
+}
+
+.add-title{
+    width:25%;
+    border:1px solid lightgray;
+    margin-right:8px;
+}
+
+.add-title>p{
+    font-size:16px;
+    text-align: left;
+    padding-left:10px;
+    margin-top:10px;
+    cursor: pointer;
+}
+
+.add-person{
+    width:70%;
+    border:1px solid lightgray;
+    overflow:auto;
+}
+
+.add-person input[type=text]{
+    width:100%;
+    font-size:13px;
+    margin:0px;
+    padding:0px;
+    height:30px;
+    color:gray;    
+}
+
+#table-container{
+    white-space: nowrap;
+}
+
+#add-table{
+    table-layout: fixed; 
+}
+
+#add-table tr{border-bottom:1px solid lightgray;}
+
+#add-table thead{
+    min-width:100px;
+    font-size:15px;
+    position:sticky;
+    top: 0;
+    background-color: slategray;
+}
+
+#add-table td{
+    min-width:100px;
+    font-size:15px;
+    font-weight: normal; 
+}
+
+.checkbox{
+    min-width:50px !important;
+    padding: 5px 0px 0px 10px;
+    /* border:1px solid black; */
+    text-align: center;
+}
+
+.addBtn{
+    font-size:15px;
+    width:60px;
+    height:35px;
+    margin-left:3px;
+    background-color: white;
+    border:2px solid #5e7e9b;
+    border-radius: 5px;
+}

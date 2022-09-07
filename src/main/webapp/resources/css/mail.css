@@ -1,0 +1,299 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+/* ========== 메뉴바 전체(공통) ========== */
+
+.container-fluid .menu-sidebar{
+    width:15%;
+    min-height: 100vh;
+    border-right:2px solid lightgray;
+    text-decoration: none;
+    color:black;
+}
+
+.container-fluid .menu-sidebar h4{
+    padding: 1rem;
+    font-weight: 600;
+}
+
+.container-fluid .menu-sidebar h6{
+    margin-left: 27px;
+    padding: 0.3rem;
+    color:black;
+}
+
+a:hover{
+    text-decoration: none;
+}
+
+.menu-sidebar h6:hover{
+    color:slategray;
+}
+
+.menu-sidebar{
+    padding-top:20px;
+}
+
+.container-fluid{
+    display:flex;
+    padding-left:0px;
+}
+
+.insider{
+    padding-left:20px;
+    margin-bottom: 30px;
+}
+
+/* ============= 개인 =============== */
+
+/* ========== 사이브 메뉴바 제목(개인) =========== */
+.container-fluid .menu-sidebar h2{
+    padding-bottom:10px;
+    font-weight: 600;
+    color: black;
+}
+
+.setup{
+    padding: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    color:black;
+    cursor: pointer;
+}
+
+.setup:hover{
+    color:black;
+}
+
+.insider h4{
+	color:black;
+}
+
+/* ========== 메뉴바 : 태그 =========== */
+#plus-tag{
+    margin-left: 27px;
+    color:gray;
+    cursor:pointer;
+}
+
+
+.tag-title{
+    display:flex;
+}
+
+.tag-title input[type=text]{
+    width:130px;
+}
+
+.tag-delete{
+    padding-top: 6px;
+    margin-left:70px;
+}
+
+.tag-modify, .tag-modify:hover{
+    color: lightgray;
+    margin-left: 80px;
+}
+
+
+/* ========== 메뉴바 : 메일함, 빠른검색 =========== */
+.first-title{
+    font-size:21px;
+    font-weight: bold;
+    text-decoration: none;
+    color:black;
+}
+
+.first-title:hover{
+    font-size:21px;
+    font-weight: bold;
+    text-decoration: none;
+    color:black;
+}
+
+/* ========= 휴지통 비우기 ============= */
+#empty{
+    float:right;
+    margin-right:20px;
+}
+
+
+/* ==========  메인콘텐츠 : 상위 제목  ========== */
+.main-content{
+    width:85%;
+    color:black;
+    margin-left: 20px;
+}
+
+.navigation{display:flex;}
+
+.main-list{ height:85%;}
+
+
+#plus-tag{
+    /* margin-left:30px;
+    font-size:15px; */
+    cursor:pointer;
+}
+
+.second-menu dd:hover{
+    color:slategray;
+}
+
+.second-title { 
+    height:10%;
+    padding-top:20px;
+    font-weight:bold;
+}
+
+.mail-count{
+    font-weight:lighter;
+    font-size:15px;
+    margin-left:20px;
+}
+
+.mail-list{height:75%;}
+/* .page-nav{height:10%;} */
+
+.second-title>div{ margin-bottom: 10px; font-size:30px;}
+.mailListCheck{
+    display: inline-block;
+    border-color: #cbcbcb;
+    border: 1px solid #cbcbcb;
+    background-color: #ebebeb;
+    padding: 7px 7px 10px;
+    border-radius: 0;
+    margin-right: 6px;
+    font-size: 0;
+}
+
+
+.icon{
+    font-size:18px;
+    margin:0px 4px;
+    cursor: pointer;
+}
+
+#select-tag>i{
+    cursor: pointer;
+}
+
+.writeForm{
+    display:inline-block;
+    /* width:40%; */
+    /* height:50px; */
+    font-size:16px;
+    /* margin:5px 3px; */
+    background-color: white;
+    border:2px solid #5e7e9b;
+    /* font-weight: bold; */
+    /* border-radius: 10px; */
+}
+
+.key_btn-lg{
+	padding: 0.5rem 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.3rem;
+}
+
+.mailBtn{
+    font-size:13px;
+    width:50px;
+    height:30px;
+    margin-left:3px;
+    background-color: white;
+    border:2px solid #5e7e9b;
+    border-radius: 5px;
+}
+
+#empty{
+    font-size:11px;
+    width:45px;
+    height:25px;
+    background-color: #5e7e9b;
+    border:none;
+    color:white;
+    border-radius: 5px;
+}
+
+.sub-btn{
+    width:100px;
+    height:33px;
+    border:none;
+    background-color:white;
+}
+
+.tag-btn{
+    display:inline-block; 
+    padding:0;
+}
+
+.sub-btn:hover{
+    background-color:rgba(0, 0, 0, 0.1);
+}
+
+
+.reply-btn{
+    width:100px;
+    height:33px;
+    background-color:slategray; 
+    color:white; 
+    border:none;
+}
+
+/* ========= 메인 콘텐츠 =========== */
+
+table{
+    border-collapse: separate;
+  border-spacing: 0 8px;
+}
+.mail-select, .icon{width:25px;}
+
+.mail-person{ width:15%; padding-left:20px;}
+.person{ 
+    width:70%;
+    text-align: center; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+} 
+.mail-title{width:70%;}
+.mail-sendtime{width:15%; font-size:12px;}
+
+.setup-tag{
+    text-align: left;
+    /* margin: 20px 50px; */
+    padding: 10px 50px;
+}
+
+.modal-content{
+    margin:auto;
+}
+
+.modal-content div, .modal-content input{
+    margin-bottom:10px;
+    color:black;
+    font-size:19px;
+    font-weight: 600;
+}
+
+#select-tag i{
+    margin: 8px 10px;
+}
+
+.mail tr{
+    cursor: pointer;
+    height: 40px;
+}
+
+.mail tr:hover{
+    background-color: #ebebeb;
+}
+
+/* ========= 모달 ========= */
+.modal-title{
+	color:black;
+}
+
+
+
