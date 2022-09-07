@@ -4,11 +4,13 @@ import java.util.ArrayList;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.member.model.vo.Member;
 import com.finalProject.eduWorks.personnel.model.dao.PersonnelDao;
 
+@Service
 public class PersonnelServiceImpl implements PersonnelService {
 	
 	@Autowired
