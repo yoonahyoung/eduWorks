@@ -57,7 +57,6 @@
                                 <thead>
                                     <tr class="table_thead_border">
                                         <th width="3%"><input type="checkbox"></th>
-                                        <th width="7%">번호</th>
                                         <th width="10%">이름</th>
                                         <th width="10%">부서명</th>
                                         <th width="10%">직급명</th>
@@ -69,28 +68,24 @@
                                 <tbody>
                                     <!-- 값은 다 DB와 연결될 것 -->
                                     <!-- 반복문 시작 -->
-                                    <tr>
-                                        <td><input type="checkbox"></td>
-                                        <td>1</td>
-                                        <td>홍길동</td>
-                                        <td>마케팅팀</td>
-                                        <td>사원</td>
-                                        <td>053-1111-2222</td>
-                                        <td>user02@naver.com</td>
-                                        <td>010-1234-5678</td>
-                                    </tr>
-                                    <!-- 반복문 끝 -->
-                                    <tr>
-                                        <td><input type="checkbox"></td>
-                                        <td>2</td>
-                                        <td>홍길동</td>
-                                        <td>마케팅팀</td>
-                                        <td>사원</td>
-                                        <td>053-1111-2222</td>
-                                        <td>user02@naver.com</td>
-                                        <td>010-1234-5678</td>
-                                    </tr>
-    
+                                    <c:choose>
+                                    	<c:when test="${empty list }">
+                                    		<td colspan="7">현재 주소록이 없습니다.</td>
+                                    	</c:when>
+                                    	<c:otherwise>        
+                                    		<c:forEach var="a" items="${list }">                        	
+			                                    <tr>
+			                                        <td><input type="checkbox"></td>
+			                                        <td>${a.memName }</td>
+			                                        <td>${a.deptCode }</td>
+			                                        <td>${a.jobCode }</td>
+			                                        <td>${a.memBusinessnum }</td>
+			                                        <td>${a.memEmail }</td>
+			                                        <td>${a.memPhone }</td>
+			                                    </tr>
+		                                    </c:forEach>
+                                    	</c:otherwise>
+                                    </c:choose>
                                 </tbody>
                             </table>
                             <br><br>
@@ -101,7 +96,7 @@
                             // 더블클릭시 해당 선택자에게 메일 보내는 함수 실행
                             $(function() {
                                 $(".board-content>tbody>tr").dblclick(function() {
-                                    location.href="sendMail.ma?mail=" + $(this).children().eq(6).text();
+                                    location.href="sendMail.ma?mail=" + $(this).children().eq(5).text();
                                 })
                             })
 
@@ -110,19 +105,43 @@
                         <div style="margin:30px 0 30px 0">
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination justify-content-center">
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
+                                	<c:choose>
+                                		<c:when test="${pi.currentPage eq 1 }">
+			                                <li class="page-item">
+			                                    <a class="page-link disabled" aria-label="Previous">
+			                                    <span aria-hidden="true">&laquo;</span>
+			                                    </a>
+			                                </li>
+		                                </c:when>
+		                                <c:otherwise>
+			                                <li class="page-item">
+			                                    <a class="page-link" href="publicAddress.ad?cpage=${pi.currentPage -1 }" aria-label="Previous">
+			                                    <span aria-hidden="true">&laquo;</span>
+			                                    </a>
+			                                </li>
+		                                </c:otherwise>
+		                            </c:choose>
+		                                
+				                    <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage }">
+				                    	<li class="page-item"><a class="page-link" href="publicAddress.ad?cpage=${p }">${p }</a></li>
+				                    </c:forEach>
+										
+									<c:choose>
+										<c:when test="${pi.currentPage eq pi.maxPage }">
+											<li class="page-item">
+			                                    <a class="page-link disabled" aria-label="Next">
+			                                    <span aria-hidden="true">&raquo;</span>
+			                                    </a>
+			                                </li>
+										</c:when>
+										<c:otherwise>
+			                                <li class="page-item">
+			                                    <a class="page-link" href="publicAddress.ad?cpage=${pi.currentPage + 1}" aria-label="Next">
+			                                    <span aria-hidden="true">&raquo;</span>
+			                                    </a>
+			                                </li>
+			                            </c:otherwise>
+                                	</c:choose>
                                 </ul>
                             </nav>
                         </div>

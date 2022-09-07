@@ -3,6 +3,52 @@
 <mapper namespace="addressMapper">
  
  
+	<resultMap id="publicAddResult" type="Member">
+		<result column="mem_no" property="memNo"/>
+		<result column="mem_id" property="memId"/>
+		<result column="mem_pwd" property="memPwd"/>
+		<result column="mem_name" property="memName"/>
+		<result column="dept_name" property="deptCode"/>
+		<result column="job_name" property="jobCode"/>
+		<result column="mem_phone" property="memPhone"/>
+		<result column="mem_businessnum" property="memBusinessnum"/>
+		<result column="mem_email" property="memEmail"/>
+		<result column="mem_birth" property="memBirth"/>
+		<result column="mem_postal_code" property="memPostalCode"/>
+		<result column="mem_postal_ad" property="memPostalAd"/>
+		<result column="mem_postal_detail" property="memPostalDetail"/>
+		<result column="mem_postal_refer" property="memPostalRefer"/>
+		<result column="mem_enroll_date" property="memEnrollDate"/>
+		<result column="mem_resign_date" property="memResignDate"/>
+		<result column="mem_resign_status" property="memResignStatus"/>
+		<result column="mem_profile" property="memProfile"/>
+	</resultMap>
+	
+	<!-- 재직중인 사원 수 조회 -->
+	<select id="selectListCount" resultType="_int">
+		select
+			count(*)
+		from tb_member
+		where mem_resign_status = 'N'
+	</select>
+	
+	<!-- 공용 주소록에 들어갈 사원 목록 조회 -->
+	<select id="selectAddressList" resultMap="publicAddResult">
+		select
+			  mem_no
+			, mem_name
+			, dept_name
+			, job_name
+			, mem_businessnum
+			, mem_email
+			, mem_phone
+		from tb_member
+		 join tb_job using (job_code)
+		 join tb_department using (dept_code)
+		where mem_resign_status = 'N'
+		order
+			by mem_no
+	</select>
  	
  
  

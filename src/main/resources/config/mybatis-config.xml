@@ -10,6 +10,8 @@
 		<typeAlias type="com.finalProject.eduWorks.board.model.vo.Board" alias="Board" />
 		<typeAlias type="com.finalProject.eduWorks.promotion.model.vo.Promotion" alias="Promotion" />
 		<typeAlias type="com.finalProject.eduWorks.member.model.vo.Member" alias="Member" />
+		<typeAlias type="com.finalProject.eduWorks.member.model.vo.Department" alias="Department" />
+		<typeAlias type="com.finalProject.eduWorks.member.model.vo.Job" alias="Job" />
 		<typeAlias type="com.finalProject.eduWorks.addressBook.model.vo.Address" alias="Address" />
 		<typeAlias type="com.finalProject.eduWorks.addressBook.model.vo.AddressOut" alias="AddressOut" />
 	</typeAliases>
