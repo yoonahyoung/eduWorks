@@ -9,6 +9,7 @@
 	<typeAliases> <!-- 아직 클래스를 만들지도 않고 등록할 수는 없다. 즉, 미리 작성 불가 꼭 클래스 생성 후 등록 -->
 		<!-- <typeAlias type="com.finalProject.eduWorks.board.model.vo.Board" alias="Board" /> -->
 		<typeAlias type="com.finalProject.eduWorks.promotion.model.vo.Promotion" alias="Promotion" />
+		<typeAlias type="com.finalProject.eduWorks.member.model.vo.Member" alias="Member" />
 	</typeAliases>
 	<!-- 유의사항 : 미리등록해두려면 해당 클래스가 진짜 존재해야 함 -->
 	
@@ -20,6 +21,7 @@
 	 <mappers>
 	 	<mapper resource="/mappers/notice-mapper.xml" />
 	 	<mapper resource="/mappers/promotion-mapper.xml" />
+	 	<mapper resource="/mappers/personnel-mapper.xml" />
 	 	
 	 </mappers>
 	 <!-- 유의사항 : 미리등록해두려면 해당 mapper 파일이 진짜 존재해야 함 (뿐만 아니라 namespace까지도 지정되어있어야 함) -->
