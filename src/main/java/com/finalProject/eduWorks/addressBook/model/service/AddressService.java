@@ -10,7 +10,7 @@ public interface AddressService {
 	
 	// 4. 개인 주소록 추가
 	
-	// 5. 개인 주소록 삭제/
+	// 5. 개인 주소록 삭제
 	
 	// 6. 연락처 삭제
 
