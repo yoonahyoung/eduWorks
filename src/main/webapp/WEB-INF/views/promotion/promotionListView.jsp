@@ -31,8 +31,8 @@
 	            <br><br><br><br><br>
 	
 	            <div style="text-align: center;">
-	                <input type="text" style="width: 300px;" name="suKeyword" placeholder="제목 입력">
-	                <button type="button" class="su_btn_border btn-sm su_btn_search">검색</button>
+	                <input type="text" style="width: 300px;" id="promoKeyword" placeholder="제목/작성자 입력">
+	                <button type="button" class="su_btn_border btn-sm su_btn_search" onclick="searchList(1);">검색</button>
 	            </div>
 	
 	            <div class="su_content_body">
@@ -60,34 +60,41 @@
 	                            </tr>
 	                        </thead>
 	                        <tbody>
-	                            <!-- 값은 다 DB와 연결될 것 -->
-	                            <tr>
-	                                <td width="5%"><input type="checkbox" name="deleteList"></td>
-	                                <td class="no">3</td>
-	                                <td>SNS</td>
-	                                <td>9월 할인 이벤트</td>
-	                                <td>한유리 대리</td>
-	                                <td>2022-08-19</td>
-	                            </tr>
-	                            <tr>
-	                                <td width="5%"><input type="checkbox" name="deleteList"></td>
-	                                <td>3</td>
-	                                <td>SNS</td>
-	                                <td>9월 할인 이벤트</td>
-	                                <td>한유리 대리</td>
-	                                <td>2022-08-19</td>
-	                            </tr><tr>
-	                                <td width="5%"><input type="checkbox" name="deleteList"></td>
-	                                <td>3</td>
-	                                <td>SNS</td>
-	                                <td>9월 할인 이벤트</td>
-	                                <td>한유리 대리</td>
-	                                <td>2022-08-19</td>
-	                            </tr>
+	                        
+	                            <c:choose>
+	                            	<c:when test="${empty list }">
+	                            		<tr>
+	                            			<th colspan="6">현재 게시글이 없습니다.</th>
+	                            		</tr>
+	                            	</c:when>
+	                            	<c:otherwise>
+	                            		<c:forEach var="p" items="${ list }">
+	                            			<tr>
+				                                <td width="5%"><input type="checkbox" name="deleteList"></td>
+				                                <td>${ p.promoNo }</td>
+				                                <c:choose>
+				                                	<c:when test="${ p.promoCateNo eq 1 }">
+				                                		<td>배너</td>
+				                                	</c:when>
+				                                	<c:when test="${ p.promoCateNo eq 2 }">
+				                                		<td>블로그</td>
+				                                	</c:when>
+				                                	<c:when test="${ p.promoCateNo eq 3 }">
+				                                		<td>포스터</td>
+				                                	</c:when>
+				                                	<c:otherwise>
+				                                		<td>SNS</td>
+				                                	</c:otherwise>
+				                                </c:choose>
+				                                
+				                                <td>${ p.promoTitle }</td>
+				                                <td>${ p.promoWriter }</td>
+				                                <td>${ p.promoCreateDate }</td>
+				                            </tr>
+	                            		</c:forEach>
+	                            	</c:otherwise>
+	                            </c:choose>	
 	                            
-	
-	
-	
 	                        </tbody>
 	                    </table>
 	
@@ -122,7 +129,93 @@
 	                            	location.href = "detail.pr?no=" + $(this).parent().children(".no").text();
 	                            });
 	                            
+	                            // 
 	                        })
+	                        
+	                        // 제목, 작성자 키워드 검색 기능 ajax=======================================================
+                            function searchList(page){
+                            	$.ajax({
+                            		url:"search.pr",
+                            		data:{
+                            				keyword:$("#promoKeyword").val(),
+                            				ppage: page
+                            			},
+                            		success:function(map){
+                            			
+                            			const pi = map.pi;
+                            			const list = map.list;
+                            			
+                            			// 검색한 리스트와 페이징으로 대체
+                            			let nList = "";
+                            			// 검색 결과가 없을 때
+                            			if(list.length == 0){
+                            				nList += "<tr>"
+	                            					+ "<th colspan='6'>현재 게시글이 없습니다.</th>"
+	                            					+ "</tr>";
+                            			} else {
+	                            			for(let i = 0; i < list.length; i++){
+	                            				nList += "<tr>"
+	                            				      + "<td width='5%'><input type='checkbox' name='deleteList'></td>"
+	                            				      + '<td>' + list[i].promoNo + '</td>';
+	                            				
+	                            				if(list[i].promoCateNo == 1){
+	                            					nList += '<td>배너</td>';
+	                            				} else if(list[i].promoCateNo == 2){
+	                            					nList += '<td>블로그</td>';
+	                            				} else if(list[i].promoCateNo == 3){
+	                            					nList += '<td>포스터</td>';
+	                            				} else{
+	                            					nList += '<td>SNS</td>';
+	                            				}
+				                                
+	                            				nList += '<td>' + list[i].promoTitle + '</td>'
+	                            					  + '<td>' + list[i].promoWriter + '</td>'
+	                            					  + '<td>' + list[i].promoCreateDate + '</td>'
+	                            					  + '</tr>';
+	                            			}
+                            				
+                            			}
+                            			
+                            			// 검색한 페이징 변경
+                            			let nPi = "";
+                            			
+                            			nPi = '<li class="page-item">';
+                            			if(pi.currentPage == 1){
+                            				nPi += '<a class="page-link su_page_btn su_prenext diabled" aria-label="Previous">'
+    			                                + '<span aria-hidden="true">&laquo;</span></a>';
+                            			} else{
+                            				nPi += '<a class="page-link su_page_btn su_prenext" onclick="searchList(' + (pi.currentPage - 1) + ');" aria-label="Previous">'
+    			                                + '<span aria-hidden="true">&laquo;</span></a>';
+                            			}
+                            			nPi += "</li>";
+                            	
+                            			for(let p = pi.startPage; p <= pi.endPage; p++){
+                            				if(p == pi.currentPage){
+                            					nPi += '<li class="page-item"><a class="page-link su_page_btn su_curPage_btn disabled">' + p + '</a></li>';
+                            				} else{
+                            					nPi += '<li class="page-item"><a class="page-link su_page_btn" onclick="searchList(' + p + ');">' + p + '</a></li>';
+                            				}
+                            			}
+		                                
+                            			nPi += '<li class="page-item">';
+                            			if(pi.currentPage == pi.endPage){
+                            				nPi += '<a class="page-link su_page_btn su_prenext disabled" aria-label="Next">'
+    	                                		+ '<span aria-hidden="true">&raquo;</span></a>';
+                            			} else{
+                            				nPi += '<a class="page-link su_page_btn su_prenext" onclick="searchList(' + (pi.currentPage + 1) + ');" aria-label="Next">'
+    	                                		+ '<span aria-hidden="true">&raquo;</span></a>';
+                            			}
+                                		nPi += "</li>";
+                            			
+                                		$("#suTable tbody").empty();
+                            			$("#suTable tbody").append(nList);
+                            			$("#suPaging").empty();
+                            			$("#suPaging").append(nPi);
+                            		}, error:function(){
+                            			console.log("ajax 홍보물 검색 조회 실패");
+                            		}
+                            	});
+                            };
 	                    
 	                    </script>
 	
@@ -182,7 +275,9 @@
 	                        </div>
 	                    </div>
 	                </div>
-	
+					
+					
+					<!-- 삭제 관련 script -->
 	                <script>
 	                    $(function(){
 	                        // 홍보물 삭제
@@ -235,7 +330,7 @@
 	                <!-- 페이징 영역 -->
 	                <div style="margin:30px 0 30px 0">
 	                    <nav aria-label="Page navigation example">
-	                        <ul class="pagination justify-content-center">
+	                        <ul class="pagination justify-content-center" id="suPaging">
 	                            <li class="page-item">
 	                            	<c:choose>
 	                            		<c:when test="${ pi.currentPage eq 1 }">
@@ -250,7 +345,16 @@
 			                     </li>
 			                        
 		                        <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-		                        	<li class="page-item"><a class="page-link su_page_btn" href="list.pr?ppage=${ p }">${ p }</a></li>
+		                        
+		                        	<c:choose>
+		                        		<c:when test="${pi.currentPage eq p }">
+		                        			<li class="page-item"><a class="page-link su_page_btn su_curPage_btn disabled" href="list.pr?ppage=${ p }">${ p }</a></li>
+		                        		</c:when>
+		                        		<c:otherwise>
+		                        			<li class="page-item"><a class="page-link su_page_btn" href="list.pr?ppage=${ p }">${ p }</a></li>
+		                        		</c:otherwise>
+		                        	</c:choose>
+		                        	
 		                        </c:forEach>
 			                        
 	                                

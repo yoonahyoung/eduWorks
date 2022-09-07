@@ -20,13 +20,13 @@ public class PromotionServiceImpl implements PromotionService {
 	private SqlSessionTemplate sqlSession;
 
 	@Override
-	public int selectListCount() {
-		return pDao.selectListCount(sqlSession);
+	public int selectListCount(String keyword, String no) {
+		return pDao.selectListCount(sqlSession, keyword, no);
 	}
 
 	@Override
-	public ArrayList<Promotion> selectPromoList(PageInfo pi) {
-		return pDao.selectPromoList(sqlSession, pi);
+	public ArrayList<Promotion> selectPromoList(PageInfo pi, String keyword, String no) {
+		return pDao.selectPromoList(sqlSession, pi, keyword, no);
 	}
 
 	@Override

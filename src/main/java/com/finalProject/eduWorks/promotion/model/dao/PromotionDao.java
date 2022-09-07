@@ -1,6 +1,7 @@
 package com.finalProject.eduWorks.promotion.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -12,16 +13,25 @@ import com.finalProject.eduWorks.promotion.model.vo.Promotion;
 @Repository
 public class PromotionDao {
 	
-	public int selectListCount(SqlSessionTemplate sqlSession) {
-		return sqlSession.selectOne("promotionMapper.selectListCount");
+	public int selectListCount(SqlSessionTemplate sqlSession, String keyword, String no) {
+		// 동적 sql
+		HashMap<String, String> map = new HashMap<>();
+		map.put("keyword", keyword);
+		map.put("no", no);
+		
+		return sqlSession.selectOne("promotionMapper.selectListCount", map);
 	}
 	
-	public ArrayList<Promotion> selectPromoList(SqlSessionTemplate sqlSession, PageInfo pi){
+	public ArrayList<Promotion> selectPromoList(SqlSessionTemplate sqlSession, PageInfo pi, String keyword, String no){
 		int limit = pi.getBoardLimit();
 		int offset = (pi.getCurrentPage() - 1) * limit;
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		
-		return (ArrayList) sqlSession.selectList("promotionMapper.selectPromoList", null, rowBounds);
+		HashMap<String, String> map = new HashMap<>();
+		map.put("keyword", keyword);
+		map.put("no", no);
+		
+		return (ArrayList) sqlSession.selectList("promotionMapper.selectPromoList", map, rowBounds);
 	}
 
 }

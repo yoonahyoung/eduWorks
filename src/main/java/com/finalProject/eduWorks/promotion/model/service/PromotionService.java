@@ -11,8 +11,8 @@ import com.finalProject.eduWorks.promotion.model.vo.Promotion;
 public interface PromotionService {
 	
 	// 리스트 페이지 조회 서비스 (페이징)
-	int selectListCount();
-	ArrayList<Promotion> selectPromoList(PageInfo pi);
+	int selectListCount(String keyword, String no);
+	ArrayList<Promotion> selectPromoList(PageInfo pi, String keyword, String no);
 	
 	// 작성 서비스
 	int insertPromo(Promotion p);

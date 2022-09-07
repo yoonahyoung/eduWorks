@@ -24,7 +24,7 @@
 	            <hr class="hr_line_top">
 	
 	
-	            <form action="" method="post">
+	            <form action="insert.pr" method="post">
 	                <div class="su_content_body">
 	
 	                    <table id="eventForm">
@@ -41,10 +41,10 @@
 	                            <td><span>&nbsp;종류</span></td>
 	                            <td>
 	                                <select style="margin-left: 20px;" name="promocateNo" id="promocateNo">
-	                                    <option value="" selected>배너</option>
-	                                    <option value="">블로그</option>
-	                                    <option value="">포스터</option>
-	                                    <option value="">SNS</option>
+	                                    <option value="1" selected>배너</option>
+	                                    <option value="2">블로그</option>
+	                                    <option value="3">포스터</option>
+	                                    <option value="4">SNS</option>
 	                                </select>
 	                            </td>
 	                        </tr>
@@ -52,7 +52,7 @@
 	                        <tr>
 	                            <td></td>
 	                            <td><span> 파일 첨부</span></td>
-	                            <td><input type="file" id="promoFile" style="margin-left: 20px;"></td>
+	                            <td><input type="file" id="promoFile" name="upfile" style="margin-left: 20px;"></td>
 	                        </tr>
 	
 	                    </table>
@@ -66,7 +66,7 @@
 	                    <br>
 	                    <!-- 서머노트로 내용 작성 -->
 	                    <div class="summerArea">
-	                        <textarea id="summernote" name="editordata"></textarea>
+	                        <textarea id="summernote" name="promoContent"></textarea>
 	                    </div>
 	
 	                    <script>
@@ -138,10 +138,10 @@
 	                        $(document).ready(function(){
 	                            $("#submitBtn").click(function(){
 	                                // 필수사항의 value가 비어있으면 모달창
-	                                if( !(!$("#promoTitle").val() || !$("#summernote").val()) ){
+	                                if( !( !$("#promoTitle").val() || !$("#summernote").val() ) ){
 	                                    $("#submitBtn").removeAttr("data-target");
 	                                   // $("#submitBtn").submit();
-	                                   console.log($("textarea[name=editordata").val());
+	                                   console.log($("textarea[name=promoContent").val());
 	                                }
 	                            });
 	

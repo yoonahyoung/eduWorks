@@ -1,17 +1,20 @@
 package com.finalProject.eduWorks.promotion.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.template.Pagination;
 import com.finalProject.eduWorks.promotion.model.service.PromotionService;
 import com.finalProject.eduWorks.promotion.model.vo.Promotion;
+import com.google.gson.Gson;
 
 @Controller
 public class PromotionController {
@@ -21,12 +24,12 @@ public class PromotionController {
 	
 	// 게시글 리스트
 	@RequestMapping("list.pr")
-	public ModelAndView selectPromoList(@RequestParam(value="ppage", defaultValue="1") int currentPage, ModelAndView mv) {
+	public ModelAndView selectPromoList(@RequestParam(value="ppage", defaultValue="1") int currentPage, String keyword, String cNo, ModelAndView mv) {
 		
-		int listCount = pService.selectListCount();
+		int listCount = pService.selectListCount(keyword, cNo);
 		
-		PageInfo pi = Pagination.getInfo(listCount, currentPage, 3, 5);
-		ArrayList<Promotion> list = pService.selectPromoList(pi);
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 4, 5);
+		ArrayList<Promotion> list = pService.selectPromoList(pi, keyword, cNo);
 		
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
@@ -40,5 +43,60 @@ public class PromotionController {
 	public String enrollForm() {
 		return "promotion/promotionEnrollForm";
 	}
+	
+	// 글 작성
+//	@RequestMapping("insert.pr")
+//	public String insertPromotion(Promotion p, MultipartFile upfile, Attachment at, 
+//			HttpSession session, Model model) {
+//		
+//	}
+	
+	
+	
+	
+	
+	
+	
+	// 게시글 검색 기능
+	@ResponseBody
+	@RequestMapping(value="search.pr", produces="application/json; charset=UTF-8")
+	public String ajaxSelectPromoList(@RequestParam(value="ppage", defaultValue="1") int currentPage, String keyword, String cNo) {
+		int listCount = pService.selectListCount(keyword, cNo);
+		
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 4, 5);
+		ArrayList<Promotion> list = pService.selectPromoList(pi, keyword, cNo);
+		
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("pi", pi);
+		map.put("list", list);
+		
+		return new Gson().toJson(map);
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

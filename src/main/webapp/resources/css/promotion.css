@@ -148,11 +148,18 @@ margin-left: 27px;
   font-weight: bold;
   margin: 0px 2px;
 }
-.su_page_btn:hover{
+/* .su_page_btn:hover{
   background-color: white !important;
   border: 2px solid #5e7e9b !important;
   color: black !important;
   font-weight: bold;
+} */
+.su_curPage_btn{
+  background-color: #5e7e9b !important;
+  border: 2px solid #5e7e9b !important;
+  color: white !important;
+  font-weight: bold;
+  margin: 0px 2px;
 }
 .su_prenext{
   font-weight: bold;
@@ -172,6 +179,9 @@ margin-left: 27px;
 }
 .su_btn_sm{
   width: 80px;
+}
+.page-item a{
+  cursor: pointer;
 }
 
 
