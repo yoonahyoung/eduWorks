@@ -7,8 +7,8 @@
 		<result column="mem_id" property="memId"/>
 		<result column="mem_pwd" property="memPwd"/>
 		<result column="mem_name" property="memName"/>
-		<result column="dept_code" property="deptCode"/>
-		<result column="job_code" property="jobCode"/>
+		<result column="dept_name" property="deptCode"/>
+		<result column="job_name" property="jobCode"/>
 		<result column="mem_phone" property="memPhone"/>
 		<result column="mem_businessnum" property="memBusinessnum"/>
 		<result column="mem_email" property="memEmail"/>
@@ -25,7 +25,7 @@
 	
 	<select id="teacherListCount" resultType="_int">
 		select count(*)
-		  from member
+		  from tb_member
 		 where dept_code = 'D0'
 	</select>
 	
@@ -34,8 +34,8 @@
 		     , mem_id
 		     , mem_pwd
 		     , mem_name
-		     , dept_code
-		     , job_code
+		     , dept_name
+		     , job_name
 		     , mem_phone
 		     , mem_businessnum
 		     , mem_email
@@ -48,8 +48,12 @@
 		     , mem_resign_date
 		     , mem_resign_status
 		     , mem_profile
-		 from member
-		where dept_code = 'D0' 
+		 from tb_member t
+		 join tb_department d on (d.dept_code = t.dept_code)
+         join tb_job j on (j.job_code = t.job_code)
+		where t.dept_code = 'D0' 
+		order 
+		   by mem_no desc
 	</select>
 	
 </mapper>

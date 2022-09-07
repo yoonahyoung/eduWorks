@@ -93,6 +93,11 @@
             border-top: none; 
             padding: 0 0 5px 0;
         }
+        
+        a>span{
+        	text-decoration: none;
+        	color:black;
+        }
 </style>
 </head>
 <body>
@@ -139,7 +144,7 @@
                                     <input type="checkbox" id="check2" checked> 
                                     <label for="check2" >퇴사</label>
                                     &nbsp;&nbsp;
-                                    <input type="text" style="line-height: 30px; width: 200px;" id="searchclick" placeholder="   검색">
+                                    <input type="text" style="line-height: 30px; width: 200px;" id="searchclick" placeholder="   검색" value="">
                                     <label for="searchclick"></label>
                                 </div>
                             </div>
@@ -156,50 +161,36 @@
                                         <th>입사일/퇴사일</th>
                                         <th>상태</th>
                                     </tr>
-                                    <tr>
-                                        <th>
-                                            <input type="checkbox" id="c2"> 
-                                            <label for="c2" class="tblabel"></label>
-                                        </th>
-                                        <td align="center">xxx</td>
-                                        <td align="center">xx</td>
-                                        <td align="center">xx</td>
-                                        <td align="center">2022.09.01</td>
-                                        <td align="center">재직</td>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            <input type="checkbox" id="c3"> 
-                                            <label for="c3" class="tblabel"></label>
-                                        </th>
-                                        <td align="center">xxx</td>
-                                        <td align="center">xx</td>
-                                        <td align="center">xx</td>
-                                        <td align="center">2022.09.01</td>
-                                        <td align="center">재직</td>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            <input type="checkbox" id="c4"> 
-                                            <label for="c4" class="tblabel"></label>
-                                        </th>
-                                        <td align="center">xxx</td>
-                                        <td align="center">xx</td>
-                                        <td align="center">xx</td>
-                                        <td align="center">2022.09.01</td>
-                                        <td align="center">재직</td>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            <input type="checkbox" id="c5"> 
-                                            <label for="c5" class="tblabel"></label>
-                                        </th>
-                                        <td align="center">xxx</td>
-                                        <td align="center">xx</td>
-                                        <td align="center">xx</td>
-                                        <td align="center">2022.09.01</td>
-                                        <td align="center">재직</td>
-                                    </tr>
+                                    <c:choose>
+                                    	<c:when test="${ empty list }">
+                                    		<tr>
+                                    			<th colspan="6">조회된 강사가 없습니다</th>
+                                    		</tr>
+                                    	</c:when>
+                                    	<c:otherwise>
+                                    		<c:forEach var="m" items="${ list }">
+			                                    <tr>
+			                                        <th>
+			                                            <input type="checkbox" id="c${ m.memNo }"> 
+			                                            <label for="c${ m.memNo }" class="tblabel"></label>
+			                                        </th>
+			                                        <td align="center">${ m.memName }</td>
+			                                        <td align="center">${ m.deptCode }</td>
+			                                        <td align="center">${ m.jobCode }</td>
+			                                        <td align="center">${ m.memEnrollDate }</td>
+			                                        <td align="center">
+			                                        	<c:if test="${ m.memResignStatus eq 'Y'  }"> 
+			                                        		퇴사
+			                                        	</c:if>
+			                                        	<c:if test="${ m.memResignStatus eq 'N'  }">
+			                                        		재직
+			                                        	</c:if>
+			                                        </td>
+			                                    </tr>
+		                                    </c:forEach>
+                                    	</c:otherwise>
+                                    </c:choose>
+                                    
                                 </table>
                             </div>
                             
@@ -208,21 +199,29 @@
                             </div>
                             <br>
                             <div style="margin-top: 10px; width: 1000px; height: 40px;" align="center">
-                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
-                                    &lt;
-                                </span>
+                            	<a href="">
+	                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
+	                                    &lt;
+	                                </span>
+                                </a>
+                                <a href="">
                                 <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
                                     1
                                 </span>
+                                </a>
+                                <a href="">
                                 <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
                                     2
                                 </span>
+                                </a>
                                 <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
                                     3
                                 </span>
+                                <a href="">
                                 <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
                                     &gt;
                                 </span>
+                                </a>
                             </div>
                         </div>
                         

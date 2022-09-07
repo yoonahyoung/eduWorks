@@ -23,7 +23,7 @@ public class PersonnelController {
 	public String selectTeacherList(@RequestParam(value="p",defaultValue = "1")int currentPage, Model model) {
 		
 		int listCount = pService.teacherListCount();
-		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 3);
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 5, 10);
 		ArrayList<Member> list = pService.teacherList(pi);
 		model.addAttribute("list", list);
 		model.addAttribute("pi", pi);

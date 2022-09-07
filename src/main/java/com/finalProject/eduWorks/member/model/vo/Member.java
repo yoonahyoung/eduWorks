@@ -12,22 +12,22 @@ import lombok.ToString;
 @Getter
 @ToString
 public class Member {
-	String memNo;
-	String memId;
-	String memPwd;
-	String memName;
-	String deptCode;
-	String jobCode;
-	String memPhone;
-	String memBusinessnum;
-	String memEmail;
-	String memBirth;
-	int memPostalCode;
-	String memPostalAd;
-	String memPostalDetail;
-	String memPostalRefer;
-	String memEnrollDate;
-	String memResignDate;
-	String memResignStatus;
-	String memProfile;
+	private String memNo;
+	private String memId;
+	private String memPwd;
+	private String memName;
+	private String deptCode;
+	private String jobCode;
+	private String memPhone;
+	private String memBusinessnum;
+	private String memEmail;
+	private String memBirth;
+	private int memPostalCode;
+	private String memPostalAd;
+	private String memPostalDetail;
+	private String memPostalRefer;
+	private String memEnrollDate;
+	private String memResignDate;
+	private String memResignStatus;
+	private String memProfile;
 }
