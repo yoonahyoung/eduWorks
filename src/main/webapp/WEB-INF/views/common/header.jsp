@@ -192,7 +192,7 @@
                         <h6 class="collapse-header">주소록</h6>
                         <a class="collapse-item" href="">전사 주소록</a>
                         <a class="collapse-item" href="">개인 주소록</a>
-                        <a class="collapse-item" href="">학생 주소록</a>
+                        <a class="collapse-item" href="list.st">학생 주소록</a>
                     </div>
                 </div>
             </li>

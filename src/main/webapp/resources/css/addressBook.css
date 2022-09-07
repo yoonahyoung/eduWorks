@@ -1,0 +1,237 @@
+/* ========== 메뉴바 전체(공통) ========== */
+
+.container-fluid .menu-sidebar{
+    width:15%;
+    min-height: 100vh;
+    border-right:2px solid lightgray;
+    text-decoration: none;
+    color:black;
+}
+
+.container-fluid .menu-sidebar h4{
+    padding: 1rem;
+    font-weight: 600;
+}
+
+.container-fluid .menu-sidebar h6{
+    margin-left: 27px;
+    padding: 0.3rem;
+    color:black;
+}
+
+a:hover{
+    text-decoration: none;
+}
+
+.menu-sidebar h6:hover{
+    color:slategray;
+}
+
+.menu-sidebar{
+    padding-top:20px;
+}
+
+.container-fluid{
+    display:flex;
+    padding-left:0px;
+}
+
+.insider{
+    padding-left:20px;
+    margin-bottom: 30px;
+}
+
+        /* 아영 */
+        h1{
+            margin:25px 15px 25px 15px; 
+            color:black
+        }
+        h2{
+            font-weight: 600;
+            /* margin:25px 15px 25px 15px; */
+        }
+        /* .searchbar{margin-left:20px;} */
+        b{
+            font-size:20px; 
+            color:black
+        }
+        .tableOption{
+            display:flex; 
+            justify-content: space-between;
+            margin: 30px 0px 3px 0px;
+        }
+        .board-content td, table th{
+            color:black;
+            text-align:center;
+        }
+        .btn_two_spacing{margin: 0 0 10px 20px}
+        .main_width{
+            display:flex; 
+            align-items: center;
+            width:100%;
+        }
+       .main-list tr{
+            cursor: pointer;
+        }
+        .main-list tbody>tr:hover{
+            background:rgb(236, 233, 233);
+        }
+        
+
+/* =========== 은영 ============== */
+.container-fluid .menu-sidebar h2{
+    padding-bottom:10px;
+    font-weight: 600;
+}
+
+.writeForm{
+    display:inline-block;
+    width:90%;
+    font-size:16px;
+    background-color: white;
+    border:2px solid #5e7e9b;
+}
+
+
+/* ========= 주소록 상위 제목 ========= */
+.mailListCheck{
+    display: inline-block;
+    border-color: #cbcbcb;
+    border: 1px solid #cbcbcb;
+    background-color: #ebebeb;
+    padding: 7px 7px 10px;
+    border-radius: 0;
+    margin:0px 6px 0px 10px;
+    font-size: 0;
+}
+
+.reply-btn{
+    width:100px;
+    height:33px;
+    background-color:slategray; 
+    color:white; 
+    border:none;
+}
+
+.sub-btn{
+    width:100px;
+    height:33px;
+    border:none;
+    background-color:white;
+}
+
+.sub-btn:hover{
+    background-color:rgba(0, 0, 0, 0.1);
+}
+
+/* ======== 개인 주소록 수정 ======== */
+#plus-tag{
+    margin-left: 27px;
+    color:gray;
+    cursor:pointer;
+}
+
+
+.address-title{
+    display:flex;
+}
+
+.address-title input[type=text]{
+    width:130px;
+}
+
+.tag-delete{
+    padding-top: 6px;
+    margin-left:70px;
+}
+
+.tag-modify, .tag-modify:hover{
+    color: lightgray;
+    margin-left: 110px;
+}
+
+.insertAddBook, .updateAddBook{
+    margin-bottom: 10px;
+    display:none;
+}
+
+.insertAddress, .updateAddress{
+    display:flex;
+}
+
+.insertAddress span, .updateAddress span{
+    width: 70%;
+}
+
+.insertAddress input[type=text], .updateAddress input[type=text], #select-addressBook{
+    width:90%;
+    height: 25px;
+}
+
+.update-addBtn span, .update-addBtn a, .update-addBtn a:hover{
+    color:black;
+    cursor: pointer;
+    margin-right:10px;
+}
+
+/* ========= 주소록 검색 ========== */
+
+.address-search{
+    cursor: pointer;
+    margin-left:5px;
+}
+
+.filterHead{
+    /* border:1px solid black; */
+    height:40px;
+}
+
+.searchbar input[type=text]{
+    border: 1px solid gray;
+    border-radius: 6px;
+}
+
+/* ========= 주소록 목록 ========== */
+
+.main-content{
+    width:85%;
+    color:black;
+    margin-left: 20px;
+}
+
+.second-title { 
+    padding-top:20px;
+    font-weight:bold;
+}
+
+.second-title>div{ margin-bottom: 10px; font-size:30px;}
+
+.main-list{ height:70%;}
+
+/* ========= 주소록 추가 모달 ========== */
+
+.address-table{
+    width:100%;
+    margin:0px 20px;
+}
+
+.address-table th{text-align: left;}
+
+.insertAddress tr{
+    height:60px;
+}
+
+.address-table input, .address-table select{
+    width:80%;
+}
+
+.addBtn{
+    font-size:15px;
+    width:60px;
+    height:35px;
+    margin-left:3px;
+    background-color: white;
+    border:2px solid #5e7e9b;
+    border-radius: 5px;
+}
+
