@@ -27,11 +27,11 @@
                         <div class="insider">
                             <h2>메일</h2>
                             <div>
-                                <button type="button" class="writeForm key_btn-lg">메일 작성</button>
-                                <button type="button" class="writeForm key_btn-lg">나에게 작성</button>
+                                <button type="button" class="writeForm key_btn-lg" onclick="location.href='writeMailForm.ma'">메일 작성</button>
+                                <button type="button" class="writeForm key_btn-lg" onclick="">나에게 작성</button>
                             </div>
                         </div>
-
+                        
                         <div class="insider">
                             <h4>태그</h4>
                              <!-- 태그 추가시 생성 -->
@@ -122,10 +122,14 @@
                     </script>
 
                     <!-- CONTENT영역 여기 작성해 주세요!! -->
-                    <div class="main-content">
+                    
+               
+              <div class="main-content">
+                 <form method="post" action="insert.mail">
+               
                         <div class="second-title">
                             <div style="font-weight: bold;">메일 작성</div>
-                            <button type="button" class="reply-btn"><i class="fas fa-location-arrow"></i>&nbsp;&nbsp;전송</button>
+                            <button type="submit" class="reply-btn"><i class="fas fa-location-arrow"></i>&nbsp;&nbsp;전송</button>
                             <button type="button" class="sub-btn" onclick="preView();"><i class="fas fa-desktop"></i>&nbsp;&nbsp;미리보기</button>
                             <button type="button" class="sub-btn"><i class="far fa-save"></i>&nbsp;&nbsp;임시저장</button>
                             <button type="button" class="sub-btn"><i class="fas fa-undo"></i>&nbsp;&nbsp;취소</button>
@@ -216,7 +220,6 @@
 
                         <div class="send-form" id="mailForm">
 
-                            <form method="post" action="insert.mail">
                             
                                 <table>
 
@@ -256,7 +259,6 @@
                                     <textarea id="summernote" name="contents"></textarea>
                                 </div>
 
-                            </form>
                         </div>
                         
                         <script>
@@ -333,9 +335,11 @@
                             $drop.classList.remove("active");
                             }
                           </script>
+                      </form>
                     </div>
 
                 </div>
+                
 
 	<jsp:include page="../common/footer.jsp" />
 	
