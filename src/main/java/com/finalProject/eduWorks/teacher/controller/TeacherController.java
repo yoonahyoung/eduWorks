@@ -41,4 +41,11 @@ public class TeacherController {
 		mv.setViewName("teacher/bookDetailView");
 		return mv;
 	}
+	
+	// (강사) 교재 수정
+	@RequestMapping("bookUpdate.bk")
+	public ModelAndView bookUpdateForm(ModelAndView mv) {
+		mv.setViewName("teacher/bookUpdate");
+		return mv;
+	}
 }

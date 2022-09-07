@@ -37,7 +37,7 @@
 				   <p class="crossK">x</p>
 				   <figure></figure>
 				   <ul class="dropdownK">
-				     <li><a onclick="updateForm('update.bk');">교재 수정</a></li>
+				     <li><a onclick="updateForm('bookUpdate.bk');">교재 수정</a></li>
 				<hr>
 				<li><a onclick="deleteForm('delete.bk')">교재 삭제</a></li>
 				    </ul>
@@ -102,7 +102,7 @@
 			      
 			</div>
 			<div class="btn_two_spacing">
-			  <button type="submit" style="float:right; padding-right: 10%;">목록가기</button>
+			  <button type="submit" style="float:right; padding-right: 10%;" onclick="history.back();">목록가기</button>
 			</div>
 		</div>  
 	
