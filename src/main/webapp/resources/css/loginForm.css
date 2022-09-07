@@ -1,0 +1,54 @@
+@charset "UTF-8";
+ body{
+        margin:0;
+        padding: 0;  
+        box-sizing: border-box;
+        background-color: slategray;
+    }
+    .outer{
+        width:100vw;
+        height:100vh;  
+        position:relative; 
+    }
+    .wrap h1{
+        margin:0;
+        font-size: 40px;
+    }
+    .loginForm{
+        border:3px solid #5e7e9b;
+        width:470px;
+        height:145px;
+        padding-top: 40px;  
+        background-color:whitesmoke;
+        border-radius: 10px;
+        margin:auto
+        
+    }
+    .loginForm input{
+        width:340px;
+        margin-bottom: 8px;
+        height:30px;
+        border-radius: 5px;
+        border:1px solid #5e7e9b;
+        font-size: 16px;
+
+    }
+    .wrap{
+        width:500px;
+        text-align:center;
+        margin: auto;
+        padding-top: 300px;
+        
+    }
+    button{
+        border: 1px solid #5e7e9b;
+        border-radius: 5px ;
+        width: 80px;
+        height:30px;
+        font-size: 15px;
+        color:#3f5468;
+        margin-top: 10px;
+    }
+    button:hover{
+        background-color: white;
+    }
