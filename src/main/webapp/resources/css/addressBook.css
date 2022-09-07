@@ -209,7 +209,7 @@ a:hover{
 .main-content{
     width:100%;
     color:black;
-    margin-left: 20px;
+	margin: 0px 20px;
 }
 
 .main-content_indiv{
@@ -231,7 +231,7 @@ a:hover{
 
 .second-title>div{ margin-bottom: 10px; font-size:30px;}
 
-.main-list{ height:650px;}
+.main-list{ height:550px;}
 
 /* ========= 주소록 추가 모달 ========== */
 

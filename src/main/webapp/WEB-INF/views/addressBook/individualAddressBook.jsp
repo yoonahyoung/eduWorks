@@ -29,12 +29,7 @@
                         </div>
 
                         <div class="insider">
-                            <h4>공용 주소록</h4>
-                            <a href=""><h6>전사 주소록</h6></a>
-                        </div>
-
-                        <div class="insider">
-                            <h4>개인 주소록</h4>
+                            <h4>주소록 목록</h4>
                             <a href=""><h6>개인 주소록</h6></a>
 
                             <!--반복문 시작 -->
@@ -124,11 +119,6 @@
                             }
 
                         </script>
-                        
-                        <div class="insider">
-                            <h4>학생 주소록</h4>
-                            <a href=""><h6>JAVA의 기초</h6></a>
-                        </div>
 
                     </nav>
                     <!-- 게시판 영역 -->
@@ -174,7 +164,6 @@
                                 <thead>
                                     <tr class="table_thead_border">
                                         <th width="3%"><input type="checkbox"></th>
-                                        <th width="5%">번호</th>
                                         <th width="10%">이름</th>
                                         <th width="10%">부서명</th>
                                         <th width="10%">직급명</th>
@@ -188,7 +177,6 @@
                                     <!-- 반복문 시작 -->
                                     <tr>
                                         <td><input type="checkbox"></td>
-                                        <td>1</td>
                                         <td data-toggle="modal" data-target="#update-Address">홍길동</td>
                                         <td>마케팅팀</td>
                                         <td>사원</td>
@@ -199,7 +187,6 @@
                                     <!-- 반복문 끝 -->
                                     <tr>
                                         <td><input type="checkbox"></td>
-                                        <td>2</td>
                                         <td data-toggle="modal" data-target="#update-Address">홍길동</td>
                                         <td>마케팅팀</td>
                                         <td>사원</td>
