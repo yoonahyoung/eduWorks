@@ -6,6 +6,7 @@
     border-right:2px solid lightgray;
     text-decoration: none;
     color:black;
+    background: white;
 }
 
 .container-fluid .menu-sidebar h4{
@@ -82,6 +83,9 @@ a:hover{
 .container-fluid .menu-sidebar h2{
     padding-bottom:10px;
     font-weight: 600;
+    	background-color:white;
+    padding-right:20px;
+    color:black;
 }
 
 .writeForm{
@@ -90,6 +94,15 @@ a:hover{
     font-size:16px;
     background-color: white;
     border:2px solid #5e7e9b;
+}
+
+.container-fluid{
+	background-color:white;
+    padding-right:20px;
+}
+
+.insider h4{
+	color: black;
 }
 
 
@@ -194,19 +207,31 @@ a:hover{
 /* ========= 주소록 목록 ========== */
 
 .main-content{
+    width:100%;
+    color:black;
+    margin-left: 20px;
+}
+
+.main-content_indiv{
     width:85%;
     color:black;
     margin-left: 20px;
 }
 
-.second-title { 
+.second-title h2 { 
     padding-top:20px;
     font-weight:bold;
+    color:black;
+}
+
+.table>tbody>tr{
+	cursor:pointer;
+	
 }
 
 .second-title>div{ margin-bottom: 10px; font-size:30px;}
 
-.main-list{ height:70%;}
+.main-list{ height:650px;}
 
 /* ========= 주소록 추가 모달 ========== */
 

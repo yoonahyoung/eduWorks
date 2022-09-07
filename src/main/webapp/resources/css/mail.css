@@ -36,6 +36,7 @@ a:hover{
 .container-fluid{
     display:flex;
     padding-left:0px;
+    background-color: white;
 }
 
 .insider{
