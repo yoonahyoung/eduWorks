@@ -223,8 +223,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseseven"
-                    aria-expanded="true" aria-controls="collapseUtilities">
+                <a class="nav-link collapsed" href="#">
                     <i class="fa-solid fa-building-circle-check"></i>
                     <span>시설예약</span>
                 </a>
