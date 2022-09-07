@@ -630,6 +630,15 @@
 	    console.log(arg.dateStr); // 날짜 출력
 	    location.href="enrollForm.ca?day=" + arg.dateStr;
 	},
+	
+	// 이벤트 클릭시 일정 상세 조회 페이지로 이동
+	eventClick:function(e){
+		// location.href = "detail.ca?no=일정 번호"
+		//console.log(e.event.title);
+		
+		
+	},
+	
 	header: {
 	    left: 'prev,next today',
 	    center: 'title',

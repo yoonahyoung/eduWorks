@@ -379,7 +379,7 @@
 	                    
 	                    <br><br>
 	
-	                    <div class="su_btn_two_center" style="width: 80%;">
+	                    <div class="su_btn_two_center" style="width: 66%;">
 	                        <button type="button" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">등록</button>
 	                        <button type="button" class="btn su_btn_two su_btn_border">취소</button>
 	                    </div>
