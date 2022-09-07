@@ -190,8 +190,8 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">주소록</h6>
-                        <a class="collapse-item" href="">전사 주소록</a>
-                        <a class="collapse-item" href="">개인 주소록</a>
+                        <a class="collapse-item" href="publicAddress.ad">전사 주소록</a>
+                        <a class="collapse-item" href="individualAddress.ad">개인 주소록</a>
                         <a class="collapse-item" href="list.st">학생 주소록</a>
                     </div>
                 </div>
@@ -228,6 +228,22 @@
                     <span>시설예약</span>
                 </a>
                 
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseten"
+                    aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-regular fa-chalkboard-user"></i>
+                    <span>강의 관리</span>
+                </a>
+                <div id="collapseten" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">강의 관리</h6>
+                        <a class="collapse-item" href="appAllList.cl">강의 개설신청</a>
+                        <a class="collapse-item" href="bookList.bk">교재관리</a>
+                    </div>
+                </div>
             </li>
             
             <!-- Divider -->
