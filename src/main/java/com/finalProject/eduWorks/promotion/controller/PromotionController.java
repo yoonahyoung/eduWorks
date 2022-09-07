@@ -64,6 +64,8 @@ public class PromotionController {
 		int listCount = pService.selectListCount(keyword, cNo);
 		
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 4, 5);
+		
+		
 		ArrayList<Promotion> list = pService.selectPromoList(pi, keyword, cNo);
 		
 		HashMap<String, Object> map = new HashMap<>();

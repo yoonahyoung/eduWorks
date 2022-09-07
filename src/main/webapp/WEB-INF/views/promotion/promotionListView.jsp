@@ -38,8 +38,8 @@
 	            <div class="su_content_body">
 	
 	                <div class="selectOption su_btn_area" align="right">
-	                    <select style="width: 150px;">
-	                        <option value="0">전체</option>
+	                    <select style="width: 150px;" id="selectNo" onchange="searchList(1);">
+	                        <option value="">전체</option>
 	                        <option value="1">배너</option>
 	                        <option value="2">블로그</option>
 	                        <option value="3">포스터</option>
@@ -129,19 +129,22 @@
 	                            	location.href = "detail.pr?no=" + $(this).parent().children(".no").text();
 	                            });
 	                            
-	                            // 
+	                            // 게시글 카테고리별 분류
+	                           
+	                            
+	                            
 	                        })
 	                        
-	                        // 제목, 작성자 키워드 검색 기능 ajax=======================================================
+	                        // 제목, 작성자 키워드 검색 / 카테고리 분류 기능 ajax=======================================================
                             function searchList(page){
                             	$.ajax({
                             		url:"search.pr",
                             		data:{
+                            				cNo:$("#selectNo").val(),
                             				keyword:$("#promoKeyword").val(),
                             				ppage: page
                             			},
                             		success:function(map){
-                            			
                             			const pi = map.pi;
                             			const list = map.list;
                             			

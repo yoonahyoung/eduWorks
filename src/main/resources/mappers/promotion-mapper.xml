@@ -8,38 +8,88 @@
 		<result column="promo_writer" property="promoWriter" />
 		<result column="promo_content" property="promoContent" />
 		<result column="promo_create_date" property="promoCreateDate" />
+		<result column="promo_status" property="promoStatus" />
 	</resultMap>
 	
 	<select id="selectListCount" resultType="_int">
 		select count(*)
-		  from tb_promo
+		  from 
+			    (		  
+				 select promo_no
+					 , promo_title
+					 , promo_cate_no
+					 , promo_writer
+					 , to_char(promo_create_date, 'YYYY-MM-DD') as "promo_create_date"
+					 , promo_status
+				   from tb_promo
+				  where 1 = 1
+					 <if test="no !=  null and no neq ''">
+					 	and promo_cate_no = #{no}
+					 </if>
+					 <if test="keyword != null and keyword neq ''">
+					    and promo_writer like '%' || #{keyword} || '%'
+					 </if>
+				 union
+				 select promo_no
+					 , promo_title
+					 , promo_cate_no
+					 , promo_writer
+					 , to_char(promo_create_date, 'YYYY-MM-DD') as "promo_create_date"
+					 , promo_status
+				   from tb_promo
+				  where 1 = 1
+					 <if test="no !=  null and no neq ''">
+					 	and promo_cate_no = #{no}
+					 </if>
+					 <if test="keyword != null and keyword neq ''">
+					    and promo_title like '%' || #{keyword} || '%'
+					 </if>
+				)
 		 where promo_status = 'Y'
-		 <if test="no != null">
-		 	and promo_cate_no = #{no}
-		 </if>
-		 <if test="keyword != null">
-		 	and promo_title like '%' || #{keyword} || '%'
-		     or promo_writer like '%' || #{keyword} || '%'
-		 </if>
 	</select>
 	
 	<select id="selectPromoList" resultMap="promotionResult">
-		select promo_no
-			 , promo_title
-			 , promo_cate_no
-			 , promo_writer
-			 , to_char(promo_create_date, 'YYYY-MM-DD') as "promo_create_date"
-		  from tb_promo
+		select *
+		  from (
+				select promo_no
+					 , promo_title
+					 , promo_cate_no
+					 , promo_writer
+					 , to_char(promo_create_date, 'YYYY-MM-DD') as "promo_create_date"
+					 , promo_status
+				  from tb_promo
+				 where 1 = 1
+				   <if test="no != null and no neq ''">
+				 		and promo_cate_no = #{no}
+				   </if>
+				   <if test="keyword != null and keyword neq ''">
+				      and promo_writer like '%' || #{keyword} || '%'
+				   </if>
+				 order
+				    by promo_no desc
+				 )
 		 where promo_status = 'Y'
-		   <if test="no != null">
-		 		and promo_cate_no = #{no}
-		   </if>
-		   <if test="keyword != null">
-		      and promo_title like '%' || #{keyword} || '%'
-		       or promo_writer like '%' || #{keyword} || '%'
-		   </if>
-		 order
-		    by promo_no desc
+		 union
+		 select *
+		  from (
+				select promo_no
+					 , promo_title
+					 , promo_cate_no
+					 , promo_writer
+					 , to_char(promo_create_date, 'YYYY-MM-DD') as "promo_create_date"
+					 , promo_status
+				  from tb_promo
+				 where 1 = 1
+				   <if test="no != null and no neq ''">
+				 		and promo_cate_no = #{no}
+				   </if>
+				   <if test="keyword != null and keyword neq ''">
+				     and promo_title like '%' || #{keyword} || '%'
+				   </if>
+				 order
+				    by promo_no desc
+				 )
+		 where promo_status = 'Y'
 	</select>
 	
 	<insert id="insertPromo">
