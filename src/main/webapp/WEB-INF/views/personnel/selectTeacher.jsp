@@ -133,21 +133,39 @@
                             <h3 class="su_sub_menu_name">강사조회</h3>
                             <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b;">
                             <br>
-                            <div style="width: 1000px; height: 60px;" class="checks" align="right" >
-                                <div style="float: right;  height: 70px;">
-                                    <button id="searchbtn" style="line-height: 0px; width: 70px;" class="btn su_btn_two su_btn_all">검색</button>
-                                 </div>
-                                <div style="height: 70px; float: right; padding-top: 3px;">
-                                    <input type="checkbox" id="check1" checked> 
-                                    <label for="check1" >재직</label>
-                                    &nbsp;
-                                    <input type="checkbox" id="check2" checked> 
-                                    <label for="check2" >퇴사</label>
-                                    &nbsp;&nbsp;
-                                    <input type="text" style="line-height: 30px; width: 200px;" id="searchclick" placeholder="   검색" value="">
-                                    <label for="searchclick"></label>
-                                </div>
-                            </div>
+                            <form action="search.te">
+	                            <div style="width: 1000px; height: 60px;" class="checks" align="right" >
+	                                <div style="float: right;  height: 70px;">
+	                                    <button type="submit" id="searchbtn" style="line-height: 0px; width: 70px;" class="btn su_btn_two su_btn_all">검색</button>
+	                                 </div>
+	                                <div style="height: 70px; float: right; padding-top: 3px;">
+	                                    <input type="checkbox" id="check1" name="check1" value=true checked> 
+	                                    <label for="check1" >재직</label>
+	                                    &nbsp;
+	                                    <input type="checkbox" id="check2" name="check2" value=true checked> 
+	                                    <label for="check2" >퇴사</label>
+	                                    &nbsp;&nbsp;
+	                                    
+		                                    <input type="text" style="line-height: 30px; text-align:center;	 width: 200px;" name="keyword" id="searchclick" placeholder="   이름검색" value="${ keyword }">
+		                                    <label for="searchclick"></label>
+	                                    
+	                                </div>
+	                            </div>
+                            </form>
+                            
+               				<c:if test="${ not empty check1 and not empty check2 }">
+               					<c:if test="${ check1 eq false }">
+               						<script>
+               							$('#check1').prop('checked',false)
+               						</script>
+               					</c:if>
+               					<c:if test="${ check2 eq false }">
+               						<script>
+               							$('#check2').prop('checked',false)
+               						</script>
+               					</c:if>
+               				</c:if>
+                            
                             <div style="clear: both; width: 650px; margin-left: 150px;" class="checks">
                                 <table width="100%" style="border-collapse: separate; border-spacing: 0 10px; ">
                                     <tr>
@@ -171,10 +189,10 @@
                                     		<c:forEach var="m" items="${ list }">
 			                                    <tr>
 			                                        <th>
-			                                            <input type="checkbox" id="c${ m.memNo }"> 
+			                                            <input type="checkbox" id="c${ m.memNo }" class="userNo" value="${ m.memNo }"> 
 			                                            <label for="c${ m.memNo }" class="tblabel"></label>
 			                                        </th>
-			                                        <td align="center">${ m.memName }</td>
+			                                        <td align="center" onclick=teacherDe(${m.memNo})>${ m.memName }</td>
 			                                        <td align="center">${ m.deptCode }</td>
 			                                        <td align="center">${ m.jobCode }</td>
 			                                        <td align="center">${ m.memEnrollDate }</td>
@@ -194,34 +212,124 @@
                                 </table>
                             </div>
                             
+                            
                             <div style="width: 650px; margin-left: 140px;">
                                 <button id="outbtn" style="line-height: 0px; width: 90px;" class="btn su_btn_two su_btn_all">퇴직처리</button>
                             </div>
+                            
+                            <script>
+                            	
+                            	function teacherDe(i){
+                            		location.href="detail.te?no="+i
+                            	}
+                            	
+                            	$('#c1').on('click',function(){
+                            		if($('#c1').prop('checked')){
+                            			$('.userNo').prop('checked',true)
+                            		}else{
+                            			$('.userNo').prop('checked',false)
+                            		}
+                            	})
+                            	
+                            	$('#outbtn').on('click',function(){
+                            		let userNo =[]
+                            		let li = $('input[class="userNo"]:checked')
+                            		$(li).each(function(){
+                                		userNo.push($(this).val())
+                                	})
+                                	console.log(userNo)
+                                	if(userNo.length==0){
+                            			alert('선택강사없음')
+                            		}
+                                	else{
+                                		$.ajax({
+                                			url:'out.te',
+                                			method:'POST',
+                                			data:{'userNo':userNo},
+                                			success:function(result){
+                                				if(result=="success"){
+                                					alert('퇴사처리성공')
+                                					location.href=location.href
+                                				}else{
+                                					alert('퇴사처리실패')
+                                					console.log('실패')
+                                				}
+                                			},error:function(){
+                                				alert('퇴사처리실패')
+                                				console.log('애러')
+                                			}
+                                		})
+                                	}
+                            		
+                            
+                            	})
+                            	
+                            	
+                            </script>
+                            
+                            
                             <br>
                             <div style="margin-top: 10px; width: 1000px; height: 40px;" align="center">
-                            	<a href="">
-	                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
-	                                    &lt;
-	                                </span>
-                                </a>
-                                <a href="">
-                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
-                                    1
-                                </span>
-                                </a>
-                                <a href="">
-                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
-                                    2
-                                </span>
-                                </a>
-                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
-                                    3
-                                </span>
-                                <a href="">
-                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
-                                    &gt;
-                                </span>
-                                </a>
+                            <c:if test="${ pi.currentPage ne 1 }">
+	                            <c:choose>
+	                            	<c:when test="${ empty searchck }">
+	                            		<a href="list.te?p=${ pi.currentPage-1 }">
+			                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
+			                                    &lt;
+			                                </span>
+		                                </a>
+	                            	</c:when>
+	                            	<c:otherwise>
+	                            		<a href="search.te?p=${ pi.currentpage-1 }&check1=${ check1 }&chek2=${ check2 }&keyword=${ keyword }">
+			                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
+			                                    &lt;
+			                                </span>
+                                		</a>
+	                            	</c:otherwise>
+	                            </c:choose>
+                            </c:if>
+                            
+                            <c:choose>
+	                            <c:when test="${ empty searchck }">
+		                            <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+				                    	<a href="list.te?p=${ p }">
+			                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
+			                                    ${ p }
+			                                </span>
+		                                </a>
+				                  	</c:forEach>	
+								</c:when>
+								<c:otherwise>
+									<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+				                    	<a href="search.te?p=${ p }&check1=${ check1 }&chek2=${ check2 }&keyword=${ keyword }">
+			                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
+			                                    ${ p }
+			                                </span>
+		                                </a>
+				                  	</c:forEach>	
+								</c:otherwise>
+				         	</c:choose>
+				         	
+				         	<c:if test="${ pi.currentPage ne pi.maxPage }">
+	                            <c:choose>
+	                            	<c:when test="${ empty searchck }">
+	                            		<a href="list.te?p=${ pi.currentPage+1 }">
+			                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
+			                                    &gt;
+			                                </span>
+		                                </a>
+	                            	</c:when>
+	                            	<c:otherwise>
+	                            		<a href="search.te?p=${ pi.currentpage+1 }&check1=${ check1 }&chek2=${ check2 }&keyword=${ keyword }">
+			                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
+			                                    &gt;
+			                                </span>
+                                		</a>
+	                            	</c:otherwise>
+	                            </c:choose>
+                            </c:if>
+                            	
+                                
                             </div>
                         </div>
                         

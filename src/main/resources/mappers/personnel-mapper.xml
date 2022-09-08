@@ -23,6 +23,16 @@
 		<result column="mem_profile" property="memProfile"/>
 	</resultMap>
 	
+	<resultMap type="Department" id="resultDept">
+		<result column="dept_code" property="deptCode"/>
+		<result column="dept_name" property="deptName"/>
+	</resultMap>
+	
+	<resultMap type="Job" id="resultJob">
+		<result column="job_code" property="jobCode"/>
+		<result column="job_name" property="jobName"/>
+	</resultMap>
+	
 	<select id="teacherListCount" resultType="_int">
 		select count(*)
 		  from tb_member
@@ -54,6 +64,109 @@
 		where t.dept_code = 'D0' 
 		order 
 		   by mem_no desc
+	</select>
+	
+	<select id="searchTeacherListCount" resultType="_int">
+		select count(*)
+		  from tb_member
+		 where dept_code = 'D0'
+		 <choose>
+		 	<when test="check1==true and check2==false">
+		 		and mem_resign_status = 'N'
+		 		and mem_name like '%'||#{keyword}||'%'
+		 	</when>
+		 	<when test="check1==false and check2==true">
+		 		and mem_resign_status = 'Y'
+		 		and mem_name like '%'||#{keyword}||'%'
+		 	</when>
+		 	<otherwise>
+		 		and mem_name like '%'||#{keyword}||'%'
+		 	</otherwise>
+		 </choose>
+	</select>
+	
+	<select id="SearchTeacherList" resultMap="resultTeacherList">
+		select mem_no
+		     , mem_id
+		     , mem_pwd
+		     , mem_name
+		     , dept_name
+		     , job_name
+		     , mem_phone
+		     , mem_businessnum
+		     , mem_email
+		     , mem_birth
+		     , mem_postal_code
+		     , mem_postal_ad
+		     , mem_postal_detail
+		     , mem_postal_refer
+		     , mem_enroll_date
+		     , mem_resign_date
+		     , mem_resign_status
+		     , mem_profile
+		 from tb_member t
+		 join tb_department d on (d.dept_code = t.dept_code)
+         join tb_job j on (j.job_code = t.job_code)
+		where t.dept_code = 'D0' 
+		<choose>
+		 	<when test="check1==true and check2==false">
+		 		and mem_resign_status = 'N'
+		 		and mem_name like '%'||#{keyword}||'%'
+		 	</when>
+		 	<when test="check1==false and check2==true">
+		 		and mem_resign_status = 'Y'
+		 		and mem_name like '%'||#{keyword}||'%'
+		 	</when>
+		 	<otherwise>
+		 		and mem_name like '%'||#{keyword}||'%'
+		 	</otherwise>
+		 </choose>
+		order 
+		   by mem_no desc
+	</select>
+	
+	<update id="resignTeacher">
+		update tb_member
+		   set mem_resign_status = 'Y',
+		       mem_resign_date = sysdate
+		 where mem_no = #{memNo}
+	</update>
+	
+	<select id="detailTeacherInfo" resultMap="resultTeacherList">
+		select mem_no
+		     , mem_id
+		     , mem_pwd
+		     , mem_name
+		     , dept_name
+		     , job_name
+		     , mem_phone
+		     , mem_businessnum
+		     , mem_email
+		     , mem_birth
+		     , mem_postal_code
+		     , mem_postal_ad
+		     , mem_postal_detail
+		     , mem_postal_refer
+		     , mem_enroll_date
+		     , mem_resign_date
+		     , mem_resign_status
+		     , mem_profile
+		 from tb_member t
+		 join tb_department d on (d.dept_code = t.dept_code)
+         join tb_job j on (j.job_code = t.job_code)
+		where t.mem_no = #{memNo}
+	</select>
+	
+	<select id="selectDept" resultMap="resultDept">
+		select dept_code
+		     , dept_name
+		  from tb_department
+	</select>
+	
+	<select id="selectJob" resultMap="resultJob">
+		select job_code
+		     , job_name
+		  from tb_job
 	</select>
 	
 </mapper>
