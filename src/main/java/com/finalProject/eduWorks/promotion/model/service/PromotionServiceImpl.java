@@ -37,6 +37,11 @@ public class PromotionServiceImpl implements PromotionService {
 	}
 	
 	@Override
+	public int selectLastNo() {
+		return pDao.selectLastNo(sqlSession);
+	}
+	
+	@Override
 	public int insertAt(Attachment at) {
 		return pDao.insertAt(sqlSession, at);
 	}

@@ -103,6 +103,11 @@ public class PromotionDao {
 		return sqlSession.insert("promotionMapper.insertPromo", p);
 	}
 	
+	// 게시글의 마지막 번호 가져오기
+	public int selectLastNo(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("promotionMapper.selectLastNo");
+	}
+	
 	// 게시글 첨부파일 등록
 	public int insertAt(SqlSessionTemplate sqlSession, Attachment at) {
 		return sqlSession.insert("promotionMapper.insertAt", at);

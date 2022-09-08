@@ -18,6 +18,7 @@ public interface PromotionService {
 	
 	// 작성 서비스
 	int insertPromo(Promotion p);
+	int selectLastNo();
 	int insertAt(Attachment at);
 	
 	// 상세 조회 서비스

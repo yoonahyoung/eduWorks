@@ -249,6 +249,17 @@
 		  )
 	</insert>
 	
+	<select id="selectLastNo" resultType="_int">
+		select *
+		  from (
+		  		 select promo_no
+		  		   from tb_promo
+		  		  order
+		  		     by promo_no desc
+		  		)
+		 where rownum = 1
+	</select>
+	
 	<insert id="insertAt">
 		insert
 		  into tb_attachment

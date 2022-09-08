@@ -135,20 +135,20 @@ public class PromotionController {
 			HttpSession session, Model model) {
 		
 		int result2 = 1;
+		int result1 = pService.insertPromo(p);
+		
 		// 첨부파일이 있을 경우
-		System.out.println(p);
 		if( !upfile.getOriginalFilename().equals("") ) {
 			// 새로운 파일 서버 업로드
 			String saveFilePath = FileUpload.saveFile(upfile, session, "resources/uploadFiles/promoFiles/");
 			
 			at.setAtOriginName(upfile.getOriginalFilename());
 			at.setAtChangeName(saveFilePath);
-			at.setAtRefBNo(p.getPromoNo());
+			int no = pService.selectLastNo();
+			at.setAtRefBNo(no);
 			
 			result2 = pService.insertAt(at);
 		}
-		
-		int result1 = pService.insertPromo(p);
 		
 		if(result1 * result2 > 0) {
 			session.setAttribute("alertMsg", "홍보물 작성에 성공하였습니다.");
