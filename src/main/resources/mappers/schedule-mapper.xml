@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="scheduleMapper">
+
+	<resultMap id="addressResult" type="Address">
+		<result column="add_per_no" property="addPerNo" />
+		<result column="mem_no" property="memNo" />
+		<result column="add_dept" property="addDept" />
+		<result column="add_job" property="addJob" />
+	</resultMap>
+	
+	<select id="selectAddrList" resultMap="addressResult">
+		select
+			   add_per_no
+			 , mem_no
+			 , add_name
+			 , add_dept
+			 , add_job
+		  from tb_address
+	</select>
+	
+</mapper>
