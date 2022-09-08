@@ -15,6 +15,7 @@
 		<typeAlias type="com.finalProject.eduWorks.member.model.vo.Job" alias="Job" />
 		<typeAlias type="com.finalProject.eduWorks.addressBook.model.vo.Address" alias="Address" />
 		<typeAlias type="com.finalProject.eduWorks.addressBook.model.vo.AddressOut" alias="AddressOut" />
+		<typeAlias type="com.finalProject.eduWorks.common.model.vo.Reply" alias="Reply" />
 	</typeAliases>
 	<!-- 유의사항 : 미리등록해두려면 해당 클래스가 진짜 존재해야 함 -->
 	
