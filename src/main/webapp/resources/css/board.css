@@ -12,7 +12,8 @@
 #bWrite-btn{
     background-color: white;
     border: 2px solid #5e7e9b !important;
-    color: black;
+    color: #fff;
+    background:#5e7e9b;
     height:35px;
     line-height: 20px;
     margin-bottom:5px;
@@ -89,7 +90,6 @@ tbody tr:hover{
 
 .board-tbody td{
     font-size: 17px;
-    font-weight: 500;
 }
 
 .tableOption, .filterHead{
@@ -99,6 +99,7 @@ tbody tr:hover{
 
 
 /* noticeEnrollForm, deptBoardEnrollForm, blindEnrollForm */
+
 #n-btn-border{
     background-color: white;
     border: 2px solid #5e7e9b;
@@ -106,14 +107,36 @@ tbody tr:hover{
     display: inline;
     float:right;
 }
+
 .hr_line{
 	margin-top: 25px;
 }
+
 .su_dropBox{
         color:grey;
 }
+
 .su_sub_menu_name{
 	display: inline;
+}
+
+/* noticeDetailView, deptDetailView */
+
+.su_board_title{
+	display:inline-block;
+}
+
+#n-title *{
+	display:inline-block;
+	color:black;
+	font-weight:600 !important;
+}
+
+.likeSt{
+	font-size:20px; 
+	vertical-align:middle; 
+	margin:0 8px 5px 20px; 
+	color:#5e7e9b;
 }
 
 
@@ -123,14 +146,17 @@ tbody tr:hover{
 #w-day{
 	color:grey;
 }
+
 .boardTable{
 	width:100%;
-	}
+}
+	
 #boardTitle{
     color:black;
     font-weight: 700;
     font-size: 17px;
 }
+
 .boardTable td{
     padding-left:15px;
     margin:30px 0 30px 0;
@@ -138,48 +164,60 @@ tbody tr:hover{
     border-bottom:1px solid gainsboro;
     cursor:pointer;
 }
+
 .boardTable span{
     font-size: 15px;
 }
+
 .boardTable td:hover{
     background-color: rgb(236, 233, 233);
 }
+
 .bestTable td{
     padding:5px 10px 5px 10px;
     cursor:pointer;
 }
+
 .bestTable a{
     color:black;
     text-decoration: none;
 }
+
 .bestTable{
     color:black;
     width:270px;
 }
+
 .side_side{
     display: flex;
     justify-content:space-between;
 }
+
 #likeReply span{
     margin:0 10px 0 10px;
 }
+
 #likeReply{
     float:left; 
     display:flex;
 }
+
 #likeReply i{
     text-align:center;
     font-weight: 500; 
     font-size: 17px;
 }
+
 #col-10{
 	margin-left:0.5px;
 }
+
 #col-2{
 	padding:0;
 	margin-left:-13px;
 	border-left:1px solid grey
 }
+
 .bestTable tr:hover{
 	background:none;
 }

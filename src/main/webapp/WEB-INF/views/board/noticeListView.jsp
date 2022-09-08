@@ -24,27 +24,25 @@
 	                <h2>전사 공지</h2>
 	            </div>
 	
-	            <br>
-	
+	            <br><br><br><br><br>
+	            
+	            <div style="text-align: center;">
+	                <input type="text" style="width: 300px;" id="promoKeyword" placeholder="제목/작성자 입력">
+	                <button type="button" class="su_btn_border btn-sm su_btn_search">검색</button>
+	            </div>
+				
+				<br><br>
+				
 	            <div class="tableOption">
 	                <div class="btn_two_spacing">
 	                    <button id="importantNotice">공지등록</button><i class="fas fa-flag"></i>
 	                    <button id="delNotice">삭제</button><i class="fas fa-trash"></i>
 	                </div>
-	                <div class="filterHead">
-	                    <div class="searchbar">
-	                        <b id="searchB">검색</b>　
-	                        <input type="text" placeholder="텍스트 검색" style="height:25px;">
-	                        <i class="fas fa-search fa-fw"></i>
-	                    </div>
-	                </div>
-	                <div class="board-write-btn">
-	                    <button type="button" class="btn" id="bWrite-btn" onclick="location.href='enrollForm.no';">글작성</button>
-	                </div>
+	                
 	            </div>
 	            
 	            <div class="main_width">
-	                <table class="board-content table" align="center">
+	                <table class="board-content table" align="center" id="noticeList"> 
 	                    <thead>
 	                        <tr class="table_thead_border">
 	                            <th width="2%"><input type="checkbox"></th>
@@ -56,48 +54,96 @@
 	                        </tr>
 	                    </thead>
 	                    <tbody class="board-tbody">
-	                        <!-- 값은 다 DB와 연결될 것 -->
-	                        <!-- 공지는 배경색 변경 -->
-	                        <tr style="background:rgb(250, 232, 232)">
-	                            <td><input type="checkbox"></td>
-	                            <td>5</td>
-	                            <td>필독 공지 사항입니다.</td>
-	                            <td>user01</td>
-	                            <td>2021-09-22</td>
-	                            <td>5</td>
-	
-	                        </tr>
-	                        <tr>
-	                            <td><input type="checkbox"></td>
-	                            <td>5</td>
-	                            <td>상품 품질이 별로네요. 교환신청합니다.</td>
-	                            <td>user01</td>
-	                            <td>2021-09-22</td>
-	                            <td>5</td>
-	
-	                        </tr>
+	                        <c:choose>
+	                        	<c:when test="${ empty list }">
+	                        		<tr>
+	                        			<td colspan="6">등록된 글이 없습니다.</td>
+	                        		</tr>
+	                        	</c:when>
+	                        	<c:when test="${ not empty topList }">
+	                        		<c:forEach var="tn" items="${topList}">
+				                        <tr style="background:rgb(250, 232, 232)">
+				                            <td><input type="checkbox"></td>
+				                            <td class="no">${ tn.boardNo }</td>
+				                            <td>${ tn.boardTitle }</td>
+				                            <td>${ tn.boWriter }</td>
+				                            <td>${ tn.boardEnDate }</td>
+				                            <td>${ tn.boardCount }</td>
+				                        </tr>
+				                    </c:forEach>
+	                        	</c:when>
+	                        </c:choose>
+	                        	<c:if test="${ not empty list }">
+	                        		<c:forEach var="n" items="${list}">
+	                        			<c:if test="${ n.boardTop eq 'N'}">
+					                        <tr>
+					                            <td><input type="checkbox"></td>
+					                            <td class="no">${ n.boardNo }</td>
+					                            <td>${ n.boardTitle }</td>
+					                            <td>${ n.boWriter }</td>
+					                            <td>${ n.boardEnDate }</td>
+					                            <td>${ n.boardCount }</td>
+					                        </tr>
+				                        </c:if>
+				                    </c:forEach>
+			                    </c:if>
+	                        
 	                    </tbody>
 	                </table>
+	                <script>
+			           	$(function(){
+			           		$("#noticeList>tbody>tr").click(function(){
+			           			// 선택된 tr의 자식요소 중에서 no라는 클래스를 가진 자식의 text값
+			           			location.href = "detail.no?no=" + $(this).children(".no").text(); 
+			           		})
+			           	})
+			        </script>
 	                <br><br>
 	                
-	                
+	            </div>
+	            <div class="board-write-btn" align="right">
+                    <button type="button" class="btn" id="bWrite-btn" onclick="location.href='enrollForm.no';">글작성</button>
 	            </div>
 	            <div id="n-pagingBar">
 	                <nav aria-label="Page navigation example">
-	                    <ul class="pagination justify-content-center">
-	                    <li class="page-item">
-	                        <a class="page-link" href="#" aria-label="Previous">
-	                        <span aria-hidden="true">&laquo;</span>
-	                        </a>
-	                    </li>
-	                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-	                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-	                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-	                    <li class="page-item">
-	                        <a class="page-link" href="#" aria-label="Next">
-	                        <span aria-hidden="true">&raquo;</span>
-	                        </a>
-	                    </li>
+	                    <ul class="pagination justify-content-center"> 
+	                    	<c:choose>
+	                    		<c:when test="${ pi.currentPage eq 1 }">
+	                    			<li class="page-item">
+				                        <a class="page-link disabled" aria-label="Previous">
+				                        	<span aria-hidden="true">&laquo;</span>
+				                        </a>
+			                    	</li>
+	                    		</c:when>
+	                    		<c:otherwise>
+				                    <li class="page-item">
+				                        <a class="page-link" href="list.no?cpage=${ pi.currentPage-1 }" aria-label="Previous">
+				                        	<span aria-hidden="true">&laquo;</span>
+				                        </a>
+				                    </li>
+			                    </c:otherwise>
+			            	</c:choose>
+			            	
+			            	<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+			            		<li class="page-item"><a class="page-link" href="list.no?cpage=${ p }">${ p }</a></li>
+			            	</c:forEach>
+			            	
+			            	<c:choose>
+	                    		<c:when test="${ pi.currentPage eq maxPage }">
+	                    			<li class="page-item">
+				                        <a class="page-link disabled" aria-label="Next">
+				                        	<span aria-hidden="true">&raquo;</span>
+				                        </a>
+			                    	</li>
+	                    		</c:when>
+	                    		<c:otherwise>
+				                    <li class="page-item">
+				                        <a class="page-link" href="list.no?cpage=${ pi.currentPage+1 }" aria-label="Next">
+				                        	<span aria-hidden="true">&raquo;</span>
+				                        </a>
+				                    </li>
+			                    </c:otherwise>
+			            	</c:choose>
 	                    </ul>
 	                </nav>
 	            </div>
