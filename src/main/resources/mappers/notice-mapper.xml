@@ -2,12 +2,130 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="noticeMapper">
 
+	<resultMap id="noticeResult" type="Board">
+		<result column="board_no" property="boardNo"/>
+		<result column="board_title" property="boardTitle"/>
+		<result column="board_content" property="boardContent"/>
+		<result column="board_writer" property="boardWriter"/> <!-- 사원번호 -->
+		<result column="b_writer" property="boWriter"/> <!-- 사원이름 -->
+		<result column="dept_code" property="deptCode"/>
+		<result column="job_name" property="jobName" />
+		<result column="board_count" property="boardCount"/>
+		<result column="board_category" property="boardCategory"/>
+		<result column="board_en_date" property="boardEnDate"/>
+		<result column="board_mo_date" property="boardMoDate"/>
+		<result column="board_status" property="boardStatus"/>
+		<result column="board_top" property="boardTop"/>
+	</resultMap>
+	
+	<resultMap id="replyResult" type="Reply">
+		<result column="reply_no" property="replyNo" />
+		<result column="reply_type" property="replyType" />
+		<result column="re_board_no" property="reBoardNo" />
+		<result column="reply_depth" property="replyDepth" />
+		<result column="reply_parent" property="replyParent" />
+		<result column="reply_content" property="replyContent" />
+		<result column="reply_writer" property="replyWriter" />
+		<result column="reply_dept" property="replyDept" />
+		<result column="reply_blind" property="replyBlind" />
+		<result column="reply_date" property="replyDate" />
+	</resultMap>
+
+	<!-- 게시글 페이징 처리 -->
 	<select id="selectListCount" resultType="_int">
 		select
 			   count(*)
-		  from board
+		  from tb_board
 		 where board_category = 1
 		   and board_status = 'Y'
 	</select>
+	
+	<!-- 전사공지 공지 리스트 조회 -->
+	<select id="selectTopList" resultMap="noticeResult">
+		select
+		       board_no
+		     , board_title
+		     , m.mem_name as "b_writer"
+		     , m.dept_code
+		     , to_char(board_en_date, 'YYYY-MM-DD') as "board_en_date"
+		     , board_count
+		     , board_top
+		  from tb_board b
+		  join tb_member m on(b.board_writer = m.mem_no)
+		 where board_category = 1
+		   and board_status = 'Y'
+		   and board_top = 'Y'
+	</select>
+	
+	<!-- 전사공지 리스트 조회 -->
+	<select id="selectList"	resultMap="noticeResult">
+		select
+			   board_no
+			 , board_title
+			 , m.mem_name as "b_writer"
+			 , m.dept_code
+			 , to_char(board_en_date, 'YYYY-MM-DD') as "board_en_date"
+			 , board_count
+			 , board_top
+		  from tb_board b
+		  join tb_member m on(b.board_writer = m.mem_no)
+		 where board_category = 1
+		   and board_status = 'Y'
+		 order
+		 	by 1 desc
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="increaseCount">
+		update 
+			   tb_board
+		   set board_count = board_count+1
+		 where board_no = #{board_no} 
+		   and board_status = 'Y'
+	</update>
+	
+	<!-- 전사공지 상세 조회 -->
+  	<select id="selectNotice" resultMap="noticeResult">
+  		select
+  			   board_no
+  			 , board_title
+  			 , board_content
+  			 , board_writer
+  			 , m.mem_name as "b_writer"
+  			 , board_count
+  			 , to_char(board_en_date, 'YYYY/MM/DD HH24:MI') as "board_en_date"
+  			 , j.job_name
+  		  from tb_board b
+  		  join tb_member m on(b.board_writer = m.mem_no)
+  		  join tb_job j using(job_code)
+  		 where board_no = #{boardNo}
+  		   and board_category = 1
+  		   and board_status = 'Y'
+  	</select>
+  	
+  	<!-- 게시글 상세 조회 시 댓글 조회 -->
+  	<select id="selectReplyList" resultMap="replyResult">
+  		select 
+		       reply_no
+		     , re_board_no
+		     , reply_depth
+		     , reply_parent
+		     , reply_content
+		     , reply_writer
+		     , reply_dept
+		     , to_char(reply_date, 'YY-MM-DD HH24:MI') as "reply_date"
+		  from tb_reply
+		 where reply_type = 4
+		   and re_board_no = #{boardNo}
+		 start with reply_parent = 0
+		connect by prior reply_no = reply_parent
+		order siblings by reply_no asc, reply_parent asc
+  	</select>
+  	
+  	<!-- 첨부파일 조회 -->
+  	<select id="noticeAtList">
+  	
+  	</select>
+  
   
 </mapper>
