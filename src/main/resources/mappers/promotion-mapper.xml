@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="promotionMapper">
+
 	<resultMap id="promotionResult" type="Promotion">
 		<result column="promo_no" property="promoNo" />
 		<result column="promo_title" property="promoTitle" />
 		<result column="promo_cate_no" property="promoCateNo" />
 		<result column="promo_writer" property="promoWriter" />
 		<result column="promo_content" property="promoContent" />
+		<result column="promo_count" property="promoCount" />
 		<result column="promo_create_date" property="promoCreateDate" />
 		<result column="promo_status" property="promoStatus" />
+	</resultMap>
+	
+	<resultMap id="replyResult" type="Reply">
+		<result column="reply_no" property="replyNo" />
+		<result column="re_board_no" property="reBoardNo" />
+		<result column="reply_depth" property="replyDepth" />
+		<result column="reply_parent" property="replyParent" />
+		<result column="reply_content" property="replyContent" />
+		<result column="reply_writer" property="replyWriter" />
+		<result column="reply_date" property="replyDate" />
+	</resultMap>
+	
+	<resultMap id="attachResult" type="Attachment">
+		<result column="at_no" property="atNo" />
+		<result column="at_origin_name" property="atOriginName" />
+		<result column="at_change_name" property="atChangeName" />
 	</resultMap>
 	
 	<select id="selectListCount" resultType="_int">
@@ -101,6 +119,116 @@
 			    by promo_no desc
 	</select>
 	
+	<update id="deletePromo">
+		update tb_promo
+		   set promo_status = 'N'
+		 where promo_no in 
+		 <foreach collection="array" item="arr" open="(" close=")" separator=",">
+		 	#{arr}
+		 </foreach>
+	</update>
+	
+	<update id="increaseCount">
+		update tb_promo
+		   set promo_count = promo_count + 1
+		 where promo_no = #{no}
+		   and promo_status = 'Y'
+	</update>
+	
+	<select id="selectPromo" resultMap="promotionResult">
+		select promo_no
+			 , promo_title
+			 , promo_cate_no
+			 , m.mem_name || ' ' || j.job_name as "promo_writer"
+			 , promo_content
+			 , promo_count
+			 , to_char(promo_create_date, 'YYYY-MM-DD (DY) HH24:MI') as "promo_create_date"
+		  from tb_promo
+		  join tb_member m on (promo_writer = mem_no)
+		  join tb_job j on (m.job_code = j.job_code)
+		 where promo_no = #{no}
+		   and promo_status = 'Y'
+	</select>
+	
+	<select id="selectReplyCount" resultType="_int">
+		select count(*)
+		  from tb_reply
+		 where reply_status = 'Y'
+		   and reply_type = 3
+		   and re_board_no = #{promoNo}
+	</select>
+	
+	<select id="selectReplyList" resultMap="replyResult">
+		select reply_no
+			 , re_board_no
+			 , reply_depth
+			 , reply_parent
+			 , reply_content
+			 , (m.mem_name || ' ' || j.job_name) as "reply_writer"
+			 , to_char(reply_date, 'YYYY-MM-DD (DY) HH24:MI') as "reply_date"
+			 , level
+		  from tb_reply
+		  join tb_member m on (m.mem_no = reply_writer)
+		  join tb_job j on (m.job_code = j.job_code)
+		 where reply_status = 'Y'
+		   and reply_type = 3
+		   and re_board_no = #{promoNo}
+		 start with reply_parent = 0
+		 connect by prior reply_no = reply_parent
+		 order
+		    by reply_date
+	</select>
+	
+	<select id="selectRReplyList" resultMap="replyResult">
+		select reply_no
+			 , reply_depth
+			 , reply_parent
+			 , reply_content
+			 , (m.mem_name || ' ' || j.job_name) as "reply_writer"
+			 , to_char(reply_date, 'YYYY-MM-DD (DY) HH24:MI') as "reply_date"
+			 , level
+		  from tb_reply
+		  join tb_member m on (m.mem_no = reply_writer)
+		  join tb_job j on (m.job_code = j.job_code)
+		 where reply_status = 'Y'
+		   and reply_type = 3
+		   and reply_depth = 2
+		   and re_board_no = #{promoNo}
+		 start with reply_parent = 0
+		 connect by prior reply_no = reply_parent
+		 order
+		    by reply_date
+	</select>
+	
+	<select id="selectAt" resultMap="attachResult">
+		select at_no
+			 , at_origin_name
+			 , at_change_name
+		  from tb_attachment
+		 where at_status = 'Y'
+		   and at_category = 4
+		   and at_ref_bno = #{promoNo}
+	</select>
+	
+	<update id="updatePromo">
+		update tb_promo
+		   set promo_title = #{promoTitle}
+		     , promo_cate_no = #{promoCateNo}
+		     <!-- promo_writer = #{로그인한 사람} -->
+		     , promo_content = #{promoContent}
+		     , promo_modify_date = sysdate
+		 where promo_no = #{promoNo}
+	</update>
+	
+	<update id="updateAt">
+		update tb_attachment
+		   set at_origin_name = #{atOriginName}
+		     , at_change_name = #{atChangeName}
+		     , at_upload_date = sysdate
+		 where at_category = 4
+		   and at_ref_bno = #{atRefBNo}
+	</update>
+	
 	<insert id="insertPromo">
 		insert
 		  into tb_promo
@@ -116,18 +244,31 @@
 		    seq_prno.nextval
 		  , #{promoTitle}
 		  , #{promoCateNo}
-		  , #{promoWriter}
+		  , '500015' <!-- , #{promoWriter} -->
 		  , #{promoContent}
 		  )
 	</insert>
 	
-	<update id="deletePromo">
-		update tb_promo
-		   set promo_status = 'N'
-		 where promo_no in 
-		 <foreach collection="array" item="arr" open="(" close=")" separator=",">
-		 	#{arr}
-		 </foreach>
-	</update>
+	<insert id="insertAt">
+		insert
+		  into tb_attachment
+		  (
+		    at_no
+		  , at_ref_bno
+		  , at_category
+		  , at_origin_name
+		  , at_change_name
+		  , at_path
+		  )
+		  values
+		  (
+		    seq_atno.nextval
+		  , #{atRefBNo}
+		  , 4
+		  , #{atOriginName}
+		  , #{atChangeName}
+		  , '5'
+		  )
+	</insert>
   
 </mapper>

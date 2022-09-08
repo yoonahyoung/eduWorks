@@ -18,7 +18,7 @@ public class Attachment {
 	private int atNo;
 	private int atRefBNo;
 	private String atCategory;
-	private String atOrginName;
+	private String atOriginName;
 	private String atChangeName;
 	private String atPath;
 	private Date atUploadDate;
