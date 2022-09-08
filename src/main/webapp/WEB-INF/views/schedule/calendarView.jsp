@@ -543,7 +543,7 @@
 	
 	                <!-- 캘린더 관리 페이지로 이동 -->
 	                <br>
-	                    <a href="" class="su_sub_menu_list" style="color: black;">
+	                    <a href="manage.ca" class="su_sub_menu_list" style="color: black;">
 	                        <h6><span class="fas fa-fw fa-cog"></span> &nbsp;캘린더 관리</h6>
 	                    </a>
 	                    <!-- <a href=""><h6>항목</h6></a> -->
