@@ -126,7 +126,7 @@
 	                            // 각 게시글의 행을 클릭하면 게시글 상세보기 페이지로 이동
 	                            $("#suTable>tbody>tr").on("click", "td:not(:first-child)", function(){
 	                            	 //console.log($(this).parent().children(".no").text());
-	                            	//location.href = "detail.pr?no=" + $(this).parent().children(".no").text();
+	                            	location.href = "detail.pr?no=" + $(this).parent().children(".no").text();
 	                            });
 	                            
 	                            // 
@@ -311,7 +311,7 @@
 	                         $("#realDelete").click(function(){
 	                            
 	                             $.ajax({
-	                                 url:"delete.pr", 
+	                                 url:"aDelete.pr", 
 	                                 data:{
 	                                	 	"checkCnt":checkCnt
 	                                 },

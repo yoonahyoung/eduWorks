@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.finalProject.eduWorks.common.model.vo.Attachment;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
+import com.finalProject.eduWorks.common.model.vo.Reply;
 import com.finalProject.eduWorks.promotion.model.dao.PromotionDao;
 import com.finalProject.eduWorks.promotion.model.vo.Promotion;
 
@@ -32,22 +33,52 @@ public class PromotionServiceImpl implements PromotionService {
 
 	@Override
 	public int insertPromo(Promotion p) {
-		return 0;
+		return pDao.insertPromo(sqlSession, p);
+	}
+	
+	@Override
+	public int insertAt(Attachment at) {
+		return pDao.insertAt(sqlSession, at);
 	}
 
 	@Override
 	public int increaseCount(int promoNo) {
-		return 0;
+		return pDao.increaseCount(sqlSession, promoNo);
 	}
 
 	@Override
 	public Promotion selectPromo(int promoNo) {
-		return null;
+		return pDao.selectPromo(sqlSession, promoNo);
+	}
+
+	@Override
+	public int selectReplyCount(int promoNo) {
+		return pDao.selectReplyCount(sqlSession, promoNo);
+	}
+
+	@Override
+	public ArrayList<Reply> selectReplyList(int promoNo) {
+		return pDao.selectReplyList(sqlSession, promoNo);
+	}
+	
+	@Override
+	public ArrayList<Reply> selectRReplyList(int promoNo) {
+		return pDao.selectRReplyList(sqlSession, promoNo);
+	}
+	
+	@Override
+	public Attachment selectAt(int promoNo) {
+		return pDao.selectAt(sqlSession, promoNo);
 	}
 
 	@Override
 	public int updatePromo(Promotion p) {
-		return 0;
+		return pDao.updatePromo(sqlSession, p);
+	}
+	
+	@Override
+	public int updateAt(Attachment at) {
+		return pDao.updateAt(sqlSession, at);
 	}
 
 	@Override
@@ -64,6 +95,7 @@ public class PromotionServiceImpl implements PromotionService {
 	public int deletePromo(String checkCnt) {
 		return pDao.deletePromo(sqlSession, checkCnt);
 	}
+
 
 
 }

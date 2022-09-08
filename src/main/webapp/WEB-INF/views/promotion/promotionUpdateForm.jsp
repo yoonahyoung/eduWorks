@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+
 <!-- css -->
 <link href="${pageContext.request.contextPath}/resources/css/promotion.css" rel="stylesheet" type="text/css">
 
@@ -18,15 +19,17 @@
 	    
 	    <div class="su_contentArea">
 	        <div class="su_content_header">
-	            <h2 class="su_sub_menu_name" style="display: inline; color: black;">홍보물 등록</h2>
+	            <h2 class="su_sub_menu_name" style="display: inline; color: black;">홍보물 수정</h2>
 	            
 	            <button class="btn su_btn_border" type="button" style="display: inline; float:right;" onclick="location.href='list.pr';">목록으로</button>
 	            <hr class="hr_line_top">
 	
 	
-	            <form id="insertForm" action="insert.pr" method="post" enctype="multipart/form-data">
+	            <form id="updateForm" action="update.pr" method="post" enctype="multipart/form-data">
+	            <!-- =================================================================================== -->
 	            	<%-- <input type="hidden" name="promoWriter" value="${ loginUser.memNo }"> --%>
 	            	<input type="hidden" name="promoNo" value="${ p.promoNo }">
+
 	                <div class="su_content_body">
 	
 	                    <table id="eventForm">
@@ -34,7 +37,8 @@
 	                            <td width="30px;"><span class="fas fa-star-of-life fontRed">&nbsp;</span></td>
 	                            <td><span>&nbsp;제목</span></td>
 	                            <td>
-	                            &ensp; &ensp;<input type="text" name="promoTitle" id="promoTitle" placeholder="제목 입력" style="width:300px;" required>
+	                            &ensp; &ensp;<input type="text" name="promoTitle" id="promoTitle" value="${ p.promoTitle }"
+	                            placeholder="제목 입력" style="width:300px;" required>
 	                            </td>
 	                        </tr>
 	
@@ -43,7 +47,7 @@
 	                            <td><span>&nbsp;종류</span></td>
 	                            <td>
 	                                <select style="margin-left: 20px;" name="promoCateNo" id="promoCateNo">
-	                                    <option value="1" selected>배너</option>
+	                                    <option value="1" >배너</option>
 	                                    <option value="2">블로그</option>
 	                                    <option value="3">포스터</option>
 	                                    <option value="4">SNS</option>
@@ -54,21 +58,37 @@
 	                        <tr>
 	                            <td></td>
 	                            <td><span> 파일 첨부</span></td>
-	                            <td><input type="file" id="promoFile" name="upfile" style="margin-left: 20px;"></td>
+	                            <td>
+	                            	<input type="file" id="promoFile" name="reupfile" style="margin-left: 20px;">
+	                            	
+	                            	<c:if test="${ not empty at.atOriginName }">
+	                            		<a style="color:black; margin-left: -120px;" href="${ at.atChangeName }" download="${ at.atOriginName }">${ at.atOriginName }</a>
+			                            <input type="hidden" name="atOriginName" value="${ at.atOriginName }">
+			                            <input type="hidden" name="atChangeName" value="${ at.atChangeName }">
+	                            	</c:if>
+	                            	
+	                            </td>
 	                        </tr>
 	
 	                    </table>
 	
 	                    <div class="form-group">
 	                        <div class="su_dropBox">
-	                            <span>&ensp;드래그로 파일을 추가해주세요.</span>
+	                        	<c:choose>
+	                        		<c:when test="${ empty at.atOriginName }">
+	                            		<span>&ensp;드래그로 파일을 추가해주세요.</span>
+	                            	</c:when>
+	                            	<c:otherwise>
+	                            		<span>&ensp;${ at.atOriginName }</span>
+	                            	</c:otherwise>
+	                            </c:choose>
 	                        </div>
 	                    </div>
 	
 	                    <br>
 	                    <!-- 서머노트로 내용 작성 -->
 	                    <div class="summerArea">
-	                        <textarea id="summernote" name="promoContent"></textarea>
+	                        <textarea id="summernote" name="promoContent">${ p.promoContent }</textarea>
 	                    </div>
 	
 	                    <script>
@@ -109,7 +129,7 @@
 	                    <br><br>
 	
 	                    <div class="su_btn_two_center">
-	                        <button type="button" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">등록</button>
+	                        <button type="button" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">수정</button>
 	                        <button type="button" class="btn su_btn_two su_btn_border">취소</button>
 	                    </div>
 	
@@ -142,8 +162,8 @@
 	                                // 필수사항의 value가 비어있으면 모달창
 	                                if( !( !$("#promoTitle").val() || !$("#summernote").val() ) ){
 	                                    $("#submitBtn").removeAttr("data-target");
-	                                    $("#insertForm").submit();
-	                                   console.log($("textarea[name=promoContent").val());
+	                                    $("#updateForm").submit();
+	                                   //console.log($("textarea[name=promoContent").val());
 	                                }
 	                            });
 	
@@ -201,7 +221,10 @@
 	                                }
 	                            });
                                 
-	
+								// select option에 selected 부여
+								const promoCate = ${ p.promoCateNo };
+									 //console.log($("#promoCateNo").children().parent().val(promoCate));
+								$( $("#promoCateNo").children().parent().val(promoCate) ).prop("selected", true);
 	                           
 	                        })
 	                    </script>
