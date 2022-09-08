@@ -312,7 +312,9 @@
 	                            
 	                             $.ajax({
 	                                 url:"delete.pr", 
-	                                 data:{"checkCnt":checkCnt},
+	                                 data:{
+	                                	 	"checkCnt":checkCnt
+	                                 },
 	                                 success:function(result){
 	                                     if(result == "success"){
 	                                         location.reload();

@@ -7,6 +7,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.finalProject.eduWorks.common.model.vo.Attachment;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.promotion.model.vo.Promotion;
 
@@ -32,6 +33,16 @@ public class PromotionDao {
 		map.put("no", no);
 		
 		return (ArrayList) sqlSession.selectList("promotionMapper.selectPromoList", map, rowBounds);
+	}
+	
+	public ArrayList<Attachment> selectAtList(SqlSessionTemplate sqlSession, String checkCnt){
+		String[] aArr = checkCnt.split(",");
+		return (ArrayList) sqlSession.selectList("promotionMapper.selectAtList", aArr);
+	}
+	
+	public int deletePromoAt(SqlSessionTemplate sqlSession, String checkCnt) {
+		String[] aArr = checkCnt.split(",");
+		return sqlSession.delete("promotionMapper.deletePromoAt", aArr);
 	}
 	
 	public int deletePromo(SqlSessionTemplate sqlSession, String checkCnt) {

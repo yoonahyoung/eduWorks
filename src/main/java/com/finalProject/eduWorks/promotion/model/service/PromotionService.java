@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 
+import com.finalProject.eduWorks.common.model.vo.Attachment;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.promotion.model.vo.Promotion;
 
@@ -25,6 +26,10 @@ public interface PromotionService {
 	int updatePromo(Promotion p);
 	
 	// 삭제 서비스
+	
+	// 선택 삭제 서비스 (AJAX)
+	ArrayList<Attachment> selectAtList(String checkCnt);
+	int deletePromoAt(String checkCnt);
 	int deletePromo(String checkCnt);
 	
 	// 댓글 리스트 조회용 서비스 (AJAX)

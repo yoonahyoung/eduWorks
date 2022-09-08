@@ -3,13 +3,17 @@ package com.finalProject.eduWorks.promotion.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.finalProject.eduWorks.common.model.vo.Attachment;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.template.Pagination;
 import com.finalProject.eduWorks.promotion.model.service.PromotionService;
@@ -56,10 +60,27 @@ public class PromotionController {
 	// 게시글 삭제 기능
 	@ResponseBody
 	@RequestMapping("delete.pr")
-	public String ajaxDeletePromo(String checkCnt) {
-		int result = pService.deletePromo(checkCnt);
+	public String ajaxDeletePromo(String checkCnt, HttpSession session) {
+		// 첨부파일이 있었을 경우 파일 삭제
+		ArrayList<Attachment> list = pService.selectAtList(checkCnt);
+		int result2 = 1;
+		if(list.size() != 0) {
+			for(int i = 0; i < list.size(); i++) {
+				System.out.println(list.get(i).getAtChangeName());
+			}
+			
+			result2 = pService.deletePromoAt(checkCnt);
+		}
 		
-		return result > 0 ? "success" : "fail";
+		int result1 = pService.deletePromo(checkCnt);
+		
+		if(result1 * result2 > 0) {
+			session.setAttribute("alertMsg", "홍보물 삭제에 성공하였습니다.");
+			return "success";
+		} else {
+			return "fail";
+		}
+		
 	}
 	
 	
