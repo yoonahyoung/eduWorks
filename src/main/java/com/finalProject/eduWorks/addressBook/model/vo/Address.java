@@ -32,7 +32,7 @@ public class Address {
 	
 	private int addPerNo;
 	private String memNo;
-	private int addNo;
+	private String addNo;
 	private String addName;
 	private String addDept;
 	private String addJob;

@@ -102,49 +102,54 @@
 
                         </Script>
 
-                        <div style="margin:30px 0 30px 0">
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination justify-content-center">
-                                	<c:choose>
-                                		<c:when test="${pi.currentPage eq 1 }">
-			                                <li class="page-item">
-			                                    <a class="page-link disabled" aria-label="Previous">
-			                                    <span aria-hidden="true">&laquo;</span>
-			                                    </a>
-			                                </li>
-		                                </c:when>
-		                                <c:otherwise>
-			                                <li class="page-item">
-			                                    <a class="page-link" href="publicAddress.ad?cpage=${pi.currentPage -1 }" aria-label="Previous">
-			                                    <span aria-hidden="true">&laquo;</span>
-			                                    </a>
-			                                </li>
-		                                </c:otherwise>
-		                            </c:choose>
-		                                
-				                    <c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage }">
-				                    	<li class="page-item"><a class="page-link" href="publicAddress.ad?cpage=${p }">${p }</a></li>
-				                    </c:forEach>
-										
-									<c:choose>
-										<c:when test="${pi.currentPage eq pi.maxPage }">
-											<li class="page-item">
-			                                    <a class="page-link disabled" aria-label="Next">
-			                                    <span aria-hidden="true">&raquo;</span>
-			                                    </a>
-			                                </li>
-										</c:when>
-										<c:otherwise>
-			                                <li class="page-item">
-			                                    <a class="page-link" href="publicAddress.ad?cpage=${pi.currentPage + 1}" aria-label="Next">
-			                                    <span aria-hidden="true">&raquo;</span>
-			                                    </a>
-			                                </li>
-			                            </c:otherwise>
-                                	</c:choose>
-                                </ul>
-                            </nav>
-                        </div>
+			<div style="margin: 30px 0 30px 0">
+				<c:choose>
+					<c:when test="${empty list }">
+						<nav aria-label="Page navigation example">
+							<ul class="pagination justify-content-center">
+							</ul>
+						</nav>
+					</c:when>
+					<c:otherwise>
+						<nav aria-label="Page navigation example">
+							<ul class="pagination justify-content-center">
+								<c:choose>
+									<c:when test="${pi.currentPage eq 1 }">
+										<li class="page-item"><a class="page-link disabled"
+											aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+										</a></li>
+									</c:when>
+									<c:otherwise>
+										<li class="page-item"><a class="page-link"
+											href="publicAddress.ad?cpage=${pi.currentPage -1 }"
+											aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+										</a></li>
+									</c:otherwise>
+								</c:choose>
+
+								<c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage }">
+									<li class="page-item"><a class="page-link"
+										href="publicAddress.ad?cpage=${p }">${p }</a></li>
+								</c:forEach>
+
+								<c:choose>
+									<c:when test="${pi.currentPage eq pi.maxPage }">
+										<li class="page-item"><a class="page-link disabled"
+											aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+										</a></li>
+									</c:when>
+									<c:otherwise>
+										<li class="page-item"><a class="page-link"
+											href="publicAddress.ad?cpage=${pi.currentPage + 1}"
+											aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+										</a></li>
+									</c:otherwise>
+								</c:choose>
+							</ul>
+						</nav>
+					</c:otherwise>
+				</c:choose>
+			</div>
                     </div>
                 </div>
                 <!-- /.container-fluid -->

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.finalProject.eduWorks.addressBook.model.dao.AddressDao;
+import com.finalProject.eduWorks.addressBook.model.vo.Address;
+import com.finalProject.eduWorks.addressBook.model.vo.AddressOut;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.member.model.vo.Member;
 
@@ -36,6 +38,26 @@ public class AddressServiceImpl implements AddressService {
 	@Override
 	public ArrayList<Member> selectAddressList(PageInfo pi) {
 		return aDao.selectAddressList(sqlSession, pi);
+	}
+
+	@Override
+	public int basicAddressNum(String memNo) {
+		return aDao.basicAddressNum(sqlSession, memNo);
+	}
+
+	@Override
+	public int selectAddBasicCount(String memNo, String addNo) {
+		return aDao.selectAddBasicCount(sqlSession, memNo, addNo);
+	}
+
+	@Override
+	public ArrayList<Address> selectAddIndivList(PageInfo pi, String memNo, String addNo) {
+		return aDao.selectAddIndivList(sqlSession, pi, memNo, addNo);
+	}
+
+	@Override
+	public ArrayList<AddressOut> selectAddCategory(String memNo) {
+		return aDao.selectAddCategory(sqlSession, memNo);
 	}
 
 }

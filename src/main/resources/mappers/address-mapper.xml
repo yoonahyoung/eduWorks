@@ -24,6 +24,19 @@
 		<result column="mem_profile" property="memProfile"/>
 	</resultMap>
 	
+	<resultMap id="addressResult" type="Address">
+		<result column="add_per_no" property="addPerNo" />
+		<result column="mem_no" property="memNo" />
+		<result column="add_no" property="addNo" />
+		<result column="add_name" property="addName" />
+		<result column="add_dept" property="addDept" />
+		<result column="add_job" property="addJob" />
+		<result column="add_phone" property="addPhone" />
+		<result column="add_email" property="addEmail" />
+		<result column="add_memo" property="addMemo" />
+		<result column="add_enroll_date" property="addEnrollDate" />
+	</resultMap>
+	
 	<!-- 재직중인 사원 수 조회 -->
 	<select id="selectListCount" resultType="_int">
 		select
@@ -48,6 +61,49 @@
 		where mem_resign_status = 'N'
 		order
 			by mem_no
+	</select>
+	
+	<select id="basicAddressNum" resultType="_int">
+		select 
+		    add_no
+		from tb_add_out
+		where mem_no = #{memNo}
+		  and rownum = 1
+		order by add_no
+	</select>
+	
+	<select id="selectAddBasicCount" resultType="_int">
+		select
+		    count(*)
+		from tb_address
+		where mem_no = #{memNo}
+		  and add_no = #{addNO}
+	</select>
+	
+	<select id="selectAddIndivList" resultMap="addressResult">
+		select
+		    add_per_no
+		  , ao.mem_no "mem_no"
+		  , ao.add_no "add_no"
+		  , ao.add_name "add_name"
+		  , add_dept
+		  , add_job
+		  , add_phone
+		  , add_email
+		  , add_memo
+		  , ao.add_enroll_date "add_enroll_date"
+		from tb_address a
+		join tb_add_out ao on (ao.add_no = a.add_no)
+		where ao.mem_no = #{memNo}
+		  and ao.add_no = #{addNo}
+	</select>
+	
+	<select id="selectAddCategory" resultMap="addressResult">
+		select
+			add_no
+		  , add_name
+		from tb_add_out
+		where mem_no = #{memNo}
 	</select>
  	
  

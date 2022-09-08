@@ -18,73 +18,83 @@
 
 	             <!-- Begin Page Content -->
                 <!--Begin of Main Content -->
-                <div class="container-fluid" style="display:flex;">
-                    <nav class="menu-sidebar">
+	<div class="container-fluid" style="display: flex;">
+		<nav class="menu-sidebar">
 
-                        <div class="insider">
-                            <h2>주소록</h2>
-                            <div class="address-btn">
-                                <button type="button" class="writeForm btn-lg">주소록 추가</button>
-                            </div>
-                        </div>
+			<div class="insider">
+				<h2>주소록</h2>
+				<div class="address-btn">
+					<button type="button" class="writeForm btn-lg" data-toggle="modal"
+						data-target="#add-Address">주소록 추가</button>
+				</div>
+			</div>
 
-                        <div class="insider">
-                            <h4>주소록 목록</h4>
-                            <a href=""><h6>개인 주소록</h6></a>
+			<div class="insider">
+				<h4>주소록 목록</h4>
+				<a href=""><h6>개인 주소록</h6></a>
 
-                            <!--반복문 시작 -->
-                            <div class="address-title">
-                                <a href=""><h6>거래처</h6></a>
+				<!--반복문 시작 -->
+				<c:choose>
+					<c:when test="${not empty category}">
+						<c:forEach var="c" items="${category }">
+							<c:if test="${c.addName != '개인주소록' }">
+								<div class="address-title">
+									<a href="" class="category-title"><h6>${c.addName }</h6></a>
 
-                                <!-- 주소록 클릭시 수정,삭제 처리하는 dropdown 생성-->
-                                    <a class="tag-modify" href="#" id="dotDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" 
-                                    aria-expanded="false">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                    </a>
-                                <div class="dropdown-list dropdown-menu shadow" aria-labelledby="dotDropdown" style="margin-left:-180px; margin-top: -10px;">
-                                    <!-- 작성자에게만 보임 -->
-                                    <a class="dropdown-item d-flex align-items-center" onclick="updateAddBook(/*해당 주소록 번호*/);">
-                                        <span class="font-weight-bold">수정하기</span>
-                                    </a>
-                                    <a class="dropdown-item d-flex align-items-center" onclick="deleteAddBook();">
-                                        <span class="font-weight-bold">삭제하기</span>
-                                    </a>
-                                </div>
-                                
-                            </div>
+									<!-- 주소록 클릭시 수정,삭제 처리하는 dropdown 생성-->
+									<a class="tag-modify" href="#" id="dotDropdown" role="button"
+										data-toggle="dropdown" aria-haspopup="true"
+										aria-expanded="false"> <i class="fas fa-ellipsis-v"></i>
+									</a>
+									<div class="dropdown-list dropdown-menu shadow"
+										aria-labelledby="dotDropdown"
+										style="margin-left: -180px; margin-top: -10px;">
+										<!-- 작성자에게만 보임 -->
+										<a class="dropdown-item d-flex align-items-center"
+											onclick="updateAddBook(/*해당 주소록 번호*/);"> <span
+											class="font-weight-bold">수정하기</span>
+										</a> <a class="dropdown-item d-flex align-items-center"
+											onclick="deleteAddBook();"> <span
+											class="font-weight-bold">삭제하기</span>
+										</a>
+									</div>
 
-                            <!-- 주소록 그룹명 수정 처리하는 함수 -->
-                            <div class="insider updateAddBook">
-                                <div class="updateAddress">
-                                    <span>
-                                        <input type="text" name="" value="거래처">
-                                    </span>
-                                    <div class="update-addBtn">
-                                        <a href=""><i class="fas fa-check"></i></a>
-                                        <span onclick="dismissUpdateAdd();"><i class="fas fa-times"></i></span>`
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- 반복문 끝 -->
+								</div>
+
+								<!-- 주소록 그룹명 수정 처리하는 함수 -->
+								<div class="insider updateAddBook">
+									<div class="updateAddress">
+										<span> <input type="text" name="" value="거래처">
+										</span>
+										<div class="update-addBtn">
+											<a href=""><i class="fas fa-check"></i></a> <span
+												onclick="dismissUpdateAdd();"><i class="fas fa-times"></i></span>`
+										</div>
+									</div>
+								</div>
+							</c:if>
+						</c:forEach>
+						<!-- 반복문 끝 -->
+					</c:when>
+				</c:choose>
 
 
-                            <!-- 주소록 그룹 추가하는 함수 -->
-                            <div class="insider insertAddBook">
-                                <div class="insertAddress">
-                                    <span>
-                                        <input type="text" name="">
-                                    </span>
-                                    <div class="update-addBtn">
-                                        <a href=""><i class="fas fa-check"></i></a>
-                                        <span onclick="dismissInsertAdd();"><i class="fas fa-times"></i></span>`
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div id="plus-tag" onclick="insertAddBook();">+ 주소록 추가</div>
-                        </div>
+				<!-- 주소록 그룹 추가하는 함수 -->
+				<div class="insider insertAddBook">
+					<div class="insertAddress">
+						<span> <input type="text" name="">
+						</span>
+						<div class="update-addBtn">
+							<a href=""><i class="fas fa-check"></i></a> <span
+								onclick="dismissInsertAdd();"><i class="fas fa-times"></i></span>`
+						</div>
+					</div>
+				</div>
 
-                        <script>
+				<div id="plus-tag" onclick="insertAddBook();">+ 주소록 추가</div>
+			</div>
+
+			<script>
 
                             // 개인 주소록 수정 처리하는 함수
                             function updateAddBook(){
@@ -120,24 +130,27 @@
 
                         </script>
 
-                    </nav>
-                    <!-- 게시판 영역 -->
-                    <div class="main-content_indiv">
-                        <!-- Page Heading -->
-                        <div class="second-title">
-                            <h2>개인 주소록</h2>
-                        </div>
-                        
-                        <div>
-                            <span class="mailListCheck"><input type="checkbox"></span>
-                            <button type="button" class="reply-btn"><i class="fas fa-location-arrow"></i>&nbsp;&nbsp;메일 작성</button>
-                            <button type="button" class="sub-btn" data-toggle="modal" data-target="#add-Address"><i class="fas fa-plus"></i>&nbsp;&nbsp;추가</button>
-                            <button type="button" class="sub-btn" onclick="deleteAddress();"><i class="fas fa-trash-alt"></i>&nbsp;&nbsp;삭제</button>
-                        </div>
+		</nav>
+		<!-- 게시판 영역 -->
+		<div class="main-content_indiv">
+			<!-- Page Heading -->
+			<div class="second-title">
+				<h2>개인 주소록</h2>
+			</div>
 
-                        <!-- <hr> -->
+			<div>
+				<span class="mailListCheck"><input type="checkbox"></span>
+				<button type="button" class="reply-btn">
+					<i class="fas fa-location-arrow"></i>&nbsp;&nbsp;메일 작성
+				</button>
+				<button type="button" class="sub-btn" onclick="deleteAddress();">
+					<i class="fas fa-trash-alt"></i>&nbsp;&nbsp;삭제
+				</button>
+			</div>
 
-                        <!-- 
+			<!-- <hr> -->
+
+			<!-- 
                         <div class="filterHead tableOption">
                             <div class="searchbar" align="center">
                                 <input type="text" placeholder="검색">
@@ -145,62 +158,65 @@
                             </div>
                         </div> -->
 
-                        <div class="tableOption">
-                            <div class="searchbar" align="center">
-                                <input type="text" placeholder="검색">
-                                <i class="fas fa-search fa-lg address-search"></i>
-                            </div>
+			<div class="tableOption">
+				<div class="searchbar" align="center">
+					<input type="text" placeholder="검색"> <i
+						class="fas fa-search fa-lg address-search"></i>
+				</div>
 
-                            <div class="selectOption" style="margin-bottom:10px">
-                                <select>
-                                    <option value="">최신순</option>
-                                    <option value="">오래된순</option> 
-                                </select>
-                            </div>
-                        </div>
+				<div class="selectOption" style="margin-bottom: 10px">
+					<select>
+						<option value="">최신순</option>
+						<option value="">오래된순</option>
+					</select>
+				</div>
+			</div>
 
-                        <div class="main-list key_main-list">
-                            <table class="board-content table" align="center">
-                                <thead>
-                                    <tr class="table_thead_border">
-                                        <th width="3%"><input type="checkbox"></th>
-                                        <th width="10%">이름</th>
-                                        <th width="10%">부서명</th>
-                                        <th width="10%">직급명</th>
-                                        <th width="15%">전화번호</th>
-                                        <th width="15%">이메일</th>
-                                        <th width="15%">메모</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- 값은 다 DB와 연결될 것 -->
-                                    <!-- 반복문 시작 -->
-                                    <tr>
-                                        <td><input type="checkbox"></td>
-                                        <td data-toggle="modal" data-target="#update-Address">홍길동</td>
-                                        <td>마케팅팀</td>
-                                        <td>사원</td>
-                                        <td>010-1234-5678</td>
-                                        <td>user02@naver.com</td>
-                                        <td>마케팅 신입</td>
-                                    </tr>
-                                    <!-- 반복문 끝 -->
-                                    <tr>
-                                        <td><input type="checkbox"></td>
-                                        <td data-toggle="modal" data-target="#update-Address">홍길동</td>
-                                        <td>마케팅팀</td>
-                                        <td>사원</td>
-                                        <td>010-1234-5678</td>
-                                        <td>user02@naver.com</td>
-                                        <td>마케팅 신입</td>
-                                    </tr>
-    
-                                </tbody>
-                            </table>
-                            <br><br>
-                        </div>
+			<div class="main-list key_main-list">
+				<table class="board-content table" align="center">
+					<thead>
+						<tr class="table_thead_border">
+							<th width="3%"><input type="checkbox"></th>
+							<th width="10%">이름</th>
+							<th width="10%">부서명</th>
+							<th width="10%">직급명</th>
+							<th width="15%">전화번호</th>
+							<th width="15%">이메일</th>
+							<th width="15%">메모</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- 값은 다 DB와 연결될 것 -->
+						<c:choose>
+							<c:when test="${empty list }">
+								<tr>
+									<td colspan="7">등록된 연락처가 없습니다.</td>
+								</tr>
+							</c:when>
+							<c:otherwise>
+								<c:forEach var="a" items="${list}">
+									<!-- 반복문 시작 -->
+									<tr>
+										<td><input type="checkbox"></td>
+										<td data-toggle="modal" data-target="#update-Address">${a.addName }</td>
+										<td>${a.addDept }</td>
+										<td>${a.addJob }</td>
+										<td>${a.addPhone }</td>
+										<td>${a.addEmail }</td>
+										<td>${a.addMemo }</td>
+									</tr>
+								</c:forEach>
+								<!-- 반복문 끝 -->
+							</c:otherwise>
+						</c:choose>
 
-                        <Script>
+					</tbody>
+				</table>
+				<br>
+				<br>
+			</div>
+
+			<Script>
 
                             // 더블클릭시 해당 선택자에게 메일 보내는 함수 실행
                             $(function() {
@@ -211,28 +227,58 @@
 
                         </Script>
 
-                        <div style="margin:30px 0 30px 0">
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination justify-content-center">
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.container-fluid -->
+			<div style="margin: 30px 0 30px 0">
+
+				<c:choose>
+					<c:when test="${empty list }">
+						<nav aria-label="Page navigation example">
+							<ul class="pagination justify-content-center">
+							</ul>
+						</nav>
+					</c:when>
+					<c:otherwise>
+						<nav aria-label="Page navigation example">
+							<ul class="pagination justify-content-center">
+								<c:choose>
+									<c:when test="${pi.currentPage eq 1 }">
+										<li class="page-item"><a class="page-link disabled"
+											aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+										</a></li>
+									</c:when>
+									<c:otherwise>
+										<li class="page-item"><a class="page-link"
+											href="publicAddress.ad?cpage=${pi.currentPage -1 }"
+											aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+										</a></li>
+									</c:otherwise>
+								</c:choose>
+
+								<c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage }">
+									<li class="page-item"><a class="page-link"
+										href="publicAddress.ad?cpage=${p }">${p }</a></li>
+								</c:forEach>
+
+								<c:choose>
+									<c:when test="${pi.currentPage eq pi.maxPage }">
+										<li class="page-item"><a class="page-link disabled"
+											aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+										</a></li>
+									</c:when>
+									<c:otherwise>
+										<li class="page-item"><a class="page-link"
+											href="publicAddress.ad?cpage=${pi.currentPage + 1}"
+											aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+										</a></li>
+									</c:otherwise>
+								</c:choose>
+							</ul>
+						</nav>
+					</c:otherwise>
+				</c:choose>
+			</div>
+		</div>
+	</div>
+	<!-- /.container-fluid -->
                 
                   <!-- 개인 주소록 연락처 추가(add-Address Model) 모달-->
     <div class="modal" id="add-Address">
@@ -250,8 +296,9 @@
         <form action="" method="post">
 
             <div class="modal-body" align="center">
-
-            <input type="hidden" name="userId" value="${loginUser.userId }">
+	
+			<!-- 나중에 로그인된 회원으로 value값 변경하기!!! -->
+            <input type="hidden" name="memNo" value="2">
 
                 <div class="insertAddress">
 
@@ -259,36 +306,35 @@
                         <tr>
                             <th>그룹 선택</th>
                             <td>
-                                <select name="" id="select-addressBook">
-                                    <option value="" selected>개인주소록</option>
-                                    <option value="">거래처</option>
+                                <select name="addNo" id="select-addressBook">
+                                    <option value="2" selected>개인주소록</option>
                                 </select>
                             </td>
                         </tr>
 
                         <tr>
                             <th>이름</th>
-                            <td><input type="text" name=""></td>
+                            <td><input type="text" name="addName"></td>
                         </tr>
                         <tr>
                             <th>부서명</th>
-                            <td><input type="text" name=""></td>
+                            <td><input type="text" name="addDept"></td>
                         </tr>
                         <tr>
                             <th>직급명</th>
-                            <td><input type="text" name=""></td>
+                            <td><input type="text" name="addJob"></td>
                         </tr>
                         <tr>
                             <th>전화번호</th>
-                            <td><input type="text" name=""></td>
+                            <td><input type="text" name="addPhone"></td>
                         </tr>
                         <tr>
                             <th>이메일</th>
-                            <td><input type="text" name=""></td>
+                            <td><input type="text" name="addEmail"></td>
                         </tr>
                         <tr>
                             <th>메모</th>
-                            <td><input type="text" name=""></td>
+                            <td><input type="text" name="addMemo"></td>
                         </tr>
 
                     </table>
@@ -338,8 +384,9 @@
                                 <th>그룹 선택</th>
                                 <td>
                                     <select name="">
-                                        <option value="" selected>개인주소록</option>
-                                        <option value="">거래처</option>
+                                    <c:forEach var="ca" items="${category }">
+                                        <option value="${ca.addNo }">${ca.addName }</option>
+                                    </c:forEach>
                                     </select>
                                 </td>
                             </tr>

@@ -197,11 +197,23 @@
 	                    <div class="bg-white py-2 collapse-inner rounded">
 	                        <h6 class="collapse-header">주소록</h6>
 	                        <a class="collapse-item" href="publicAddress.ad">전사 주소록</a>
-	                        <a class="collapse-item" href="individualAddress.ad">개인 주소록</a>
+	                        <a class="collapse-item" onclick="postFromSubmit('individualAddress.ad')">개인 주소록</a>
 	                        <a class="collapse-item" href="list.st">학생 주소록</a>
 	                    </div>
 	                </div>
 	            </li>
+	            
+	            <form id="postForm" action="" method="post">
+	            	
+	            	<input type="hidden" name="memNo" value="500001">
+	            
+	            </form>
+	            
+	            <script>
+	            	function postFromSubmit(url){
+	            		$("#postForm").attr("action", url).submit();
+	            	}
+	            </script>
 	
 	            <li class="nav-item">
 	                <a class="nav-link collapsed" href="list.ca">

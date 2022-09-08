@@ -22,7 +22,7 @@ public class AddressOut {
 	
 	// 은영
 
-	private int addNo;
+	private String addNo;
 	private String memNo;
 	private String addName;
 	private String addEnrollDate;
