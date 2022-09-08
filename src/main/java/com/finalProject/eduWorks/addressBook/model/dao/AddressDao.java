@@ -16,7 +16,7 @@ import com.finalProject.eduWorks.member.model.vo.Member;
 public class AddressDao {
 	
 	/**
-	 * 1. 공용 주소록에 들어가는 사원 수 조회
+	 * 1_1. 공용 주소록에 들어가는 사원 수 조회
 	 * @return : 재직중인 사원 수
 	 */
 	public int selectListCount(SqlSessionTemplate sqlSession) {
@@ -24,7 +24,7 @@ public class AddressDao {
 	}
 	
 	/**
-	 * 1_1. 공용 주소록에 들어갈 재직중인 사원 목록
+	 * 1_2. 공용 주소록에 들어갈 재직중인 사원 목록
 	 * @param pi : 페이징 처리
 	 * @return : 재직중인 사원 목록이 들어간 ArrayList<Member>
 	 */
@@ -38,11 +38,21 @@ public class AddressDao {
 
 	}
 	
-	
+	/**
+	 * 2_1. 개인 주소록 '개인주소록' 번호 조회 (기본페이지)
+	 * @param memNo : 로그인한 회원 번호
+	 * @return : '개인주소록' 번호
+	 */
 	public int basicAddressNum(SqlSessionTemplate sqlSession, String memNo) {
 		return sqlSession.selectOne("addressMapper.basicAddressNum", memNo);
 	}
 	
+	/**
+	 * 2_2. 개인 주소록 '개인주소록'에 등록된 연락처 수 조회
+	 * @param memNo : 로그인한 회원 번호
+	 * @param addNo : 로그인한 회원의 개인 주소록 번호
+	 * @return : 등록된 연락처 수
+	 */
 	public int selectAddBasicCount(SqlSessionTemplate sqlSession, String memNo, String addNo) {
 		
 		HashMap<String, String> map = new HashMap<>();
@@ -54,6 +64,12 @@ public class AddressDao {
 	
 	}
 	
+	/**
+	 * 2_3. 개인 주소록 '개인주소록'에 저장된 연락처 목록 조회
+	 * @param memNo : 로그인한 회원 번호
+	 * @param addNo : 로그인한 회원의 개인 주소록 번호
+	 * @return : 조회된 연락처 목록이 담긴 ArrayList<Address>
+	 */
 	public ArrayList<Address> selectAddIndivList(SqlSessionTemplate sqlSession, PageInfo pi, String memNo, String addNo){
 		
 		HashMap<String, String> map = new HashMap<>();
@@ -69,8 +85,22 @@ public class AddressDao {
 		
 	}
 	
+	/**
+	 * 2_4. 개인 주소록 카테고리 목록 조회
+	 * @param memNo : 로그인한 회원 번호
+	 * @return : 등록한 카테고리 목록이 담긴 ArrayList<AddressOut>
+	 */
 	public ArrayList<AddressOut> selectAddCategory(SqlSessionTemplate sqlSession, String memNo){
 		return (ArrayList)sqlSession.selectList("addressMapper.selectAddCategory", memNo);		
+	}
+	
+	/**
+	 * 3. 개인 주소록 그룹 추가
+	 * @param ado : 로그인한 회원 번호, 추가하고자하는 그룹 명
+	 * @return : 그룹 추가 성공 여부가 담긴 int형 변수 (성공 : 1 : 실패 : 0)
+	 */
+	public int ajaxInsertAddIndiv(SqlSessionTemplate sqlSession, AddressOut ado) {
+		return sqlSession.insert("addressMapper.insertAddIndiv", ado);
 	}
 	
 

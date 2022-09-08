@@ -2,10 +2,13 @@ package com.finalProject.eduWorks.addressBook.controller;
 
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.finalProject.eduWorks.addressBook.model.service.AddressServiceImpl;
@@ -22,7 +25,7 @@ public class AddressController {
 	private AddressServiceImpl aService;
 	
 	/**
-	 * 공용 주소록 페이지 이동
+	 * 1. 공용 주소록 페이지 이동
 	 * @return : 공용 주소록 페이지
 	 */
 	@RequestMapping("publicAddress.ad")
@@ -46,7 +49,7 @@ public class AddressController {
 	}
 	
 	/**
-	 * 개인 주소록 페이지 이동 (개인주소록 첫 페이지)
+	 * 2. 개인 주소록 페이지 이동 (개인주소록 첫 페이지)
 	 * @return : 개인 주소록 페이지
 	 */
 	@RequestMapping("individualAddress.ad")
@@ -74,6 +77,21 @@ public class AddressController {
 		mv.setViewName("addressBook/individualAddressBook");
 		
 		return mv;
+		
+	}
+	
+	/**
+	 * 3. 개인 주소록 그룹 추가
+	 * @param ado : 로그인한 회원 번호, 추가하고자하는 그룹 명
+	 * @return : 그룹 추가 성공 여부가 담긴 int형 변수 (성공 : 1 : 실패 : 0)
+	 */
+	@ResponseBody
+	@RequestMapping("insertAddIndiv.ad")
+	public String ajaxInsertAddIndiv(AddressOut ado) {
+		
+		int result = aService.ajaxInsertAddIndiv(ado);
+		
+		return result > 0 ? "success" : "fail";
 		
 	}
 

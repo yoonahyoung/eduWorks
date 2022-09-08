@@ -26,10 +26,9 @@ public interface AddressService {
 
 	// 개인 주소록 카테고리 목록 조회
 	ArrayList<AddressOut> selectAddCategory(String memNo);
-	
-	
-	
+
 	// 3. 개인 주소록 등록
+	int ajaxInsertAddIndiv(AddressOut ado);
 	
 	// 4. 개인 주소록 추가
 	

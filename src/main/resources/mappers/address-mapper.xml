@@ -85,7 +85,7 @@
 		    add_per_no
 		  , ao.mem_no "mem_no"
 		  , ao.add_no "add_no"
-		  , ao.add_name "add_name"
+		  , a.add_name "add_name"
 		  , add_dept
 		  , add_job
 		  , add_phone
@@ -105,6 +105,23 @@
 		from tb_add_out
 		where mem_no = #{memNo}
 	</select>
+	
+	<!-- 개인 주소록 그룹 추가 -->
+	<insert id="insertAddIndiv">
+		insert 
+		    into tb_add_out
+		    (
+		     add_no
+		   , mem_no
+		   , add_name
+		    )
+		  values
+		   (
+		    seq_aono.nextval
+		  , #{memNo}
+		  , #{addName}
+		   )
+	</insert>
  	
  
  

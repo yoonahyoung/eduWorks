@@ -40,24 +40,56 @@ public class AddressServiceImpl implements AddressService {
 		return aDao.selectAddressList(sqlSession, pi);
 	}
 
+	/**
+	 * 2_1. 개인 주소록 '개인주소록' 번호 조회 (기본페이지)
+	 * @param memNo : 개인 주소록 조회할 회원 번호
+	 * @return : '개인주소록' 번호
+	 */
 	@Override
 	public int basicAddressNum(String memNo) {
 		return aDao.basicAddressNum(sqlSession, memNo);
 	}
 
+	/**
+	 * 2_2. 개인 주소록 '개인주소록'에 등록된 연락처 수 조회
+	 * @param memNo : 로그인한 회원 번호
+	 * @param addNo : 로그인한 회원의 개인 주소록 번호
+	 * @return : 등록된 연락처 수
+	 */
 	@Override
 	public int selectAddBasicCount(String memNo, String addNo) {
 		return aDao.selectAddBasicCount(sqlSession, memNo, addNo);
 	}
 
+	/**
+	 * 2_3. 개인 주소록 '개인주소록'에 저장된 연락처 목록 조회
+	 * @param memNo : 로그인한 회원 번호
+	 * @param addNo : 로그인한 회원의 개인 주소록 번호
+	 * @return : 조회된 연락처 목록이 담긴 ArrayList<Address>
+	 */
 	@Override
 	public ArrayList<Address> selectAddIndivList(PageInfo pi, String memNo, String addNo) {
 		return aDao.selectAddIndivList(sqlSession, pi, memNo, addNo);
 	}
 
+	/**
+	 * 2_4. 개인 주소록 카테고리 목록 조회
+	 * @param memNo : 로그인한 회원 번호
+	 * @return : 등록한 카테고리 목록이 담긴 ArrayList<AddressOut>
+	 */
 	@Override
 	public ArrayList<AddressOut> selectAddCategory(String memNo) {
 		return aDao.selectAddCategory(sqlSession, memNo);
+	}
+
+	/**
+	 * 3. 개인 주소록 그룹 추가
+	 * @param ado : 로그인한 회원 번호, 추가하고자하는 그룹 명
+	 * @return : 그룹 추가 성공 여부가 담긴 int형 변수 (성공 : 1 : 실패 : 0)
+	 */
+	@Override
+	public int ajaxInsertAddIndiv(AddressOut ado) {
+		return aDao.ajaxInsertAddIndiv(sqlSession, ado);
 	}
 
 }

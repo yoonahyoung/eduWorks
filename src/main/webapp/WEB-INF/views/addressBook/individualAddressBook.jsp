@@ -25,14 +25,14 @@
 				<h2>주소록</h2>
 				<div class="address-btn">
 					<button type="button" class="writeForm btn-lg" data-toggle="modal"
-						data-target="#add-Address">주소록 추가</button>
+						data-target="#add-Address">연락처 추가</button>
 				</div>
 			</div>
 
 			<div class="insider">
 				<h4>주소록 목록</h4>
 				<a href=""><h6>개인 주소록</h6></a>
-
+	
 				<!--반복문 시작 -->
 				<c:choose>
 					<c:when test="${not empty category}">
@@ -68,7 +68,7 @@
 										</span>
 										<div class="update-addBtn">
 											<a href=""><i class="fas fa-check"></i></a> <span
-												onclick="dismissUpdateAdd();"><i class="fas fa-times"></i></span>`
+												onclick="dismissUpdateAdd();"><i class="fas fa-times"></i></span>
 										</div>
 									</div>
 								</div>
@@ -82,11 +82,11 @@
 				<!-- 주소록 그룹 추가하는 함수 -->
 				<div class="insider insertAddBook">
 					<div class="insertAddress">
-						<span> <input type="text" name="">
-						</span>
+						<span> <input type="text" name="addName" id="addName"> </span>
+						
 						<div class="update-addBtn">
-							<a href=""><i class="fas fa-check"></i></a> <span
-								onclick="dismissInsertAdd();"><i class="fas fa-times"></i></span>`
+							<a id="insertAddIndiv"><i class="fas fa-check"></i></a>
+							<a onclick="dismissInsertAdd();"><i class="fas fa-times"></i></a>
 						</div>
 					</div>
 				</div>
@@ -95,40 +95,69 @@
 			</div>
 
 			<script>
+				// 개인 주소록 수정 처리하는 함수
+				function updateAddBook() {
+					// 해당 주소록 번호만 들어간 요소 hide, show 이벤트 부여
+					$(".address-title").hide();
+					$(".updateAddBook").show();
+				}
 
-                            // 개인 주소록 수정 처리하는 함수
-                            function updateAddBook(){
-                                // 해당 주소록 번호만 들어간 요소 hide, show 이벤트 부여
-                                $(".address-title").hide();
-                                $(".updateAddBook").show();
-                            }
+				// 개인 주소록 삭제 처리하는 함수
+				function deleteAddBook() {
+					confirm("주소록을 삭제하면 안에 있는 연락처 모두 삭제됩니다.\n주소록을 삭제하시겠습니까?");
 
-                            // 개인 주소록 삭제 처리하는 함수
-                            function deleteAddBook(){
-                                confirm("주소록을 삭제하면 안에 있는 연락처 모두 삭제됩니다.\n주소록을 삭제하시겠습니까?");
+					// if(확인버튼 클릭){
+					//     주소록 삭제
+					// }
+				}
 
-                                // if(확인버튼 클릭){
-                                //     주소록 삭제
-                                // }
-                            }
+				// 주소록 그룹명 수정 '취소'시 처리하는 함수
+				function dismissUpdateAdd() {
+					$(".updateAddBook").hide();
+					$(".address-title").show();
+				}
 
-                            // 주소록 그룹명 수정 '취소'시 처리하는 함수
-                            function dismissUpdateAdd(){
-                                $(".updateAddBook").hide();
-                                $(".address-title").show();
-                            }
+				// 주소록 추가 클릭시 처리하는 함수
+				function insertAddBook() {
+	
+				// 추가하는 구문 보이도록 처리
+				$(".insertAddBook").show();
+				
+				// 주소록 그룹 '추가'시 실행하는 ajax함수
+					$("#insertAddIndiv").click(function() {
 
-                            // 주소록 추가 클릭시 처리하는 함수
-                            function insertAddBook(){
-                                $(".insertAddBook").show();
-                            }
+						if ($("#addName").val().trim() != 0) {
 
-                            // 주소록 추가 '취소'시 처리하는 함수
-                            function dismissInsertAdd() {
-                                $(".insertAddBook").hide();
-                            }
+							$.ajax({
+								url : "insertAddIndiv.ad",
+								data : {
+									memNo : '500001',
+									addName : $("#addName").val()
+								},
+								success : function(result) {
 
-                        </script>
+									if (result == "success") {
+										location.reload(); // 서버 새로고침
+									}
+								},
+								error : function() {
+									alert("주소록을 추가하는데 실패했습니다. 다시 시도해주세요.");
+								}
+
+							})
+						} else {
+							alert("주소록명을 입력해주세요.");
+						}
+
+					})
+				}
+
+				// 주소록 추가 '취소'시 처리하는 함수
+				function dismissInsertAdd() {
+					$(".insertAddBook").hide();
+				}
+
+			</script>
 
 		</nav>
 		<!-- 게시판 영역 -->
@@ -293,7 +322,7 @@
             </div>
       
             <!-- Modal body -->
-        <form action="" method="post">
+        <form action="insertAddIndiv.ad" method="post">
 
             <div class="modal-body" align="center">
 	
@@ -302,44 +331,53 @@
 
                 <div class="insertAddress">
 
-                    <table class="address-table">
-                        <tr>
-                            <th>그룹 선택</th>
-                            <td>
-                                <select name="addNo" id="select-addressBook">
-                                    <option value="2" selected>개인주소록</option>
-                                </select>
-                            </td>
-                        </tr>
+							<table class="address-table">
+								<tr>
+									<th>그룹 선택</th>
+									<td><c:choose>
+											<c:when test="${empty category }">
+												<select name="addNo" id="select-addressBook">
+													<option value="2" selected>개인주소록</option>
+												</select>
+											</c:when>
+											<c:otherwise>
+												<select name="addNo" id="select-addressBook">
+													<c:forEach var="c" items="${category }">
+														<option value="${c.addNo }">${c.addName }</option>
+													</c:forEach>
+												</select>
+											</c:otherwise>
+										</c:choose></td>
+								</tr>
 
-                        <tr>
-                            <th>이름</th>
-                            <td><input type="text" name="addName"></td>
-                        </tr>
-                        <tr>
-                            <th>부서명</th>
-                            <td><input type="text" name="addDept"></td>
-                        </tr>
-                        <tr>
-                            <th>직급명</th>
-                            <td><input type="text" name="addJob"></td>
-                        </tr>
-                        <tr>
-                            <th>전화번호</th>
-                            <td><input type="text" name="addPhone"></td>
-                        </tr>
-                        <tr>
-                            <th>이메일</th>
-                            <td><input type="text" name="addEmail"></td>
-                        </tr>
-                        <tr>
-                            <th>메모</th>
-                            <td><input type="text" name="addMemo"></td>
-                        </tr>
+								<tr>
+									<th>이름</th>
+									<td><input type="text" name="addName"></td>
+								</tr>
+								<tr>
+									<th>부서명</th>
+									<td><input type="text" name="addDept"></td>
+								</tr>
+								<tr>
+									<th>직급명</th>
+									<td><input type="text" name="addJob"></td>
+								</tr>
+								<tr>
+									<th>전화번호</th>
+									<td><input type="text" name="addPhone"></td>
+								</tr>
+								<tr>
+									<th>이메일</th>
+									<td><input type="text" name="addEmail"></td>
+								</tr>
+								<tr>
+									<th>메모</th>
+									<td><input type="text" name="addMemo"></td>
+								</tr>
 
-                    </table>
+							</table>
 
-                </div>
+						</div>
                               
 
                 <div style="margin-top:10px;">
