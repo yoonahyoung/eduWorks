@@ -95,7 +95,7 @@
 				
 	            <div class="su_board_writer">
 	                <div>
-	                    <img src="resources/profile_images/defaultProfile.png" alt="">
+	                    <img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">
 	                </div>
 	                <div>
 	                    <span class="font-weight-bold">${ b.boWriter }${ b.jobName }</span>
@@ -147,61 +147,9 @@
 	
 	            <!-- 댓글 영역 -->
 	            <div class="su_board_reply">
-	
-	                <!-- 댓글 하나의 영역 -->
-	                <!-- <div class="su_reply_Barea">
-	                    <div class="su_reply">
-	                        <div>
-	                            <img src="resources/defaultProfile.png" alt="">
-	                        </div>
-	
-	                        <div>
-	                            <div class="su_reply_writer">
-	                                <span class="font-weight-bold">김미영 팀장</span>
-	                                <span style="margin-right:10px">2022-08-19 (금) 10:51</span>
-	                                대댓글 작성 버튼
-	                                <i class="fas fa-reply" style="transform: rotate(180deg);"></i> 댓글
-	                            </div>
-	                            
-	                            <div class="su_reply_Bcontent">
-	                                <p>네 확인했습니다.</p>
-	                            </div>
-	                        </div>
-	                    </div>
-	
-	                    <div class="su_reply_btn">
-	                        본인이 작성한 댓글에만 보임
-	                        <button type="button" class="btn btn-sm su_btn_border" style="border:0px">수정</button>|
-	                        <button type="button" class="btn btn-sm su_btn_border" style="border:0px">삭제</button>
-	                    </div>
-	                </div> -->
-	                <!-- 대댓글 하나의 영역 -->
-	                <div class="su_reply_Barea su_rreply_Barea">
-	                    <div class="su_reply">
-	                        <div>
-	                            <img src="resources/defaultProfile.png" alt="">
-	                        </div>
-	
-	                        <div>
-	                            <div class="su_reply_writer">
-	                                <span class="font-weight-bold">김미영 팀장</span>
-	                                <span>2022-08-19 (금) 10:51</span>
-	                            </div>
-	                            
-	                            <div class="su_reply_Bcontent">
-	                                <p>네 확인했습니다.</p>
-	                            </div>
-	                        </div>
-	                    </div>
-						
-	                    <div class="su_reply_btn">
-	                        <!-- 본인이 작성한 댓글에만 보임 -->
-	                        <button type="button" class="btn btn-sm su_btn_border" style="border:0px">수정</button>|
-	                        <button type="button" class="btn btn-sm su_btn_border" style="border:0px">삭제</button>
-	                    </div>
-	                </div>
-	
-	
+				<!-- 이 밑으로 ajax통해서 댓글 보여짐 -->
+				
+				<!-- --------------------------- -->
 	                <!-- 댓글 작성 영역 -->
 	                <div class="su_reply_Barea">
 	                    <div class="su_reply" style="width: 100%;">
@@ -235,7 +183,8 @@
 								console.log(rList);
 								
 								let value = "";
-								let user = "${loginUser.memName}";
+								let user = "${loginUserN.memName}";
+								let root = "${pageContext.request.contextPath}";
 								console.log(user);
 								
 								for(let i=0; i<rList.length; i++){
@@ -246,8 +195,8 @@
 										value += '<div class="su_reply_Barea su_rreply_Barea">';
 									}
 											value += '<div class="su_reply">'
-														+ '<div>'
-															+'<img src="/resources/profile_images/defaultProfile.png" alt="">'
+														+ '<div>' 
+															+'<img src="' + root + '/resources/profile_images/defaultProfile.png" alt="">'
 														+ '</div>'
 														+ '<div>'
 															+ '<div class="su_reply_writer">'
