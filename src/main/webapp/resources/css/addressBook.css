@@ -160,7 +160,10 @@ a:hover{
 
 .tag-modify, .tag-modify:hover{
     color: lightgray;
-    margin-left: 110px;
+}
+
+.category-title{
+	width:90%;
 }
 
 .insertAddBook, .updateAddBook{
@@ -215,7 +218,7 @@ a:hover{
 .main-content_indiv{
     width:85%;
     color:black;
-    margin-left: 20px;
+    margin: 0px 20px;
 }
 
 .second-title h2 { 
