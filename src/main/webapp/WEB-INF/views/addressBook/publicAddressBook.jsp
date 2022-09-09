@@ -1,14 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 
-	<!-- css -->
-	<link href="${pageContext.request.contextPath}/resources/css/addressBook.css" rel="stylesheet" type="text/css">
-	
+<!-- css -->
+<link href="${pageContext.request.contextPath}/resources/css/addressBook.css" rel="stylesheet" type="text/css">
+
 <title>공용 주소록</title>
 </head>
 <body>
@@ -34,11 +34,11 @@
 
 			<script>
                         
-                        		function writeMail() {
-                        			location.href="writeMailForm.ma";
-                        		}
+                function writeMail() {
+                   location.href="writeMailForm.ma";
+                }
                         
-                        </script>
+            </script>
 
 			<div class="tableOption">
 				<div class="searchbar" align="center">
@@ -90,21 +90,21 @@
 						</c:choose>
 					</tbody>
 				</table>
-				<br>
-				<br>
+				<br> <br>
 			</div>
 
 			<Script>
 
-                            // 더블클릭시 해당 선택자에게 메일 보내는 함수 실행
-                            $(function() {
-                                $(".board-content>tbody>tr").dblclick(function() {
-                                    location.href="sendMail.ma?mail=" + $(this).children().eq(5).text();
-                                })
-                            })
+              // 더블클릭시 해당 선택자에게 메일 보내는 함수 실행
+              $(function() {
+                   $(".board-content>tbody>tr").dblclick(function() {
+                        location.href="sendMail.ma?mail=" + $(this).children().eq(5).text();
+                    })
+               })
 
-                        </Script>
+           </Script>
 
+			<!-- ============== 페이지 이동 ================== -->
 			<div style="margin: 30px 0 30px 0">
 				<c:choose>
 					<c:when test="${empty list }">
@@ -156,7 +156,7 @@
 		</div>
 	</div>
 	<!-- /.container-fluid -->
-                
-           <jsp:include page="../common/footer.jsp" />
+
+	<jsp:include page="../common/footer.jsp" />
 </body>
 </html>
