@@ -24,10 +24,9 @@ public interface PromotionService {
 	// 상세 조회 서비스
 	int increaseCount(int promoNo);
 	Promotion selectPromo(int promoNo);
-	int selectReplyCount(int promoNo);
-	ArrayList<Reply> selectReplyList(int promoNo);
-	ArrayList<Reply> selectRReplyList(int promoNo);
 	Attachment selectAt(int promoNo);
+	ArrayList<Reply> selectReplyList(int promoNo);
+	int insertReply(Reply r);
 	
 	// 수정 서비스
 	int updatePromo(Promotion p);

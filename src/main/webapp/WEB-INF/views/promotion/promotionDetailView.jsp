@@ -90,7 +90,7 @@
                      	</c:otherwise>
                     </c:choose>
 	                
-	                <span> &ensp;[${ rCount }]</span>
+	                <span id="rCountTitle"></span>
 	            </div>
 	
 	             <!-- 수정삭제 버튼 -->
@@ -188,7 +188,7 @@
 	            <div class="su_board_count">
 	                <div>
 	                    <span class="fas fa-comments"></span>
-	                    <span>댓글 ${ rCount }개</span>
+	                    <span id="rCounstSpan"></span>
 	                </div>
 	                &ensp;&ensp;
 	                <div>
@@ -203,100 +203,8 @@
 	            <div class="su_board_reply">
 	
 	                <!-- 댓글 하나의 영역 -->
-	                <!-- id 뒤에 댓글번호 붙이기 ex) id="pReply${promoNo}" -->
-	                
-	                <c:if test="${ list.size() ne 0 }">
-	                	<c:forEach var="r" items="${ list }">
-	                		<c:if test="${ r.replyDepth eq 1 }">
-		                		<div class="su_reply_Barea" id="pReply">
-				                    <div class="su_reply">
-				                        <div>
-				                        <!-- 사진 join해서 연결하기 -->
-				                            <img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">
-				                        </div>
-				
-				                        <div>
-				                            <div class="su_reply_writer">
-				                            	<input type="hidden" value="${ r.replyNo }">
-				                                <span class="font-weight-bold">${ r.replyWriter }</span>
-				                                <span style="margin-right:10px">&ensp;${ r.replyDate }</span>
-				                                <!-- 대댓글 작성 버튼 -->
-				                                <!-- ()안에 댓글 번호 넣기 -->
-				                                <!-- 내가 작성한 댓글이 아닐 때만 보이게 -->
-				                                <a id="pReplyEvent" style="cursor: pointer;" onclick="rReply();"><i class="fas fa-reply" style="transform: rotate(180deg);"></i> 댓글</a>
-				                            </div>
-				                            
-				                            <div class="su_reply_Bcontent">
-				                                <p>${ r.replyContent }</p>
-				                            </div>
-				                        </div>
-				                    </div>
-				
-				                    <div class="su_reply_btn">
-				                        <!-- 본인이 작성한 댓글에만 보임 -->
-				                        <button type="button" class="btn btn-sm" style="border:0px; color: black;">수정</button>|
-				                        <button type="button" class="btn btn-sm" style="border:0px; color: black;">삭제</button>
-				                    </div>
-				                </div>
-				            </c:if>
-			                
-			                <!-- 대댓글 영역 -->
-			                <!-- 위의 부모 댓글 번호의 대댓글만 출력 -->
-			                
-			                <c:forEach var="rr" items="${ list }">
-				                <c:if test="${ rr.replyDepth eq 2 and rr.reBoardNo eq r.replyNo }">
-				                
-				                	<!-- 대댓글 하나의 영역 -->
-					                <div class="su_reply_Barea su_rreply_Barea">
-					                    <div class="su_reply">
-					                        <div>
-					                            <img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">
-					                        </div>
-					
-					                        <div>
-					                            <div class="su_reply_writer">
-					                                <span class="font-weight-bold">${ rr.replyWriter }</span>
-					                                <span>${ rr.replyDate }</span>
-					                            </div>
-					                            
-					                            <div class="su_reply_Bcontent">
-					                                <p>${ rr.replyContent }</p>
-					                            </div>
-					                        </div>
-					                    </div>
-					
-					                    <div class="su_reply_btn">
-					                        <!-- 본인이 작성한 댓글에만 보임 -->
-					                        <button type="button" class="btn btn-sm" style="border:0px">수정</button>|
-					                        <button type="button" class="btn btn-sm" style="border:0px">삭제</button>
-					                    </div>
-					                    
-					                </div>
-				                </c:if>
-	                		</c:forEach>
-	                	</c:forEach>
-		            </c:if>
-		            
-	                
-	
-	                <!-- 대댓글 작성 영역 -->
-	                <!-- <div class="su_reply_Barea su_rreply_Barea">
-	                    <div class="su_reply" style="width: 100%;">
-	                        <div>
-	                            <img src="resources/defaultProfile.png" alt="">
-	                        </div>
-	                        
-	                        <div style="width: 100%">
-	                            <input style="width: 100%;" type="text" placeholder="댓글 입력">
-	                        </div>
-	
-	                    </div>
-	                    <div class="su_reply_btn">
-	                        <button type="button" class="btn su_btn_border btn-sm" id="writeReplyBtn">댓글 작성</button>
-	                    </div>
-	
-	                </div> -->
-	
+	                <!-- ajax를 통해 댓글 리스트 생성 -->
+					<div id="replyArea"></div>
 	                <!-- 댓글 작성 영역 -->
 	                <div class="su_reply_Barea">
 	                    <div class="su_reply" style="width: 100%;">
@@ -305,21 +213,90 @@
 	                        </div>
 	                        
 	                        <div style="width: 100%">
-	                            <input style="width: 100%;" type="text" placeholder="댓글 입력" id="nContent">
+	                            <input style="width: 100%;" type="text" placeholder="댓글 입력" id="replyContent0">
 	                        </div>
 	
 	                    </div>
 	                    <div class="su_reply_btn">
-	                        <button type="button" class="btn su_btn_border btn-sm" id="writeReplyBtn">댓글 작성</button>
+	                        <button type="button" class="btn su_btn_border btn-sm writeReplyBtn" 
+	                        onclick="addReply(0);" id="writeReplyBtn">댓글 작성</button>
 	                    </div>
 	
 	                </div>
-	
+					
+					<!-- 댓글 ajax script -->
 	                <script>
-	                    $(document).ready(function(){
-	                    })
+	                	$(function(){
+	                		selectReplyList();	
+	                	})
+	                	
+	                	function selectReplyList(){
+	                		$.ajax({
+	                			url: "rlist.pr",
+	                			data:{no: ${ p.promoNo }},
+	                			success: function(list){
+	                				
+	                				let value = "";
+	                				//let userName = "${ loginUser.memName}";
+	                				let rCount = list.length;
+	                				
+	                				$("#rCountTitle").html(" &ensp;[" + rCount + "]");
+	                				$("#rCounstSpan").html("댓글 " + rCount + " 개");
+	                				
+	                				for(let i = 0; i < rCount; i++){
+	                					
+	                					if(list[i].replyParent == 0){ // 원댓글 이면
+	                						value += '<div class="su_reply_Barea" id="pReply">';
+	                					} else { // 대댓글이면
+	                						value += '<div class="su_reply_Barea su_rreply_Barea">';	
+	                					}
+	                					
+	                					value += '<div class="su_reply">'
+				                        			+ '<div>'
+				                        				+ '<img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">'
+				                        			+ '</div>'
+				
+				                        			+ '<div>'
+				                            			+ '<div class="su_reply_writer">'
+					                            			+ '<span class="font-weight-bold">' + list[i].replyWriter + '&ensp;' + list[i].replyDept + '&ensp;</span>'
+															+ '<span style="margin-right:10px">' + list[i].replyDate + '</span> &ensp;';
+						                          
+							                                <!-- 대댓글 작성 버튼 -->
+							                                <!-- ()안에 댓글 번호 넣기 -->
+							                                <!-- 내가 작성한 댓글이 아니고 원댓글일 때만 보이게 -->
+							                                if(list[i].replyParent == 0){
+							                                	
+							                                	value += '<a id="pReplyEvent" style="cursor: pointer;" onclick="rReply(' + list[i].replyNo + ');">'
+									                                	+ '<i class="fas fa-reply" style="transform: rotate(180deg);"></i> 댓글</a>';
+							                                }
+							                      value += '</div>'
+				                            			 + '<div class="su_reply_Bcontent">'
+				                            			 	+ '<p>' + list[i].replyContent +'</p>'
+														 + '</div>'
+												+ '</div>'
+											+ '</div>';
+											
+											// 댓글 작성자만 보이는 수정, 삭제 버튼
+				                      		//if(list[i].replyWriter == userName){
+				                      			value += '<div class="su_reply_btn">'
+						                        			+ '<button type="button" class="btn btn-sm" style="border:0px; color: black;">수정</button>|' 
+						                        			+ '<button type="button" class="btn btn-sm" style="border:0px; color: black;">삭제</button>'
+						                    			+ '</div>';
+				                      		//}
+											
+											value += '</div>';
+	                					
+	                				}
+	                				
+	                				$(".su_board_reply #replyArea").html(value);	
+	                					
+	                			}, error:function(){
+	                				console.log("ajax 댓글 리스트 조회 실패");
+	                			}
+	                		});
+	                	}
 	
-	                    function rReply(){
+	                    function rReply(rNo){
 	                        const rReplyDiv = '<div class="su_reply_Barea su_rreply_Barea">'
 	                                            + '<div class="su_reply" style="width: 100%;">'
 	                                                + '<div>'
@@ -331,11 +308,15 @@
 	                                                + '</div>'
 	
 	                                            + '</div>'
-	                                            + '<div class="su_reply_btn" id="su_reply_btn1">'
-	                                                + '<button type="button" class="btn su_btn_border btn-sm writeReplyBtn" id="writeReplyBtn">댓글 작성</button>'
+	                                            + '<div class="su_reply_btn" id="su_reply_btn">'
+	                                                + '<button type="button" class="btn su_btn_border btn-sm writeReplyBtn" id="writeReplyBtn" onclick="addReply(' + rNo + ');">댓글 작성</button>'
 	                                            + '</div>'
 	
 	                                            + '</div>';
+	                                            console.log(rNo);
+	                                            
+	                        //let rLastNo = 
+	                                            
 	                        $("#pReply").before(rReplyDiv);
 	                        // 원 댓의 이벤트 제거
 	                        $("#pReplyEvent").removeAttr("onclick");
@@ -343,12 +324,44 @@
 	                        $(".su_rreply_Barea>.su_reply input").focus();
 	                            
 	                    }
+	                    
+	                    function addReply(num){
+	                    	// num : 부모 댓글 번호
+	                    	let id = "replyContent" + num;
+	                    	//console.log($("#" + id).val());
+	                    	
+	                    	if( $("#" + id).val().trim().length != 0 ){	// 유효한 댓글 작성시 => ajax로 insert 요청
+	                    		
+	                    		$.ajax({
+	                    			url: "rinsert.pr",
+	                    			data: {
+	                    				replyContent: $("#" + id).val(),
+	                    				reBoardNo: ${ p.promoNo },
+	                    				replyParent: num
+	                    				//replyWriter: ${loginUser.memName }
+	                    				//replyDept: ${ loginUser.memDept }
+	                    			},
+	                    			success: function(result){
+	                    				if(result == "success"){
+	                    					$("#"+ id).val("");
+	                    					selectReplyList();
+	                    				}
+	                    			}, error: function(){
+	                    				console.log("ajax 댓글 작성 실패");
+	                    			}
+	                    		});
+	                    	} else{	// 댓글 내용 무
+	                    		 alert("댓글 내용을 입력해주세요!");
+	                    	}
+	                    	
+	                    	
+	                    	
+	                    }
 	
 	                    // 숫자 주의하기(댓글 번호와 연결)
-	                    $(document).on("click", ".su_rreply_Barea>#su_reply_btn1", function(){
-	                        console.log("하,,,");
-	                        $("#pReplyEvent1").attr("onclick", "rReply();");
-	                    })
+	                   /*  $(document).on("click", ".su_rreply_Barea>#su_reply_btn1", function(){
+	                        $("#pReplyEvent").attr("onclick", "rReply();");
+	                    }) */
 	                    
 	
 	

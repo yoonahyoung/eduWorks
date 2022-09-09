@@ -59,15 +59,9 @@ public class PromotionController {
 		
 		if(result > 0) {
 			Promotion p = pService.selectPromo(no);
-			int rCount = pService.selectReplyCount(no);
-			ArrayList<Reply> list = pService.selectReplyList(no);
-			ArrayList<Reply> rlist = pService.selectRReplyList(no);
 			Attachment at = pService.selectAt(no);
 	
 			mv.addObject("p", p)
-			  .addObject("rCount", rCount)
-			  .addObject("list", list)
-			  //.addObject("rlist", rList)
 			  .addObject("at", at)
 			  .setViewName("promotion/promotionDetailView");
 			
@@ -76,6 +70,33 @@ public class PromotionController {
 			System.out.println("ddd");
 		}
 		return mv;
+	}
+	
+
+	// 댓글 리스트 조회
+	@ResponseBody
+	@RequestMapping(value="rlist.pr", produces="application/json; charset=UTF-8")
+	public String ajaxSelectReplyList(int no) {
+		
+		ArrayList<Reply> list = pService.selectReplyList(no);
+		
+		return new Gson().toJson(list);
+	}
+	
+	// 댓글, 대댓글 입력
+	@ResponseBody
+	@RequestMapping("rinsert.pr")
+	public String ajaxInsertReply(Reply r) {
+		
+		if(r.getReplyParent() == 0) { // 원댓글일 때
+			r.setReplyDepth(0);
+		} else {
+			r.setReplyDepth(1);
+		}
+		
+		int result = pService.insertReply(r);
+		
+		return result > 0 ? "success" : "fail";
 	}
 	
 	// 글 수정 페이지 이동
@@ -207,7 +228,6 @@ public class PromotionController {
 		return new Gson().toJson(map);
 		
 	}
-	
 	
 	
 	

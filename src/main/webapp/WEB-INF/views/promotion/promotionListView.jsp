@@ -124,8 +124,10 @@
 	                            });
 	                            
 	                            // 각 게시글의 행을 클릭하면 게시글 상세보기 페이지로 이동
-	                            $("#suTable>tbody>tr").on("click", "td:not(:first-child)", function(){
-	                            	 //console.log($(this).parent().children(".no").text());
+	                            //$("#suTable>tbody>tr").on("click", "td:not(:first-child)", function(){ 
+	                           // ajax 포함되었을 땐 이런 식으로 작성하기
+	                            $(document).on("click", "#suTable>tbody>tr td:not(:first-child)", function(){
+	                            	 console.log($(this).parent().children(".no").text());
 	                            	location.href = "detail.pr?no=" + $(this).parent().children(".no").text();
 	                            });
 	                            

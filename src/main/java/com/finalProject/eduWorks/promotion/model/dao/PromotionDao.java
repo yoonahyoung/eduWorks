@@ -68,24 +68,19 @@ public class PromotionDao {
 		return sqlSession.selectOne("promotionMapper.selectPromo", no);
 	}
 	
-	// 게시글의 댓글 개수 조회
-	public int selectReplyCount(SqlSessionTemplate sqlSession, int promoNo) {
-		return sqlSession.selectOne("promotionMapper.selectReplyCount", promoNo);
+	// 첨부파일 조회
+	public Attachment selectAt(SqlSessionTemplate sqlSession, int promoNo) {
+		return sqlSession.selectOne("promotionMapper.selectAt", promoNo);
 	}
-	
+
 	// 게시글 댓글 리스트 조회
 	public ArrayList<Reply> selectReplyList(SqlSessionTemplate sqlSession, int promoNo){
 		return (ArrayList) sqlSession.selectList("promotionMapper.selectReplyList", promoNo);
 	}
 	
-	// 게시글 대댓글 리스트 조회
-	public ArrayList<Reply> selectRReplyList(SqlSessionTemplate sqlSession, int promoNo){
-		return (ArrayList) sqlSession.selectList("promotionMapper.selectRReplyList", promoNo);
-	}
-	
-	// 첨부파일 조회
-	public Attachment selectAt(SqlSessionTemplate sqlSession, int promoNo) {
-		return sqlSession.selectOne("promotionMapper.selectAt", promoNo);
+	// 댓글 입력
+	public int insertReply(SqlSessionTemplate sqlSession, Reply r) {
+		return sqlSession.insert("promotionMapper.insertReply", r);
 	}
 	
 	// 게시글 수정

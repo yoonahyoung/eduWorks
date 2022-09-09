@@ -57,8 +57,8 @@ public class PromotionServiceImpl implements PromotionService {
 	}
 
 	@Override
-	public int selectReplyCount(int promoNo) {
-		return pDao.selectReplyCount(sqlSession, promoNo);
+	public Attachment selectAt(int promoNo) {
+		return pDao.selectAt(sqlSession, promoNo);
 	}
 
 	@Override
@@ -67,15 +67,10 @@ public class PromotionServiceImpl implements PromotionService {
 	}
 	
 	@Override
-	public ArrayList<Reply> selectRReplyList(int promoNo) {
-		return pDao.selectRReplyList(sqlSession, promoNo);
+	public int insertReply(Reply r) {
+		return pDao.insertReply(sqlSession, r);
 	}
 	
-	@Override
-	public Attachment selectAt(int promoNo) {
-		return pDao.selectAt(sqlSession, promoNo);
-	}
-
 	@Override
 	public int updatePromo(Promotion p) {
 		return pDao.updatePromo(sqlSession, p);
