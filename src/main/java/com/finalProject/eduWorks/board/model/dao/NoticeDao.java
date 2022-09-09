@@ -55,7 +55,6 @@ public class NoticeDao {
 	
 	// 게시글 댓글 조회
 	public ArrayList<Reply> selectReplyList(SqlSessionTemplate sqlSession, int boardNo) {
-		System.out.println((ArrayList)sqlSession.selectList("noticeMapper.selectReplyList", boardNo));
 		return (ArrayList)sqlSession.selectList("noticeMapper.selectReplyList", boardNo);
 	}
 
