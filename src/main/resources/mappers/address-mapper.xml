@@ -71,15 +71,7 @@
 		  and rownum = 1
 		order by add_no
 	</select>
-	
-	<select id="selectAddBasicCount" resultType="_int">
-		select
-		    count(*)
-		from tb_address
-		where mem_no = #{memNo}
-		  and add_no = #{addNo}
-	</select>
-	
+
 	<select id="selectAddIndivList" resultMap="addressResult">
 		select
 		    add_per_no
@@ -162,5 +154,21 @@
 			  , #{addMemo}
 		  	)
 	</insert>
+	
+	<!-- 주소록 그룹 삭제시 해당 그룹 연락처 모두 삭제 -->
+	<delete id="deleteIndivAddNum">
+		delete 
+		    from tb_address
+		where mem_no = #{memNo}
+		  and add_no = #{addNo}
+	</delete>
+	
+	<!-- 주소록 그룹 삭제 -->
+	<delete id="deleteIndivAddressBook">
+		delete
+		    from tb_add_out
+		where mem_no = #{memNo}
+		  and add_no = #{addNo}
+	</delete>
 
 </mapper>

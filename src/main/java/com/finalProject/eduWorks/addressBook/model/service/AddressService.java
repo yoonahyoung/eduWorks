@@ -19,7 +19,7 @@ public interface AddressService {
 	int basicAddressNum(String memNo);
 	
 	// 개인 기본 주소록에 들어가는 사람 수 조회
-	int selectAddBasicCount(Address a); // 회원 번호, 기본 주소록 번호 필요
+	int selectIndivNumCount(Address a); // 회원 번호, 기본 주소록 번호 필요
 		
 	// 개인 주소록 기본 목록 조회
 	ArrayList<Address> selectAddIndivList(PageInfo pi, Address a);
@@ -27,21 +27,20 @@ public interface AddressService {
 	// 개인 주소록 카테고리 목록 조회
 	ArrayList<AddressOut> selectAddCategory(Address a);
 
-	// 3. 개인 주소록 등록
-	
-	// 개인 주소록 그룹 추가
+	// 3. 개인 주소록 그룹 추가
 	int ajaxInsertAddIndiv(AddressOut ado); // 
 	
-	// 개인 주소록 연락처 추가
+	// 4. 개인 주소록 연락처 추가
 	int insertAddIndivNum(Address a);
-	
-	// 해당 개인 주소록에 등록된 연락처 수 조회
-	int selectIndivNumCount(Address a);
 
-	// 4. 개인 주소록 추가
+	// 5. 개인 주소록 그룹 삭제
 	
-	// 5. 개인 주소록 삭제
+	// 주소록 그룹에 해당된 연락처들 삭제
+	int deleteIndivAddNum(Address a);
 	
+	// 주소록 그룹 삭제
+	int deleteIndivAddressBook(Address a);
+
 	// 6. 연락처 삭제
 
 }

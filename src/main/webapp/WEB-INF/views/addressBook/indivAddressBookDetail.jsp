@@ -53,7 +53,7 @@
 											onclick="updateAddBook(/*해당 주소록 번호*/);"> <span
 											class="font-weight-bold">수정하기</span>
 										</a> <a class="dropdown-item d-flex align-items-center"
-											onclick="deleteAddBook();"> <span
+											onclick="deleteAddBook('${c.addNo}');"> <span
 											class="font-weight-bold">삭제하기</span>
 										</a>
 									</div>
@@ -116,12 +116,32 @@
 				}
 
 				// 개인 주소록 삭제 처리하는 함수
-				function deleteAddBook() {
-					confirm("주소록을 삭제하면 안에 있는 연락처 모두 삭제됩니다.\n주소록을 삭제하시겠습니까?");
+				function deleteAddBook(addNo) {
+					let answer = confirm("주소록을 삭제하면 안에 있는 연락처가 모두 삭제됩니다.\n주소록을 삭제하시겠습니까?");
+					
+					// 삭제 '확정'시 실행
+				 	if(answer == true){
+				 		
+				 		$.ajax({
+				 			url : "deleteIndivAddressBook.ad",
+				 			data : {
+				 				memNo : ${loginUserN.memNo},
+				 				addNo : addNo
+				 			},
+				 			success : function(result){
+				 				console.log(result);
+				 				if(result == 'success'){
+					 				alert("주소록을 삭제했습니다.");
+					 				location.reload(); // 서버 새로고침
+				 				}
 
-					// if(확인버튼 클릭){
-					//     주소록 삭제
-					// }
+				 			},
+				 			error : function(){
+				 				console.log("실패");
+				 			}
+				 		})
+				 		
+				 	}
 				}
 
 				// 주소록 그룹명 수정 '취소'시 처리하는 함수
