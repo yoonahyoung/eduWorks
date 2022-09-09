@@ -101,7 +101,7 @@
 
 
 			<script>
-		
+
 				// 해당 주소록 이동 처리하는 함수	
 				function postSubmit(url, addNo) {
 					$("#post").children("#addNo").val(addNo); // hidden값에 반복되는 addNo요소 중 클릭된 요소만 value값에 넣기
@@ -425,7 +425,7 @@
 
                 <div class="modal-body" align="center">
 
-                <input type="hidden" name="userId" value="${loginUser.userId }">
+                <input type="hidden" name="memNo" value="${loginUserN.memNo }">
 
                     <div class="insertAddress">
 

@@ -53,22 +53,31 @@ public class AddressController {
 	 * @return : 개인 주소록 페이지
 	 */
 	@RequestMapping("individualAddress.ad")
-	public ModelAndView individualAddressBook(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv, String memNo) {
+	public ModelAndView individualAddressBook(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv, String memNo, HttpSession session) {
+		
+		// 로그인 세션! (삭제하기!)
+		Member loginUser = new Member("500001", "user02", "pass02", "황재범", "D1", "J3", "010-2222-2223", "2222-2223", "aaaa1112@gmail.com", "1997-01-06", 111111, "111111", "상세주소2", "참고항목2", "2022-08-02", "2022-08-02", "N", "file");
+	    session.setAttribute("loginUserN", loginUser);
+		
 		
 		// 개인 주소록 기본('개인주소록') 번호 조회
 		String basicAddNum = String.valueOf(aService.basicAddressNum(memNo));
+
+		// 개인 주소록 기본 연락처 목록 조회
+		Address a = new Address();
+		a.setMemNo(memNo);
+		a.setAddNo(basicAddNum);
 		
 		// 개인 기본 주소록에 들어가는 사람 수 조회
-		int selectAddBasicCount = aService.selectAddBasicCount(memNo, basicAddNum);
+		int selectAddBasicCount = aService.selectAddBasicCount(a);
 
 		// 페이징
 		PageInfo pi = Pagination.getInfo(selectAddBasicCount, currentPage, 10, 10);
 		
-		// 개인 주소록 기본 연락처 목록 조회
-		ArrayList<Address> list = aService.selectAddIndivList(pi, memNo, basicAddNum);
+		ArrayList<Address> list = aService.selectAddIndivList(pi, a);
 		
 		// 개인 주소록 카테고리 목록 조회
-		ArrayList<AddressOut> category = aService.selectAddCategory(memNo);
+		ArrayList<AddressOut> category = aService.selectAddCategory(a);
 		
 		mv.addObject("pi", pi);
 		mv.addObject("list", list);
@@ -79,7 +88,7 @@ public class AddressController {
 		return mv;
 		
 	}
-	
+		
 	/**
 	 * 3. 개인 주소록 그룹 추가
 	 * @param ado : 로그인한 회원 번호, 추가하고자하는 그룹 명
@@ -94,5 +103,38 @@ public class AddressController {
 		return result > 0 ? "success" : "fail";
 		
 	}
+	
+	@RequestMapping("indivAddressBook.ad")
+	public ModelAndView individualAddressBook(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv, Address a) {
+		
+		// 해당 개인주소록에 등록된 연락처 수 조회
+		int listCount = aService.selectIndivNumCount(a);
+		
+		// 페이징
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
+		
+		// 해당 개인주소록에 등록된 연락처 목록 조회
+		ArrayList<Address> list = aService.selectAddIndivList(pi, a);
+		
+		// 개인 주소록 카테고리 목록 조회
+		ArrayList<AddressOut> category = aService.selectAddCategory(a);
+		
+		mv.addObject("pi", pi);
+		mv.addObject("list", list);
+		mv.addObject("category", category);
+		
+		mv.setViewName("addressBook/indivAddressBookDetail");
+		
+		return mv;
+		
+	}
+	
+//	@RequestMapping("insertAddIndivNum.ad")
+//	public String insertAddIndivNum(Address a) {
+//		
+//		int result = aService.insertAddIndivNum(a);
+//
+//		
+//	}
 
 }

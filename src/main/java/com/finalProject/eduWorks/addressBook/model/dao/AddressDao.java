@@ -53,14 +53,9 @@ public class AddressDao {
 	 * @param addNo : 로그인한 회원의 개인 주소록 번호
 	 * @return : 등록된 연락처 수
 	 */
-	public int selectAddBasicCount(SqlSessionTemplate sqlSession, String memNo, String addNo) {
-		
-		HashMap<String, String> map = new HashMap<>();
-		
-		map.put(memNo, memNo);
-		map.put(addNo, addNo);
-		
-		return sqlSession.selectOne("addressMapper.selectAddBasicCount", map);
+	public int selectAddBasicCount(SqlSessionTemplate sqlSession, Address a) {
+	
+		return sqlSession.selectOne("addressMapper.selectAddBasicCount", a);
 	
 	}
 	
@@ -70,18 +65,13 @@ public class AddressDao {
 	 * @param addNo : 로그인한 회원의 개인 주소록 번호
 	 * @return : 조회된 연락처 목록이 담긴 ArrayList<Address>
 	 */
-	public ArrayList<Address> selectAddIndivList(SqlSessionTemplate sqlSession, PageInfo pi, String memNo, String addNo){
-		
-		HashMap<String, String> map = new HashMap<>();
-		
-		map.put(memNo, memNo);
-		map.put(addNo, addNo);
-		
+	public ArrayList<Address> selectAddIndivList(SqlSessionTemplate sqlSession, PageInfo pi, Address a){
+				
 		int limit = pi.getBoardLimit(); // 조회해야되는 게시글 갯수
 		int offset = (pi.getCurrentPage() - 1) * limit;
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		
-		return (ArrayList)sqlSession.selectList("addressMapper.selectAddIndivList", map, rowBounds);
+		return (ArrayList)sqlSession.selectList("addressMapper.selectAddIndivList", a, rowBounds);
 		
 	}
 	
@@ -90,8 +80,8 @@ public class AddressDao {
 	 * @param memNo : 로그인한 회원 번호
 	 * @return : 등록한 카테고리 목록이 담긴 ArrayList<AddressOut>
 	 */
-	public ArrayList<AddressOut> selectAddCategory(SqlSessionTemplate sqlSession, String memNo){
-		return (ArrayList)sqlSession.selectList("addressMapper.selectAddCategory", memNo);		
+	public ArrayList<AddressOut> selectAddCategory(SqlSessionTemplate sqlSession, Address a){
+		return (ArrayList)sqlSession.selectList("addressMapper.selectAddCategory", a);		
 	}
 	
 	/**
@@ -103,5 +93,9 @@ public class AddressDao {
 		return sqlSession.insert("addressMapper.insertAddIndiv", ado);
 	}
 	
+	public int selectIndivNumCount(SqlSessionTemplate sqlSession, Address a) {
+		return sqlSession.selectOne("addressMapper.selectIndivNumCount", a);
+	}
+
 
 }

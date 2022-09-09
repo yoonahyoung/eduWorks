@@ -57,8 +57,8 @@ public class AddressServiceImpl implements AddressService {
 	 * @return : 등록된 연락처 수
 	 */
 	@Override
-	public int selectAddBasicCount(String memNo, String addNo) {
-		return aDao.selectAddBasicCount(sqlSession, memNo, addNo);
+	public int selectAddBasicCount(Address a) {
+		return aDao.selectAddBasicCount(sqlSession, a);
 	}
 
 	/**
@@ -68,8 +68,8 @@ public class AddressServiceImpl implements AddressService {
 	 * @return : 조회된 연락처 목록이 담긴 ArrayList<Address>
 	 */
 	@Override
-	public ArrayList<Address> selectAddIndivList(PageInfo pi, String memNo, String addNo) {
-		return aDao.selectAddIndivList(sqlSession, pi, memNo, addNo);
+	public ArrayList<Address> selectAddIndivList(PageInfo pi, Address a) {
+		return aDao.selectAddIndivList(sqlSession, pi, a);
 	}
 
 	/**
@@ -78,8 +78,8 @@ public class AddressServiceImpl implements AddressService {
 	 * @return : 등록한 카테고리 목록이 담긴 ArrayList<AddressOut>
 	 */
 	@Override
-	public ArrayList<AddressOut> selectAddCategory(String memNo) {
-		return aDao.selectAddCategory(sqlSession, memNo);
+	public ArrayList<AddressOut> selectAddCategory(Address a) {
+		return aDao.selectAddCategory(sqlSession, a);
 	}
 
 	/**
@@ -91,5 +91,16 @@ public class AddressServiceImpl implements AddressService {
 	public int ajaxInsertAddIndiv(AddressOut ado) {
 		return aDao.ajaxInsertAddIndiv(sqlSession, ado);
 	}
+
+	@Override
+	public int insertAddIndivNum(Address a) {
+		return 0;
+	}
+
+	@Override
+	public int selectIndivNumCount(Address a) {
+		return aDao.selectIndivNumCount(sqlSession, a);
+	}
+
 
 }
