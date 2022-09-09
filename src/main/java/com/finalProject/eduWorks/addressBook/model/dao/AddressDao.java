@@ -102,6 +102,11 @@ public class AddressDao {
 		return sqlSession.selectOne("addressMapper.selectIndivNumCount", a);
 	}
 	
+	/**
+	 * 5. 개인 주소록 그룹 중 선택한 그룹에 연락처 등록
+	 * @param a : 연락처 정보
+	 * @return : 등록 성공 여부 (성공 : success | 실패 : fail)
+	 */
 	public int insertAddIndivNum(SqlSessionTemplate sqlSession, Address a) {
 		return sqlSession.insert("addressMapper.insertAddIndivNum", a);
 	}
