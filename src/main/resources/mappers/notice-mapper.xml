@@ -26,7 +26,7 @@
 		<result column="reply_parent" property="replyParent" />
 		<result column="reply_content" property="replyContent" />
 		<result column="reply_writer" property="replyWriter" />
-		<result column="reply_dept" property="replyDept" />
+		<result column="reply_job" property="replyJob" />
 		<result column="reply_blind" property="replyBlind" />
 		<result column="reply_date" property="replyDate" />
 	</resultMap>
@@ -103,6 +103,11 @@
   		   and board_status = 'Y'
   	</select>
   	
+  	<!-- 첨부파일 조회 -->
+  	<select id="noticeAtList">
+  	
+  	</select>
+  	
   	<!-- 게시글 상세 조회 시 댓글 조회 -->
   	<select id="selectReplyList" resultMap="replyResult">
   		select 
@@ -112,7 +117,7 @@
 		     , reply_parent
 		     , reply_content
 		     , reply_writer
-		     , reply_dept
+		     , reply_job
 		     , to_char(reply_date, 'YY-MM-DD HH24:MI') as "reply_date"
 		  from tb_reply
 		 where reply_type = 4
@@ -122,10 +127,34 @@
 		order siblings by reply_no asc, reply_parent asc
   	</select>
   	
-  	<!-- 첨부파일 조회 -->
-  	<select id="noticeAtList">
-  	
-  	</select>
-  
+  	<!-- 댓글 등록 -->
+  	<insert id="insertReply">
+  		insert
+  		  into tb_reply
+  		  (
+  		  	reply_no
+  		  , reply_type
+  		  , re_board_no
+  		  , reply_depth
+  		  , reply_parent
+  		  , reply_content
+  		  , reply_writer
+  		  , reply_job
+  		  , reply_date
+  		  )
+  		  values
+  		  (
+  		  	seq_reno.nextval
+  		  , 4
+  		  , #{reBoardNo}
+  		  , #{replyDepth}
+  		  , #{replyParent}
+  		  , #{replyContent}
+  		  , #{replyWriter}
+  		  , #{replyJob}
+  		  , sysdate
+  		  )
+  		  
+  	</insert>
   
 </mapper>

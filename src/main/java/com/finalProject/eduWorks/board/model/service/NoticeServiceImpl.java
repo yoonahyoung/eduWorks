@@ -50,7 +50,12 @@ public class NoticeServiceImpl implements NoticeService{
 	public ArrayList<Reply> selectReplyList(int noticeNo) {
 		return nDao.selectReplyList(sqlSession, noticeNo);
 	}
-
+	
+	// 댓글 등록
+	@Override
+	public int insertReply(Reply r) {
+		return nDao.insertReply(sqlSession, r);
+	}
 	@Override
 	public Board udpatetNotice(Board b) {
 		return null;
@@ -65,6 +70,8 @@ public class NoticeServiceImpl implements NoticeService{
 	public int deleteNotice(int noticeNo) {
 		return 0;
 	}
+
+	
 
 	
 

@@ -20,7 +20,7 @@ public class Reply {
 	private int replyParent;
 	private String replyContent;
 	private String replyWriter;
-	private String replyDept;
+	private String replyJob;
 	private String replyBlind;
 	private String replyDate;
 	private String replyNoDate;

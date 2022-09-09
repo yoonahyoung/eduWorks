@@ -19,7 +19,12 @@ public interface NoticeService {
 	// 3. 공지사항 상세 페이지 조회 서비스
 	int increaseCount(int noticeNo);
 	Board selectNotice(int noticeNo);
+	
+	// 3-1) 댓글 조회 서비스
 	ArrayList<Reply> selectReplyList(int noticeNo);
+	
+	// 3-2) 댓글 작성 서비스
+	int insertReply(Reply r);
 	
 	// 4. 공지사항 수정 서비스
 	Board udpatetNotice(Board b);

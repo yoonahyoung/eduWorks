@@ -25,7 +25,7 @@
 	            <div class="su_btn_two_area">
 	                <div class="su_left_area"><!-- 자리 채우기용 div --></div>
 	                <div>
-	                    <button type="button" class="n-btn su_btn_border" onclick="history.back();">목록으로</button>
+	                    <button type="button" class="n-btn su_btn_border" onclick="location.href='list.no'">목록으로</button>
 	                </div>
 	            </div>
 	            <hr class="hr_line">
@@ -145,26 +145,22 @@
 	            	
 	            	</div>
 				
-				<!-- 댓글 작성 form 영역, 대댓글 작성시 ajax통신 -->
-					<form action="insertRe.no">
-		                <div class="su_reply_Barea">
-		                    <div class="su_reply" style="width: 100%;">
-		                        <div>
-		                            <img src="resources/defaultProfile.png" alt="">
-		                        </div>
-		                        
-		                        <div style="width: 100%">
-		                            <input style="width: 100%;" type="text" placeholder="댓글 입력" name="replyContent">
-		                        </div>
-		
-		                    </div>
-	                        <div class="su_reply_btn">
-	                            <button type="submit" class="n-btn su_btn_border btn-sm" id="writeReplyBtn">댓글 작성</button>
+					<!-- 댓글 작성 영역, onclick시 parentNo 전달 -->
+	                <div class="su_reply_Barea">
+	                    <div class="su_reply" style="width: 100%;">
+	                        <div>
+	                            <img src="resources/defaultProfile.png" alt="">
 	                        </div>
-		
-		                </div>
-	                </form>
-				<!-- 댓글 script -->
+	                        
+	                        <div style="width: 100%">
+	                            <input style="width: 100%;" type="text" placeholder="댓글 입력" id="replyContent">
+	                        </div>
+	
+	                    </div>
+                        <div class="su_reply_btn">
+                            <button type="button" class="n-btn su_btn_border btn-sm" id="writeReplyBtn" onclick="insertReply(0);">댓글 작성</button>
+                        </div>
+	                </div>
 				<script>
 					$(function(){
 						selectReplyList();
@@ -176,12 +172,10 @@
 							url: "rList.no",
 							data: {no:"${b.boardNo}"},
 							success:function(rList){
-								console.log(rList);
 								
 								let value = "";
 								let user = "${loginUserN.memName}";
 								let root = "${pageContext.request.contextPath}";
-								console.log(user);
 								
 								for(let i=0; i<rList.length; i++){
 									// 원댓글 or 대댓글 조건문
@@ -197,7 +191,7 @@
 														+ '<div>'
 															+ '<div class="su_reply_writer">'
 																+ '<span class="font-weight-bold">' + rList[i].replyWriter + '</span>'
-																+ '<span class="font-weight-bold"> ' + rList[i].replyDept + '</span>'
+																+ '<span class="font-weight-bold"> ' + rList[i].replyJob+ '</span>'
 																+ '<span style="margin-right:10px"> | ' + rList[i].replyDate + '</span>';
 																// 원댓글만 댓글 추가 버튼 보이게끔 (댓글 작성자 본인 또한 본인 댓글에 대댓글 가능)
 																if(rList[i].replyParent == 0){
@@ -218,8 +212,7 @@
 										}
 										value += '</div>'
 											   + '<div class="pReply' + rList[i].replyNo + '">'
-											   + '</div>'
-										;
+											   + '</div>';
 								}
 								
 								$(".ajaxReply").html(value);
@@ -239,12 +232,12 @@
                                                 + '</div>'
                         
                                                 + '<div style="width: 100%">'
-                                                    + '<input style="width: 100%;" type="text" placeholder="댓글 입력">'
+                                                    + '<input style="width: 100%;" type="text" placeholder="댓글 입력" id="replyContent">'
                                                 + '</div>'
 
                                             + '</div>'
                                             + '<div class="su_reply_btn" id="su_reply_btn1">'
-                                                + '<button type="button" class="n-btn su_btn_border btn-sm writeReplyBtn" id="writeReplyBtn">댓글 작성</button>'
+                                                + '<button type="button" class="n-btn su_btn_border btn-sm writeReplyBtn" id="writeReplyBtn" onclick="insertReply(' + rNo + ');">댓글 작성</button>'
                                             + '</div>'
 
                                         + '</div>';
@@ -269,18 +262,27 @@
                         $("#pReplyEvent1").attr("onclick", "rReply();");
                     }) */
 					
-					
-					function insertReply(){ // 대댓글 insert 할 예정
-						/* $.ajax({
+                 	// 댓글 insert 
+                    function insertReply(replyParentNo){ 
+						 $.ajax({
 							url: "insertRe.no",
 							data:{
 								no:${b.boardNo},
-								replyWriter:${loginUserN.memName},
-								replyDept:${loginUserN.deptCode},
-								
+								replyDepth:4,
+								replyParent:replyParentNo,
+								replyContent:$("#replyContent").val(),
+								replyWriter:"${loginUserN.memName}",
+								replyJob:"${loginUserN.jobCode}"
+							},
+							success(result){
+								console.log(result);
+								selectReplyList();
+							},
+							error(){
+								console.log("댓글 등록 실패");
 							}
 							
-						}) */
+						}) 
 					}
 				</script>
 				

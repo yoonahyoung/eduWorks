@@ -66,7 +66,6 @@ public class NoticeController {
 			// 게시글 상세 조회
 			Board b = nService.selectNotice(no);
 			model.addAttribute("b", b);
-			
 		}else {
 			model.addAttribute("alertMsg", "게시글 조회에 실패하였습니다.");
 		}
@@ -85,6 +84,40 @@ public class NoticeController {
 	public String ajaxSelectReplyList(int no) {
 		ArrayList<Reply> rList = nService.selectReplyList(no);
 		return new Gson().toJson(rList);
+	}
+	
+	@ResponseBody
+	@RequestMapping("insertRe.no")
+	public String ajaxInsertReply(int no, int replyDepth, int replyParent, String replyContent, HttpSession session, Model model) {
+		Member loginUser = (Member)session.getAttribute("loginUserN");
+		
+		String replyJob = "";
+		switch(loginUser.getJobCode()) {
+			case "J0" : replyJob = "대표"; break;
+			case "J1" : replyJob = "사원"; break;
+			case "J2" : replyJob = "대리"; break;
+			case "J3" : replyJob = "팀장"; break;
+			case "J4" : replyJob = "대표"; break;
+		}
+		
+		Reply r = new Reply();
+		r.setReBoardNo(no);
+		r.setReplyDepth(replyDepth);
+		r.setReplyParent(replyParent);
+		r.setReplyContent(replyContent);
+		r.setReplyWriter(loginUser.getMemName());
+		r.setReplyJob(replyJob);
+		
+		int result = nService.insertReply(r);
+		
+		if(result > 0) {
+			Board b = nService.selectNotice(no);
+			model.addAttribute("b", b);
+		}else {
+			session.setAttribute("alertMsg", "댓글 작성 실패!");
+		}
+		
+		return result > 0 ? "success" : "fail";
 	}
 	
 	@RequestMapping("enrollForm.no")

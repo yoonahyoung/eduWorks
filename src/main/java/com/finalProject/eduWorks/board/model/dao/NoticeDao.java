@@ -58,4 +58,9 @@ public class NoticeDao {
 		return (ArrayList)sqlSession.selectList("noticeMapper.selectReplyList", boardNo);
 	}
 
+	// 댓글 등록
+	public int insertReply(SqlSessionTemplate sqlSession, Reply r) {
+		return sqlSession.insert("noticeMapper.insertReply", r);
+	}
+
 }
