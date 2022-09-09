@@ -25,8 +25,19 @@ public interface PromotionService {
 	int increaseCount(int promoNo);
 	Promotion selectPromo(int promoNo);
 	Attachment selectAt(int promoNo);
+	
+	// 댓글 리스트 조회용 서비스 (AJAX)
 	ArrayList<Reply> selectReplyList(int promoNo);
+	
+	// 댓글 작성 서비스 (ajax)
 	int insertReply(Reply r);
+	
+	// 댓글 수정 서비스 (ajax)
+	int updateReply(Reply r);
+	Reply selectReply(int replyNo);
+	
+	// 댓글 삭제 서비스 (ajax)
+	int deleteReply(int replyNo);
 	
 	// 수정 서비스
 	int updatePromo(Promotion p);
@@ -39,12 +50,5 @@ public interface PromotionService {
 	int deletePromoAt(String checkCnt);
 	int deletePromo(String checkCnt);
 	
-	// 댓글 리스트 조회용 서비스 (AJAX)
 	
-	// 댓글 작성 서비스 (ajax)
-	
-	// 댓글 수정 서비스 (ajax)
-	
-	// 댓글 삭제 서비스 (ajax)
-
 }

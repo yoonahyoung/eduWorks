@@ -52,6 +52,38 @@ public class PromotionController {
 		return "promotion/promotionEnrollForm";
 	}
 	
+
+	// 글 작성
+	@RequestMapping("insert.pr")
+	public String insertPromotion(Promotion p, MultipartFile upfile, Attachment at, 
+			HttpSession session, Model model) {
+		
+		int result2 = 1;
+		int result1 = pService.insertPromo(p);
+		
+		// 첨부파일이 있을 경우
+		if( !upfile.getOriginalFilename().equals("") ) {
+			// 새로운 파일 서버 업로드
+			String saveFilePath = FileUpload.saveFile(upfile, session, "resources/uploadFiles/promoFiles/");
+			
+			at.setAtOriginName(upfile.getOriginalFilename());
+			at.setAtChangeName(saveFilePath);
+			int no = pService.selectLastNo();
+			at.setAtRefBNo(no);
+			
+			result2 = pService.insertAt(at);
+		}
+		
+		if(result1 * result2 > 0) {
+			session.setAttribute("alertMsg", "홍보물 작성에 성공하였습니다.");
+			return "redirect:list.pr";
+		} else {
+			//session.setAttribute("alertMsg", "수정 실패");
+			return "redirect:list.pr?ppage=2";
+		}
+		
+	}
+	
 	// 글 상세 조회
 	@RequestMapping("detail.pr")
 	public ModelAndView selectPromo(int no, ModelAndView mv) {
@@ -97,6 +129,38 @@ public class PromotionController {
 		int result = pService.insertReply(r);
 		
 		return result > 0 ? "success" : "fail";
+	}
+	
+	// 댓글 수정
+	@ResponseBody
+	@RequestMapping(value="rupdate.pr", produces="application/json; charset=UTF-8")
+	public String ajaxUpdateReply(Reply rr) {
+		int result = pService.updateReply(rr);
+		Reply r = pService.selectReply(rr.getReplyNo());
+		
+		if(result > 0) {
+			return new Gson().toJson(r);
+		} else {
+			return "fail";
+		}
+	}
+	
+	// 댓글 취소
+	@ResponseBody
+	@RequestMapping(value="rcancel.pr", produces="application/json; charset=UTF-8")
+	public String ajaxCancelReply(int replyNo) {
+		Reply r = pService.selectReply(replyNo);
+		
+		return new Gson().toJson(r);
+	}
+	
+	// 댓글 삭제
+	@ResponseBody
+	@RequestMapping("rdelete.pr")
+	public int ajaxDeleteReply(int replyNo) {
+		int result = pService.deleteReply(replyNo);
+		
+		return result;
 	}
 	
 	// 글 수정 페이지 이동
@@ -150,37 +214,33 @@ public class PromotionController {
 		}
 	}
 	
-	// 글 작성
-	@RequestMapping("insert.pr")
-	public String insertPromotion(Promotion p, MultipartFile upfile, Attachment at, 
-			HttpSession session, Model model) {
+	// 글 삭제
+	@RequestMapping("delete.pr")
+	public String deletePromo(int no, HttpSession session) {
+		String aNo = Integer.toString(no);
+		System.out.println(no);
+		System.out.println(aNo);
 		
+		ArrayList<Attachment> list = pService.selectAtList(aNo);
 		int result2 = 1;
-		int result1 = pService.insertPromo(p);
 		
-		// 첨부파일이 있을 경우
-		if( !upfile.getOriginalFilename().equals("") ) {
-			// 새로운 파일 서버 업로드
-			String saveFilePath = FileUpload.saveFile(upfile, session, "resources/uploadFiles/promoFiles/");
+		if(list.size() != 0) {
+			for(int i = 0; i < list.size(); i++) {
+				System.out.println(list.get(i).getAtChangeName());
+			}
 			
-			at.setAtOriginName(upfile.getOriginalFilename());
-			at.setAtChangeName(saveFilePath);
-			int no = pService.selectLastNo();
-			at.setAtRefBNo(no);
-			
-			result2 = pService.insertAt(at);
+			result2 = pService.deletePromoAt(aNo);
 		}
+		
+		int result1 = pService.deletePromo(aNo);
 		
 		if(result1 * result2 > 0) {
-			session.setAttribute("alertMsg", "홍보물 작성에 성공하였습니다.");
+			session.setAttribute("alertMsg", "홍보물 삭제에 성공하였습니다.");
 			return "redirect:list.pr";
 		} else {
-			//session.setAttribute("alertMsg", "수정 실패");
-			return "redirect:list.pr?ppage=2";
+			return "fail";
 		}
-		
 	}
-	
 	
 	// 게시글 삭제 기능
 	@ResponseBody
@@ -188,6 +248,7 @@ public class PromotionController {
 	public String ajaxDeletePromo(String checkCnt, HttpSession session) {
 		// 첨부파일이 있었을 경우 파일 삭제
 		ArrayList<Attachment> list = pService.selectAtList(checkCnt);
+		
 		int result2 = 1;
 		if(list.size() != 0) {
 			for(int i = 0; i < list.size(); i++) {
@@ -208,8 +269,6 @@ public class PromotionController {
 		
 	}
 	
-	
-	
 	// 게시글 검색 기능
 	@ResponseBody
 	@RequestMapping(value="search.pr", produces="application/json; charset=UTF-8")
@@ -229,28 +288,4 @@ public class PromotionController {
 		
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 }

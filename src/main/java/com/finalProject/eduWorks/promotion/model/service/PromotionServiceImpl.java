@@ -72,6 +72,21 @@ public class PromotionServiceImpl implements PromotionService {
 	}
 	
 	@Override
+	public Reply selectReply(int replyNo) {
+		return pDao.selectReply(sqlSession, replyNo);
+	}
+
+	@Override
+	public int updateReply(Reply r) {
+		return pDao.updateReply(sqlSession, r);
+	}
+
+	@Override
+	public int deleteReply(int replyNo) {
+		return pDao.deleteReply(sqlSession, replyNo);
+	}
+	
+	@Override
 	public int updatePromo(Promotion p) {
 		return pDao.updatePromo(sqlSession, p);
 	}
@@ -95,7 +110,5 @@ public class PromotionServiceImpl implements PromotionService {
 	public int deletePromo(String checkCnt) {
 		return pDao.deletePromo(sqlSession, checkCnt);
 	}
-
-
 
 }
