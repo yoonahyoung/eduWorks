@@ -92,15 +92,22 @@ public class AddressServiceImpl implements AddressService {
 		return aDao.ajaxInsertAddIndiv(sqlSession, ado);
 	}
 
-	@Override
-	public int insertAddIndivNum(Address a) {
-		return 0;
-	}
-
+	/**
+	 * 4. 개인 주소록 그룹 중 선택한 페이지로 이동
+	 * @param a : 로그인한 회원 아이디, 개인 주소록 번호
+	 * @return : 선택한 개인 주소록 그룹 페이지 정보
+	 */
 	@Override
 	public int selectIndivNumCount(Address a) {
 		return aDao.selectIndivNumCount(sqlSession, a);
 	}
+	
+	
+	@Override
+	public int insertAddIndivNum(Address a) {
+		return aDao.insertAddIndivNum(sqlSession, a);
+	}
+	
 
 
 }

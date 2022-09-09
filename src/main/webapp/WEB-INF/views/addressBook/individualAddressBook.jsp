@@ -31,15 +31,17 @@
 
 			<div class="insider">
 				<h4>주소록 목록</h4>
-				<a onclick="postFormSubmit('individualAddress.ad')"><h6>개인 주소록</h6></a>
-	
+				<a onclick="postFormSubmit('individualAddress.ad')"><h6>개인
+						주소록</h6></a>
+
 				<!--반복문 시작 -->
 				<c:choose>
 					<c:when test="${not empty category}">
 						<c:forEach var="c" items="${category}">
 							<c:if test="${c.addName != '개인주소록'}">
 								<div class="address-title">
-									<a onclick="postSubmit('indivAddressBook.ad', '${c.addNo}')" class="category-title"><h6>${c.addName }</h6></a>
+									<a onclick="postSubmit('indivAddressBook.ad', '${c.addNo}')"
+										class="category-title"><h6>${c.addName }</h6></a>
 									<!-- 주소록 클릭시 수정,삭제 처리하는 dropdown 생성-->
 									<a class="tag-modify" href="#" id="dotDropdown" role="button"
 										data-toggle="dropdown" aria-haspopup="true"
@@ -59,13 +61,13 @@
 									</div>
 
 								</div>
-								
-						<form id="post" action="" method="post">
-			            	
-			            	<input type="hidden" name="memNo" value="${loginUserN.memNo }">
-			            	<input type="hidden" name="addNo" id="addNo">
-			            
-			            </form>
+
+								<form id="post" action="" method="post">
+
+									<input type="hidden" name="memNo" value="${loginUserN.memNo }">
+									<input type="hidden" name="addNo" id="addNo">
+
+								</form>
 
 								<!-- 주소록 그룹명 수정 처리하는 함수 -->
 								<div class="insider updateAddBook">
@@ -87,11 +89,12 @@
 				<!-- 주소록 그룹 추가하는 함수 -->
 				<div class="insider insertAddBook">
 					<div class="insertAddress">
-						<span> <input type="text" name="addName" id="addName"> </span>
-						
+						<span> <input type="text" name="addName" id="addName">
+						</span>
+
 						<div class="update-addBtn">
-							<a id="insertAddIndiv"><i class="fas fa-check"></i></a>
-							<a onclick="dismissInsertAdd();"><i class="fas fa-times"></i></a>
+							<a id="insertAddIndiv"><i class="fas fa-check"></i></a> <a
+								onclick="dismissInsertAdd();"><i class="fas fa-times"></i></a>
 						</div>
 					</div>
 				</div>
@@ -253,20 +256,19 @@
 
 					</tbody>
 				</table>
-				<br>
-				<br>
+				<br> <br>
 			</div>
 
 			<Script>
+		
+	             // 더블클릭시 해당 선택자에게 메일 보내는 함수 실행
+	             $(function() {
+	                 $(".board-content>tbody>tr").dblclick(function() {
+	                     location.href="sendMail.ma?mail=" + $(this).children().eq(6).text();
+	                 })
+	             })
 
-                            // 더블클릭시 해당 선택자에게 메일 보내는 함수 실행
-                            $(function() {
-                                $(".board-content>tbody>tr").dblclick(function() {
-                                    location.href="sendMail.ma?mail=" + $(this).children().eq(6).text();
-                                })
-                            })
-
-                        </Script>
+             </Script>
 
 			<div style="margin: 30px 0 30px 0">
 
@@ -287,16 +289,17 @@
 										</a></li>
 									</c:when>
 									<c:otherwise>
+										<!--  href="indivAddressBook.ad?page=${pi.currentPage -1 }" -->
 										<li class="page-item"><a class="page-link"
-											href="publicAddress.ad?cpage=${pi.currentPage -1 }"
+											onclick="movePage('individualAddress.ad', ${pi.currentPage -1 });"
 											aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 										</a></li>
 									</c:otherwise>
 								</c:choose>
-
+								<!-- href="indivAddressBook.ad?page=${p }" -->
 								<c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage }">
 									<li class="page-item"><a class="page-link"
-										href="publicAddress.ad?cpage=${p }">${p }</a></li>
+										onclick="movePage('individualAddress.ad', ${p });">${p }</a></li>
 								</c:forEach>
 
 								<c:choose>
@@ -306,8 +309,9 @@
 										</a></li>
 									</c:when>
 									<c:otherwise>
+										<!-- href="indivAddressBook.ad?page=${pi.currentPage + 1}" -->
 										<li class="page-item"><a class="page-link"
-											href="publicAddress.ad?cpage=${pi.currentPage + 1}"
+											onclick="movePage('individualAddress.ad', ${pi.currentPage + 1});"
 											aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 										</a></li>
 									</c:otherwise>
@@ -319,29 +323,43 @@
 			</div>
 		</div>
 	</div>
+
+	<form id="moveForm" action="" method="post">
+		<input type="hidden" name="memNo" value="${loginUserN.memNo }">
+		<input type="hidden" name="page" id="page">
+	</form>
+
+	<script>
+		function movePage(url, page){
+			$("#moveForm").children("#page").val(page);
+			$("#moveForm").attr("action", url).submit();
+		}
+	</script>
 	<!-- /.container-fluid -->
                 
-                  <!-- 개인 주소록 연락처 추가(add-Address Model) 모달-->
-    <div class="modal" id="add-Address">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content" style="height:600px">
-      
-            <!-- Modal Header -->
-            <div class="modal-header">
-              <h4 class="modal-title"><b>연락처 추가</b></h4>
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <!-- 해당 버튼 클릭시 모달과 연결해제 -->
-            </div>
-      
-            <!-- Modal body -->
-        <form action="insertAddIndivNum.ad" method="post">
+    <!-- 개인 주소록 연락처 추가(add-Address Model) 모달-->
+	<div class="modal" id="add-Address">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content" style="height: 600px">
 
-            <div class="modal-body" align="center">
-	
-			<!-- 나중에 로그인된 회원으로 value값 변경하기!!! -->
-            <input type="hidden" name="memNo" value="${loginUserN.memNo }">
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">
+						<b>연락처 추가</b>
+					</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<!-- 해당 버튼 클릭시 모달과 연결해제 -->
+				</div>
 
-                <div class="insertAddress">
+				<!-- Modal body -->
+				<form method="post">
+
+					<div class="modal-body" align="center">
+
+						<!-- 나중에 로그인된 회원으로 value값 변경하기!!! -->
+						<input type="hidden" name="memNo" value="${loginUserN.memNo }">
+
+						<div class="insertAddress">
 
 							<table class="address-table">
 								<tr>
@@ -349,7 +367,7 @@
 									<td><c:choose>
 											<c:when test="${empty category }">
 												<select name="addNo" id="select-addressBook">
-													<option value="2" selected>개인주소록</option>
+													<option value="${addNo }" selected>개인주소록</option>
 												</select>
 											</c:when>
 											<c:otherwise>
@@ -364,49 +382,91 @@
 
 								<tr>
 									<th>이름</th>
-									<td><input type="text" name="addName"></td>
+									<td id="addName"><input type="text" name="addName"></td>
 								</tr>
 								<tr>
 									<th>부서명</th>
-									<td><input type="text" name="addDept"></td>
+									<td id="addDept"><input type="text" name="addDept"></td>
 								</tr>
 								<tr>
 									<th>직급명</th>
-									<td><input type="text" name="addJob"></td>
+									<td id="addJob"><input type="text" name="addJob"></td>
 								</tr>
 								<tr>
 									<th>전화번호</th>
-									<td><input type="text" name="addPhone"></td>
+									<td id="addPhone"><input type="text" name="addPhone"></td>
 								</tr>
 								<tr>
 									<th>이메일</th>
-									<td><input type="text" name="addEmail"></td>
+									<td id="addEmail"><input type="text" name="addEmail"></td>
 								</tr>
 								<tr>
 									<th>메모</th>
-									<td><input type="text" name="addMemo"></td>
+									<td id="addMemo"><input type="text" name="addMemo"></td>
 								</tr>
 
 							</table>
 
 						</div>
-                              
-
-                <div style="margin-top:10px;">
-                    <button type="submit" class="addBtn" style="background-color:slategray; color:white; border:none;">추가</button>
-                    <button type="button" data-dismiss="modal" class="addBtn" >취소</button>
-                </div>
-
-            </div>
-
-        </form>
-
-            </div>
-        </div>
-    </div>
 
 
-        <!-- 개인 주소록 연락처 수정 및 삭제(update-Address Model) 모달-->
+						<div style="margin-top: 10px;">
+							<button type="button" class="addBtn" onclick="insertAddNum();"
+								style="background-color: slategray; color: white; border: none;">추가</button>
+							<button type="button" data-dismiss="modal" class="addBtn">취소</button>
+						</div>
+
+					</div>
+
+				 <script>
+				
+		        	// 선택한 그룹에 연락처 추가하는 ajax함수
+		        	function insertAddNum(){
+		        		
+		        		if( $("#addName>input").val().trim().length != 0 && $("#addPhone>input").val().trim().length != 0 ){
+		        				
+			        		$.ajax({
+			        			method : "get",
+			        			url : "insertAddIndivNum.ad",
+			        			data : {
+			        				memNo : ${loginUserN.memNo},
+			        				addNo : $('select[name=addNo] option:selected').val(),
+			        				addName : $("#addName>input").val(),
+			        				addDept : $("#addDept>input").val(),
+			        				addJob : $("#addJob>input").val(),
+			        				addPhone : $("#addPhone>input").val(),
+			        				addEmail : $("#addEmail>input").val(),
+			        				addMemo : $("#addMemo>input").val()
+			        			},
+			        			success : function(result) {
+			        				
+			        				console.log("성공");
+
+			        				if(result == 'success') {
+										location.reload(); // 서버 새로고침
+									}
+								},
+			        			error : function(){
+			        				console.log("실패");
+			        			}
+			        		})
+
+		        		} else {
+		        			alert("이름 및 연락처를 입력해주세요.");
+		        		}
+
+		        	}
+
+				</script>
+
+
+				</form>
+			
+			</div>
+		</div>
+	</div>
+
+	<!-- 개인 주소록 연락처 수정 및 삭제(update-Address Model) 모달-->
         <div class="modal" id="update-Address">
             <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="height:600px">
@@ -485,7 +545,7 @@
         </div>
 
         <script>
-
+        
             // 개인 연락처 삭제 처리하는 함수
             function deleteAddress(){
                 confirm("연락처를 삭제하시겠습니까?");

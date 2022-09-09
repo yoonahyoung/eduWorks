@@ -93,8 +93,17 @@ public class AddressDao {
 		return sqlSession.insert("addressMapper.insertAddIndiv", ado);
 	}
 	
+	/**
+	 * 4. 개인 주소록 그룹 중 선택한 페이지로 이동
+	 * @param a : 로그인한 회원 아이디, 개인 주소록 번호
+	 * @return : 선택한 개인 주소록 그룹 페이지 정보
+	 */
 	public int selectIndivNumCount(SqlSessionTemplate sqlSession, Address a) {
 		return sqlSession.selectOne("addressMapper.selectIndivNumCount", a);
+	}
+	
+	public int insertAddIndivNum(SqlSessionTemplate sqlSession, Address a) {
+		return sqlSession.insert("addressMapper.insertAddIndivNum", a);
 	}
 
 
