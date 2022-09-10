@@ -48,15 +48,12 @@ public class AddressDao {
 	}
 	
 	/**
-	 * 2_2. 개인 주소록 '개인주소록'에 등록된 연락처 수 조회
-	 * @param memNo : 로그인한 회원 번호
-	 * @param addNo : 로그인한 회원의 개인 주소록 번호
-	 * @return : 등록된 연락처 수
+	 * 2_2. 개인 주소록 그룹 중 등록된 연락처 갯수 조회
+	 * @param a : 로그인한 회원 아이디, 개인 주소록 번호
+	 * @return : 선택한 개인 주소록 그룹 중 등록된 연락처 갯수
 	 */
-	public int selectAddBasicCount(SqlSessionTemplate sqlSession, Address a) {
-	
-		return sqlSession.selectOne("addressMapper.selectAddBasicCount", a);
-	
+	public int selectIndivNumCount(SqlSessionTemplate sqlSession, Address a) {
+		return sqlSession.selectOne("addressMapper.selectIndivNumCount", a);
 	}
 	
 	/**
@@ -93,9 +90,32 @@ public class AddressDao {
 		return sqlSession.insert("addressMapper.insertAddIndiv", ado);
 	}
 	
-	public int selectIndivNumCount(SqlSessionTemplate sqlSession, Address a) {
-		return sqlSession.selectOne("addressMapper.selectIndivNumCount", a);
+	
+	/**
+	 * 4. 개인 주소록 그룹 중 선택한 그룹에 연락처 등록
+	 * @param a : 연락처 정보
+	 * @return : 등록 성공 여부 (성공 : success | 실패 : fail)
+	 */
+	public int insertAddIndivNum(SqlSessionTemplate sqlSession, Address a) {
+		return sqlSession.insert("addressMapper.insertAddIndivNum", a);
 	}
-
+	
+	/**
+	 * 5_1. 개인 주소록 그룹 중 선택한 그룹의 연락처 삭제
+	 * @param a : 로그인한 회원, 주소록 그룹 번호
+	 * @return : 삭제 성공 여부가 담긴 int형 변수 (성공 : 1 | 실패 : 0)
+	 */
+	public int deleteIndivAddNum(SqlSessionTemplate sqlSession, Address a) {
+		return sqlSession.delete("addressMapper.deleteIndivAddNum", a);
+	}
+	
+	/**
+	 * 5_2. 개인 주소록 그룹 중 선택한 그룹 삭제
+	 * @param a : 로그인한 회원, 주소록 그룹 번호
+	 * @return : 삭제 성공 여부가 담긴 int형 변수 (성공 : 1 | 실패 : 0)
+	 */
+	public int deleteIndivAddressBook(SqlSessionTemplate sqlSession, Address a) {
+		return sqlSession.delete("addressMapper.deleteIndivAddressBook", a);
+	}
 
 }

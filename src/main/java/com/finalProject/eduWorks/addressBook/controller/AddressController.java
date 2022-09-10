@@ -17,6 +17,7 @@ import com.finalProject.eduWorks.addressBook.model.vo.AddressOut;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.template.Pagination;
 import com.finalProject.eduWorks.member.model.vo.Member;
+import com.google.gson.Gson;
 
 @Controller
 public class AddressController {
@@ -29,7 +30,7 @@ public class AddressController {
 	 * @return : 공용 주소록 페이지
 	 */
 	@RequestMapping("publicAddress.ad")
-	public ModelAndView publicAddressList(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv) {
+	public ModelAndView publicAddressList(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv) {
 		
 		// 공용 주소록 전체 갯수 조회
 		int listCount = aService.selectListCount();
@@ -53,12 +54,11 @@ public class AddressController {
 	 * @return : 개인 주소록 페이지
 	 */
 	@RequestMapping("individualAddress.ad")
-	public ModelAndView individualAddressBook(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv, String memNo, HttpSession session) {
+	public ModelAndView individualAddressBook(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv, String memNo, HttpSession session) {
 		
 		// 로그인 세션! (삭제하기!)
 		Member loginUser = new Member("500001", "user02", "pass02", "황재범", "D1", "J3", "010-2222-2223", "2222-2223", "aaaa1112@gmail.com", "1997-01-06", 111111, "111111", "상세주소2", "참고항목2", "2022-08-02", "2022-08-02", "N", "file");
 	    session.setAttribute("loginUserN", loginUser);
-		
 		
 		// 개인 주소록 기본('개인주소록') 번호 조회
 		String basicAddNum = String.valueOf(aService.basicAddressNum(memNo));
@@ -69,16 +69,17 @@ public class AddressController {
 		a.setAddNo(basicAddNum);
 		
 		// 개인 기본 주소록에 들어가는 사람 수 조회
-		int selectAddBasicCount = aService.selectAddBasicCount(a);
+		int count = aService.selectIndivNumCount(a);
 
 		// 페이징
-		PageInfo pi = Pagination.getInfo(selectAddBasicCount, currentPage, 10, 10);
+		PageInfo pi = Pagination.getInfo(count, currentPage, 10, 10);
 		
 		ArrayList<Address> list = aService.selectAddIndivList(pi, a);
 		
 		// 개인 주소록 카테고리 목록 조회
 		ArrayList<AddressOut> category = aService.selectAddCategory(a);
 		
+		mv.addObject("addNo", basicAddNum); // 개인주소록 번호
 		mv.addObject("pi", pi);
 		mv.addObject("list", list);
 		mv.addObject("category", category);
@@ -104,8 +105,13 @@ public class AddressController {
 		
 	}
 	
+	/**
+	 * 4. 개인 주소록 그룹 중 선택한 페이지로 이동
+	 * @param a : 로그인한 회원 아이디, 개인 주소록 번호
+	 * @return : 선택한 개인 주소록 그룹 페이지 정보
+	 */
 	@RequestMapping("indivAddressBook.ad")
-	public ModelAndView individualAddressBook(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv, Address a) {
+	public ModelAndView individualAddressBook(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv, Address a) {
 		
 		// 해당 개인주소록에 등록된 연락처 수 조회
 		int listCount = aService.selectIndivNumCount(a);
@@ -119,6 +125,7 @@ public class AddressController {
 		// 개인 주소록 카테고리 목록 조회
 		ArrayList<AddressOut> category = aService.selectAddCategory(a);
 		
+		mv.addObject("addNo", a.getAddNo()); // 개인 주소록 그룹 중 선택한 그룹 번호
 		mv.addObject("pi", pi);
 		mv.addObject("list", list);
 		mv.addObject("category", category);
@@ -129,12 +136,46 @@ public class AddressController {
 		
 	}
 	
-//	@RequestMapping("insertAddIndivNum.ad")
-//	public String insertAddIndivNum(Address a) {
-//		
-//		int result = aService.insertAddIndivNum(a);
-//
-//		
-//	}
+	/**
+	 * 4. 개인 주소록 그룹 중 선택한 그룹에 연락처 등록
+	 * @param a : 연락처 정보
+	 * @return : 등록 성공 여부 (성공 : success | 실패 : fail)
+	 */
+	@ResponseBody
+	@RequestMapping("insertAddIndivNum.ad")
+	public String ajaxInsertAddIndivNum(Address a) {
+		
+		int result = aService.insertAddIndivNum(a);
+		
+		return result > 0 ? "success" : "fail";
+		
+	}
+		
+	/**
+	 * 5. 개인 주소록 그룹 및 연락처들 삭제
+	 * @param a : 로그인한 회원, 주소록 그룹 번호
+	 * @return : 삭제 여부가 담긴 String 변수 (성공 : success : 실패 : fail)
+	 */
+	@ResponseBody
+	@RequestMapping("deleteIndivAddressBook.ad")
+	public String ajaxDeleteIndivAddBook(Address a) {
+				
+		// 삭제할 연락처 갯수 조회
+		int count = aService.selectIndivNumCount(a);
+
+		// 삭제된 그룹에 들어가있는 연락처들 삭제
+		int result1 = 1;
+		if(count > 0) {
+			result1 = aService.deleteIndivAddNum(a);
+		}
+
+		// 주소록 그룹 삭제
+		int result2 = aService.deleteIndivAddressBook(a);
+		
+		int total = result1 * result2;
+		
+		return total > 0 ? "success" : "fail";
+		
+	}
 
 }

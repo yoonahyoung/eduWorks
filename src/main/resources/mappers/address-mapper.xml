@@ -71,15 +71,7 @@
 		  and rownum = 1
 		order by add_no
 	</select>
-	
-	<select id="selectAddBasicCount" resultType="_int">
-		select
-		    count(*)
-		from tb_address
-		where mem_no = #{memNo}
-		  and add_no = #{addNo}
-	</select>
-	
+
 	<select id="selectAddIndivList" resultMap="addressResult">
 		select
 		    add_per_no
@@ -104,6 +96,8 @@
 		  , add_name
 		from tb_add_out
 		where mem_no = #{memNo}
+		order 
+		    by add_no asc
 	</select>
 	
 	<!-- 개인 주소록 그룹 추가 -->
@@ -131,5 +125,50 @@
 		where mem_no = #{memNo}
 		  and add_no = #{addNo}
 	</select>
+	
+	<!-- 해당 주소록 그룹에 연락처 추가하기 -->
+	<insert id="insertAddIndivNum">
+		INSERT 
+		    INTO TB_ADDRESS
+		    (
+			     ADD_PER_NO
+			   , MEM_NO
+			   , ADD_NO
+			   , ADD_NAME
+			   , ADD_DEPT
+			   , ADD_JOB
+			   , ADD_PHONE
+			   , ADD_EMAIL
+			   , ADD_MEMO
+		   	)
+		   VALUES
+		   (
+			    SEQ_ADNO.NEXTVAL
+			  , #{memNo}
+			  , #{addNo}
+			  , #{addName}
+			  , #{addDept}
+			  , #{addJob}
+			  , #{addPhone}
+			  , #{addEmail}
+			  , #{addMemo}
+		  	)
+	</insert>
+	
+	<!-- 주소록 그룹 삭제시 해당 그룹 연락처 모두 삭제 -->
+	<delete id="deleteIndivAddNum">
+		delete 
+		    from tb_address
+		where mem_no = #{memNo}
+		  and add_no = #{addNo}
+	</delete>
+	
+	<!-- 주소록 그룹 삭제 -->
+	<delete id="deleteIndivAddressBook">
+		delete
+		    from tb_add_out
+		where mem_no = #{memNo}
+		  and add_no = #{addNo}
+	</delete>
 
 </mapper>

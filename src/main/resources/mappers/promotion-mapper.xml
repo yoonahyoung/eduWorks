@@ -20,7 +20,7 @@
 		<result column="reply_parent" property="replyParent" />
 		<result column="reply_content" property="replyContent" />
 		<result column="reply_writer" property="replyWriter" />
-		<result column="reply_dept" property="replyDept" />
+		<result column="reply_job" property="replyJob" />
 		<result column="reply_date" property="replyDate" />
 	</resultMap>
 	
@@ -120,6 +120,29 @@
 			    by promo_no desc
 	</select>
 	
+	<select id="selectAtList" resultMap="attachResult">
+		select at_no
+			 , at_origin_name
+			 , at_change_name
+		  from tb_attachment
+		 where at_status = 'Y'
+		   and at_category = 4
+		   and at_ref_bno in 
+		   <foreach collection="array" item="arr" open="(" close=")" separator=",">
+		 	#{arr}
+		 </foreach>
+	</select>
+	
+	<update id="deletePromoAt">
+		update tb_attachment
+		   set at_status = 'N'
+		 where at_category = 4
+		   and at_ref_bno in 
+		   <foreach collection="array" item="arr" open="(" close=")" separator=",">
+		 	#{arr}
+		 </foreach>
+	</update>
+	
 	<update id="deletePromo">
 		update tb_promo
 		   set promo_status = 'N'
@@ -168,7 +191,7 @@
 			 , reply_parent
 			 , reply_content
 			 , reply_writer
-			 , reply_dept
+			 , reply_job
 			 , to_char(reply_date, 'YYYY-MM-DD (DY) HH24:MI') as "reply_date"
 		  from tb_reply
 		 where reply_status = 'Y'
@@ -186,7 +209,7 @@
 		    reply_no
 		  , reply_type
 		  , re_board_no
-		  , reply_depth
+		  , reply_job
 		  , reply_parent
 		  , reply_content
 		  , reply_writer
@@ -204,6 +227,33 @@
 		  , '사원'
 		  )
 	</insert>
+	
+	<update id="updateReply">
+		update tb_reply
+		   set reply_content = #{replyContent}
+		     , reply_mo_date = sysdate
+		 where reply_no = #{replyNo}
+	</update>
+	
+	<select id="selectReply" resultMap="replyResult">
+		select reply_no
+			 , re_board_no
+			 , reply_depth
+			 , reply_parent
+			 , reply_content
+			 , reply_writer
+			 , reply_job
+			 , to_char(reply_date, 'YYYY-MM-DD (DY) HH24:MI') as "reply_date"
+		  from tb_reply
+		 where reply_status = 'Y'
+		   and reply_no = #{replyNo}
+	</select>
+	
+	<update id="deleteReply">
+		update tb_reply
+		   set reply_status = 'N'
+		 where reply_no = #{replyNo}
+	</update>
 	
 	<update id="updatePromo">
 		update tb_promo

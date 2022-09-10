@@ -41,6 +41,7 @@ public class PromotionDao {
 	// 리스트 페이지에서 게시글 삭제시 삭제할 첨부파일 리스트 조회
 	public ArrayList<Attachment> selectAtList(SqlSessionTemplate sqlSession, String checkCnt){
 		String[] aArr = checkCnt.split(",");
+		System.out.println(aArr);
 		return (ArrayList) sqlSession.selectList("promotionMapper.selectAtList", aArr);
 	}
 	
@@ -81,6 +82,21 @@ public class PromotionDao {
 	// 댓글 입력
 	public int insertReply(SqlSessionTemplate sqlSession, Reply r) {
 		return sqlSession.insert("promotionMapper.insertReply", r);
+	}
+	
+	// 댓글 수정
+	public int updateReply(SqlSessionTemplate sqlSession, Reply r) {
+		return sqlSession.update("promotionMapper.updateReply", r);
+	}
+	
+	// 댓글 조회
+	public Reply selectReply(SqlSessionTemplate sqlSession, int replyNo) {
+		return sqlSession.selectOne("promotionMapper.selectReply", replyNo);
+	}
+	
+	// 댓글 삭제
+	public int deleteReply(SqlSessionTemplate sqlSession, int replyNo) {
+		return sqlSession.update("promotionMapper.deleteReply", replyNo);
 	}
 	
 	// 게시글 수정
