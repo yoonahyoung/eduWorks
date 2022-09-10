@@ -156,7 +156,7 @@
 	</insert>
 	
 	<!-- 주소록 그룹 삭제시 해당 그룹 연락처 모두 삭제 -->
-	<delete id="deleteIndivAddNum">
+	<delete id="deleteAllIndivAddNum">
 		delete 
 		    from tb_address
 		where mem_no = #{memNo}
@@ -169,6 +169,17 @@
 		    from tb_add_out
 		where mem_no = #{memNo}
 		  and add_no = #{addNo}
+	</delete>
+	
+	<!-- 선택한 연락처들만 삭제 -->
+	<delete id="deleteIndivAddNum">
+		delete
+			from tb_address
+		  where add_per_no in 
+				<foreach item="addPerNo" index="i" collection="array"
+					open="(" separator="," close=")">
+					#{addPerNo}
+				</foreach>
 	</delete>
 
 </mapper>

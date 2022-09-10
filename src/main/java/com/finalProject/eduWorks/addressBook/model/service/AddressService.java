@@ -35,12 +35,13 @@ public interface AddressService {
 
 	// 5. 개인 주소록 그룹 삭제
 	
-	// 주소록 그룹에 해당된 연락처들 삭제
-	int deleteIndivAddNum(Address a);
+	// 주소록 그룹에 해당된 연락처들 전체 삭제
+	int deleteAllIndivAddNum(Address a);
 	
 	// 주소록 그룹 삭제
 	int deleteIndivAddressBook(Address a);
 
-	// 6. 연락처 삭제
+	// 6. 선택한 연락처 삭제
+	int deleteIndivAddNum(String addPerNo);
 
 }

@@ -107,8 +107,8 @@ public class AddressServiceImpl implements AddressService {
 	 * @return : 삭제 성공 여부가 담긴 int형 변수 (성공 : 1 | 실패 : 0)
 	 */
 	@Override
-	public int deleteIndivAddNum(Address a) {
-		return aDao.deleteIndivAddNum(sqlSession, a);
+	public int deleteAllIndivAddNum(Address a) {
+		return aDao.deleteAllIndivAddNum(sqlSession, a);
 	}
 	
 	/**
@@ -119,6 +119,16 @@ public class AddressServiceImpl implements AddressService {
 	@Override
 	public int deleteIndivAddressBook(Address a) {
 		return aDao.deleteIndivAddressBook(sqlSession, a);
+	}
+
+	/**
+	 * 6. 선택한 연락처 삭제 
+	 * @param addPerNo : 선택한 연락처 번호
+	 * @return : 삭제 성공 여부 (성공 : sucess | 실패 : fail)
+	 */
+	@Override
+	public int deleteIndivAddNum(String addPerNo) {
+		return aDao.deleteIndivAddNum(sqlSession, addPerNo);
 	}
 
 

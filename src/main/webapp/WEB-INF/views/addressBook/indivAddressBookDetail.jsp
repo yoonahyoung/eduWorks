@@ -132,7 +132,7 @@
 				 	if(answer == true){
 				 		
 				 		$.ajax({
-				 			url : "deleteIndivAddressBook.ad",
+				 			url : "deleteAllIndivAddBook.ad",
 				 			data : {
 				 				memNo : ${loginUserN.memNo},
 				 				addNo : addNo
@@ -212,7 +212,7 @@
 				<button type="button" class="reply-btn">
 					<i class="fas fa-location-arrow"></i>&nbsp;&nbsp;메일 작성
 				</button>
-				<button type="button" class="sub-btn" onclick="deleteAddress();">
+				<button type="button" class="sub-btn" onclick="return deleteAddNum();">
 					<i class="fas fa-trash-alt"></i>&nbsp;&nbsp;삭제
 				</button>
 			</div>
@@ -256,7 +256,7 @@
 								<c:forEach var="a" items="${list}">
 									<!-- 반복문 시작 -->
 									<tr>
-										<td><input type="checkbox" name="addPerNo" value="${a.addPerNo }"></td>
+										<td><input type="checkbox" class="addPerNo" name="addPerNo" value="${a.addPerNo }"></td>
 										<td data-toggle="modal" data-target="#update-Address">${a.addName }</td>
 										<td>${a.addDept }</td>
 										<td>${a.addJob }</td>
@@ -286,7 +286,55 @@
 				              
 				           });
 				        }
-
+					  
+					 // '삭제'버튼 클릭시 실행하는 함수
+					function deleteAddNum(){
+							 
+						// 선택한 요소가 있는지 확인
+						let $checked = $(".addPerNo:checked");
+							 
+						// 선택하지 않은 경우
+						if( $checked.length < 1){
+							alert("삭제할 데이터를 선택해주세요.");
+							return false;
+								 
+						} else { // 선택한 경우
+								
+							 if( confirm("선택한 연락처를 삭제하시겠습니까?") ){
+								 let checkArr = [];
+								 
+								 $(".addPerNo").each(function(){
+									 
+									 if($(this).prop("checked")){
+										 checkArr.push( $(this).val() );
+									 }
+								 });
+								 
+							const addPerNo = checkArr.toString();
+							
+								$.ajax({
+									url : "deleteAddNum.ad",
+									data : {
+										memNo : ${loginUserN.memNo},
+										addPerNo : addPerNo
+									},
+									success : function(result){
+										
+										if(result == 'success'){
+											alert("성공적으로 연락처를 삭제했습니다.");
+											location.reload();
+										}
+									},
+									error : function(){
+										alert("연락처를 삭제하는데 실패했습니다.\n다시 시도해주세요.");
+										console.log("실패");
+									}
+								 })
+							   }
+						    } 
+						 }
+				  
+					 
                      // 더블클릭시 해당 선택자에게 메일 보내는 함수 실행
                      $(function() {
                          $(".board-content>tbody>tr").dblclick(function() {
@@ -467,15 +515,14 @@
 			        				addMemo : $("#addMemo>input").val()
 			        			},
 			        			success : function(result) {
-			        				
-			        				console.log("성공");
 
 			        				if(result == 'success') {
+			        					alert("성공적으로 연락처를 등록했습니다.");
 										location.reload(); // 서버 새로고침
 									}
 								},
 			        			error : function(){
-			        				console.log("실패");
+			        				alert("연락처를 등록하는데 실패했습니다.\n다시 시도해주시길 바랍니다.");
 			        			}
 			        		})
 
@@ -558,9 +605,6 @@
 
 
 						<div style="margin-top: 10px;">
-							<button type="submit" class="addBtn"
-								style="background-color: lightgray; color: black; border: none;"
-								onclick="deleteAddress();">삭제</button>
 							<button type="button" class="addBtn"
 								style="background-color: slategray; color: white; border: none;">수정</button>
 							<button type="button" data-dismiss="modal" class="class addBtn">취소</button>
@@ -572,19 +616,6 @@
 			</div>
 		</div>
 	</div>
-
-	<script>
-
-			// ============= 선택한 그룹에 연락처 삭제하는 함수 실행 =============
-            function deleteAddress(){
-                confirm("연락처를 삭제하시겠습니까?");
-
-                // if(확인버튼 클릭){
-                //     주소록 삭제
-                // }
-            }
-
-        </script>
 
 	<jsp:include page="../common/footer.jsp" />
 </body>

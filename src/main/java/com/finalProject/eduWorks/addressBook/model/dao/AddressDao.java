@@ -2,6 +2,7 @@ package com.finalProject.eduWorks.addressBook.model.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -105,8 +106,8 @@ public class AddressDao {
 	 * @param a : 로그인한 회원, 주소록 그룹 번호
 	 * @return : 삭제 성공 여부가 담긴 int형 변수 (성공 : 1 | 실패 : 0)
 	 */
-	public int deleteIndivAddNum(SqlSessionTemplate sqlSession, Address a) {
-		return sqlSession.delete("addressMapper.deleteIndivAddNum", a);
+	public int deleteAllIndivAddNum(SqlSessionTemplate sqlSession, Address a) {
+		return sqlSession.delete("addressMapper.deleteAllIndivAddNum", a);
 	}
 	
 	/**
@@ -116,6 +117,18 @@ public class AddressDao {
 	 */
 	public int deleteIndivAddressBook(SqlSessionTemplate sqlSession, Address a) {
 		return sqlSession.delete("addressMapper.deleteIndivAddressBook", a);
+	}
+	
+	/**
+	 * 6. 선택한 연락처 삭제 
+	 * @param addPerNo : 선택한 연락처 번호
+	 * @return : 삭제 성공 여부 (성공 : sucess | 실패 : fail)
+	 */
+	public int deleteIndivAddNum(SqlSessionTemplate sqlSession, String addPerNo) {
+		
+		String[] arr = addPerNo.split(","); // 선택한 String값 배열에 담기
+		
+		return sqlSession.delete("addressMapper.deleteIndivAddNum", arr);
 	}
 
 }
