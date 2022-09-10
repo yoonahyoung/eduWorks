@@ -26,7 +26,6 @@
 			</div>
 
 			<div>
-				<span class="mailListCheck"><input type="checkbox"></span>
 				<button type="button" class="reply-btn" onclick="writeMail();">
 					<i class="fas fa-location-arrow"></i>&nbsp;&nbsp;메일 작성
 				</button>
@@ -58,7 +57,7 @@
 				<table class="board-content table" align="center">
 					<thead>
 						<tr class="table_thead_border">
-							<th width="3%"><input type="checkbox"></th>
+							<th width="3%"><input type="checkbox" id="allCheck" onclick="allCheck(this)"></th>
 							<th width="10%">이름</th>
 							<th width="10%">부서명</th>
 							<th width="10%">직급명</th>
@@ -77,7 +76,7 @@
 							<c:otherwise>
 								<c:forEach var="a" items="${list }">
 									<tr>
-										<td><input type="checkbox"></td>
+										<td><input name="memNo" type="checkbox" value="${a.memNo }"></td>
 										<td>${a.memName }</td>
 										<td>${a.deptCode }</td>
 										<td>${a.jobCode }</td>
@@ -94,6 +93,19 @@
 			</div>
 
 			<Script>
+			
+			  // '전체클릭'버튼 클릭시 실행하는 함수
+			  function allCheck(allCheck){
+				  				  
+				  let checkboxes = document.getElementsByName("memNo");
+				  
+		           checkboxes.forEach((checkbox)=>{
+		        	   
+		              checkbox.checked = allCheck.checked; // 전체 클릭 클릭시 => 항목 전체 선택 실행
+		              
+		           });
+		        }
+			  
 
               // 더블클릭시 해당 선택자에게 메일 보내는 함수 실행
               $(function() {
