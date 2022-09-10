@@ -24,22 +24,19 @@
 	                <h2>부서 게시판</h2><!-- 로그인한 유저의 부서 넣기. -->
 	            </div>
 	
-	            <br>
+	            <br><br><br><br><br>
+	            
+	            <div style="text-align: center;">
+	                <input type="text" style="width: 300px;" id="promoKeyword" placeholder="제목/작성자 입력">
+	                <button type="button" class="su_btn_border btn-sm su_btn_search">검색</button>
+	            </div>
+	            
+	            <br><br>
 	
 	            <div class="tableOption">
 	                <div class="btn_two_spacing">
 	                    <button id="importantNotice">공지등록</button><i class="fas fa-flag"></i>
 	                    <button id="delNotice">삭제</button><i class="fas fa-trash"></i>
-	                </div>
-	                <div class="filterHead">
-	                    <div class="searchbar">
-	                        <b id="searchB">검색</b>　
-	                        <input type="text" placeholder="텍스트 검색" style="height:25px;">
-	                        <i class="fas fa-search fa-fw"></i>
-	                    </div>
-	                </div>
-	                <div class="board-write-btn">
-	                    <button type="button" class="btn" id="bWrite-btn" onclick="location.href='enrollForm.de'">글작성</button>
 	                </div>
 	            </div>
 	            
@@ -80,8 +77,11 @@
 	                </table>
 	                <br><br>
 	                
-	                
 	            </div>
+	            
+                <div class="board-write-btn" align="right">
+                    <button type="button" class="btn" id="bWrite-btn" onclick="location.href='enrollForm.de'">글작성</button>
+                </div>
 	            <div id="n-pagingBar">
 	                <nav aria-label="Page navigation example">
 	                    <ul class="pagination justify-content-center">
