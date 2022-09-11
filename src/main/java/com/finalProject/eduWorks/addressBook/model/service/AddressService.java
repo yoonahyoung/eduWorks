@@ -43,5 +43,13 @@ public interface AddressService {
 
 	// 6. 선택한 연락처 삭제
 	int deleteIndivAddNum(String addPerNo);
+	
+	// 7. 선택한 연락처 수정
+	
+	// 선택한 연락처 정보 조회
+	Address ajaxSelectAddInfo(String addPerNo);
+	
+	// 선택한 연락처 정보 수정
+	int updateIndivAddress(Address a);
 
 }

@@ -88,6 +88,8 @@
 		join tb_add_out ao on (ao.add_no = a.add_no)
 		where ao.mem_no = #{memNo}
 		  and ao.add_no = #{addNo}
+		order 
+			by add_per_no			
 	</select>
 	
 	<select id="selectAddCategory" resultMap="addressResult">
@@ -181,5 +183,36 @@
 					#{addPerNo}
 				</foreach>
 	</delete>
+	
+	<!-- 선택한 연락처 정보 조회 -->
+	<select id="selectAddInfo" resultMap="addressResult">
+		select
+		    add_per_no
+		  , mem_no
+		  , add_no
+		  , add_name
+		  , add_dept
+		  , add_job
+		  , add_phone
+		  , add_email
+		  , add_memo
+		from tb_address
+		where add_per_no = #{addPerNo}
+	</select>
+	
+	<!-- 선택한 연락처 정보 수정 -->
+	<update id="updateIndivAddress">
+		update
+			 tb_address
+		   set add_no = #{addNo}
+		     , add_name = #{addName}
+		     , add_dept = #{addDept}
+		     , add_job = #{addJob}
+		     , add_phone = #{addPhone}
+		     , add_email = #{addEmail}
+		     , add_memo = #{addMemo}
+		     , add_enroll_date = sysdate
+		   where add_per_no = #{addPerNo}
+	</update>
 
 </mapper>

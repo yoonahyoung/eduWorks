@@ -256,7 +256,7 @@
 									<!-- 반복문 시작 -->
 									<tr>
 										<td><input type="checkbox" class="addPerNo" name="addPerNo" value="${a.addPerNo }"></td>
-										<td data-toggle="modal" data-target="#update-Address">${a.addName }</td>
+										<td data-toggle="modal" data-target="#update-Address" id="updateAdd">${a.addName }</td>
 										<td>${a.addDept }</td>
 										<td>${a.addJob }</td>
 										<td>${a.addPhone }</td>
@@ -273,7 +273,7 @@
 			</div>
 
 			<Script>
-		
+				  
 				  // '전체클릭'버튼 클릭시 실행하는 함수
 				  function allCheck(allCheck){
 					  				  
@@ -541,7 +541,7 @@
 		</div>
 	</div>
 
-	<!-- ================== 개인 주소록 연락처 수정 및 삭제(update-Address Model) 모달 ====================== -->
+	<!-- ================== 개인 주소록 연락처 수정 (update-Address Model) 모달 ====================== -->
 	<div class="modal" id="update-Address">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content" style="height: 600px">
@@ -556,18 +556,18 @@
 				</div>
 
 				<!-- Modal body -->
-				<form action="" method="post">
+				<form method="post">
 
 					<div class="modal-body" align="center">
 
-						<input type="hidden" name="userId" value="${loginUser.userId }">
+						<input type="hidden" name="addPerNo" id="updateAddPerNo">
 
 						<div class="insertAddress">
 
 							<table class="address-table">
 								<tr>
 									<th>그룹 선택</th>
-									<td><select name="">
+									<td><select name="addNo" id="updateAddNo">
 											<c:forEach var="ca" items="${category }">
 												<option value="${ca.addNo }">${ca.addName }</option>
 											</c:forEach>
@@ -576,28 +576,27 @@
 
 								<tr>
 									<th>이름</th>
-									<td><input type="text" name="" value="홍길동"></td>
+									<td id="updateName"><input type="text" name="addName"></td>
 								</tr>
 								<tr>
 									<th>부서명</th>
-									<td><input type="text" name="" value="마케팅"></td>
+									<td id="updateDept"><input type="text" name="addDept"></td>
 								</tr>
 								<tr>
 									<th>직급명</th>
-									<td><input type="text" name="" value="사원"></td>
+									<td id="updateJob"><input type="text" name="addJob"></td>
 								</tr>
 								<tr>
 									<th>전화번호</th>
-									<td><input type="text" name="" value="010-1234-5678"></td>
+									<td id="updatePhone"><input type="text" name="addPhone"></td>
 								</tr>
 								<tr>
 									<th>이메일</th>
-									<td><input type="text" name=""
-										value="eduwork123@goodee.co.kr"></td>
+									<td id="updateEmail"><input type="text" name="addEmail"></td>
 								</tr>
 								<tr>
 									<th>메모</th>
-									<td><input type="text" name="" value="마케팅 신입"></td>
+									<td id="updateMemo"><input type="text" name="addMemo"></td>
 								</tr>
 
 							</table>
@@ -606,7 +605,7 @@
 
 
 						<div style="margin-top: 10px;">
-							<button type="submit" class="addBtn"
+							<button type="button" class="addBtn" id="updateBtn"
 								style="background-color: slategray; color: white; border: none;">수정</button>
 							<button type="button" data-dismiss="modal" class="class addBtn">취소</button>
 						</div>
@@ -617,6 +616,87 @@
 			</div>
 		</div>
 	</div>
+	
+	<script>
+	
+	
+		// 선택한 연락처 수정처리하는 함수
+		$(function(){
+			
+			$("#updateBtn").click(function(){
+				
+				$.ajax({
+					url : "updateIndivAdd.ad",
+					data : {
+						addPerNo : $("#updateAddPerNo").val(),
+						addNo : $("#updateAddNo").val(),
+						addName : $("#updateName>input").val(),
+						addDept : $("#updateDept>input").val(),
+						addJob : $("#updateJob>input").val(),
+						addPhone : $("#updatePhone>input").val(),
+						addEmail : $("#updateEmail>input").val(),
+						addMemo : $("#updateMemo>input").val()
+					},
+					success : function(result){
+						
+						console.log(result);
+						
+						if(result == 'success'){
+							alert("성공적으로 연락처를 수정했습니다.");
+							location.reload();
+						}
+					},
+					error : function(){
+						alert("연락처 정보를 수정하는데 실패했습니다. 다시 시도해주세요.");
+						location.reload();
+					}
+				})
+			})
+			
+		})
+		
+
+		// 등록된 연락처의 '이름'클릭시 조회된 연락처 정보 전달
+		$(function() {
+			
+			$( ".board-content #updateAdd" ).click(function(){
+				console.log( $(this).prev().children().val() );
+				
+				$.ajax({
+					url : "selectAddInfo.ad",
+					data : {
+						addPerNo : $(this).prev().children().val()
+						// 연락처 번호
+					},
+					success : function(a){
+						
+						// 개인 주소록
+						const no = a.addNo;
+						console.log(no);
+						$("#updateAddNo>option").each(function(){
+							if( no.search( $(this).val() ) != -1 ){
+								$(this).attr("selected", true);
+							}
+						});
+						
+						$("#updateAddPerNo").val(a.addPerNo);
+						$("#updateName>input").val(a.addName);
+						$("#updateDept>input").val(a.addDept);
+						$("#updateJob>input").val(a.addJob);
+						$("#updatePhone>input").val(a.addPhone);
+						$("#updateEmail>input").val(a.addEmail);
+						$("#updateMemo>input").val(a.addMemo);
+						
+						
+					},
+					error : function(){
+						console.log("실패");
+					}
+				})
+			})
+		})
+
+	</script>
 
 	<jsp:include page="../common/footer.jsp" />
 </body>

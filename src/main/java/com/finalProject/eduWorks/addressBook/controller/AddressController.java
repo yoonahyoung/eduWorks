@@ -17,6 +17,7 @@ import com.finalProject.eduWorks.addressBook.model.vo.AddressOut;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.template.Pagination;
 import com.finalProject.eduWorks.member.model.vo.Member;
+import com.google.gson.Gson;
 
 @Controller
 public class AddressController {
@@ -191,5 +192,36 @@ public class AddressController {
 		return result > 0 ? "success" : "fail";
 		
 	}
+	
+	/**
+	 * 7_1. 선택한 연락처 정보 조회
+	 * @param addPerNo : 선택한 연락처 번호
+	 * @return : 선택한 연락처 정보
+	 */
+	@ResponseBody
+	@RequestMapping(value="selectAddInfo.ad", produces="application/json; charset=UTF-8")
+	public String ajaxSelectAddInfo(String addPerNo) {
+
+		Address a = aService.ajaxSelectAddInfo(addPerNo);
+		
+		return new Gson().toJson(a);
+		
+	}
+	
+	/**
+	 * 7_2. 선택한 연락처 정보 수정
+	 * @param a : 수정된 연락처 정보
+	 * @return : 수정 성공 여부 (성공 : success | 실패 : fail)
+	 */
+	@ResponseBody
+	@RequestMapping("updateIndivAdd.ad")
+	public String ajaxUpdateIndivAddress(Address a, HttpSession session) {
+		
+		int result = aService.updateIndivAddress(a);
+
+		return result > 0 ? "success" : "fail";
+		
+	}
+	
 
 }
