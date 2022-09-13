@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.finalProject.eduWorks.board.model.dao.NoticeDao;
 import com.finalProject.eduWorks.board.model.vo.Board;
+import com.finalProject.eduWorks.common.model.vo.Attachment;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.model.vo.Reply;
 
@@ -45,6 +46,11 @@ public class NoticeServiceImpl implements NoticeService{
 		return nDao.selectNotice(sqlSession, noticeNo);
 	}
 	
+	// 해당 게시글 첨부파일 조회
+	@Override
+	public ArrayList<Attachment> selectAtList(int noticeNo) {
+		return nDao.selectAtList(sqlSession, noticeNo);
+	}
 	// 전사공지 상세 조회 시 댓글 리스트 조회
 	@Override
 	public ArrayList<Reply> selectReplyList(int noticeNo) {
@@ -56,6 +62,21 @@ public class NoticeServiceImpl implements NoticeService{
 	public int insertReply(Reply r) {
 		return nDao.insertReply(sqlSession, r);
 	}
+	
+	// 댓글 조회
+	@Override
+	public Reply selectReply(int replyNo) {
+		return nDao.selectReply(sqlSession, replyNo);
+	}
+	
+	// 댓글 수정
+	@Override
+	public int updateReply(Reply r) {
+		return nDao.updateReply(sqlSession, r);
+	}
+	
+	
+	
 	@Override
 	public Board udpatetNotice(Board b) {
 		return null;
@@ -70,6 +91,8 @@ public class NoticeServiceImpl implements NoticeService{
 	public int deleteNotice(int noticeNo) {
 		return 0;
 	}
+
+	
 
 	
 
