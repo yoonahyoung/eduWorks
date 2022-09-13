@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link href="${pageContext.request.contextPath}/resources/css/bookList.css" rel="stylesheet" type="text/css">
+<link href="${pageContext.request.contextPath}/resources/css/book.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 
@@ -51,7 +51,7 @@
 			<div class="main_width">
 			    <table id="book" class="board-content table" align="center">
 			        <thead>
-			            <tr class="table_thead_border">
+			            <tr class="table_thead_border" style="background-color:white">
 			                <th width="5%">번호</th>
 			                <th width="30%">신청 교재명</th>
 			                <th width="14%">강사명</th>
@@ -60,7 +60,7 @@
 			        <tbody class="board-tbody">
 			            <!-- 값은 다 DB와 연결될 것 -->
 			<!-- 공지는 배경색 변경 -->
-						<tr style="background:rgb(250, 232, 232)">
+						<tr>
 			                <td>2</td>
 			                <td>JAVA의 이해</td>
 			                <td>삽자루</td>

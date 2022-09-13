@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-	<link href="${pageContext.request.contextPath}/resources/css/bookDetailView.css" rel="stylesheet" type="text/css">
+	<link href="${pageContext.request.contextPath}/resources/css/book.css" rel="stylesheet" type="text/css">
 
 </head>
 <body>

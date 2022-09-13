@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-	<link href="${pageContext.request.contextPath}/resources/css/bookEnrollForm.css" rel="stylesheet" type="text/css">
+	<link href="${pageContext.request.contextPath}/resources/css/book.css" rel="stylesheet" type="text/css">
  	<!-- 서머노트  -->
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
