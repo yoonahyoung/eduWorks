@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="teacherMapper">
+
+	<resultMap id="teacherResult" type="Teacher">
+		<result column="class_no" property="classNo" />
+		<result column="class_title" property="classTitle" />
+		<result column="class_content" property="classContent" />
+		<result column="class_objective" property="classObjective" />
+		<result column="class_subject" property="classSubject" />
+		<result column="class_student" property="classStudent" />
+		<result column="class_start_date" property="classStartDate" />
+		<result column="class_end_date" property="classEndDate" />
+		<result column="mem_no" property="memNo" />
+		<result column="class_approval" property="classApproval" />
+		<result column="class_fee" property="classFee" />
+		<result column="class_signup_date" property="classSignupDate" />
+	</resultMap>
+	
+	
+	
+	<select id="selectListCount" resultType="_int">
+		select
+		       count(*)
+		  from tb_class
+		 where class_status = 'Y'
+	</select>
+
+	<select id="appAllListSelect" resultMap="teacherResult">
+		select
+		       class_no
+		     , class_title
+		     , class_content
+		     , class_objective
+		     , class_subject
+		     , class_student
+		     , class_start_date
+		     , class_end_date
+		     , c.mem_no
+		     , class_approval
+		     , class_fee
+		     , class_signup_date
+		     , mem_name
+		  from tb_class c
+		  join tb_member m on(c.mem_no = m.mem_no)
+		 where class_status = 'Y'
+         order
+            by class_no desc
+	</select>
+</mapper>
