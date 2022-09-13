@@ -256,47 +256,56 @@
 	                				
 	                				for(let i = 0; i < rCount; i++){
 	                					
+	                					
+	                					
 	                					if(list[i].replyParent == 0){ // 원댓글 이면
 	                						value += '<div class="su_reply_Barea" id="pReply' + list[i].replyNo + '">';
 	                					} else { // 대댓글이면
 	                						value += '<div class="su_reply_Barea su_rreply_Barea" id="pReply' + list[i].replyNo + '">';
 	                					}
 	                					
-	                					value += '<div class="su_reply">'
-				                        			+ '<div>'
-				                        				+ '<img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">'
-				                        			+ '</div>'
-				
-				                        			+ '<div>'
-				                            			+ '<div class="su_reply_writer">'
-					                            			+ '<span class="font-weight-bold">' + list[i].replyWriter + '&ensp;' + list[i].replyJob + '&ensp;</span>'
-															+ '<span style="margin-right:10px">' + list[i].replyDate + '</span> &ensp;';
-						                          
-							                                <!-- 대댓글 작성 버튼 -->
-							                                <!-- ()안에 댓글 번호 넣기 -->
-							                                <!-- 내가 작성한 댓글이 아니고 원댓글일 때만 보이게 -->
-							                                if(list[i].replyParent == 0){
-							                                	
-							                                	value += '<a id="pReplyEvent" style="cursor: pointer;" onclick="rReply(' + list[i].replyNo + ');">'
-									                                	+ '<i class="fas fa-reply" style="transform: rotate(180deg);"></i> 댓글</a>';
-							                                }
-							                      value += '</div>'
-				                            			 + '<div class="su_reply_Bcontent">'
-				                            			 	+ '<p>' + list[i].replyContent +'</p>'
-														 + '</div>'
-												+ '</div>'
-											+ '</div>';
+	                					if(list[i].replyStatus == 'Y'){
+		                					value += '<div class="su_reply">'
+					                        			+ '<div>'
+					                        				+ '<img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">'
+					                        			+ '</div>'
+					
+					                        			+ '<div>'
+					                            			+ '<div class="su_reply_writer">'
+						                            			+ '<span class="font-weight-bold">' + list[i].replyWriter + '&ensp;' + list[i].replyJob + '&ensp;</span>'
+																+ '<span style="margin-right:10px">' + list[i].replyDate + '</span> &ensp;';
+							                          
+								                                <!-- 대댓글 작성 버튼 -->
+								                                <!-- ()안에 댓글 번호 넣기 -->
+								                                <!-- 내가 작성한 댓글이 아니고 원댓글일 때만 보이게 -->
+								                                if(list[i].replyParent == 0){
+								                                	value += '<a id="pReplyEvent' + list[i].replyNo + '" style="cursor: pointer;" onclick="rReply(' + list[i].replyNo + ');">'
+										                                	+ '<i class="fas fa-reply" style="transform: rotate(180deg);"></i> 댓글</a>';
+								                                }
+								                      value += '</div>'
+					                            			 + '<div class="su_reply_Bcontent">'
+					                            			 	+ '<p>' + list[i].replyContent +'</p>'
+															 + '</div>'
+													+ '</div>'
+												+ '</div>';
+												
+												// 댓글 작성자만 보이는 수정, 삭제 버튼
+					                      		//if(list[i].replyWriter == userName){
+					                      			value += '<div class="su_reply_btn">'
+							                        			+ '<button type="button" class="btn btn-sm" style="border:0px; color: black;" onclick="updateReplyDiv(' + list[i].replyNo + ');">수정</button>|' 
+							                        			+ '<button type="button" class="btn btn-sm" style="border:0px; color: black;" onclick="deleteReply(' + list[i].replyNo + ')">삭제</button>'
+							                    			+ '</div>';
+					                      		//}
+												
+												value += '</div>';
 											
-											// 댓글 작성자만 보이는 수정, 삭제 버튼
-				                      		//if(list[i].replyWriter == userName){
-				                      			value += '<div class="su_reply_btn">'
-						                        			+ '<button type="button" class="btn btn-sm" style="border:0px; color: black;" onclick="updateReplyDiv(' + list[i].replyNo + ');">수정</button>|' 
-						                        			+ '<button type="button" class="btn btn-sm" style="border:0px; color: black;" onclick="deleteReply(' + list[i].replyNo + ')">삭제</button>'
-						                    			+ '</div>';
-				                      		//}
-											
-											value += '</div>';
 	                					
+	                					} else {
+	                						value += '<div class="su_reply">'
+	            	                    			+ '<p>삭제된 댓글입니다.</p>'
+	            	                    		+ '</div>'
+	            	                    		+ '</div>';
+	                					}
 	                				}
 	                				
 	                				$(".su_board_reply #replyArea").html(value);	
@@ -306,42 +315,54 @@
 	                			}
 	                		});
 	                	}
-	
+	                	
 	                	// 대댓글 작성 영역 추가 이벤트
 	                    function rReply(rNo){
-	                        const rReplyDiv = '<div class="su_reply_Barea su_rreply_Barea">'
+	                		let reId = 'pReplyEvent' + rNo;
+	                		let id = "pReply" + (rNo + 1);
+	                		let caId = "cancleReReply" + rNo
+	                        const rReplyDiv = '<div class="su_reply_Barea su_rreply_Barea" id="reReplyDiv' + rNo + '">'
 	                                            + '<div class="su_reply" style="width: 100%;">'
 	                                                + '<div>'
 	                                                    + '<img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">'                                        
 	                                                + '</div>'
 	                        
 	                                                + '<div style="width: 100%">'
-	                                                    + '<input style="width: 100%;" type="text" placeholder="댓글 입력">'
+	                                                    + '<input style="width: 100%;" type="text" placeholder="댓글 입력" id="replyContent' + rNo + '">'
 	                                                + '</div>'
 	
 	                                            + '</div>'
-	                                            + '<div class="su_reply_btn" id="su_reply_btn">'
-	                                                + '<button type="button" class="btn su_btn_border btn-sm writeReplyBtn" id="writeReplyBtn" onclick="addReply(' + rNo + ');">댓글 작성</button>'
+	                                            + '<div class="su_reply_btn" id="su_reply_btn" style="display: inline-flex;">'
+	                                                 + '<button type="button" class="btn su_btn_border btn-sm writeReplyBtn" id="writeReplyBtn"' 
+	                                                 + 'onclick="addReply(' + rNo + ');">댓글 작성</button>'
 	                                            + '</div>'
 	
 	                                            + '</div>';
-	                                            console.log(rNo);
 	                                            
-	                        //let rLastNo = 
 	                                            
-	                        $("#pReply").before(rReplyDiv);
+	                        $("#" + id).before(rReplyDiv);
 	                        // 원 댓의 이벤트 제거
-	                        $("#pReplyEvent").removeAttr("onclick");
+	                        $("#" + reId).attr("onclick", "cancleReReply(" + rNo + ")");
 	                        // 댓글 입력칸 focus
 	                        $(".su_rreply_Barea>.su_reply input").focus();
-	                            
+	                       
 	                    }
+	                	
+	                	// 대댓 작성 취소
+	                	function cancleReReply(rNo){
+	                		let reId = 'pReplyEvent' + rNo;
+	                		let divId = 'reReplyDiv' + rNo;
+	                		
+	                		let value = "";
+	                		$("#" + divId).remove();
+	                		 $("#" + reId).attr("onclick", "rReply(" + rNo + ");");
+	                	}
 	                    
 	                    // 댓글 작성 이벤트
 	                    function addReply(num){
 	                    	// num : 부모 댓글 번호
 	                    	let id = "replyContent" + num;
-	                    	//console.log($("#" + id).val());
+	                    	console.log($("#" + id).val());
 	                    	
 	                    	if( $("#" + id).val().trim().length != 0 ){	// 유효한 댓글 작성시 => ajax로 insert 요청
 	                    		
@@ -395,6 +416,7 @@
                     				+ '</div>';
                     				
                     		$("#" + id).html(value);
+                    		$("#" + contentId).focus();
 	                    }
 	                    
 	                    function updateReply(num){
@@ -515,7 +537,7 @@
 											
 										$("#" + id).html(value);
 	                    					
-	                    				selectReplyList();
+	                    				//selectReplyList();
 	                    					
 	                    			} else{
 	                    				alert("댓글 수정 취소에 실패하였습니다.");
@@ -538,6 +560,7 @@
 	                    			success: function(result){
 	                    				if(result > 0){
 	                    					$("#deleteReply").modal("hide");
+	                    					
 	                    					selectReplyList();
 	                    				} else{
 	                    					alert("댓글 삭제에 실패하였습니다.");
