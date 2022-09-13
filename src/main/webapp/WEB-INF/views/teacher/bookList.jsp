@@ -12,10 +12,9 @@
 
 	<jsp:include page="../common/header.jsp" />
 	
-	<div class="container-fluid" style="display: flex;">
 		
 		        <!-- 게시판 영역 -->
-		<div style="padding:0; width:97%;">
+		<div class="col-12" style="padding:0; width: 100%;">
 			<!-- Page Heading -->
 			<div class="d-sm-flex align-items-center mb-4" id="boardHeader">
 			    <h2 style="color:black">교재 목록</h2>
@@ -41,14 +40,14 @@
 			    <div class="searchbar">
 			        <b>검색</b>　
 			        <input type="text" placeholder="텍스트 검색" style="height:25px;">
-			            <i class="fas fa-search fa-fw"></i>
+			            <a href="" style="color:slategray"><i class="fas fa-search fa-fw"></i></a>
 			        </div>
 			     <br>   
 			    </div>
 			    
 			</div>
 		
-			<div class="main_width">
+			<div class="main_width" style="width: 100%;">
 			    <table id="book" class="board-content table" align="center">
 			        <thead>
 			            <tr class="table_thead_border" style="background-color:white">
@@ -111,9 +110,7 @@
 		                
 		</div>
 		
-        <!-- End of Content Wrapper -->
 
-    </div>
 	
 	
 	
