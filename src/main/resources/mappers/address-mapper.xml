@@ -96,6 +96,7 @@
 		select
 			add_no
 		  , add_name
+		  , mem_no
 		from tb_add_out
 		where mem_no = #{memNo}
 		order 
@@ -214,5 +215,93 @@
 		     , add_enroll_date = sysdate
 		   where add_per_no = #{addPerNo}
 	</update>
+	
+	<!-- 연락처 검색시 나오는 연락처 수 조회 (개인 주소록) -->
+	<select id="searchIndivCount" resultType="_int">
+			select
+			    count(*)
+			from tb_address
+			where (add_name like '%' || #{keyword} || '%'
+			  or add_dept like '%' || #{keyword} || '%'
+			  or add_job like '%' || #{keyword} || '%'
+			  or add_phone like '%' || #{keyword} || '%'
+			  or add_email like '%' || #{keyword} || '%'
+			  or add_memo like '%' || #{keyword} || '%')
+			  and mem_no = #{memNo}
+			  and add_no = #{addNo}
+			order
+				by add_per_no
+	</select>
+	
+	<!-- 연락처 검색시 나오는 연락처 목록 조회 (개인 주소록) -->
+	<select id="searchIndivAdd" resultMap="addressResult">
+			select
+			    add_per_no
+			  , mem_no
+			  , add_no
+			  , add_name
+			  , add_dept
+			  , add_job
+			  , add_phone
+			  , add_email
+			  , add_memo
+			from tb_address
+			where (add_name like '%' || #{keyword} || '%'
+			  or add_dept like '%' || #{keyword} || '%'
+			  or add_job like '%' || #{keyword} || '%'
+			  or add_phone like '%' || #{keyword} || '%'
+			  or add_email like '%' || #{keyword} || '%'
+			  or add_memo like '%' || #{keyword} || '%')
+			  and mem_no = #{memNo}
+			  and add_no = #{addNo}
+			order 	
+				by add_per_no
+	</select>
+	
+	<!-- 연락처 검색시 나오는 연락처 수 조회 (전사 주소록) -->
+	<select id="searchPublicCount" resultType="_int">
+		select
+			 count(*)
+		from tb_member
+		 join tb_job using (job_code)
+		 join tb_department using (dept_code)
+		where mem_resign_status = 'N'
+          and (mem_no like '%' || #{keyword} || '%'
+          or mem_name like '%' || #{keyword} || '%'
+          or dept_name like '%' || #{keyword} || '%'
+          or job_name like '%' || #{keyword} || '%'
+          or mem_businessnum like '%' || #{keyword} || '%'
+          or mem_email like '%' || #{keyword} || '%'
+          or mem_phone like '%' || #{keyword} || '%'
+          )          
+		order
+			by mem_no
+	</select>
+	
+	<!-- 연락처 검색시 나오는 연락처 목록 조회 (전사 주소록) -->
+	<select id="searchPublicAdd" resultMap="publicAddResult">
+		select
+			  mem_no
+			, mem_name
+			, dept_name
+			, job_name
+			, mem_businessnum
+			, mem_email
+			, mem_phone
+		from tb_member
+		 join tb_job using (job_code)
+		 join tb_department using (dept_code)
+		where mem_resign_status = 'N'
+          and (mem_no like '%' || #{keyword} || '%'
+          or mem_name like '%' || #{keyword} || '%'
+          or dept_name like '%' || #{keyword} || '%'
+          or job_name like '%' || #{keyword} || '%'
+          or mem_businessnum like '%' || #{keyword} || '%'
+          or mem_email like '%' || #{keyword} || '%'
+          or mem_phone like '%' || #{keyword} || '%'
+          )          
+		order
+			by mem_no
+	</select>
 
 </mapper>

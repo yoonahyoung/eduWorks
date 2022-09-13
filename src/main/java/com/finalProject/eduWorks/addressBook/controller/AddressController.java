@@ -56,8 +56,6 @@ public class AddressController {
 	@RequestMapping("individualAddress.ad")
 	public ModelAndView individualAddressBook(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv, String memNo, HttpSession session) {
 		
-		
-		
 		// 개인 주소록 기본('개인주소록') 번호 조회
 		String basicAddNum = String.valueOf(aService.basicAddressNum(memNo));
 
@@ -230,7 +228,7 @@ public class AddressController {
 	 */
 	@RequestMapping("searchIndivAdd.ad")
 	public ModelAndView ajaxSeacrhIndivAdd(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv, String kind, String keyword, Address a) {
-		
+
 		// 연락처 조회시 나오는 연락처 수 조회
 		int searchCount = aService.searchIndivCount(keyword, a);
 		
@@ -245,6 +243,7 @@ public class AddressController {
 		
 		mv.addObject("pi", pi);
 		mv.addObject("list", search);
+		mv.addObject("addNo", a.getAddNo());
 		mv.addObject("category", category);
 		mv.addObject("keyword", keyword);
 		
@@ -258,9 +257,14 @@ public class AddressController {
 		
 	}
 	
+	/**
+	 * 8_2. 연락처 검색 (전사 주소록)
+	 * @param keyword : 검색 키워드
+	 * @return : 검색 목록
+	 */
 	@RequestMapping("searchPublicAdd.ad")
 	public ModelAndView searchPublicAdd(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv, String keyword) {
-		
+				
 		// 연락처 조회시 나오는 연락처 수 조회
 		int searchCount = aService.searchPublicCount(keyword);
 				
@@ -280,5 +284,4 @@ public class AddressController {
 		
 	}
 	
-
 }

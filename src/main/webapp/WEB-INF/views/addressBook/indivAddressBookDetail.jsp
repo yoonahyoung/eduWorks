@@ -38,7 +38,7 @@
 				<c:choose>
 					<c:when test="${not empty category}">
 						<c:forEach var="c" items="${category}">
-							<c:if test="${c.addName != '개인주소록'}">
+							<c:if test="${c.addName != '개인주소록' and c.memNo == loginUser.memNo}">
 								<div class="address-title">
 								
 									<!-- =========== 해당 주소록 그룹으로 이동 ============== -->
@@ -70,7 +70,7 @@
 
 								<form id="post" action="" method="post">
 
-									<input type="hidden" name="memNo" value="${loginUserN.memNo }">
+									<input type="hidden" name="memNo" value="${loginUser.memNo }">
 									<input type="hidden" name="addNo" id="addNo">
 
 								</form>
@@ -134,7 +134,7 @@
 				 		$.ajax({
 				 			url : "deleteAllIndivAddBook.ad",
 				 			data : {
-				 				memNo : ${loginUserN.memNo},
+				 				memNo : ${loginUser.memNo},
 				 				addNo : addNo
 				 			},
 				 			success : function(result){
@@ -173,7 +173,7 @@
 							$.ajax({
 								url : "insertAddIndiv.ad",
 								data : {
-									memNo : '${loginUserN.memNo }',
+									memNo : '${loginUser.memNo }',
 									addName : $("#addName").val()
 								},
 								success : function(result) {
@@ -218,11 +218,17 @@
 			</div>
 
 			<div class="tableOption">
-				<div class="searchbar" align="center">
-					<input type="text" placeholder="검색"> <i
-						class="fas fa-search fa-lg address-search"></i>
-				</div>
-
+			<!-- ==================== 연락처 검색 =================== -->
+				<form action="searchIndivAdd.ad" method="post">
+					<div class="searchbar" align="center">
+						<input type="text" name="keyword" placeholder="검색">
+						<input type="hidden" name="memNo" value="${loginUser.memNo }">
+						<input type="hidden" name="kind" value="other">
+						<input type="hidden" name="addNo" value="${addNo }">
+ 						<button type="submit" class="address-search"><i class="fas fa-search fa-lg"></i></button>
+					</div>
+				</form>
+				
 				<div class="selectOption" style="margin-bottom: 10px">
 					<select>
 						<option value="">최신순</option>
@@ -255,6 +261,7 @@
 							<c:otherwise>
 								<c:forEach var="a" items="${list}">
 									<!-- 반복문 시작 -->
+									<c:if test="${a.memNo == loginUser.memNo }">
 									<tr>
 										<td><input type="checkbox" class="addPerNo" name="addPerNo" value="${a.addPerNo }"></td>
 										<td data-toggle="modal" data-target="#update-Address" id="updateAdd">${a.addName }</td>
@@ -264,6 +271,7 @@
 										<td>${a.addEmail }</td>
 										<td>${a.addMemo }</td>
 									</tr>
+									</c:if>
 								</c:forEach>
 								<!-- 반복문 끝 -->
 							</c:otherwise>
@@ -274,7 +282,7 @@
 			</div>
 
 			     <Script>
-			     
+
 					  // '전체클릭'버튼 클릭시 실행하는 함수
 					  function allCheck(allCheck){
 						  				  
@@ -315,7 +323,7 @@
 								$.ajax({
 									url : "deleteAddNum.ad",
 									data : {
-										memNo : ${loginUserN.memNo},
+										memNo : ${loginUser.memNo},
 										addPerNo : addPerNo
 									},
 									success : function(result){
@@ -344,50 +352,77 @@
 
            		</Script>
 
-			<!-- ============== 페이지 이동 ================== -->
+<!-- ============== 페이지 이동 ================== -->
 			<div style="margin: 30px 0 30px 0">
 				<c:choose>
 					<c:when test="${empty list }">
+					<!-- 연락처 목록 없는 경우 -->
 						<nav aria-label="Page navigation example">
 							<ul class="pagination justify-content-center">
 							</ul>
 						</nav>
 					</c:when>
 					<c:otherwise>
+					<!-- 연락처 목록 있는 경우 -->
 						<nav aria-label="Page navigation example">
 							<ul class="pagination justify-content-center">
 								<c:choose>
 									<c:when test="${pi.currentPage eq 1 }">
+									<!-- 현재 페이지가 1인 경우 -->
 										<li class="page-item"><a class="page-link disabled"
 											aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 										</a></li>
 									</c:when>
+									
 									<c:otherwise>
+									<!-- 현재 페이지가 1이 아닌 경우 -->
 										<!--  href="indivAddressBook.ad?page=${pi.currentPage -1 }" -->
 										<li class="page-item"><a class="page-link"
-											onclick="movePage('indivAddressBook.ad', ${pi.currentPage -1 });"
+											onclick="movePage('indivAddressBook.ad', ${pi.currentPage -1 }, ${addNo });"
 											aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 										</a></li>
 									</c:otherwise>
 								</c:choose>
-								<!-- href="indivAddressBook.ad?page=${p }" -->
+
 								<c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage }">
-									<li class="page-item"><a class="page-link"
-										onclick="movePage('indivAddressBook.ad', ${p });">${p }</a></li>
+									<c:choose>
+									<c:when test="${empty keyword }">
+										<!-- 현재 페이지가 1이 아니고, keyword가 입력되지 않은 경우 -->
+										<li class="page-item"><a class="page-link"
+											onclick="movePage('indivAddressBook.ad', ${p }, ${addNo });">${p }</a></li>
+									</c:when>
+									<c:otherwise>
+										<!-- 현재 페이지가 1이 아니고, keyword가 입력된 경우 -->
+										<li class="page-item"><a class="page-link"
+											onclick="movePage('searchIndivAdd.ad', ${p }, ${keyword }, ${addNo });">${p }</a></li>
+									</c:otherwise>
+									</c:choose>
 								</c:forEach>
 
 								<c:choose>
 									<c:when test="${pi.currentPage eq pi.maxPage }">
+										<!-- 마지막 페이지인 경우 -->
 										<li class="page-item"><a class="page-link disabled"
 											aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 										</a></li>
 									</c:when>
 									<c:otherwise>
-										<!-- href="indivAddressBook.ad?page=${pi.currentPage + 1}" -->
-										<li class="page-item"><a class="page-link"
-											onclick="movePage('indivAddressBook.ad', ${pi.currentPage + 1});"
-											aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-										</a></li>
+										<c:choose>
+											<c:when test="${empty keyword }">
+												<!-- 마지막 페이지가 아니고, keyword가 입력되지 않은 경우 -->
+												<li class="page-item"><a class="page-link"
+													onclick="movePage('indivAddressBook.ad', ${pi.currentPage + 1}, ${addNo });"
+													aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+												</a></li>
+											</c:when>
+											<c:otherwise>
+												<!-- 마지막 페이지가 아니고, keyword가 입력된 경우 -->
+												<li class="page-item"><a class="page-link"
+													onclick="movePage('searchIndivAdd.ad', ${pi.currentPage + 1}, ${keyword }, ${addNo });"
+													aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+												</a></li>
+											</c:otherwise>
+										</c:choose>
 									</c:otherwise>
 								</c:choose>
 							</ul>
@@ -400,15 +435,21 @@
 	
 	<!-- ================== 페이지 이동 ====================== -->
 	<form id="moveForm" action="" method="post">
-		<input type="hidden" name="memNo" value="${loginUserN.memNo }">
+		<input type="hidden" name="memNo" value="${loginUser.memNo }">
 		<input type="hidden" name="page" id="page">
+		<input type="hidden" name="keyword" id="keyword">
+		<input type="hidden" name="addNo" id="pAddNo">
 	</form>
 
 	<!--================== 해당 페이지로 이동처리하는 함수 ================== -->
 	<script>
-		function movePage(url, page){
+		function movePage(url, page, keyword, addNo){
 			$("#moveForm").children("#page").val(page);
+			$("#moveForm").children("#keyword").val(keyword);
+			$("#moveForm").children("#pAddNo").val(addNo);
 			$("#moveForm").attr("action", url).submit();
+			
+			console.log(${"#p-addNo"});
 		}
 	</script>
 	<!-- /.container-fluid -->
@@ -433,7 +474,7 @@
 					<div class="modal-body" align="center">
 
 						<!-- 나중에 로그인된 회원으로 value값 변경하기!!! -->
-						<input type="hidden" name="memNo" value="${loginUserN.memNo }">
+						<input type="hidden" name="memNo" value="${loginUser.memNo }">
 
 						<div class="insertAddress">
 
@@ -505,7 +546,7 @@
 			        			method : "get",
 			        			url : "insertAddIndivNum.ad",
 			        			data : {
-			        				memNo : ${loginUserN.memNo},
+			        				memNo : ${loginUser.memNo},
 			        				addNo : $('select[name=addNo] option:selected').val(),
 			        				addName : $("#addName>input").val(),
 			        				addDept : $("#addDept>input").val(),

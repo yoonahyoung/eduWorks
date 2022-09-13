@@ -148,5 +148,67 @@ public class AddressDao {
 	public int updateIndivAddress(SqlSessionTemplate sqlSession, Address a) {
 		return sqlSession.update("addressMapper.updateIndivAddress", a);
 	}
+	
+	/**
+	 * 8_1. 연락처 검색시 나오는 연락처 수 조회 (개인 주소록)
+	 * @param keyword : 검색어
+	 * @param a : 로그인한 회원, 주소록 그룹 번호
+	 * @return : 검색시 나오는 연락처 수
+	 */
+	public int searchIndivCount(SqlSessionTemplate sqlSession, String keyword, Address a) {
+		
+		HashMap map = new HashMap<>();
+		
+		map.put("keyword", keyword);
+		map.put("memNo", a.getMemNo());
+		map.put("addNo", a.getAddNo());
+		
+		return sqlSession.selectOne("addressMapper.searchIndivCount", map);
+	}
 
+	/**
+	 * 8_2. 연락처 검색시 나오는 연락처 목록 조회 (개인 주소록)
+	 * @param keyword : 검색어
+	 * @param a : 로그인한 회원, 주소록 그룹 번호
+	 * @return : 검색시 나오는 연락처 목록
+	 */
+	public ArrayList<Address> searchIndivAdd(SqlSessionTemplate sqlSession, PageInfo pi, String keyword, Address a){
+		
+		int limit = pi.getBoardLimit(); // 조회해야되는 게시글 갯수
+		int offset = (pi.getCurrentPage() - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		HashMap map = new HashMap<>();
+		
+		map.put("keyword", keyword);
+		map.put("memNo", a.getMemNo());
+		map.put("addNo", a.getAddNo());
+		
+		return (ArrayList)sqlSession.selectList("addressMapper.searchIndivAdd", map, rowBounds);
+	}
+	
+	/**
+	 * 8_3. 연락처 검색시 나오는 연락처 수 조회 (전사 주소록)
+	 * @param keyword : 검색어
+	 * @return : 검색시 나오는 연락처 수
+	 */
+	public int searchPublicCount(SqlSessionTemplate sqlSession, String keyword) {
+		return sqlSession.selectOne("addressMapper.searchPublicCount", keyword);
+	}
+	
+	/**
+	 * 8_4. 연락처 검색시 나오는 연락처 목록 조회 (전사 주소록)
+	 * @param pi : 페이징
+	 * @param keyword : 검색어
+	 * @return : 검색시 나오는 연락처 목록
+	 */
+	public ArrayList<Member> searchPublicAdd(SqlSessionTemplate sqlSession, PageInfo pi, String keyword){
+		
+		int limit = pi.getBoardLimit(); // 조회해야되는 게시글 갯수
+		int offset = (pi.getCurrentPage() - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return (ArrayList)sqlSession.selectList("addressMapper.searchPublicAdd", keyword, rowBounds);
+	}
+	
 }
