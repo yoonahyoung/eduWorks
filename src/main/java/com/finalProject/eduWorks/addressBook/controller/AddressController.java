@@ -56,9 +56,7 @@ public class AddressController {
 	@RequestMapping("individualAddress.ad")
 	public ModelAndView individualAddressBook(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv, String memNo, HttpSession session) {
 		
-		// 로그인 세션! (삭제하기!)
-		Member loginUser = new Member("500001", "user02", "pass02", "황재범", "D1", "J3", "010-2222-2223", "2222-2223", "aaaa1112@gmail.com", "1997-01-06", 111111, "111111", "상세주소2", "참고항목2", "2022-08-02", "2022-08-02", "N", "file");
-	    session.setAttribute("loginUserN", loginUser);
+		
 		
 		// 개인 주소록 기본('개인주소록') 번호 조회
 		String basicAddNum = String.valueOf(aService.basicAddressNum(memNo));

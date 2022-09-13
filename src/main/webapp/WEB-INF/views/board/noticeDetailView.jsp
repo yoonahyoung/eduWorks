@@ -61,7 +61,7 @@
 		            </div>
 				</c:if>
 				
-	            <!-- 삭제 모달창 -->
+	            <!-- 글 삭제 모달창 -->
 	            <div class="modal" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	                <div class="modal-dialog modal-dialog-centered cascading-modal modal-avatar" role="document">
 	                    <!--Content-->
@@ -83,8 +83,27 @@
 	                </div>
 	            </div>
 	
-	             <!-- ==================================== 삭제 완료 후 alert창 출력하기==================================================== -->
-				
+	             <!-- 댓글 삭제 모달창 -->
+				<div class="modal" id="deleteReply" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	                <div class="modal-dialog modal-dialog-centered cascading-modal modal-avatar" role="document">
+	                    <!--Content-->
+	                    <div class="modal-content modal_alert">
+	                        
+	                        <!--Body-->
+	                        <div class="modal-body text-center modal_alert_child">
+	                            <div id="req-modal">
+	            
+	                                <h5 class="mt-1 mb-2 req-msg">정말 삭제하시겠습니까?</h5>
+	                                <br>
+	                                <div class="text-center mt-4" id="realDeleteDiv"> 
+	                                    <button type="button" id="realDeleteReply" class="n-btn su_btn_all su_btn_medium">확인</button>
+	                                    <button type="button" id="next" class="n-btn su_btn_border su_btn_medium" data-dismiss="modal">취소</button>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
 				
 	            <div class="su_board_writer">
 	                <div>
@@ -103,13 +122,14 @@
 	                    </p>
                     </div>
                 </div>
-	
-                <div class="su_board_file">
-                    <span><i class="fas fa-paperclip" style="color: #5e7e9b;">&nbsp;</i></span>
-	            	<span>첨부파일 &nbsp;: &nbsp;</span>
-	                <!-- 첨부파일 이름 나오게 -->
-	            </div>
-	
+				
+				<c:if test="${ not empty atList }">
+	                <div class="su_board_file">
+	                    <span><i class="fas fa-paperclip" style="color: #5e7e9b;">&nbsp;</i></span>
+		            	<span>첨부파일 &nbsp;: &nbsp;</span>
+		                <!-- 첨부파일 이름 나오게 -->
+		            </div>
+				</c:if>
 	            <br>
 	
 	            <div class="su_board_count tableOption">
@@ -180,34 +200,34 @@
 								for(let i=0; i<rList.length; i++){
 									// 원댓글 or 대댓글 조건문
 									if(rList[i].replyParent == 0){
-										value += '<div class="su_reply_Barea">';
+										value += '<div class="su_reply_Barea selNo' + rList[i].replyNo + '">';
 									}else{
-										value += '<div class="su_reply_Barea su_rreply_Barea">';
+										value += '<div class="su_reply_Barea su_rreply_Barea selNo' + rList[i].replyNo + '">';
 									}
 											value += '<div class="su_reply">'
 														+ '<div>' 
 															+'<img src="' + root + '/resources/profile_images/defaultProfile.png" alt="">'
 														+ '</div>'
-														+ '<div>'
+														+ '<div id="reUpdateArea' + rList[i].replyNo + '">'
 															+ '<div class="su_reply_writer">'
 																+ '<span class="font-weight-bold">' + rList[i].replyWriter + '</span>'
 																+ '<span class="font-weight-bold"> ' + rList[i].replyJob+ '</span>'
 																+ '<span style="margin-right:10px"> | ' + rList[i].replyDate + '</span>';
 																// 원댓글만 댓글 추가 버튼 보이게끔 (댓글 작성자 본인 또한 본인 댓글에 대댓글 가능)
 																if(rList[i].replyParent == 0){
-																	value += '<a id="pReplyEvent" style="cursor: pointer;" onclick="rReply(' + rList[i].replyNo + ');"><i class="fas fa-reply" style="transform: rotate(180deg);"></i> 댓글</a>';
+																	value += '<a id="pReplyEvent' + rList[i].replyNo + '" style="cursor: pointer;" onclick="rReply(' + rList[i].replyNo + ');"><i class="fas fa-reply" style="transform: rotate(180deg);"></i> 댓글</a>';
 																}
 													 value += '</div>'
-															+ '<div class="su_reply_Bcontent">'
-																+ '<p>' + rList[i].replyContent +'</p>'
+															+ '<div class="su_reply_Bcontent conNo' + rList[i].replyNo + '" style="width:95%;">'
+																+ '<p style="width:100%">' + rList[i].replyContent +'</p>'
 															+ '</div>'
 														+ '</div>'
 													+ '</div>';
 										// 댓글 작성자만 수정, 삭제 버튼 보이게끔
 										if(rList[i].replyWriter == user){
 											 value += '<div class="su_reply_btn">'
-														+ '<button type="button" class="btn btn-sm su_btn_border" style="border:0px">수정</button>|'
-														+ '<button type="button" class="btn btn-sm su_btn_border" style="border:0px">삭제</button>'
+														+ '<button type="button" class="btn btn-sm su_btn_border" style="border:0px" onclick="updateReBtn(' + rList[i].replyNo + ');">수정</button>|'
+														+ '<button type="button" class="btn btn-sm su_btn_border" style="border:0px" onclick="deleteReBtn(' + rList[i].replyNo + ');">삭제</button>'
 												   + '</div>';
 										}
 										value += '</div>'
@@ -225,7 +245,7 @@
 					}
 					
 					function rReply(rNo){ // 대댓글 버튼 클릭 시 실행
-                        const rReplyDiv = '<div class="su_reply_Barea su_rreply_Barea" id="clickRR">'
+                        const rReplyDiv = '<div class="su_reply_Barea su_rreply_Barea" id="clickRR' + rNo + '">'
                                             + '<div class="su_reply" style="width: 100%;">'
                                                 + '<div>'
                                                     + '<img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">'                                        
@@ -236,7 +256,7 @@
                                                 + '</div>'
 
                                             + '</div>'
-                                            + '<div class="su_reply_btn" id="su_reply_btn1">'
+                                            + '<div class="su_reply_btn" id="su_reply_btn1" style="display:flex">'
                                                 + '<button type="button" class="n-btn su_btn_border btn-sm writeReplyBtn" id="writeReplyBtn" onclick="insertReply(' + rNo + ');">댓글 작성</button>'
                                             + '</div>'
 
@@ -246,21 +266,17 @@
                         
                         // 댓글 입력칸 focus
                         $(".su_rreply_Barea>.su_reply input").focus();
+                        
+                        // 대댓글 보여지게끔
+                        $("#pReplyEvent" + rNo).attr("onclick", "rReplyView( " + rNo  + ");");
 						
-						// 다시 한번 더 클릭 시 댓글 창 안보이도록 하고 싶은데 정말 쉽지 않네....ㅎ..하....
-                        $("#pReplyEvent").on("click",function(){
-							const plusRR = $(".su_reply_Barea").find("#clickRR");//추가된 대댓요소
-							
-							
-							$("#clickRR").css("display", "none");
-						});
                     }
-
-                    // 숫자 주의하기(댓글 번호와 연결)
-                    /* $(document).on("click", ".su_rreply_Barea>#su_reply_btn1", function(){
-                        console.log("하,,,");
-                        $("#pReplyEvent1").attr("onclick", "rReply();");
-                    }) */
+					
+					
+					function rReplyView(rNo){
+						$("#clickRR" + rNo).remove();
+						$("#pReplyEvent" + rNo).attr("onclick", "rReply(" + rNo + ");");
+					}
 					
                  	// 댓글 insert 
                     function insertReply(replyParentNo){ 
@@ -284,6 +300,62 @@
 							
 						}) 
 					}
+                    
+                    // 댓글 수정
+                    function updateReBtn(rNo){
+                    	$.ajax({
+							url: "selectRe.no",
+							data:{no:rNo},
+							success(reply){
+								const rReplyDiv = '<div class="su_reply" style="width: 100%;">'
+					                        		+ '<div>'
+					                    				+ '<img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">'
+					                				+ '</div>'
+					                
+					                				+ '<div style="width: 100%">'
+					                    				+ '<input style="width: 100%;" type="text" id="upRe' + rNo + '" value="' + reply.replyContent + '">'
+					                				+ '</div>'
+					            				+ '</div>'
+					            				+ '<div class="su_reply_btn" style="display: inline-flex;">'
+					                				+ '<button type="button" class="n-btn su_btn_border btn-sm writeReplyBtn" '
+					                				+ 'onclick="updateReply(' + rNo + ');" style="margin-left: 10px; width: 60px;">수정</button>'
+					                				+ '<button type="button" class="n-btn su_btn_border btn-sm writeReplyBtn" '
+					                				+ 'onclick="selectReplyList();" style="margin-left: 10px; width: 60px;">취소</button>'
+					            				+ '</div>';
+						                         
+						        $(".selNo"+rNo).html(rReplyDiv);
+							},
+							error(){
+								console.log("댓글 조회 실패");
+							}
+						}) 
+                    }
+                    
+                    function updateReply(rNo){
+                    	$.ajax({
+                    		url:"updateRe.no",
+                    		data:{
+                    			no:rNo,
+                    			replyContent: $("#upRe"+rNo).val()
+                    			},
+                    		success(result){
+                    			console.log("댓글 수정 성공");
+                    			selectReplyList();
+                    		},
+                    		error(){
+                    			console.log("댓글 수정 실패");
+                    		}
+                    	})
+                    }
+                    
+                    function deleteReBtn(rNo){
+                    	$("#deleteReply").modal("show");
+                    	
+                    	$("#realDeleteDiv").on("click", "#realDeleteReply", function(){
+                    		console.log("gdg");
+                    	})
+                    }
+                    
 				</script>
 				
 	            </div>
