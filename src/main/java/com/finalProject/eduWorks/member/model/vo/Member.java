@@ -30,4 +30,5 @@ public class Member {
 	private String memResignDate;
 	private String memResignStatus;
 	private String memProfile;
+	private String jobName;
 }

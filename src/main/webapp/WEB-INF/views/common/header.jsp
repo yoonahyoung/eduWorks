@@ -99,13 +99,10 @@
 	}
 </style>
 </head>
-	<c:if test="${ not empty alertMsg }">
-		<script>
-			alertify.alert("${alertMsg}");
-		</script>
-		<c:remove var="alertMsg" scope="session" /> <!-- 일회성 메시지의 역할을 하기 위해 지워주기 -->
-	</c:if>
+	
 	<body id="page-top">
+	
+	
 	
 	    <!-- Page Wrapper -->
 	    <div id="wrapper">
@@ -454,9 +451,9 @@
 	                        <li class="nav-item dropdown no-arrow">
 	                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
 	                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">사무보조님</span>
+	                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">${ loginUser.memName }</span>
 	                                <img class=""
-	                                    src="">
+	                                    src="${ loginUser.memProfile }">
 	                            </a>
 	                            <!-- Dropdown - User Information -->
 	                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -474,16 +471,37 @@
 	                                    Activity Log
 	                                </a>
 	                                <div class="dropdown-divider"></div>
-	                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+	                                <a class="dropdown-item"  data-toggle="modal" data-target="#logoutModal">
 	                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
 	                                    Logout
 	                                </a>
+	                               
 	                            </div>
 	                        </li>
 	
 	                    </ul>
 	                </nav>
 	                <!-- End of Topbar -->
+					
+					 <!-- Logout Modal-->
+				    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+				        aria-hidden="true">
+				        <div class="modal-dialog" role="document">
+				            <div class="modal-content">
+				                <div class="modal-header">
+				                    <h5 class="modal-title" id="exampleModalLabel">정말 로그아웃하시겠습니까?</h5>
+				                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+				                        <span aria-hidden="true">×</span>
+				                    </button>
+				                </div>
+				                <div class="modal-body">"예"를 누르시면 로그아웃이 됩니다.</div>
+				                <div class="modal-footer">
+				                    <button class="btn btn-secondary" type="button" data-dismiss="modal">아니오</button>
+				                    <a class="btn btn-primary" href="logout.me" style="width:70px">예</a>
+				                </div>
+				            </div>
+				        </div>
+				    </div>
         
 </body>
 </html>
