@@ -220,7 +220,7 @@ public class AddressDao {
 		map.put("keyword", keyword);
 		map.put("range", range);
 		
-		return (ArrayList)sqlSession.selectList("addressMapper.searchPublicAdd", keyword, rowBounds);
+		return (ArrayList)sqlSession.selectList("addressMapper.searchPublicAdd", map, rowBounds);
 	}
 	
 }

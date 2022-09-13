@@ -327,11 +327,11 @@
 		<choose>
 			<when test="range == 'newest'">
 			order 
-				by add_per_no desc
+				by mem_no desc
 			</when>
 			<otherwise>
 			order 
-				by add_per_no
+				by mem_no
 			</otherwise>
 		</choose>
 	</select>

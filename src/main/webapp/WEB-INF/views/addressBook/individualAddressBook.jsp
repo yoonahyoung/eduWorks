@@ -227,17 +227,35 @@
 					</div>
 				</form>
 			
-				<div class="selectOption" style="margin-bottom: 10px">
-				<!-- =============== 주소록 정렬 ================== -->
-				<form action="individualAddress.ad" id="rangeForm" method="post">
-					<input type="hidden" name="memNo" value="${loginUser.memNo }">
-					<input type="hidden" name="addNo" value="${addNo }">
-					<select name="range">
-						<option value="oldest">오래된순</option>
-						<option value="newest">최신순</option>
-					</select>
-				</form>
-				</div>
+			<c:choose>
+				<c:when test="${empty keyword }">
+					<div class="selectOption" style="margin-bottom: 10px">
+					<!-- =============== 주소록 정렬 ================== -->
+					<form action="individualAddress.ad" id="rangeForm" method="post">
+						<input type="hidden" name="memNo" value="${loginUser.memNo }">
+						<input type="hidden" name="addNo" value="${addNo }">
+						<select name="range">
+							<option value="oldest">오래된순</option>
+							<option value="newest">최신순</option>
+						</select>
+					</form>
+					</div>
+				</c:when>
+				<c:otherwise>
+					<div class="selectOption" style="margin-bottom: 10px">
+					<!-- =============== 주소록 정렬 ================== -->
+					<form action="searchIndivAdd.ad" id="rangeSearchForm" method="post">
+						<input type="hidden" name="keyword" value="${keyword }">
+						<input type="hidden" name="memNo" value="${loginUser.memNo }">
+						<input type="hidden" name="addNo" value="${addNo }">
+						<select name="range">
+							<option value="oldest">오래된순</option>
+							<option value="newest">최신순</option>
+						</select>
+					</form>
+					</div>
+				</c:otherwise>
+			</c:choose>
 			</div>
 
 			<script>
@@ -245,8 +263,10 @@
 				// 주소록 정렬시 실행하는 함수
 				$(function(){
 					$("select[name=range]").change(function(){
-						$("#rangeForm").submit();
+						$("#rangeForm").submit(); // 검색하지 않은 경우
+						$("#rangeSearchForm").submit(); // 검색한 경우
 					})
+					
 				})
 				
 				// 주소록 선택시 선택된 값 유지하는 함수

@@ -75,7 +75,7 @@ public class AddressController {
 		
 		// 개인 주소록 카테고리 목록 조회
 		ArrayList<AddressOut> category = aService.selectAddCategory(a);
-		
+				
 		mv.addObject("addNo", basicAddNum); // 개인주소록 번호
 		mv.addObject("pi", pi);
 		mv.addObject("list", list);
@@ -143,7 +143,7 @@ public class AddressController {
 	@ResponseBody
 	@RequestMapping("insertAddIndivNum.ad")
 	public String ajaxInsertAddIndivNum(Address a) {
-		
+
 		int result = aService.insertAddIndivNum(a);
 		
 		return result > 0 ? "success" : "fail";
@@ -267,7 +267,7 @@ public class AddressController {
 	 */
 	@RequestMapping("searchPublicAdd.ad")
 	public ModelAndView searchPublicAdd(@RequestParam(value="page", defaultValue="1") int currentPage, @RequestParam(value="range", defaultValue="oldest") String range, ModelAndView mv, String keyword) {
-				
+
 		// 연락처 조회시 나오는 연락처 수 조회
 		int searchCount = aService.searchPublicCount(keyword);
 				

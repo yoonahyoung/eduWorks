@@ -67,7 +67,8 @@
 				<c:otherwise>
 					<div class="selectOption" style="margin-bottom: 10px">
 					<!-- =============== 주소록 정렬 ================== -->
-					<form action="searchPublicAdd.ad" id="rangeForm" method="post">
+					<form action="searchPublicAdd.ad" id="rangeSearchForm" method="post">
+						<input type="hidden" name="keyword" value="${keyword }">
 						<select name="range">
 							<option value="oldest">오래된순</option>
 							<option value="newest">최신순</option>
@@ -83,8 +84,10 @@
 				// 주소록 정렬시 실행하는 함수
 				$(function(){
 					$("select[name=range]").change(function(){
-						$("#rangeForm").submit();
+						$("#rangeForm").submit(); // 검색하지 않은 경우
+						$("#rangeSearchForm").submit(); // 검색한 경우
 					})
+					
 				})
 				
 				// 주소록 선택시 선택된 값 유지하는 함수
