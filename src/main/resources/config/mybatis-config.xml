@@ -11,6 +11,7 @@
 		<typeAlias type="com.finalProject.eduWorks.common.model.vo.Reply" alias="Reply" />
 		<typeAlias type="com.finalProject.eduWorks.common.model.vo.Attachment" alias="Attachment" />
 		<typeAlias type="com.finalProject.eduWorks.promotion.model.vo.Promotion" alias="Promotion" />
+		<typeAlias type="com.finalProject.eduWorks.schedule.model.vo.Mycal" alias="Mycal" />
 		<typeAlias type="com.finalProject.eduWorks.schedule.model.vo.Schedule" alias="Schedule"/>
 		<typeAlias type="com.finalProject.eduWorks.member.model.vo.Member" alias="Member" />
 		<typeAlias type="com.finalProject.eduWorks.member.model.vo.Department" alias="Department" />
