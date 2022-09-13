@@ -27,7 +27,7 @@
 	
 	            <form id="updateForm" action="update.pr" method="post" enctype="multipart/form-data">
 	            <!-- =================================================================================== -->
-	            	<%-- <input type="hidden" name="promoWriter" value="${ loginUser.memNo }"> --%>
+	            	<input type="hidden" name="promoWriter" value="${ loginUser.memNo }">
 	            	<input type="hidden" name="promoNo" value="${ p.promoNo }">
 
 	                <div class="su_content_body">

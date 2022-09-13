@@ -25,7 +25,7 @@
 	
 	
 	            <form id="insertForm" action="insert.pr" method="post" enctype="multipart/form-data">
-	            	<%-- <input type="hidden" name="promoWriter" value="${ loginUser.memNo }"> --%>
+	            	<input type="hidden" name="promoWriter" value="${ loginUser.memNo }">
 	                <div class="su_content_body">
 	
 	                    <table id="eventForm">

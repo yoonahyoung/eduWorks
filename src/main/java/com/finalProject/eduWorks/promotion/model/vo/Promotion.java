@@ -1,5 +1,7 @@
 package com.finalProject.eduWorks.promotion.model.vo;
 
+import com.finalProject.eduWorks.member.model.vo.Member;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,5 +24,7 @@ public class Promotion {
 	private String promoCreateDate;
 	private String promoModifyDate;
 	private String promoStatus;
+	
+	private Member Member;
 
 }

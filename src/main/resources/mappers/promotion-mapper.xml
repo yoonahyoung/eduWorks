@@ -2,17 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="promotionMapper">
 
-	<resultMap id="promotionResult" type="Promotion">
-		<result column="promo_no" property="promoNo" />
-		<result column="promo_title" property="promoTitle" />
-		<result column="promo_cate_no" property="promoCateNo" />
-		<result column="promo_writer" property="promoWriter" />
-		<result column="promo_content" property="promoContent" />
-		<result column="promo_count" property="promoCount" />
-		<result column="promo_create_date" property="promoCreateDate" />
-		<result column="promo_status" property="promoStatus" />
-	</resultMap>
-	
 	<resultMap id="replyResult" type="Reply">
 		<result column="reply_no" property="replyNo" />
 		<result column="re_board_no" property="reBoardNo" />
@@ -25,11 +14,33 @@
 		<result column="reply_status" property="replyStatus" />
 	</resultMap>
 	
+	<resultMap id="memberResult" type="Member">
+		<result column="mem_no" property="memNo" />
+		<result column="mem_name" property="memName" />
+		<result column="dept_code" property="deptCode" />
+		<result column="job_code" property="jobCode" />
+		<result column="job_name" property="jobName" />
+		<result column="mem_profile" property="memProfile" />
+	</resultMap>
+	
 	<resultMap id="attachResult" type="Attachment">
 		<result column="at_no" property="atNo" />
 		<result column="at_origin_name" property="atOriginName" />
 		<result column="at_change_name" property="atChangeName" />
 	</resultMap>
+	
+	<resultMap id="promotionResult" type="Promotion">
+		<result column="promo_no" property="promoNo" />
+		<result column="promo_title" property="promoTitle" />
+		<result column="promo_cate_no" property="promoCateNo" />
+		<result column="promo_writer" property="promoWriter" />
+		<result column="promo_content" property="promoContent" />
+		<result column="promo_count" property="promoCount" />
+		<result column="promo_create_date" property="promoCreateDate" />
+		<result column="promo_status" property="promoStatus" />
+		<collection property="member" resultMap="memberResult" />
+	</resultMap>
+	
 	
 	<select id="selectListCount" resultType="_int">
 		select count(*)
@@ -161,18 +172,21 @@
 	</update>
 	
 	<select id="selectPromo" resultMap="promotionResult">
-		select promo_no
-			 , promo_title
-			 , promo_cate_no
-			 , m.mem_name || ' ' || j.job_name as "promo_writer"
-			 , promo_content
-			 , promo_count
-			 , to_char(promo_create_date, 'YYYY-MM-DD (DY) HH24:MI') as "promo_create_date"
-		  from tb_promo
+		select p.promo_no
+			 , p.promo_title
+			 , p.promo_cate_no
+			 , m.mem_name 
+			 <!-- , m.job_name as "job_name" -->
+			 , m.job_code 
+			 , p.promo_writer
+			 , m.mem_profile
+			 , p.promo_content
+			 , p.promo_count
+			 , to_char(p.promo_create_date, 'YYYY-MM-DD (DY) HH24:MI') as "promo_create_date"
+		  from tb_promo p
 		  join tb_member m on (promo_writer = mem_no)
-		  join tb_job j on (m.job_code = j.job_code)
-		 where promo_no = #{no}
-		   and promo_status = 'Y'
+		 where p.promo_no = #{no}
+		   and p.promo_status = 'Y'
 	</select>
 	
 	<select id="selectAt" resultMap="attachResult">
@@ -224,8 +238,8 @@
 		  , #{replyDepth}
 		  , #{replyParent}
 		  , #{replyContent}
-		  , '정예지'
-		  , '사원'
+		  , #{replyWriter}
+		  , #{replyJob}
 		  )
 	</insert>
 	
@@ -260,7 +274,7 @@
 		update tb_promo
 		   set promo_title = #{promoTitle}
 		     , promo_cate_no = #{promoCateNo}
-		     <!-- promo_writer = #{로그인한 사람} -->
+		     , promo_writer = #{promoWriter}
 		     , promo_content = #{promoContent}
 		     , promo_modify_date = sysdate
 		 where promo_no = #{promoNo}
@@ -290,7 +304,7 @@
 		    seq_prno.nextval
 		  , #{promoTitle}
 		  , #{promoCateNo}
-		  , '500015' <!-- , #{promoWriter} -->
+		  , #{promoWriter}
 		  , #{promoContent}
 		  )
 	</insert>
