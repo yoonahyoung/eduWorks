@@ -27,6 +27,14 @@ public class MemberController {
 		if(loginUser != null /*&& bcryptPasswordEncoder.matches(m.getMemId(), loginUser.getMemPwd())*/) {
 			session.setAttribute("loginUser", loginUser);
 			mv.setViewName("main");
+			
+			switch(loginUser.getJobCode()){
+			case "j0": m.setJobName("강사"); break;
+			case "j1": m.setJobName("사원"); break;
+			case "j2": m.setJobName("대리"); break;
+			case "j3": m.setJobName("팀장"); break;
+			case "j4": m.setJobName("대표"); break;
+			}
 			return mv;
 		}else {
 			//mv.addObject("errorMsg", "로그인 실패");

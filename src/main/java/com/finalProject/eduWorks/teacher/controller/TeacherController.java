@@ -1,15 +1,31 @@
 package com.finalProject.eduWorks.teacher.controller;
 
+import java.util.ArrayList;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.finalProject.eduWorks.common.model.vo.PageInfo;
+import com.finalProject.eduWorks.common.template.Pagination;
+import com.finalProject.eduWorks.teacher.model.vo.Teacher;
 
 @Controller
 public class TeacherController {
 
 	// (강사) 신청한 강의 리스트
 	@RequestMapping("appAllList.cl")
-	public ModelAndView appAllListSelect(ModelAndView mv) {
+	public ModelAndView appAllListSelect(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv) {
+		
+		int listCount = bService.selectListCount();
+		
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 5);
+		ArrayList<Teacher> list = bService.appAllListSelect(pi);
+		
+		mv.addObject("pi", pi)
+		  .addObject("list", list)
+		
 		mv.setViewName("teacher/appLectureList");
 		return mv;
 	}
