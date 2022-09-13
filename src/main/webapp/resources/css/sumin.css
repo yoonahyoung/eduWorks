@@ -161,6 +161,11 @@ body{
     width: 80px;
   }
   
+  .su_reply_btn{
+  	width: 109px;
+  	text-align: center;
+  }
+  
   
   /* =================== 모달 =================== */
   .modal_alert_child {
@@ -354,9 +359,6 @@ body{
   .su_reply_content{
     width: 90%;
   }
-  .su_reply_content p{
-    white-space: pre;
-  }
   .su_reReply span{
     transform: scaleY(-1);
     font-size: 20px;
@@ -454,6 +456,7 @@ body{
   .su_board_reply .su_reply{
     display: flex;
     align-items: center;
+    width: 95%
     /* flex-wrap: wrap; */
   }
   .su_reply img{
@@ -461,7 +464,6 @@ body{
     margin-right: 10px;
   }
   .su_reply_Bcontent p{
-    white-space: pre;
     margin: 0;
   }
   .su_reply_Barea #writeReplyBtn{

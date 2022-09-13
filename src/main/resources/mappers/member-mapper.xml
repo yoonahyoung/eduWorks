@@ -1,5 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper>
-  <cache-ref namespace=""/>
+<mapper namespace="memberMapper">
+  
+  <resultMap id="memberResult" type="Member">
+  	<result column="mem_no" property="memNo" />
+  	<result column="mem_id" property="memId" />
+  	<result column="mem_pwd" property="memPwd" />
+  	<result column="mem_name" property="memName" />
+  	<result column="dept_code" property="deptCode" />
+  	<result column="job_code" property="jobCode" />
+  	<result column="mem_phone" property="memPhone" />
+  	<result column="mem_businessnum" property="memBusinessnum" />
+  	<result column="mem_email" property="memEmail" />
+  	<result column="mem_birth" property="memBirth" />
+  	<result column="mem_postal_code" property="memPostalCode" />
+  	<result column="mem_postal_ad" property="memPostalAd" />
+  	<result column="mem_postal_detail" property="memPostalDetail" />
+  	<result column="mem_postal_refer" property="memPostalRefer" />
+  	<result column="mem_enroll_date" property="memEnrollDate" />
+  	<result column="mem_resign_date" property="memResignDate" />
+  	<result column="mem_resign_status" property="memResignStatus" />
+  	<result column="mem_profile" property="memProfile" />
+  </resultMap>
+  
+  <select id="loginMember" resultMap="memberResult">
+  	select
+  		   mem_no
+  		 , mem_id
+  		 , mem_pwd
+  		 , mem_name
+  		 , dept_code
+  		 , job_code
+  		 , mem_phone
+  		 , mem_businessnum
+  		 , mem_email
+  		 , mem_birth
+  		 , mem_postal_code
+  		 , mem_postal_ad
+  		 , mem_postal_detail
+  		 , mem_postal_refer
+  		 , mem_enroll_date
+  		 , mem_resign_date
+  		 , mem_resign_status
+  		 , mem_profile
+      from tb_member
+     where mem_resign_status = 'N'
+       and mem_id = #{memId}
+       and mem_pwd = #{memPwd}
+  </select>
+  
 </mapper>

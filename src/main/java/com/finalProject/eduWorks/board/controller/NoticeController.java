@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.finalProject.eduWorks.board.model.service.NoticeServiceImpl;
 import com.finalProject.eduWorks.board.model.vo.Board;
+import com.finalProject.eduWorks.common.model.vo.Attachment;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.model.vo.Reply;
 import com.finalProject.eduWorks.common.template.Pagination;
@@ -37,7 +38,7 @@ public class NoticeController {
 	 */
 	@RequestMapping("list.no")
 	public ModelAndView noticeList(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv, HttpSession session) {
-		Member loginUser = new Member("500001", "user02", "pass02", "황재범", "D1", "J3", "010-2222-2223", "2222-2223", "aaaa1112@gmail.com", "1997-01-06", 111111, "111111", "상세주소2", "참고항목2", "2022-08-02", "2022-08-02", "N", "file");
+		Member loginUser = new Member("500001", "user02", "pass02", "황재범", "D1", "J3", "010-2222-2223", "2222-2223", "aaaa1112@gmail.com", "1997-01-06", 111111, "111111", "상세주소2", "참고항목2", "2022-08-02", "2022-08-02", "N", "file", "사원");
 		session.setAttribute("loginUserN", loginUser);
 		
 		int listCount = nService.selectListCount();
@@ -65,7 +66,9 @@ public class NoticeController {
 		if(result > 0) {
 			// 게시글 상세 조회
 			Board b = nService.selectNotice(no);
+			ArrayList<Attachment> atList = nService.selectAtList(no);
 			model.addAttribute("b", b);
+			model.addAttribute("atList", atList);
 		}else {
 			model.addAttribute("alertMsg", "게시글 조회에 실패하였습니다.");
 		}
@@ -86,6 +89,16 @@ public class NoticeController {
 		return new Gson().toJson(rList);
 	}
 	
+	/**
+	 * 댓글 등록
+	 * @param no 게시글 번호
+	 * @param replyDepth 댓글 깊이
+	 * @param replyParent 부모 댓글 번호
+	 * @param replyContent 댓글 내용
+	 * @param session
+	 * @param model
+	 * @return 성공여부
+	 */
 	@ResponseBody
 	@RequestMapping("insertRe.no")
 	public String ajaxInsertReply(int no, int replyDepth, int replyParent, String replyContent, HttpSession session, Model model) {
@@ -120,8 +133,39 @@ public class NoticeController {
 		return result > 0 ? "success" : "fail";
 	}
 	
+	/**
+	 * 댓글조회(한개)
+	 * @param no 댓글 번호
+	 * @return 댓글 전체 정보
+	 */
+	@ResponseBody
+	@RequestMapping(value="selectRe.no", produces="application/json; charset=utf-8")
+	public String ajaxSelectReply(int no) {
+		Reply r = nService.selectReply(no);
+		return new Gson().toJson(r);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="updateRe.no", produces="application/json; charset=utf-8")
+	public String ajaxUpdateReply(int no, String replyContent) {
+		Reply r = new Reply();
+		r.setReplyNo(no);
+		r.setReplyContent(replyContent);
+		int result = nService.updateReply(r);
+		return new Gson().toJson(result);
+	}
+	
+	/**
+	 * 글 작성 페이지 포워딩
+	 * @param model
+	 * @return 글 작성 페이지
+	 */
 	@RequestMapping("enrollForm.no")
 	public String noticeEnrollForm(Model model) {
 		return "board/noticeEnrollForm";
 	}
+	
+	
+	
+	
 }

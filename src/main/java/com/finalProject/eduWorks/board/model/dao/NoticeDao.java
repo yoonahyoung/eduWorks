@@ -8,6 +8,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.finalProject.eduWorks.board.model.vo.Board;
+import com.finalProject.eduWorks.common.model.vo.Attachment;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.model.vo.Reply;
 
@@ -53,7 +54,12 @@ public class NoticeDao {
 		return sqlSession.selectOne("noticeMapper.selectNotice", boardNo);
 	}
 	
-	// 게시글 댓글 조회
+	// 첨부파일 조회
+	public ArrayList<Attachment> selectAtList(SqlSessionTemplate sqlSession, int noticeNo) {
+		return (ArrayList)sqlSession.selectList("noticeMapper.selectAtList", noticeNo);
+	}
+	
+	// 게시글 댓글리스트 조회
 	public ArrayList<Reply> selectReplyList(SqlSessionTemplate sqlSession, int boardNo) {
 		return (ArrayList)sqlSession.selectList("noticeMapper.selectReplyList", boardNo);
 	}
@@ -62,5 +68,17 @@ public class NoticeDao {
 	public int insertReply(SqlSessionTemplate sqlSession, Reply r) {
 		return sqlSession.insert("noticeMapper.insertReply", r);
 	}
+	
+	// 댓글 조회
+	public Reply selectReply(SqlSessionTemplate sqlSession, int replyNo) {
+		return sqlSession.selectOne("noticeMapper.selectReply", replyNo);
+	}
+	
+	// 댓글 수정 
+	public int updateReply(SqlSessionTemplate sqlSession, Reply r) {
+		return sqlSession.update("noticeMapper.updateReply", r);
+	}
+
+	
 
 }
