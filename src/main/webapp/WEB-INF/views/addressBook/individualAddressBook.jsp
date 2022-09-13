@@ -228,12 +228,38 @@
 				</form>
 			
 				<div class="selectOption" style="margin-bottom: 10px">
-					<select>
-						<option value="">최신순</option>
-						<option value="">오래된순</option>
+				<!-- =============== 주소록 정렬 ================== -->
+				<form action="individualAddress.ad" id="rangeForm" method="post">
+					<input type="hidden" name="memNo" value="${loginUser.memNo }">
+					<input type="hidden" name="addNo" value="${addNo }">
+					<select name="range">
+						<option value="oldest">오래된순</option>
+						<option value="newest">최신순</option>
 					</select>
+				</form>
 				</div>
 			</div>
+
+			<script>
+				
+				// 주소록 정렬시 실행하는 함수
+				$(function(){
+					$("select[name=range]").change(function(){
+						$("#rangeForm").submit();
+					})
+				})
+				
+				// 주소록 선택시 선택된 값 유지하는 함수
+				$(function(){
+					$(".selectOption option").each(function(){
+						if( $(this).val() == '${range}'){
+							$(this).attr("selected", true);
+						}
+					})
+					
+				})
+				
+			</script>
 
 			<div class="main-list key_main-list">
 				<table class="board-content table" align="center">
@@ -376,7 +402,7 @@
 									<!-- 현재 페이지가 1이 아닌 경우 -->
 										<!--  href="indivAddressBook.ad?page=${pi.currentPage -1 }" -->
 										<li class="page-item"><a class="page-link"
-											onclick="movePage('individualAddress.ad', ${pi.currentPage -1 }, ${addNo});"
+											onclick="movePage('individualAddress.ad', ${pi.currentPage -1 }, '', ${addNo}, '${range }');"
 											aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 										</a></li>
 									</c:otherwise>
@@ -387,12 +413,12 @@
 									<c:when test="${empty keyword }">
 										<!-- 현재 페이지가 1이 아니고, keyword가 입력되지 않은 경우 -->
 										<li class="page-item"><a class="page-link"
-											onclick="movePage('individualAddress.ad', ${p }, ${addNo});">${p }</a></li>
+											onclick="movePage('individualAddress.ad', ${p }, '', ${addNo}, '${range }');">${p }</a></li>
 									</c:when>
 									<c:otherwise>
 										<!-- 현재 페이지가 1이 아니고, keyword가 입력된 경우 -->
 										<li class="page-item"><a class="page-link"
-											onclick="movePage('searchIndivAdd.ad', ${p }, ${keyword }, ${addNo});">${p }</a></li>
+											onclick="movePage('searchIndivAdd.ad', ${p }, '${keyword }', ${addNo}, '${range }');">${p }</a></li>
 									</c:otherwise>
 									</c:choose>
 								</c:forEach>
@@ -409,14 +435,14 @@
 											<c:when test="${empty keyword }">
 												<!-- 마지막 페이지이고, keyword가 입력되지 않은 경우 -->
 												<li class="page-item"><a class="page-link"
-													onclick="movePage('individualAddress.ad', ${pi.currentPage + 1}, ${addNo} });"
+													onclick="movePage('individualAddress.ad', ${pi.currentPage + 1}, '', ${addNo}, '${range }' });"
 													aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 												</a></li>
 											</c:when>
 											<c:otherwise>
 												<!-- 마지막 페이지이고, keyword가 입력된 경우 -->
 												<li class="page-item"><a class="page-link"
-													onclick="movePage('searchIndivAdd.ad', ${pi.currentPage + 1}, ${keyword }, ${addNo});"
+													onclick="movePage('searchIndivAdd.ad', ${pi.currentPage + 1}, '${keyword }', ${addNo}, '${range }');"
 													aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 												</a></li>
 											</c:otherwise>
@@ -437,14 +463,16 @@
 		<input type="hidden" name="page" id="page">
 		<input type="hidden" name="keyword" id="keyword">
 		<input type="hidden" name="addNo" id="pAddNo">
+		<input type="hidden" name="range" id="pRange">
 	</form>
 
 	<!--================== 해당 페이지로 이동처리하는 함수 ================== -->
 	<script>
-		function movePage(url, page, keyword, addNo){
+		function movePage(url, page, keyword, addNo, range){
 			$("#moveForm").children("#page").val(page);
 			$("#moveForm").children("#keyword").val(keyword);
 			$("#moveForm").children("#pAddNo").val(addNo);
+			$("#moveForm").children("#pRange").val(range);
 			$("#moveForm").attr("action", url).submit();
 		}
 	</script>
@@ -609,7 +637,8 @@
 											<c:forEach var="ca" items="${category }">
 												<option value="${ca.addNo }">${ca.addName }</option>
 											</c:forEach>
-									</select></td>
+									</select>
+									</td>
 								</tr>
 
 								<tr>

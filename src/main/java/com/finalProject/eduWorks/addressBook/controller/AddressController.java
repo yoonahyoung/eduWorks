@@ -30,7 +30,7 @@ public class AddressController {
 	 * @return : 공용 주소록 페이지
 	 */
 	@RequestMapping("publicAddress.ad")
-	public ModelAndView publicAddressList(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv) {
+	public ModelAndView publicAddressList(@RequestParam(value="page", defaultValue="1") int currentPage, @RequestParam(value="range", defaultValue="oldest") String range,  ModelAndView mv) {
 		
 		// 공용 주소록 전체 갯수 조회
 		int listCount = aService.selectListCount();
@@ -38,10 +38,11 @@ public class AddressController {
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
 		
 		// 공용 주소록 목록 조회
-		ArrayList<Member> list = aService.selectAddressList(pi);
-		
+		ArrayList<Member> list = aService.selectAddressList(pi, range);
+
 		mv.addObject("pi", pi);
 		mv.addObject("list", list);
+		mv.addObject("range", range);
 				
 		mv.setViewName("addressBook/publicAddressBook");
 		
@@ -54,7 +55,7 @@ public class AddressController {
 	 * @return : 개인 주소록 페이지
 	 */
 	@RequestMapping("individualAddress.ad")
-	public ModelAndView individualAddressBook(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv, String memNo, HttpSession session) {
+	public ModelAndView individualAddressBook(@RequestParam(value="page", defaultValue="1") int currentPage, @RequestParam(value="range", defaultValue="oldest") String range, ModelAndView mv, String memNo, HttpSession session) {
 		
 		// 개인 주소록 기본('개인주소록') 번호 조회
 		String basicAddNum = String.valueOf(aService.basicAddressNum(memNo));
@@ -70,7 +71,7 @@ public class AddressController {
 		// 페이징
 		PageInfo pi = Pagination.getInfo(count, currentPage, 10, 10);
 		
-		ArrayList<Address> list = aService.selectAddIndivList(pi, a);
+		ArrayList<Address> list = aService.selectAddIndivList(pi, a, range);
 		
 		// 개인 주소록 카테고리 목록 조회
 		ArrayList<AddressOut> category = aService.selectAddCategory(a);
@@ -78,6 +79,7 @@ public class AddressController {
 		mv.addObject("addNo", basicAddNum); // 개인주소록 번호
 		mv.addObject("pi", pi);
 		mv.addObject("list", list);
+		mv.addObject("range", range);
 		mv.addObject("category", category);
 		
 		mv.setViewName("addressBook/individualAddressBook");
@@ -107,7 +109,7 @@ public class AddressController {
 	 * @return : 선택한 개인 주소록 그룹 페이지 정보
 	 */
 	@RequestMapping("indivAddressBook.ad")
-	public ModelAndView individualAddressBook(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv, Address a) {
+	public ModelAndView individualAddressBook(@RequestParam(value="page", defaultValue="1") int currentPage, @RequestParam(value="range", defaultValue="oldest") String range, ModelAndView mv, Address a) {
 		
 		// 해당 개인주소록에 등록된 연락처 수 조회
 		int listCount = aService.selectIndivNumCount(a);
@@ -116,7 +118,7 @@ public class AddressController {
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
 		
 		// 해당 개인주소록에 등록된 연락처 목록 조회
-		ArrayList<Address> list = aService.selectAddIndivList(pi, a);
+		ArrayList<Address> list = aService.selectAddIndivList(pi, a, range);
 		
 		// 개인 주소록 카테고리 목록 조회
 		ArrayList<AddressOut> category = aService.selectAddCategory(a);
@@ -124,6 +126,7 @@ public class AddressController {
 		mv.addObject("addNo", a.getAddNo()); // 개인 주소록 그룹 중 선택한 그룹 번호
 		mv.addObject("pi", pi);
 		mv.addObject("list", list);
+		mv.addObject("range", range);
 		mv.addObject("category", category);
 		
 		mv.setViewName("addressBook/indivAddressBookDetail");
@@ -227,7 +230,7 @@ public class AddressController {
 	 * @return : 검색 목록, 페이지 종류
 	 */
 	@RequestMapping("searchIndivAdd.ad")
-	public ModelAndView ajaxSeacrhIndivAdd(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv, String kind, String keyword, Address a) {
+	public ModelAndView ajaxSeacrhIndivAdd(@RequestParam(value="page", defaultValue="1") int currentPage, @RequestParam(value="range", defaultValue="oldest") String range, ModelAndView mv, String kind, String keyword, Address a) {
 
 		// 연락처 조회시 나오는 연락처 수 조회
 		int searchCount = aService.searchIndivCount(keyword, a);
@@ -236,7 +239,7 @@ public class AddressController {
 		PageInfo pi = Pagination.getInfo(searchCount, currentPage, 10, 10);
 		
 		// 연락처 조회시 나오는 연락처 목록 조회
-		ArrayList<Address> search = aService.searchIndivAdd(pi, keyword, a);
+		ArrayList<Address> search = aService.searchIndivAdd(pi, keyword, a, range);
 		
 		// 개인 주소록 카테고리 목록 조회
 		ArrayList<AddressOut> category = aService.selectAddCategory(a);
@@ -263,7 +266,7 @@ public class AddressController {
 	 * @return : 검색 목록
 	 */
 	@RequestMapping("searchPublicAdd.ad")
-	public ModelAndView searchPublicAdd(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv, String keyword) {
+	public ModelAndView searchPublicAdd(@RequestParam(value="page", defaultValue="1") int currentPage, @RequestParam(value="range", defaultValue="oldest") String range, ModelAndView mv, String keyword) {
 				
 		// 연락처 조회시 나오는 연락처 수 조회
 		int searchCount = aService.searchPublicCount(keyword);
@@ -272,11 +275,12 @@ public class AddressController {
 		PageInfo pi = Pagination.getInfo(searchCount, currentPage, 10, 10);
 				
 		// 연락처 조회시 나오는 연락처 목록 조회
-		ArrayList<Member> search = aService.searchPublicAdd(pi, keyword);
+		ArrayList<Member> search = aService.searchPublicAdd(pi, keyword, range);
 				
 		mv.addObject("pi", pi);
 		mv.addObject("list", search);
 		mv.addObject("keyword", keyword);
+		mv.addObject("range", range);
 		
 		mv.setViewName("addressBook/publicAddressBook");
 		

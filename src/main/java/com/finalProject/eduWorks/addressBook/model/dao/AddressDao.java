@@ -29,13 +29,13 @@ public class AddressDao {
 	 * @param pi : 페이징 처리
 	 * @return : 재직중인 사원 목록이 들어간 ArrayList<Member>
 	 */
-	public ArrayList<Member> selectAddressList(SqlSessionTemplate sqlSession, PageInfo pi){
+	public ArrayList<Member> selectAddressList(SqlSessionTemplate sqlSession, PageInfo pi, String range){
 		
 		int limit = pi.getBoardLimit(); // 조회해야되는 게시글 갯수
 		int offset = (pi.getCurrentPage() - 1) * limit;
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		
-		return (ArrayList)sqlSession.selectList("addressMapper.selectAddressList",null, rowBounds);
+		return (ArrayList)sqlSession.selectList("addressMapper.selectAddressList", range, rowBounds);
 
 	}
 	
@@ -63,13 +63,19 @@ public class AddressDao {
 	 * @param addNo : 로그인한 회원의 개인 주소록 번호
 	 * @return : 조회된 연락처 목록이 담긴 ArrayList<Address>
 	 */
-	public ArrayList<Address> selectAddIndivList(SqlSessionTemplate sqlSession, PageInfo pi, Address a){
+	public ArrayList<Address> selectAddIndivList(SqlSessionTemplate sqlSession, PageInfo pi, Address a, String range){
 				
 		int limit = pi.getBoardLimit(); // 조회해야되는 게시글 갯수
 		int offset = (pi.getCurrentPage() - 1) * limit;
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		
-		return (ArrayList)sqlSession.selectList("addressMapper.selectAddIndivList", a, rowBounds);
+		HashMap map = new HashMap<>();
+		
+		map.put("range", range);
+		map.put("memNo", a.getMemNo());
+		map.put("addNo", a.getAddNo());
+		
+		return (ArrayList)sqlSession.selectList("addressMapper.selectAddIndivList", map, rowBounds);
 		
 	}
 	
@@ -172,7 +178,7 @@ public class AddressDao {
 	 * @param a : 로그인한 회원, 주소록 그룹 번호
 	 * @return : 검색시 나오는 연락처 목록
 	 */
-	public ArrayList<Address> searchIndivAdd(SqlSessionTemplate sqlSession, PageInfo pi, String keyword, Address a){
+	public ArrayList<Address> searchIndivAdd(SqlSessionTemplate sqlSession, PageInfo pi, String keyword, Address a, String range){
 		
 		int limit = pi.getBoardLimit(); // 조회해야되는 게시글 갯수
 		int offset = (pi.getCurrentPage() - 1) * limit;
@@ -183,6 +189,7 @@ public class AddressDao {
 		map.put("keyword", keyword);
 		map.put("memNo", a.getMemNo());
 		map.put("addNo", a.getAddNo());
+		map.put("range", range);
 		
 		return (ArrayList)sqlSession.selectList("addressMapper.searchIndivAdd", map, rowBounds);
 	}
@@ -202,11 +209,16 @@ public class AddressDao {
 	 * @param keyword : 검색어
 	 * @return : 검색시 나오는 연락처 목록
 	 */
-	public ArrayList<Member> searchPublicAdd(SqlSessionTemplate sqlSession, PageInfo pi, String keyword){
+	public ArrayList<Member> searchPublicAdd(SqlSessionTemplate sqlSession, PageInfo pi, String keyword, String range){
 		
 		int limit = pi.getBoardLimit(); // 조회해야되는 게시글 갯수
 		int offset = (pi.getCurrentPage() - 1) * limit;
 		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		HashMap map = new HashMap<>();
+		
+		map.put("keyword", keyword);
+		map.put("range", range);
 		
 		return (ArrayList)sqlSession.selectList("addressMapper.searchPublicAdd", keyword, rowBounds);
 	}

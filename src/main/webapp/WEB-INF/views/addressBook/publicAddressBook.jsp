@@ -51,15 +51,54 @@
 						</button>
 					</div>
 				</form>
-
-				<div class="selectOption" style="margin-bottom: 10px">
-					<select>
-						<option value="">최신순</option>
-						<option value="">오래된순</option>
-					</select>
-				</div>
+				
+			<c:choose>
+				<c:when test="${empty keyword }">
+					<div class="selectOption" style="margin-bottom: 10px">
+					<!-- =============== 주소록 정렬 ================== -->
+					<form action="publicAddress.ad" id="rangeForm" method="post">
+						<select name="range">
+							<option value="oldest">오래된순</option>
+							<option value="newest">최신순</option>
+						</select>
+					</form>
+					</div>
+				</c:when>
+				<c:otherwise>
+					<div class="selectOption" style="margin-bottom: 10px">
+					<!-- =============== 주소록 정렬 ================== -->
+					<form action="searchPublicAdd.ad" id="rangeForm" method="post">
+						<select name="range">
+							<option value="oldest">오래된순</option>
+							<option value="newest">최신순</option>
+						</select>
+					</form>
+					</div>
+				</c:otherwise>
+			</c:choose>
 			</div>
 
+			<script>
+				
+				// 주소록 정렬시 실행하는 함수
+				$(function(){
+					$("select[name=range]").change(function(){
+						$("#rangeForm").submit();
+					})
+				})
+				
+				// 주소록 선택시 선택된 값 유지하는 함수
+				$(function(){
+					$(".selectOption option").each(function(){
+						if( $(this).val() == '${range}'){
+							$(this).attr("selected", true);
+						}
+					})
+					
+				})
+				
+			</script>
+			
 			<div class="main-list">
 				<table class="board-content table" align="center">
 					<thead>
@@ -152,14 +191,14 @@
 											<c:when test="${empty keyword }">
 											<!-- 현재 페이지가 1이 아니고, keyword가 입력되지 않은 경우 -->
 												<li class="page-item"><a class="page-link"
-													href="publicAddress.ad?page=${pi.currentPage -1 }"
+													onclick="movePage('publicAddress.ad', ${pi.currentPage -1 } , '', '${range }');"
 													aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 												</a></li>
 											</c:when>
 											<c:otherwise>
 											<!-- 현재 페이지가 1이 아니고, keyword가 입력된 경우 -->
 											<li class="page-item"><a class="page-link"
-												href="searchPublicAdd.ad?page=${pi.currentPage -1 }&keyword=${keyword}"
+												onclick="movePage('searchPublicAdd.ad', ${pi.currentPage -1 }, '${keyword }', '${range }');"
 												aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 											</a></li>
 											</c:otherwise>
@@ -172,12 +211,14 @@
 										<c:when test="${empty keyword }">
 										<!-- 검색 전 페이징 바(keyword 입력 전) -->
 											<li class="page-item"><a class="page-link"
-												href="publicAddress.ad?page=${p }">${p }</a></li>
+												onclick="movePage('publicAddress.ad', ${p } , '', '${range }');">
+												${p }</a></li>
 										</c:when>
 										<c:otherwise>
 											<!-- 검색 후 페이징 바(keyword 입력 후) -->
 											<li class="page-item"><a class="page-link"
-												href="searchPublicAdd.ad?page=${p }&keyword=${keyword}">${p }</a></li>
+												onclick="movePage('searchPublicAdd.ad', ${p } , '${keyword }', '${range }');">
+												${p }</a></li>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
@@ -195,14 +236,14 @@
 											<c:when test="${empty keyword }">
 												<!-- 현재 페이지가 마지막이 아니고, keyword가 입력되지 않은 경우 -->
 												<li class="page-item"><a class="page-link"
-													href="publicAddress.ad?page=${pi.currentPage + 1}"
+													onclick="movePage('publicAddress.ad', ${pi.currentPage + 1} , '', '${range }');"
 													aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 												</a></li>
 											</c:when>
 											<c:otherwise>
 												<!-- 현재 페이지가 마지막이 아니고, keyword가 입력된 경우 -->
 												<li class="page-item"><a class="page-link"
-													href="searchPublicAdd.ad?page=${pi.currentPage + 1}&keyword=${keyword}"
+													onclick="movePage('searchPublicAdd.ad', ${pi.currentPage + 1}, '${keyword }', '${range }');"
 													aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 												</a></li>
 											</c:otherwise>
@@ -216,6 +257,24 @@
 			</div>
 		</div>
 	</div>
+	
+	<!-- ================== 페이지 이동 ====================== -->
+	<form id="moveForm" action="" method="post">
+		<input type="hidden" name="page" id="page">
+		<input type="hidden" name="keyword" id="keyword">
+		<input type="hidden" name="range" id="pRange">
+	</form>
+
+	<!--================== 해당 페이지로 이동처리하는 함수 ================== -->
+	<script>
+		function movePage(url, page, keyword, range){
+			$("#moveForm").children("#page").val(page);
+			$("#moveForm").children("#keyword").val(keyword);
+			$("#moveForm").children("#pRange").val(range);
+			$("#moveForm").attr("action", url).submit();
+		}
+	</script>
+	
 	<!-- /.container-fluid -->
 
 	<jsp:include page="../common/footer.jsp" />

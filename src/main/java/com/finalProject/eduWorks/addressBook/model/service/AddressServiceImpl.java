@@ -36,8 +36,8 @@ public class AddressServiceImpl implements AddressService {
 	 * @return : 재직중인 사원 목록이 들어간 ArrayList<Member>
 	 */
 	@Override
-	public ArrayList<Member> selectAddressList(PageInfo pi) {
-		return aDao.selectAddressList(sqlSession, pi);
+	public ArrayList<Member> selectAddressList(PageInfo pi, String range) {
+		return aDao.selectAddressList(sqlSession, pi, range);
 	}
 
 	/**
@@ -67,8 +67,8 @@ public class AddressServiceImpl implements AddressService {
 	 * @return : 조회된 연락처 목록이 담긴 ArrayList<Address>
 	 */
 	@Override
-	public ArrayList<Address> selectAddIndivList(PageInfo pi, Address a) {
-		return aDao.selectAddIndivList(sqlSession, pi, a);
+	public ArrayList<Address> selectAddIndivList(PageInfo pi, Address a, String range) {
+		return aDao.selectAddIndivList(sqlSession, pi, a, range);
 	}
 
 	/**
@@ -169,8 +169,8 @@ public class AddressServiceImpl implements AddressService {
 	 * @return : 검색시 나오는 연락처 목록
 	 */
 	@Override
-	public ArrayList<Address> searchIndivAdd(PageInfo pi, String keyword,  Address a) {
-		return aDao.searchIndivAdd(sqlSession, pi, keyword, a);
+	public ArrayList<Address> searchIndivAdd(PageInfo pi, String keyword,  Address a, String range) {
+		return aDao.searchIndivAdd(sqlSession, pi, keyword, a, range);
 	}
 	
 	/**
@@ -190,8 +190,8 @@ public class AddressServiceImpl implements AddressService {
 	 * @return : 검색시 나오는 연락처 목록
 	 */
 	@Override
-	public ArrayList<Member> searchPublicAdd(PageInfo pi, String keyword) {
-		return aDao.searchPublicAdd(sqlSession, pi, keyword);
+	public ArrayList<Member> searchPublicAdd(PageInfo pi, String keyword, String range) {
+		return aDao.searchPublicAdd(sqlSession, pi, keyword, range);
 	}
 	
 }

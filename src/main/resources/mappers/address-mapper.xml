@@ -59,8 +59,16 @@
 		 join tb_job using (job_code)
 		 join tb_department using (dept_code)
 		where mem_resign_status = 'N'
-		order
-			by mem_no
+		<choose>
+			<when test="range == 'newest'">
+			order
+				by mem_no desc
+			</when>
+			<otherwise>
+			order
+				by mem_no
+			</otherwise>
+		</choose>
 	</select>
 	
 	<select id="basicAddressNum" resultType="_int">
@@ -88,8 +96,16 @@
 		join tb_add_out ao on (ao.add_no = a.add_no)
 		where ao.mem_no = #{memNo}
 		  and ao.add_no = #{addNo}
-		order 
-			by add_per_no			
+		<choose>
+			<when test="range == 'newest'">
+			order 
+				by add_per_no desc
+			</when>
+			<otherwise>
+			order 
+				by add_per_no
+			</otherwise>
+		</choose>
 	</select>
 	
 	<select id="selectAddCategory" resultMap="addressResult">
@@ -254,8 +270,16 @@
 			  or add_memo like '%' || #{keyword} || '%')
 			  and mem_no = #{memNo}
 			  and add_no = #{addNo}
-			order 	
+		<choose>
+			<when test="range == 'newest'">
+			order 
+				by add_per_no desc
+			</when>
+			<otherwise>
+			order 
 				by add_per_no
+			</otherwise>
+		</choose>
 	</select>
 	
 	<!-- 연락처 검색시 나오는 연락처 수 조회 (전사 주소록) -->
@@ -300,8 +324,16 @@
           or mem_email like '%' || #{keyword} || '%'
           or mem_phone like '%' || #{keyword} || '%'
           )          
-		order
-			by mem_no
+		<choose>
+			<when test="range == 'newest'">
+			order 
+				by add_per_no desc
+			</when>
+			<otherwise>
+			order 
+				by add_per_no
+			</otherwise>
+		</choose>
 	</select>
 
 </mapper>

@@ -33,8 +33,8 @@
 
                 <div class="selectOption" style="margin-bottom:10px">
                     <select>
-                        <option value="">최신순</option>
                         <option value="">오래된순</option> 
+                        <option value="">최신순</option>
                     </select>
                 </div>
             </div>
