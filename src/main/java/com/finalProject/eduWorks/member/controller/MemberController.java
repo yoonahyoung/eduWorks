@@ -25,16 +25,18 @@ public class MemberController {
 		Member loginUser = mService.loginMember(m);
 		
 		if(loginUser != null /*&& bcryptPasswordEncoder.matches(m.getMemId(), loginUser.getMemPwd())*/) {
-			session.setAttribute("loginUser", loginUser);
-			mv.setViewName("main");
 			
 			switch(loginUser.getJobCode()){
-			case "j0": m.setJobName("강사"); break;
-			case "j1": m.setJobName("사원"); break;
-			case "j2": m.setJobName("대리"); break;
-			case "j3": m.setJobName("팀장"); break;
-			case "j4": m.setJobName("대표"); break;
+			case "J0": loginUser.setJobName("강사"); break;
+			case "J1": loginUser.setJobName("사원"); break;
+			case "J2": loginUser.setJobName("대리"); break;
+			case "J3": loginUser.setJobName("팀장"); break;
+			case "J4": loginUser.setJobName("대표"); break;
 			}
+			System.out.println(loginUser.getJobCode());
+			System.out.println(loginUser.getJobName());
+			session.setAttribute("loginUser", loginUser);
+			mv.setViewName("main");
 			return mv;
 		}else {
 			//mv.addObject("errorMsg", "로그인 실패");
