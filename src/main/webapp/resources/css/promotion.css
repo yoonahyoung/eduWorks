@@ -483,6 +483,7 @@ input[type=checkbox]{
 .su_board_reply .su_reply{
   display: flex;
   align-items: center;
+  width: 95%;
   /* flex-wrap: wrap; */
 }
 .su_reply img{
@@ -490,12 +491,15 @@ input[type=checkbox]{
   margin-right: 10px;
 }
 .su_reply_Bcontent p{
-  white-space: pre;
   margin: 0;
 }
 .su_reply_Barea .writeReplyBtn{
   width: 95px;
   margin-left: 10px;
+}
+.su_reply_btn{
+	width: 109px;
+	text-align: center;
 }
 
 .su_dropBox{

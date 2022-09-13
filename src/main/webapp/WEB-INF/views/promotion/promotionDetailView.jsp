@@ -258,10 +258,12 @@
 	                					
 	                					
 	                					
-	                					if(list[i].replyParent == 0){ // 원댓글 이면
+	                					if(list[i].replyParent == 0 && list[i].replyStatus == 'Y'){ // 원댓글 이면
 	                						value += '<div class="su_reply_Barea" id="pReply' + list[i].replyNo + '">';
-	                					} else { // 대댓글이면
+	                					} else if(list[i].replyStatus == 'Y'){ // 대댓글이면
 	                						value += '<div class="su_reply_Barea su_rreply_Barea" id="pReply' + list[i].replyNo + '">';
+	                					} else if(list[i].replyStatus == 'N'){
+	                						value += '<div>';
 	                					}
 	                					
 	                					if(list[i].replyStatus == 'Y'){
@@ -300,11 +302,15 @@
 												value += '</div>';
 											
 	                					
-	                					} else {
-	                						value += '<div class="su_reply">'
-	            	                    			+ '<p>삭제된 댓글입니다.</p>'
-	            	                    		+ '</div>'
-	            	                    		+ '</div>';
+	                					} else if(i < (list.length - 1)){
+	                						if( (list[i].replyParent == 0) && (list[i+1].replyParent != 0) && (list[i+1].replyStatus == 'Y') ){
+		                						value += '<div class="su_reply">'
+		            	                    			+ '<p style="vertical-algin: middle;">삭제된 댓글입니다.</p>'
+		            	                    		+ '</div>'
+		            	                    		+ '</div>';
+	                						} else{
+	                							value += '</div>';
+	                						}
 	                					}
 	                				}
 	                				
@@ -319,7 +325,7 @@
 	                	// 대댓글 작성 영역 추가 이벤트
 	                    function rReply(rNo){
 	                		let reId = 'pReplyEvent' + rNo;
-	                		let id = "pReply" + (rNo + 1);
+	                		let id = "pReply" + rNo;
 	                		let caId = "cancleReReply" + rNo
 	                        const rReplyDiv = '<div class="su_reply_Barea su_rreply_Barea" id="reReplyDiv' + rNo + '">'
 	                                            + '<div class="su_reply" style="width: 100%;">'
@@ -340,7 +346,7 @@
 	                                            + '</div>';
 	                                            
 	                                            
-	                        $("#" + id).before(rReplyDiv);
+	                        $("#" + id).after(rReplyDiv);
 	                        // 원 댓의 이벤트 제거
 	                        $("#" + reId).attr("onclick", "cancleReReply(" + rNo + ")");
 	                        // 댓글 입력칸 focus
@@ -447,7 +453,7 @@
 							                          
 								                                <!-- 대댓글 작성 버튼 -->
 								                                <!-- ()안에 댓글 번호 넣기 -->
-								                                <!-- 내가 작성한 댓글이 아니고 원댓글일 때만 보이게 -->
+								                                <!-- 원댓글일 때만 보이게 -->
 								                                if(r.replyParent == 0){
 								                                	
 								                                	value += '<a id="pReplyEvent" style="cursor: pointer;" onclick="rReply(' + r.replyNo + ');">'
