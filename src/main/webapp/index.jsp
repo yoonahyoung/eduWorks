@@ -9,7 +9,7 @@
 </head>
 <body>
 	<!-- main페이지로 바로 포워딩 시켜주기 -->
-	<jsp:forward page="WEB-INF/views/main.jsp" />
+	<jsp:forward page="WEB-INF/views/member/loginForm.jsp" />
 
 </body>
 </html>

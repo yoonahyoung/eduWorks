@@ -32,6 +32,7 @@
 	 	<mapper resource="/mappers/schedule-mapper.xml" />
 	 	<mapper resource="/mappers/personnel-mapper.xml" />
 	 	<mapper resource="/mappers/address-mapper.xml" />
+	 	<mapper resource="/mappers/member-mapper.xml" />
 	 </mappers>
 	 <!-- 유의사항 : 미리등록해두려면 해당 mapper 파일이 진짜 존재해야 함 (뿐만 아니라 namespace까지도 지정되어있어야 함) -->
 	
