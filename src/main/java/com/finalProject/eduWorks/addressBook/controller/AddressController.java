@@ -223,5 +223,64 @@ public class AddressController {
 		
 	}
 	
+	/**
+	 * 8_1. 연락처 검색 (개인 주소록)
+	 * @param kind : 페이지 종류
+	 * @param keyword : 검색 키워드
+	 * @param a : 로그인한 회원 아이디, 주소록 그룹
+	 * @return : 검색 목록, 페이지 종류
+	 */
+	@RequestMapping("searchIndivAdd.ad")
+	public ModelAndView ajaxSeacrhIndivAdd(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv, String kind, String keyword, Address a) {
+		
+		// 연락처 조회시 나오는 연락처 수 조회
+		int searchCount = aService.searchIndivCount(keyword, a);
+		
+		// 페이징
+		PageInfo pi = Pagination.getInfo(searchCount, currentPage, 10, 10);
+		
+		// 연락처 조회시 나오는 연락처 목록 조회
+		ArrayList<Address> search = aService.searchIndivAdd(pi, keyword, a);
+		
+		// 개인 주소록 카테고리 목록 조회
+		ArrayList<AddressOut> category = aService.selectAddCategory(a);
+		
+		mv.addObject("pi", pi);
+		mv.addObject("list", search);
+		mv.addObject("category", category);
+		mv.addObject("keyword", keyword);
+		
+		if(kind == "basic") {
+			mv.setViewName("addressBook/indivAddressBook");
+		} else {
+			mv.setViewName("addressBook/indivAddressBookDetail");
+		}
+		
+		return mv;
+		
+	}
+	
+	@RequestMapping("searchPublicAdd.ad")
+	public ModelAndView searchPublicAdd(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv, String keyword) {
+		
+		// 연락처 조회시 나오는 연락처 수 조회
+		int searchCount = aService.searchPublicCount(keyword);
+				
+		// 페이징
+		PageInfo pi = Pagination.getInfo(searchCount, currentPage, 10, 10);
+				
+		// 연락처 조회시 나오는 연락처 목록 조회
+		ArrayList<Member> search = aService.searchPublicAdd(pi, keyword);
+				
+		mv.addObject("pi", pi);
+		mv.addObject("list", search);
+		mv.addObject("keyword", keyword);
+		
+		mv.setViewName("addressBook/publicAddressBook");
+		
+		return mv;
+		
+	}
+	
 
 }
