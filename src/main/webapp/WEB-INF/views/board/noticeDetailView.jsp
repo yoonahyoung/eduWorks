@@ -40,7 +40,7 @@
 	            </div>
 	
 	            <!-- 작성자에게만 보이는 수정삭제 버튼 -->
-	            <c:if test="${ loginUserN.memNo eq b.boardWriter }">
+	            <c:if test="${ loginUser.memNo eq b.boardWriter }">
 		            <div class="detailDot" style="float:right; width:10%; margin-right:-130px">
 		                <ul class="navbar-nav ml-auto moDelte">
 		                    <li class="nav-item dropdown no-arrow mx-1">
@@ -192,37 +192,43 @@
 							url: "rList.no",
 							data: {no:"${b.boardNo}"},
 							success:function(rList){
-								
 								let value = "";
-								let user = "${loginUserN.memName}";
+								let user = "${loginUser.memName}";
 								let root = "${pageContext.request.contextPath}";
 								
 								for(let i=0; i<rList.length; i++){
 									// 원댓글 or 대댓글 조건문
-									if(rList[i].replyParent == 0){
+									if(rList[i].replyParent == 0 && rList[i].replyStatus == 'Y'){ // 원댓글
 										value += '<div class="su_reply_Barea selNo' + rList[i].replyNo + '">';
-									}else{
+										console.log("원댓글");
+									}else if(rList[i].replyStatus == 'Y'){ // 대댓글
 										value += '<div class="su_reply_Barea su_rreply_Barea selNo' + rList[i].replyNo + '">';
+										console.log("대댓글");
+									}else if(rList[i].replyStatus == 'N'){ // 대댓글이면서 삭제됐을 경우
+										value += '<div>';
 									}
-											value += '<div class="su_reply">'
-														+ '<div>' 
-															+'<img src="' + root + '/resources/profile_images/defaultProfile.png" alt="">'
+									console.log(i);
+									console.log(rList[i]);
+									if(rList[i].replyStatus == 'Y'){
+										value += '<div class="su_reply">'
+													+ '<div>' 
+														+'<img src="' + root + '/resources/profile_images/defaultProfile.png" alt="">'
+													+ '</div>'
+													+ '<div id="reUpdateArea' + rList[i].replyNo + '">'
+														+ '<div class="su_reply_writer">'
+															+ '<span class="font-weight-bold">' + rList[i].replyWriter + '</span>'
+															+ '<span class="font-weight-bold"> ' + rList[i].replyJob+ '</span>'
+															+ '<span style="margin-right:10px"> | ' + rList[i].replyDate + '</span>';
+															// 원댓글만 댓글 추가 버튼 보이게끔 (댓글 작성자 본인 또한 본인 댓글에 대댓글 가능)
+															if(rList[i].replyParent == 0){
+																value += '<a id="pReplyEvent' + rList[i].replyNo + '" style="cursor: pointer;" onclick="rReply(' + rList[i].replyNo + ');"><i class="fas fa-reply" style="transform: rotate(180deg);"></i> 댓글</a>';
+															}
+												 value += '</div>'
+														+ '<div class="su_reply_Bcontent conNo' + rList[i].replyNo + '" style="width:95%;">'
+															+ '<p style="width:100%">' + rList[i].replyContent +'</p>'
 														+ '</div>'
-														+ '<div id="reUpdateArea' + rList[i].replyNo + '">'
-															+ '<div class="su_reply_writer">'
-																+ '<span class="font-weight-bold">' + rList[i].replyWriter + '</span>'
-																+ '<span class="font-weight-bold"> ' + rList[i].replyJob+ '</span>'
-																+ '<span style="margin-right:10px"> | ' + rList[i].replyDate + '</span>';
-																// 원댓글만 댓글 추가 버튼 보이게끔 (댓글 작성자 본인 또한 본인 댓글에 대댓글 가능)
-																if(rList[i].replyParent == 0){
-																	value += '<a id="pReplyEvent' + rList[i].replyNo + '" style="cursor: pointer;" onclick="rReply(' + rList[i].replyNo + ');"><i class="fas fa-reply" style="transform: rotate(180deg);"></i> 댓글</a>';
-																}
-													 value += '</div>'
-															+ '<div class="su_reply_Bcontent conNo' + rList[i].replyNo + '" style="width:95%;">'
-																+ '<p style="width:100%">' + rList[i].replyContent +'</p>'
-															+ '</div>'
-														+ '</div>'
-													+ '</div>';
+													+ '</div>'
+												+ '</div>';
 										// 댓글 작성자만 수정, 삭제 버튼 보이게끔
 										if(rList[i].replyWriter == user){
 											 value += '<div class="su_reply_btn">'
@@ -233,6 +239,15 @@
 										value += '</div>'
 											   + '<div class="pReply' + rList[i].replyNo + '">'
 											   + '</div>';
+									}else if(i < (rList.length - 1)){
+										console.log("삭제된 꼬리 있는 원댓글");
+										if((rList[i].replyParent == 0) && (rList[i+1].replyParent != 0) && (rList[i+1].replyStatus == 'Y')){ // 대댓글 있는 원댓글이면서 삭제됐을 경우
+											value += '<div class="su_reply">'
+			                							+'<div style="height:48px; line-height:48px">삭제된 댓글입니다.</div>'
+			                						+'</div></div>';
+										}
+									}
+									
 								}
 								
 								$(".ajaxReply").html(value);
@@ -245,7 +260,7 @@
 					}
 					
 					function rReply(rNo){ // 대댓글 버튼 클릭 시 실행
-                        const rReplyDiv = '<div class="su_reply_Barea su_rreply_Barea" id="clickRR' + rNo + '">'
+                        const rReplyDiv = '<div class="su_reply_Barea su_rreply_Barea selNo' + rNo + '" id="clickRR' + rNo + '">'
                                             + '<div class="su_reply" style="width: 100%;">'
                                                 + '<div>'
                                                     + '<img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">'                                        
@@ -272,7 +287,7 @@
 						
                     }
 					
-					
+					// 대댓글 버튼 클릭시 없어지는 function
 					function rReplyView(rNo){
 						$("#clickRR" + rNo).remove();
 						$("#pReplyEvent" + rNo).attr("onclick", "rReply(" + rNo + ");");
@@ -280,19 +295,23 @@
 					
                  	// 댓글 insert 
                     function insertReply(replyParentNo){ 
+                 		let replyDepth = 0;
+                 		if(replyParentNo != 0){ // 댓글 깊이
+                 			replyDepth = 1;
+                 		}
 						 $.ajax({
 							url: "insertRe.no",
 							data:{
 								no:${b.boardNo},
-								replyDepth:4,
+								replyDepth:replyDepth,
 								replyParent:replyParentNo,
 								replyContent:$("#replyContent").val(),
-								replyWriter:"${loginUserN.memName}",
-								replyJob:"${loginUserN.jobCode}"
+								replyWriter:"${loginUser.memName}",
+								replyJob:"${loginUser.jobCode}"
 							},
 							success(result){
-								console.log(result);
 								selectReplyList();
+								$("#replyContent").val("");
 							},
 							error(){
 								console.log("댓글 등록 실패");
@@ -301,7 +320,7 @@
 						}) 
 					}
                     
-                    // 댓글 수정
+                    // 댓글 수정 div
                     function updateReBtn(rNo){
                     	$.ajax({
 							url: "selectRe.no",
@@ -324,6 +343,7 @@
 					            				+ '</div>';
 						                         
 						        $(".selNo"+rNo).html(rReplyDiv);
+						        
 							},
 							error(){
 								console.log("댓글 조회 실패");
@@ -331,6 +351,7 @@
 						}) 
                     }
                     
+                    // 댓글 수정 ajax
                     function updateReply(rNo){
                     	$.ajax({
                     		url:"updateRe.no",
@@ -348,11 +369,29 @@
                     	})
                     }
                     
+                    // 댓글 삭제 ajax
                     function deleteReBtn(rNo){
                     	$("#deleteReply").modal("show");
                     	
                     	$("#realDeleteDiv").on("click", "#realDeleteReply", function(){
-                    		console.log("gdg");
+                    		$.ajax({
+                    			url:"deleteRe.no",
+                    			data:{no:rNo},
+                    			success(result){
+                    				let value = "";
+                    				
+                    				value += '<div class="su_reply">'
+                    							+'<div>삭제된 댓글입니다.</div>'
+                    						+'</div>';
+                    						
+                    				$(".selNo"+rNo).html(value);
+                    				$("#deleteReply").modal("hide");
+                    				selectReplyList();
+                    			},
+                    			error(){
+                    				console.log("댓글 삭제 실패");
+                    			}
+                    		})
                     	})
                     }
                     

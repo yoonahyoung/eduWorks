@@ -33,6 +33,9 @@ public interface NoticeService {
 	// 3-3) 댓글 수정 서비스
 	int updateReply(Reply r);
 	
+	// 3-4) 댓글 삭제 서비스
+	int deleteReply(int replyNo);
+	
 	// 3-) 해당 게시글 첨부파일 조회
 	ArrayList<Attachment> selectAtList(int noticeNo);
 	

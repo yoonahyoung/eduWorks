@@ -29,6 +29,7 @@
 		<result column="reply_job" property="replyJob" />
 		<result column="reply_blind" property="replyBlind" />
 		<result column="reply_date" property="replyDate" />
+		<result column="reply_status" property="replyStatus" />
 	</resultMap>
 	
 	<resultMap id="attachmentResult" type="Attachment">
@@ -128,7 +129,7 @@
 		   and at_status = 'Y'
   	</select>
   	
-  	<!-- 게시글 상세 조회 시 댓글 조회 -->
+  	<!-- 게시글 상세 조회 시 댓글리스트 조회 -->
   	<select id="selectReplyList" resultMap="replyResult">
   		select 
 		       reply_no
@@ -139,6 +140,7 @@
 		     , reply_writer
 		     , reply_job
 		     , to_char(reply_date, 'YY-MM-DD HH24:MI') as "reply_date"
+		     , reply_status
 		  from tb_reply
 		 where reply_type = 4
 		   and re_board_no = #{boardNo}
@@ -188,6 +190,7 @@
 		     , reply_writer
 		     , reply_job
 		     , to_char(reply_date, 'YY-MM-DD HH24:MI') as "reply_date"
+			 , reply_status
 		  from tb_reply
 		 where reply_no = #{replyNo}
 		 start with reply_parent = 0
@@ -205,5 +208,12 @@
   		   and reply_status = 'Y'
   	</update>
   	
+  	<!-- 댓글 삭제 -->
+  	<update id="deleteReply">
+  		update
+  			   tb_reply
+  		   set reply_status = 'N'
+  		 where reply_no = #{replyNo}
+  	</update>
   
 </mapper>

@@ -79,6 +79,9 @@ public class NoticeDao {
 		return sqlSession.update("noticeMapper.updateReply", r);
 	}
 
-	
+	// 댓글 삭제
+	public int deleteReply(SqlSessionTemplate sqlSession, int replyNo) {
+		return sqlSession.update("noticeMapper.deleteReply", replyNo);
+	}
 
 }
