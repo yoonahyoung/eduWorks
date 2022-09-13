@@ -151,5 +151,47 @@ public class AddressServiceImpl implements AddressService {
 		return aDao.updateIndivAddress(sqlSession, a);
 	}
 
+	/**
+	 * 8_1. 연락처 검색시 나오는 연락처 수 조회 (개인 주소록)
+	 * @param keyword : 검색어
+	 * @param a : 로그인한 회원, 주소록 그룹 번호
+	 * @return : 검색시 나오는 연락처 수
+	 */
+	@Override
+	public int searchIndivCount(String keyword,  Address a) {
+		return aDao.searchIndivCount(sqlSession, keyword, a);
+	}
 
+	/**
+	 * 8_2. 연락처 검색시 나오는 연락처 목록 조회 (개인 주소록)
+	 * @param keyword : 검색어
+	 * @param a : 로그인한 회원, 주소록 그룹 번호
+	 * @return : 검색시 나오는 연락처 목록
+	 */
+	@Override
+	public ArrayList<Address> searchIndivAdd(PageInfo pi, String keyword,  Address a) {
+		return aDao.searchIndivAdd(sqlSession, pi, keyword, a);
+	}
+	
+	/**
+	 * 8_3. 연락처 검색시 나오는 연락처 수 조회 (전사 주소록)
+	 * @param keyword : 검색어
+	 * @return : 검색시 나오는 연락처 수
+	 */
+	@Override
+	public int searchPublicCount(String keyword) {
+		return aDao.searchPublicCount(sqlSession, keyword);
+	}
+
+	/**
+	 * 8_4. 연락처 검색시 나오는 연락처 목록 조회 (전사 주소록)
+	 * @param pi : 페이징
+	 * @param keyword : 검색어
+	 * @return : 검색시 나오는 연락처 목록
+	 */
+	@Override
+	public ArrayList<Member> searchPublicAdd(PageInfo pi, String keyword) {
+		return aDao.searchPublicAdd(sqlSession, pi, keyword);
+	}
+	
 }

@@ -51,5 +51,21 @@ public interface AddressService {
 	
 	// 선택한 연락처 정보 수정
 	int updateIndivAddress(Address a);
-
+	
+	// 8_1. 연락처 검색 리스트 조회 (개인 주소록)
+	
+	// 검색시 나오는 연락처 수 조회
+	int searchIndivCount(String keyword, Address a);
+	
+	// 검색 목록 조회
+	ArrayList<Address> searchIndivAdd(PageInfo pi, String keyword, Address a);
+	
+	// 8_2. 연락처 검색 리스트 조회 (전사 주소록)
+	
+	// 검색시 나오는 연락처 수 조회
+	int searchPublicCount(String keyword);
+	
+	// 검색 목록 조회
+	ArrayList<Member> searchPublicAdd(PageInfo pi, String keyword);
+	
 }

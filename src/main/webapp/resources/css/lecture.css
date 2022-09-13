@@ -164,5 +164,15 @@
         border-radius: 5px;
         border:1px solid  #5e7e9b;
     }
+    
+    .col-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+	}
+	
+	#boardHeader * {
+    font-weight: 600;
+    color: black !important;
+}
 	
         

@@ -196,6 +196,8 @@ a:hover{
 .address-search{
     cursor: pointer;
     margin-left:5px;
+    border:none;
+    background-color:transparent;
 }
 
 .filterHead{

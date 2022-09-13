@@ -507,7 +507,10 @@ tbody tr:hover{
         margin:0;
     }
 
-
+	.col-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+	}
 
 
 
