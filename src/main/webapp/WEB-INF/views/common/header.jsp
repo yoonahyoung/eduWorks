@@ -99,6 +99,12 @@
 	}
 </style>
 </head>
+	<c:if test="${ not empty alertMsg }">
+		<script>
+			alertify.alert("${alertMsg}");
+		</script>
+		<c:remove var="alertMsg" scope="session" /> <!-- 일회성 메시지의 역할을 하기 위해 지워주기 -->
+	</c:if>
 	
 	<body id="page-top">
 	
@@ -202,7 +208,7 @@
 	            
 	            <form id="postForm" action="" method="post">
 	            	
-	            	<input type="hidden" name="memNo" value="500001">
+	            	<input type="hidden" name="memNo" value="${loginUser.memNo }">
 	            
 	            </form>
 	            
