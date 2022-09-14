@@ -48,4 +48,61 @@
          order
             by class_no desc
 	</select>
+	
+	<insert id="bookEnrollFormInsert">
+		insert
+		  into tb_class
+		  (
+		    class_no
+		  , class_title
+		  , class_content
+		  , class_objective
+		  , class_subject
+		  , class_student
+		  , class_start_date
+		  , class_end_date
+		  , mem_no
+		  , class_approval
+		  , class_status
+		  , class_fee
+		  , class_signup_date
+		  )
+		  values
+		  (
+		    seq_clno.nextval 
+		  ,	#{classTitle}
+		  ,	#{classContent}
+		  ,	#{classObjective}
+		  ,	#{classSubject}
+		  ,	#{classStudent}
+		  ,	#{classStartDate}
+		  ,	#{classEndDate}
+		  , #{memNo}
+		  , default
+		  , default
+		  ,	#{classFee}
+		  , sysdate
+		  )
+	</insert>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 </mapper>

@@ -51,7 +51,7 @@
 
 <!-- suit 글꼴 -->
 <link href="https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/static/woff2/SUIT.css" rel="stylesheet">
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <style>
     .container-fluid .menu-sidebar{
         width:15%;

@@ -2,8 +2,11 @@ package com.finalProject.eduWorks.teacher.controller;
 
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -36,11 +39,25 @@ public class TeacherController {
 		return mv;
 	}
 	
-	// (강사) 강의 신청 폼
+	// (강사) 강의 신청 페이지 이동
+	@RequestMapping("appEnroll.cl")
+	public String appEnroll() {
+		return "teacher/appLectureEnroll";
+	}
+	
+	// (강사) 강의 신청 insert
 	@RequestMapping("appEnrollForm.cl")
-	public ModelAndView appEnrollFormInsert(ModelAndView mv) {
-		mv.setViewName("teacher/appLectureEnroll");
-		return mv;
+	public String appEnrollFormInsert(Teacher t, HttpSession session) {
+		
+		int result = tService.bookEnrollFormInsert(t);
+		System.out.println(t);
+		if(result > 0) {
+			session.setAttribute("alertMsg", "강의 개설신청을 완료하였습니다.");
+			return "redirect:bookList.bk";
+		}else {
+			session.setAttribute("errorMsg", "강의 개설신청 실패.");
+			return "redierct:/";
+		}
 	}
 	
 	// (강사) 교재리스트
@@ -61,7 +78,7 @@ public class TeacherController {
 	// (강사) 교재 등록
 	@RequestMapping("bookEnrollForm.bk")
 	public ModelAndView bookEnrollFormInsert(ModelAndView mv) {
-		mv.setViewName("teacher/bookEnrollForm");
+		mv.setViewName("teacher/appLectureEnroll");
 		return mv;
 	}
 	

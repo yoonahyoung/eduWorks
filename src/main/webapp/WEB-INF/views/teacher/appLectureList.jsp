@@ -28,7 +28,7 @@
 			    <script>
 			    	$(function(){
 			    		$("#submit").click(function(){
-			    			location.href = 'appEnrollForm.cl';
+			    			location.href = 'appEnroll.cl';
 			    		})
 			    	})
 			    </script>

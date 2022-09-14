@@ -41,5 +41,10 @@ public class TeacherServiceImpl implements TeacherService{
 		return tDao.bookListSelect(sqlSession, pi);
 	}
 
+	@Override
+	public int bookEnrollFormInsert(Teacher t) {
+		return tDao.bookEnrollFormInsert(sqlSession, t);
+	}
+
 
 }
