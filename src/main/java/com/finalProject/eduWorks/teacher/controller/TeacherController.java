@@ -52,8 +52,9 @@ public class TeacherController {
 		int result = tService.bookEnrollFormInsert(t);
 		System.out.println(t);
 		if(result > 0) {
+			session.setAttribute("alertTitle", "강의 개설신청 완료");
 			session.setAttribute("alertMsg", "강의 개설신청을 완료하였습니다.");
-			return "redirect:bookList.bk";
+			return "redirect:appAllList.cl";
 		}else {
 			session.setAttribute("errorMsg", "강의 개설신청 실패.");
 			return "redierct:/";

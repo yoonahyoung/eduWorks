@@ -51,6 +51,7 @@
 
 <!-- suit 글꼴 -->
 <link href="https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/static/woff2/SUIT.css" rel="stylesheet">
+<!-- alert -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <style>
     .container-fluid .menu-sidebar{
@@ -101,9 +102,33 @@
 </head>
 	<c:if test="${ not empty alertMsg }">
 		<script>
-			alert("${alertMsg}");
+             Swal.fire({
+                 icon: 'success',
+                 title: '${alertTitle}',
+                 text: "${alertMsg}",
+                 allowOutsideClick: false,
+                 showConfirmButton: true,
+                 showCancelButton: false,
+                 closeOnConfirm: true,
+                 closeOnCancel: true,
+                 confirmButtonText: 'OK',
+                 confirmButtonColor: 'slategray',
+                 cancelButtonText: 'Cancel',
+                 imageUrl: null,
+                 imageSize: null,
+                 timer: null,
+                 customClass: '',
+                 html: false,
+                 animation: true,
+                 allowEscapeKey: true,
+                 inputType: 'text',
+                 inputPlaceholder: '',
+                 inputValue: '',
+                 showLoaderOnConfirm: false
+       		  });
 		</script>
-		<c:remove var="alertMsg" scope="session" /> <!-- 일회성 메시지의 역할을 하기 위해 지워주기 -->
+		<c:remove var="alertMsg" scope="session" />
+		<c:remove var="alertTitle" scope="session" /> <!-- 일회성 메시지의 역할을 하기 위해 지워주기 -->
 	</c:if>
 	
 	<body id="page-top">
