@@ -3,6 +3,7 @@ package com.finalProject.eduWorks.mail.model.service;
 import org.springframework.stereotype.Service;
 
 import com.finalProject.eduWorks.mail.model.vo.Mail;
+import com.finalProject.eduWorks.mail.model.vo.MailStatus;
 
 @Service
 public class MailServiceImpl implements MailService {
@@ -13,13 +14,10 @@ public class MailServiceImpl implements MailService {
 	}
 
 	@Override
-	public int replyMail(Mail m) {
+	public int insertMailStatus(MailStatus ms) {
 		return 0;
 	}
 
-	@Override
-	public int insertMailMe(Mail m) {
-		return 0;
-	}
+
 
 }

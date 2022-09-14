@@ -288,7 +288,7 @@ img{
 
 .dropBox{
     display:inline-block;
-    height:100px;
+    height:130px;
     width:100%;
     border:3px dotted slategray;
     margin:10px 0px;
@@ -314,6 +314,15 @@ img{
     border-radius: 2px;
     background-color: slategray;
     color:white;
+}
+
+/* ========== 첨부파일 ========== */
+#upfile{
+	style="display:none;"
+}
+
+#btn-upload{
+	border: 1px solid gray;
 }
 
 /* ========== 주소록 모달 ============== */

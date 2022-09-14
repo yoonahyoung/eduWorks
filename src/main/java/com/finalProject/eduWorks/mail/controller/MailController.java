@@ -34,6 +34,19 @@ public class MailController {
 		return "mail/writeMailForm";
 	}
 	
+	/**
+	 * 메일 작성(나에게) 페이지로 이동
+	 * @return : 메일 작성 페이지
+	 */
+	@RequestMapping("writeMailToMeForm.ma")
+	public String writeMailToMeForm(Model model) {
+		return "mail/writeMailToMeForm";
+	}
+	
+	/**
+	 * 중요 메일함으로 이동
+	 * @return : 중요 메일함 페이지
+	 */
 	@RequestMapping("importantMailForm.ma")
 	public String importantMailForm(Model model) {
 		return "mail/importantMailList";
