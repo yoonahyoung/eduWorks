@@ -1,17 +1,19 @@
 package com.finalProject.eduWorks.mail.model.service;
 
 import com.finalProject.eduWorks.mail.model.vo.Mail;
+import com.finalProject.eduWorks.mail.model.vo.MailStatus;
 
 public interface MailService {
 
 	// 1. 메일 작성 (임시 보관 포함)
 	int insertMail(Mail m);
+	int insertMailStatus(MailStatus ms);
 	
 	// 1_2. 메일 답장
-	int replyMail(Mail m);
+//	int replyMail(Mail m);
 	
 	// 2. 메일 작성 (나에게)
-	int insertMailMe(Mail m);
+//	int insertMailMe(Mail m);
 	
 	// 3. 보낸 메일 조회
 	
