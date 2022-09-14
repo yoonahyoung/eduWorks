@@ -35,6 +35,7 @@
 	 
 	 <mappers>
 	 	<mapper resource="/mappers/notice-mapper.xml" />
+	 	<mapper resource="/mappers/deptBoard-mapper.xml" />
 	 	<mapper resource="/mappers/promotion-mapper.xml" />
 	 	<mapper resource="/mappers/schedule-mapper.xml" />
 	 	<mapper resource="/mappers/personnel-mapper.xml" />
