@@ -53,8 +53,8 @@
 					<tr>
 						<th>첨부파일</th>
 						<td colspan="2">
-							<button id="btn-upload" type="button">파일 추가</button> <input
-							type="file" name="upfile" class="input-mail" id="upfile"
+							<button id="btn-upload" type="button">파일 추가</button> 
+							<input type="file" name="upfile" class="input-mail" id="upfile"
 							onchange="addFile();" multiple>
 						</td>
 					</tr>
@@ -73,6 +73,14 @@
 			</div>
 
 			<script>
+			
+				// '파일 추가' 누를 때 실행하는 함수
+				$(function() {
+					$('#btn-upload').click(function(e) {
+						e.preventDefault();
+						$('#upfile').click();
+					});
+				});
 				
 		        $('#summernote').summernote({
 		            //   tabsize: 2,

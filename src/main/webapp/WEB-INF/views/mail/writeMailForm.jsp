@@ -165,6 +165,7 @@
 			</div>
 
 			<script>
+			
 				// '파일 추가' 누를 때 실행하는 함수
 				$(function() {
 					$('#btn-upload').click(function(e) {

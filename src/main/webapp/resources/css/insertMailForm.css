@@ -318,7 +318,7 @@ img{
 
 /* ========== 첨부파일 ========== */
 #upfile{
-	style="display:none;"
+	display: none;
 }
 
 #btn-upload{
