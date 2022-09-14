@@ -40,4 +40,29 @@ public class TeacherDao {
 		
 		return (ArrayList)sqlSession.selectList("bookMapper.bookListSelect", null, rowBounds);
 	}
+	
+	public int bookEnrollFormInsert(SqlSessionTemplate sqlSession, Teacher t) {
+		return sqlSession.insert("teacherMapper.bookEnrollFormInsert", t);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

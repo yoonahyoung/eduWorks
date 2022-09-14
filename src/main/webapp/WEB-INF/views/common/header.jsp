@@ -51,7 +51,7 @@
 
 <!-- suit 글꼴 -->
 <link href="https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/static/woff2/SUIT.css" rel="stylesheet">
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <style>
     .container-fluid .menu-sidebar{
         width:15%;
@@ -101,7 +101,60 @@
 </head>
 	<c:if test="${ not empty alertMsg }">
 		<script>
-			alertify.alert("${alertMsg}");
+             Swal.fire({
+                 icon: 'success',
+                 title: '신청 성공',
+                 text: "${alertMsg}",
+                 allowOutsideClick: false,
+                 showConfirmButton: true,
+                 showCancelButton: false,
+                 closeOnConfirm: true,
+                 closeOnCancel: true,
+                 confirmButtonText: 'OK',
+                 confirmButtonColor: 'slategray',
+                 cancelButtonText: 'Cancel',
+                 imageUrl: null,
+                 imageSize: null,
+                 timer: null,
+                 customClass: '',
+                 html: false,
+                 animation: true,
+                 allowEscapeKey: true,
+                 inputType: 'text',
+                 inputPlaceholder: '',
+                 inputValue: '',
+                 showLoaderOnConfirm: false
+       		  });
+		</script>
+		<c:remove var="alertMsg" scope="session" /> <!-- 일회성 메시지의 역할을 하기 위해 지워주기 -->
+	</c:if>
+	
+	<c:if test="${ not empty errorMsg }">
+		<script>
+             Swal.fire({
+                 icon: 'fail',
+                 title: '신청 실패',
+                 text: "${errorMsg}",
+                 allowOutsideClick: false,
+                 showConfirmButton: true,
+                 showCancelButton: false,
+                 closeOnConfirm: true,
+                 closeOnCancel: true,
+                 confirmButtonText: 'OK',
+                 confirmButtonColor: 'slategray',
+                 cancelButtonText: 'Cancel',
+                 imageUrl: null,
+                 imageSize: null,
+                 timer: null,
+                 customClass: '',
+                 html: false,
+                 animation: true,
+                 allowEscapeKey: true,
+                 inputType: 'text',
+                 inputPlaceholder: '',
+                 inputValue: '',
+                 showLoaderOnConfirm: false
+       		  });
 		</script>
 		<c:remove var="alertMsg" scope="session" /> <!-- 일회성 메시지의 역할을 하기 위해 지워주기 -->
 	</c:if>
