@@ -48,9 +48,10 @@ public class NoticeServiceImpl implements NoticeService{
 	
 	// 해당 게시글 첨부파일 조회
 	@Override
-	public ArrayList<Attachment> selectAtList(int noticeNo) {
-		return nDao.selectAtList(sqlSession, noticeNo);
+	public Attachment selectAttachment(int noticeNo) {
+		return nDao.selectAttachment(sqlSession, noticeNo);
 	}
+	
 	// 전사공지 상세 조회 시 댓글 리스트 조회
 	@Override
 	public ArrayList<Reply> selectReplyList(int noticeNo) {
@@ -81,22 +82,38 @@ public class NoticeServiceImpl implements NoticeService{
 		return nDao.deleteReply(sqlSession, replyNo);
 	}
 	
-	
+	// 게시글 등록
 	@Override
-	public Board udpatetNotice(Board b) {
-		return null;
+	public int insertNotice(Board b) {
+		return nDao.insertNotice(sqlSession, b);
 	}
 	
+	// 첨부파일 등록
 	@Override
-	public int insertNotice(Board n) {
-		return 0;
+	public int insertAttachment(Attachment at) {
+		return nDao.insertAttachment(sqlSession, at);
 	}
 	
+	// 게시글 수정
+	@Override
+	public int updateNotice(Board b) {
+		return nDao.updateNotice(sqlSession, b);
+	}
+	
+	// 첨부파일 수정
+	@Override
+	public int updateAttachment(Attachment at) {
+		return nDao.updateAttachment(sqlSession, at);
+	}
+	
+	
+	// 게시글 삭제
 	@Override
 	public int deleteNotice(int noticeNo) {
-		return 0;
+		return nDao.deleteNotice(sqlSession, noticeNo);
 	}
-
+	
+	
 	
 
 	

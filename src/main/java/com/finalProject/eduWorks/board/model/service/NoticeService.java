@@ -37,11 +37,16 @@ public interface NoticeService {
 	int deleteReply(int replyNo);
 	
 	// 3-) 해당 게시글 첨부파일 조회
-	ArrayList<Attachment> selectAtList(int noticeNo);
+	Attachment selectAttachment(int noticeNo);
 	
+	// 3- ) 첨부파일 등록
+	int insertAttachment(Attachment at);
 	
 	// 4. 공지사항 수정 서비스
-	Board udpatetNotice(Board b);
+	int updateNotice(Board b);
+	
+	// 4-1. 첨부파일 수정 서비스
+	int updateAttachment(Attachment at);
 	
 	// 5. 공지사항 삭제 서비스
 	int deleteNotice(int noticeNo);

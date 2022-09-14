@@ -49,7 +49,7 @@
 		                            <i class="fas fa-ellipsis-v" style="color:black; font-size: 25px;"></i>
 		                        </a>
 	                        	<div class="dropdown-list dropdown-menu shadow" aria-labelledby="dotDropdown" style="margin-left:-180px; margin-top: -10px;">
-		                            <a class="dropdown-item d-flex align-items-center" href="#">
+		                            <a class="dropdown-item d-flex align-items-center" href="updateForm.no?no=${b.boardNo}">
 		                                <span class="font-weight-bold">수정하기</span>
 		                            </a>
 		                            <a class="dropdown-item d-flex align-items-center" href="#" data-toggle="modal" data-target="#delete">
@@ -73,8 +73,8 @@
 	            
 	                                <h5 class="mt-1 mb-2 req-msg">정말 삭제하시겠습니까?</h5>
 	                                <br>
-	                                <div class="text-center mt-4"> 
-	                                    <button type="button" id="realDelete" class="n-btn su_btn_all su_btn_medium">확인</button>
+	                                <div class="text-center mt-4" id="boardDeleteDiv"> 
+	                                    <button type="button" id="realDeleteBoard" class="n-btn su_btn_all su_btn_medium">확인</button>
 	                                    <button type="button" id="next" class="n-btn su_btn_border su_btn_medium" data-dismiss="modal">취소</button>
 	                                </div>
 	                            </div>
@@ -83,7 +83,7 @@
 	                </div>
 	            </div>
 	
-	             <!-- 댓글 삭제 모달창 -->
+	            <!-- 댓글 삭제 모달창 -->
 				<div class="modal" id="deleteReply" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	                <div class="modal-dialog modal-dialog-centered cascading-modal modal-avatar" role="document">
 	                    <!--Content-->
@@ -96,7 +96,7 @@
 	                                <h5 class="mt-1 mb-2 req-msg">정말 삭제하시겠습니까?</h5>
 	                                <br>
 	                                <div class="text-center mt-4" id="realDeleteDiv"> 
-	                                    <button type="button" id="realDeleteReply" class="n-btn su_btn_all su_btn_medium">확인</button>
+	                                    <button type="button" id="realDeleteReply" class="n-btn su_btn_all su_btn_medium" data-dismiss="modal">확인</button>
 	                                    <button type="button" id="next" class="n-btn su_btn_border su_btn_medium" data-dismiss="modal">취소</button>
 	                                </div>
 	                            </div>
@@ -104,6 +104,27 @@
 	                    </div>
 	                </div>
 	            </div>
+	            
+	            <!-- 알람용 모달창 -->
+                <div class="modal" id="moContent" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered cascading-modal modal-avatar" role="document">
+                        <!--Content-->
+                        <div class="modal-content modal_alert">
+                            
+                            <!--Body-->
+                            <div class="modal-body text-center modal_alert_child">
+                                <div id="req-modal">
+                
+                                    <h5 class="mt-1 mb-2 req-msg" id="modalContent"></h5>
+                                    <br>                                
+                                    <div class="text-center mt-4"> 
+                                        <button type="button" class="n-btn su_btn_all su_btn_medium" data-dismiss="modal" id="resultUrl">확인</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 				
 	            <div class="su_board_writer">
 	                <div>
@@ -123,11 +144,11 @@
                     </div>
                 </div>
 				
-				<c:if test="${ not empty atList }">
+				<c:if test="${ not empty at }">
 	                <div class="su_board_file">
 	                    <span><i class="fas fa-paperclip" style="color: #5e7e9b;">&nbsp;</i></span>
 		            	<span>첨부파일 &nbsp;: &nbsp;</span>
-		                <!-- 첨부파일 이름 나오게 -->
+		                <a href="${ at.atChangeName }" download="${ at.atOriginName }">${ at.atOriginName }</a>
 		            </div>
 				</c:if>
 	            <br>
@@ -302,7 +323,7 @@
 						 $.ajax({
 							url: "insertRe.no",
 							data:{
-								no:${b.boardNo},
+								reBoardNo:${b.boardNo},
 								replyDepth:replyDepth,
 								replyParent:replyParentNo,
 								replyContent:$("#replyContent").val(),
@@ -394,6 +415,33 @@
                     		})
                     	})
                     }
+                    
+                    // 글삭제
+                    $("#boardDeleteDiv").on("click", "#realDeleteBoard", function(){
+                    	$.ajax({
+                    		url:"delete.no",
+                    		data:{
+                    			boardNo:${b.boardNo},
+                    			atPath:'${at.atChangeName}'
+                    		},
+                    		success(result){
+                    			if(result == 3){
+                    				console.log(result);
+                    				$("#modalContent").html("글이 삭제 되었습니다.");
+	                    			$("#resultUrl").attr("onclick", "location.href='list.no'");
+	                    			$("#moContent").modal("show");
+                    			}else{
+                    				$("#modalContent").html("삭제에 실패하였습니다.");
+	                    			$("#resultUrl").attr("onclick", "");
+	                    			$("#moContent").modal("show");
+                    			}
+                    			
+                    		},
+                    		error(){
+                    			console.log("ajax통신 실패");
+                    		}
+                    	})
+                    })
                     
 				</script>
 				
