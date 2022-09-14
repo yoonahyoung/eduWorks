@@ -16,11 +16,10 @@ import lombok.ToString;
 public class Attachment {
 	
 	private int atNo;
-	private int atRefBNo;
+	private int atRefBno;
 	private String atCategory;
 	private String atOriginName;
 	private String atChangeName;
-	private String atPath;
 	private Date atUploadDate;
 	private String atStatus;
 	
