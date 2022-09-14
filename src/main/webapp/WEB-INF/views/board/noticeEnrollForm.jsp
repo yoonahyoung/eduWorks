@@ -25,11 +25,12 @@
 
                 <h2 class="su_sub_menu_name">전사 공지 등록</h2>
                 
-                <button class="btn" id="n-btn-border" type="button" onclick="history.back();">목록으로</button>
+                <button class="btn" id="n-btn-border" type="button" onclick="location.href='list.no'">목록으로</button>
                 <hr class="hr_line">
 
 
-                <form action="" method="post">
+                <form action="insert.no" method="post" enctype="multipart/form-data" id="insertForm">
+                	<input type="hidden" name="boardWriter" value="${ loginUser.memNo }">
                     <div class="su_content_body">
     
                         <table id="eventForm">
@@ -37,21 +38,21 @@
                                 <td width="5%;"><span class="fas fa-star-of-life fontRed">&nbsp;</span></td>
                                 <td><span>&nbsp;제목</span></td>
                                 <td>
-                                &ensp; &ensp;<input type="text" name="bardTitle" placeholder="제목 입력" style="width:300px;" required>
+                                &ensp; &ensp;<input type="text" name="boardTitle" placeholder="제목 입력" style="width:300px;" id="boardTitle" required>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td></td>
                                 <td><span> &nbsp;파일 첨부</span></td>
-                                <td><input type="file" style="margin-left: 20px;" id="boardAt" onchange="atChange();"></td>
+                                <td><input type="file" style="margin-left: 20px;" id="boardAt" onchange="atChange();" name="atOriginName"></td>
                             </tr>
 
                         </table>
 
                         <div class="form-group">
                             <div class="su_dropBox">
-                                <span id="atName">&nbsp;파일을 선택/드래그 해주세요</span>
+                                <span id="atName">&nbsp;파일을 선택 해주세요</span>
                             </div>
                         </div>
                         
@@ -151,7 +152,7 @@
 
                         <div class="su_btn_two_center">
                             <button type="button" class="n-btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">등록</button>
-                            <button type="button" class="n-btn su_btn_two su_btn_border">취소</button>
+                            <button type="reset" class="n-btn su_btn_two su_btn_border" onclick="history.back();">취소</button>
                         </div>
 
                         <!-- 필수사항 입력 안했을 때 모달창 -->
@@ -182,6 +183,10 @@
                                 $("#submitBtn").click(function(){
                                     // 필수사항의 value가 비어있으면 모달창
                                     // 입력했으면 data-target attr 지우기
+                                	if( !( !$("#boardTitle").val() || !$("#summernote").val() ) ){
+	                                    $("#submitBtn").removeAttr("data-target");
+	                                    $("#insertForm").submit();
+	                                }
                                 });
 
                             })

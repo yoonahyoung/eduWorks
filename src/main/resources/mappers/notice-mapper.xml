@@ -36,8 +36,8 @@
 		<result column="at_no" property="atNo" />
 		<result column="at_ref_bno" property="atRefBno" />
 		<result column="at_category_name" property="atCategory"/>
-		<result column="at_change_name" property="atChangeNamge"/>
-		<result column="at_path" property="atPath"/>
+		<result column="at_origin_name" property="atOriginName" />
+		<result column="at_change_name" property="atChangeName"/>
 		<result column="at_upload_date" property="atUploadDate"/>
 		<result column="at_status" property="atStatus"/>
 	</resultMap>
@@ -121,10 +121,9 @@
 		     , at_ref_bno
 		     , at_origin_name
 		     , at_change_name
-		     , at_path
 		     , at_upload_date
 		  from tb_attachment
-		 where at_ref_bno = #{noticeNo}
+		 where at_ref_bno = #{boardNo}
 		   and at_category = 3
 		   and at_status = 'Y'
   	</select>
@@ -215,5 +214,74 @@
   		   set reply_status = 'N'
   		 where reply_no = #{replyNo}
   	</update>
-  
+  	
+  	<!-- 게시글 등록 -->
+  	<insert id="insertNotice">
+  		insert
+  		  into tb_board
+  		  (
+  		  	board_no
+  		  , board_title
+  		  , board_content
+  		  , board_writer
+  		  , dept_code
+  		  , board_category
+  		  , board_en_date
+  		  )
+  		  values
+  		  (
+  		  	seq_bono.nextval
+  		  , #{boardTitle}
+  		  , #{boardContent}
+  		  , #{boardWriter}
+  		  , #{deptCode}
+  		  , 1
+  		  , sysdate
+  		  )
+  	</insert>
+  	
+  	<!-- 첨부파일 등록 -->
+  	<insert id="insertAttachment">
+  		insert
+  		  into tb_attachment
+  		  (
+  		  	at_no
+  		  , at_ref_bno
+  		  , at_category
+  		  , at_origin_name
+  		  , at_change_name
+  		  )
+  		  values
+  		  (
+  		  	seq_atno.nextval
+  		  , seq_bono.currval
+  		  , 3
+  		  , #{atOriginName}
+  		  , #{atChangeName}
+  		  )
+  	</insert>
+  	
+  	<!-- 게시글 삭제 -->
+  	<update id="deleteNotice">
+  		update tb_board
+  		   set board_status = 'N'
+  		 where board_no = #{boardNo}
+  	</update>
+  	
+  	<!-- 게시글 수정 -->
+  	<update id="updateNotice">
+  		update tb_board
+  		   set board_title = #{boardTitle}
+  		     , board_content = #{boardContent}
+  		     , board_mo_date = sysdate
+  		 where board_no = #{boardNo}
+  	</update>
+  	
+  	<!-- 첨부파일 수정 -->
+  	<update id="updateAttachment">
+  		update tb_attachment
+  		   set at_status = 'N'
+  		 where at_no = #{atNo}
+  	</update>
+  	
 </mapper>
