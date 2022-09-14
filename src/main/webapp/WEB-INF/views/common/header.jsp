@@ -101,7 +101,7 @@
 </head>
 	<c:if test="${ not empty alertMsg }">
 		<script>
-			alertify.alert("${alertMsg}");
+			alert("${alertMsg}");
 		</script>
 		<c:remove var="alertMsg" scope="session" /> <!-- 일회성 메시지의 역할을 하기 위해 지워주기 -->
 	</c:if>
