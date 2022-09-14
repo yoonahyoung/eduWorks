@@ -50,8 +50,9 @@ public class TeacherController {
 	public String appEnrollFormInsert(Teacher t, HttpSession session) {
 		
 		int result = tService.bookEnrollFormInsert(t);
-		System.out.println(t);
+
 		if(result > 0) {
+			session.setAttribute("alertIcon", "success");
 			session.setAttribute("alertTitle", "강의 개설신청 완료");
 			session.setAttribute("alertMsg", "강의 개설신청을 완료하였습니다.");
 			return "redirect:appAllList.cl";
@@ -69,7 +70,7 @@ public class TeacherController {
 		
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 5);
 		ArrayList<Book> list = tService.bookListSelect(pi);
-		System.out.println(list);
+
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
 		  .setViewName("teacher/bookList");

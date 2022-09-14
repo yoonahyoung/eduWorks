@@ -103,7 +103,7 @@
 	<c:if test="${ not empty alertMsg }">
 		<script>
              Swal.fire({
-                 icon: 'success',
+                 icon: '${alertIcon}',
                  title: '${alertTitle}',
                  text: "${alertMsg}",
                  allowOutsideClick: false,
