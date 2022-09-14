@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="bookMapper">
+
+	<resultMap id="bookResult" type="Book">
+		<result column="book_no" property="bookNo" />
+		<result column="mem_no" property="memNo" />
+		<result column="bk_title" property="bkTitle" />
+		<result column="bk_content" property="bkContent" />
+		<result column="mem_name" property="memName" />
+	</resultMap>
+	
+	 <select id="selectBookListCount" resultType="_int">
+		select
+		       count(*)
+		  from tb_book
+	</select>
+	
+	<select id="bookListSelect" resultMap="bookResult">
+		select
+		       book_no
+		     , b.mem_no
+		     , bk_title
+		     , bk_content
+		     , mem_name
+		  from tb_book b 
+		  join tb_member m on (b.mem_no = m.mem_no)
+		 order
+		    by book_no desc
+	</select>
+
+
+</mapper>

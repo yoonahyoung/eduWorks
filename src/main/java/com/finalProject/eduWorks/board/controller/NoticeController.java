@@ -38,8 +38,6 @@ public class NoticeController {
 	 */
 	@RequestMapping("list.no")
 	public ModelAndView noticeList(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv, HttpSession session) {
-		Member loginUser = new Member("500001", "user02", "pass02", "황재범", "D1", "J3", "010-2222-2223", "2222-2223", "aaaa1112@gmail.com", "1997-01-06", 111111, "111111", "상세주소2", "참고항목2", "2022-08-02", "2022-08-02", "N", "file", "사원");
-		session.setAttribute("loginUserN", loginUser);
 		
 		int listCount = nService.selectListCount();
 		
@@ -102,16 +100,9 @@ public class NoticeController {
 	@ResponseBody
 	@RequestMapping("insertRe.no")
 	public String ajaxInsertReply(int no, int replyDepth, int replyParent, String replyContent, HttpSession session, Model model) {
-		Member loginUser = (Member)session.getAttribute("loginUserN");
+		Member loginUser = (Member)session.getAttribute("loginUser");
 		
-		String replyJob = "";
-		switch(loginUser.getJobCode()) {
-			case "J0" : replyJob = "대표"; break;
-			case "J1" : replyJob = "사원"; break;
-			case "J2" : replyJob = "대리"; break;
-			case "J3" : replyJob = "팀장"; break;
-			case "J4" : replyJob = "대표"; break;
-		}
+		System.out.println(loginUser);
 		
 		Reply r = new Reply();
 		r.setReBoardNo(no);
@@ -119,7 +110,8 @@ public class NoticeController {
 		r.setReplyParent(replyParent);
 		r.setReplyContent(replyContent);
 		r.setReplyWriter(loginUser.getMemName());
-		r.setReplyJob(replyJob);
+		r.setReplyJob(loginUser.getJobName());
+		
 		
 		int result = nService.insertReply(r);
 		
@@ -145,6 +137,12 @@ public class NoticeController {
 		return new Gson().toJson(r);
 	}
 	
+	/**
+	 * 댓글 수정
+	 * @param no 댓글 번호
+	 * @param replyContent 댓글 내용
+	 * @return 성공 여부
+	 */
 	@ResponseBody
 	@RequestMapping(value="updateRe.no", produces="application/json; charset=utf-8")
 	public String ajaxUpdateReply(int no, String replyContent) {
@@ -152,6 +150,18 @@ public class NoticeController {
 		r.setReplyNo(no);
 		r.setReplyContent(replyContent);
 		int result = nService.updateReply(r);
+		return new Gson().toJson(result);
+	}
+	
+	/**
+	 * 댓글 삭제
+	 * @param no 댓글 번호
+	 * @return 성공 여부
+	 */
+	@ResponseBody
+	@RequestMapping(value="deleteRe.no", produces="application/json; charset=utf-8")
+	public String ajaxDeleteReply(int no) {
+		int result = nService.deleteReply(no);
 		return new Gson().toJson(result);
 	}
 	

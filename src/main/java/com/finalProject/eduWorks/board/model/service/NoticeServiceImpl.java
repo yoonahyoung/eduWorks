@@ -75,6 +75,11 @@ public class NoticeServiceImpl implements NoticeService{
 		return nDao.updateReply(sqlSession, r);
 	}
 	
+	// 댓글 삭제
+	@Override
+	public int deleteReply(int replyNo) {
+		return nDao.deleteReply(sqlSession, replyNo);
+	}
 	
 	
 	@Override

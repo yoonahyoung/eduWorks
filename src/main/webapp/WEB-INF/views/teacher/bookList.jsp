@@ -56,21 +56,24 @@
 			                <th width="14%">강사명</th>
 			            </tr>
 			        </thead>
+			        
 			        <tbody class="board-tbody">
-			            <!-- 값은 다 DB와 연결될 것 -->
-			<!-- 공지는 배경색 변경 -->
-						<tr>
-			                <td>2</td>
-			                <td>JAVA의 이해</td>
-			                <td>삽자루</td>
-			                
-			
-			            </tr>
-			            <tr>
-			                <td>1</td>
-			                <td>파이썬 심화과정</td>
-			                <td>임요환</td>
-			            </tr>
+			        <c:choose>
+			       		<c:when test="${ empty list }">
+				        	<tr>
+				        		<td colspan="3">등록된 교재가 없습니다.</td>
+				        	</tr>
+				        </c:when>
+				        <c:otherwise>
+					        <c:forEach var="b" items="${ list }">
+								<tr>
+					                <td class="no">${ b.bookNo }</td>
+					                <td>${ b.bkTitle }</td>
+					                <td>${ b.memName }</td>
+					            </tr>
+				            </c:forEach>
+			            </c:otherwise>
+			        </c:choose>
 			        </tbody>
 			    </table>
 			    
@@ -89,24 +92,53 @@
 			</div>
 		
 			<div style="margin:30px 0 30px 0">
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-center">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                    </ul>
-                </nav>
-            </div>
+			    <nav aria-label="Page navigation example">
+			        <ul class="pagination justify-content-center">
+			        	
+			        	<c:choose>
+			        		<c:when test="${ pi.currentPage eq 1 }">
+					        	<li class="page-item disabled">
+						            <a class="page-link" style="color:lightgray" href="#" aria-label="Previous">
+						            <span aria-hidden="true">&laquo;</span>
+						            </a>
+						        </li>
+						    </c:when>
+						    <c:otherwise>
+						    	<li class="page-item">
+						            <a class="page-link" style="color:slategray" href="bookList.bk?cpage=${ pi.currentPage-1 }" aria-label="Previous">
+						            <span aria-hidden="true">&laquo;</span>
+						            </a>
+						        </li>
+						    </c:otherwise>
+						</c:choose>
+					        
+				        <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+				        	<li class="page-item"><a class="page-link" style="color:slategray" href="bookList.bk?cpage=${ p }">${ p }</a></li>
+				        </c:forEach>
+					        
+					    <c:choose>
+			        		<c:when test="${ pi.currentPage eq pi.maxPage }">
+					        	<li class="page-item disabled">
+						            <a class="page-link disabled" style="color:lightgray" aria-label="Next">
+						            <span aria-hidden="true">&raquo;</span>
+						            </a>
+						        </li>
+						    </c:when>
+						    <c:otherwise>
+						    	<li class="page-item">
+						            <a class="page-link" style="color:slategray" href="bookList.bk?cpage=${ pi.currentPage+1 }" aria-label="Next">
+						            <span aria-hidden="true">&raquo;</span>
+						            </a>
+						        </li>
+						    </c:otherwise>
+						</c:choose>    
+					        
+					        
+					       
+			        
+			        </ul>
+			    </nav>
+			</div>
 		                
 		</div>
 		

@@ -94,26 +94,27 @@
 	            </div>
 	
 	             <!-- 수정삭제 버튼 -->
-	             <div class="detailDot" style="float:right; width:10%; margin-right:-130px">
-	                <ul class="navbar-nav ml-auto moDelte">
-	                    <li class="nav-item dropdown no-arrow mx-1">
-	                        <a class="nav-link dropdown-toggle" href="#" id="dotDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" 
-	                            aria-expanded="false">
-	                            <i class="fas fa-ellipsis-v" style="color:black; font-size: 25px;"></i>
-	                        </a>
-	                        <div class="dropdown-list dropdown-menu shadow" aria-labelledby="dotDropdown" style="margin-left:-180px; margin-top: -10px;">
-	                            <!-- 작성자에게만 보임 -->
-	                            <a class="dropdown-item d-flex align-items-center" href="updateForm.pr?no=${ p.promoNo }">
-	                                <span class="font-weight-bold">수정하기</span>
-	                            </a>
-	                            <a class="dropdown-item d-flex align-items-center" href="#" data-toggle="modal" data-target="#delete">
-	                                <span class="font-weight-bold">삭제하기</span>
-	                            </a>
-	                        </div>
-	                    </li>
-	                </ul>
-	            </div>
-	            
+	             <!-- 작성자에게만 보임 -->
+	             <c:if test="${ loginUser.memNo == p.promoWriter }">
+		             <div class="detailDot" style="float:right; width:10%; margin-right:-130px">
+		                <ul class="navbar-nav ml-auto moDelte">
+		                    <li class="nav-item dropdown no-arrow mx-1">
+		                        <a class="nav-link dropdown-toggle" href="#" id="dotDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" 
+		                            aria-expanded="false">
+		                            <i class="fas fa-ellipsis-v" style="color:black; font-size: 25px;"></i>
+		                        </a>
+		                        <div class="dropdown-list dropdown-menu shadow" aria-labelledby="dotDropdown" style="margin-left:-180px; margin-top: -10px;">
+			                            <a class="dropdown-item d-flex align-items-center" href="updateForm.pr?no=${ p.promoNo }">
+			                                <span class="font-weight-bold">수정하기</span>
+			                            </a>
+			                            <a class="dropdown-item d-flex align-items-center" href="#" data-toggle="modal" data-target="#delete">
+			                                <span class="font-weight-bold">삭제하기</span>
+			                            </a>
+		                        </div>
+		                    </li>
+		                </ul>
+		            </div>
+	            </c:if>
 
 	             <!-- ==================================== 삭제 완료 후 alert창 출력하기==================================================== -->
 	
@@ -167,9 +168,10 @@
 	            <div class="su_board_writer">
 	                <div>
 	                    <img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">
+	                	<!-- <img src="${ p.member.memProfile}"> -->
 	                </div>
 	                <div>
-	                    <span class="font-weight-bold">${ p.promoWriter }</span>
+	                    <span class="font-weight-bold">${ p.member.memName }&ensp;${ p.member.jobName }</span>
 	                    <span>${ p.promoCreateDate }</span>
 	                </div>
 	            </div>
@@ -220,6 +222,7 @@
 	                    <div class="su_reply" style="width: 100%;">
 	                        <div>
 	                            <img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">
+	                        	<!-- <img src="${ loginUser.memProfile}> -->
 	                        </div>
 	                        
 	                        <div style="width: 100%">
@@ -279,25 +282,25 @@
 							                          
 								                                <!-- 대댓글 작성 버튼 -->
 								                                <!-- ()안에 댓글 번호 넣기 -->
-								                                <!-- 내가 작성한 댓글이 아니고 원댓글일 때만 보이게 -->
+								                                <!-- 원댓글일 때만 보이게 -->
 								                                if(list[i].replyParent == 0){
 								                                	value += '<a id="pReplyEvent' + list[i].replyNo + '" style="cursor: pointer;" onclick="rReply(' + list[i].replyNo + ');">'
 										                                	+ '<i class="fas fa-reply" style="transform: rotate(180deg);"></i> 댓글</a>';
 								                                }
 								                      value += '</div>'
 					                            			 + '<div class="su_reply_Bcontent">'
-					                            			 	+ '<p>' + list[i].replyContent +'</p>'
+					                            			 	+ '<p id="rContent' + list[i].replyNo + '">' + list[i].replyContent +'</p>'
 															 + '</div>'
 													+ '</div>'
 												+ '</div>';
 												
 												// 댓글 작성자만 보이는 수정, 삭제 버튼
-					                      		//if(list[i].replyWriter == userName){
+					                      		if(list[i].replyWriter == "${ loginUser.memName }"){
 					                      			value += '<div class="su_reply_btn">'
 							                        			+ '<button type="button" class="btn btn-sm" style="border:0px; color: black;" onclick="updateReplyDiv(' + list[i].replyNo + ');">수정</button>|' 
 							                        			+ '<button type="button" class="btn btn-sm" style="border:0px; color: black;" onclick="deleteReply(' + list[i].replyNo + ')">삭제</button>'
 							                    			+ '</div>';
-					                      		//}
+					                      		}
 												
 												value += '</div>';
 											
@@ -331,7 +334,8 @@
 	                                            + '<div class="su_reply" style="width: 100%;">'
 	                                                + '<div>'
 	                                                    + '<img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">'                                        
-	                                                + '</div>'
+	                                                // + '<img src="${ loginUser.memProfile }">'
+	                                                    + '</div>'
 	                        
 	                                                + '<div style="width: 100%">'
 	                                                    + '<input style="width: 100%;" type="text" placeholder="댓글 입력" id="replyContent' + rNo + '">'
@@ -368,7 +372,19 @@
 	                    function addReply(num){
 	                    	// num : 부모 댓글 번호
 	                    	let id = "replyContent" + num;
-	                    	console.log($("#" + id).val());
+	                    	/* const job = ${ loginUser.jobCode };
+	                    	if(job == 'J0'){
+	                    		job = '강사';
+	                    	} else if(job == 'J1'){
+	                    		job = '사원';
+	                    	} else if(job == 'J2'){
+	                    		job = '대리';
+	                    	} else if(job == 'J3'){
+	                    		job = '팀장';
+	                    	} else {
+	                    		job = '대표';
+	                    	} */
+	                    		
 	                    	
 	                    	if( $("#" + id).val().trim().length != 0 ){	// 유효한 댓글 작성시 => ajax로 insert 요청
 	                    		
@@ -377,9 +393,9 @@
 	                    			data: {
 	                    				replyContent: $("#" + id).val(),
 	                    				reBoardNo: ${ p.promoNo },
-	                    				replyParent: num
-	                    				//replyWriter: ${loginUser.memName }
-	                    				//replyDept: ${ loginUser.memDept }
+	                    				replyParent: num,
+	                    				replyWriter: ${loginUser.memName},
+	                    				replyJob: ${loginUser.jobName}
 	                    			},
 	                    			success: function(result){
 	                    				if(result == "success"){
@@ -402,16 +418,19 @@
 	                    function updateReplyDiv(num){
 	                    	// num : 댓글 번호
 	                    	let id = "pReply" + num;
+	                    	let cId = "rContent" + num;
+	                    	let contentValue = $("#" + cId).text();
 	                    	let contentId = "updateContent" + num;
 	                    	let value = "";
-	                    	
+
 	                    	value += '<div class="su_reply" style="width: 100%;">'
 	                        			+ '<div>'
                             				+ '<img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">'
+                            				// + '<img src="${ loginUser.memProfile }">'
                         				+ '</div>'
                         
                         				+ '<div style="width: 100%">'
-                            				+ '<input style="width: 100%;" type="text" placeholder="댓글 입력" id="' + contentId + '">'
+                            				+ '<input style="width: 100%;" type="text" placeholder="댓글 입력" id="' + contentId + '" value="' + contentValue + '">'
                         				+ '</div>'
                     				+ '</div>'
                     				+ '<div class="su_reply_btn" style="display: inline-flex;">'
@@ -467,12 +486,12 @@
 												+ '</div>';
 												
 												// 댓글 작성자만 보이는 수정, 삭제 버튼
-					                      		//if(list[i].replyWriter == userName){
+					                      		if(r.replyWriter == "${ loginUser.memName }"){
 					                      			value += '<div class="su_reply_btn">'
 							                        			+ '<button type="button" class="btn btn-sm" style="border:0px; color: black;" onclick="updateReplyDiv(' + r.replyNo + ');">수정</button>|' 
 							                        			+ '<button type="button" class="btn btn-sm" style="border:0px; color: black;" onclick="deleteReply(' + r.replyNo + ')">삭제</button>'
 							                    			+ '</div>';
-					                      		//}
+					                      		}
 												
 												value += '</div>'; 
 											
@@ -532,12 +551,12 @@
 												+ '</div>';
 												
 												// 댓글 작성자만 보이는 수정, 삭제 버튼
-					                      		//if(list[i].replyWriter == userName){
+					                      		if(r.replyWriter == "${ loginUser.memName }"){
 					                      			value += '<div class="su_reply_btn">'
 							                        			+ '<button type="button" class="btn btn-sm" style="border:0px; color: black;" onclick="updateReplyDiv(' + r.replyNo + ');">수정</button>|' 
 							                        			+ '<button type="button" class="btn btn-sm" style="border:0px; color: black;" onclick="deleteReply(' + r.replyNo + ')">삭제</button>'
 							                    			+ '</div>';
-					                      		//}
+					                      		}
 												
 												value += '</div>'; 
 											
