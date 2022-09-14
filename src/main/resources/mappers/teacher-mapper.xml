@@ -15,6 +15,7 @@
 		<result column="class_approval" property="classApproval" />
 		<result column="class_fee" property="classFee" />
 		<result column="class_signup_date" property="classSignupDate" />
+		<result column="mem_name" property="memName" />
 	</resultMap>
 	
 	

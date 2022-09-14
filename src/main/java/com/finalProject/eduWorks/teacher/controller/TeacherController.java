@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.template.Pagination;
 import com.finalProject.eduWorks.teacher.model.service.TeacherService;
+import com.finalProject.eduWorks.teacher.model.vo.Book;
 import com.finalProject.eduWorks.teacher.model.vo.Teacher;
 
 @Controller
@@ -44,8 +45,16 @@ public class TeacherController {
 	
 	// (강사) 교재리스트
 	@RequestMapping("bookList.bk")
-	public ModelAndView bookListSelect(ModelAndView mv) {
-		mv.setViewName("teacher/bookList");
+	public ModelAndView bookListSelect(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv) {
+		
+		int listCount = tService.selectBookListCount();
+		
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 5);
+		ArrayList<Book> list = tService.bookListSelect(pi);
+		System.out.println(list);
+		mv.addObject("pi", pi)
+		  .addObject("list", list)
+		  .setViewName("teacher/bookList");
 		return mv;
 	}
 	

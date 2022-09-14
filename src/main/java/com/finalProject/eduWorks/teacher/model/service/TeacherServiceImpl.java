@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.teacher.model.dao.TeacherDao;
+import com.finalProject.eduWorks.teacher.model.vo.Book;
 import com.finalProject.eduWorks.teacher.model.vo.Teacher;
 
 @Service
@@ -29,5 +30,16 @@ public class TeacherServiceImpl implements TeacherService{
 	public ArrayList<Teacher> appAllListSelect(PageInfo pi) {
 		return tDao.appAllListSelect(sqlSession, pi);
 	}
+
+	@Override
+	public int selectBookListCount() {
+		return tDao.selectBookListCount(sqlSession);
+	}
+	
+	@Override
+	public ArrayList<Book> bookListSelect(PageInfo pi) {
+		return tDao.bookListSelect(sqlSession, pi);
+	}
+
 
 }
