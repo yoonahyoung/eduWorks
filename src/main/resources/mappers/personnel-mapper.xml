@@ -23,6 +23,37 @@
 		<result column="mem_profile" property="memProfile"/>
 	</resultMap>
 	
+	<resultMap type="Member" id="resultTeacherDetailList">
+		<result column="mem_no" property="memNo"/>
+		<result column="mem_id" property="memId"/>
+		<result column="mem_pwd" property="memPwd"/>
+		<result column="mem_name" property="memName"/>
+		<result column="dept_code" property="deptCode"/>
+		<result column="job_code" property="jobCode"/>
+		<result column="mem_phone" property="memPhone"/>
+		<result column="mem_businessnum" property="memBusinessnum"/>
+		<result column="mem_email" property="memEmail"/>
+		<result column="mem_birth" property="memBirth"/>
+		<result column="mem_postal_code" property="memPostalCode"/>
+		<result column="mem_postal_ad" property="memPostalAd"/>
+		<result column="mem_postal_detail" property="memPostalDetail"/>
+		<result column="mem_postal_refer" property="memPostalRefer"/>
+		<result column="mem_enroll_date" property="memEnrollDate"/>
+		<result column="mem_resign_date" property="memResignDate"/>
+		<result column="mem_resign_status" property="memResignStatus"/>
+		<result column="mem_profile" property="memProfile"/>
+	</resultMap>
+	
+	<resultMap type="com.finalProject.eduWorks.personnel.model.vo.Ojt" id="resultOjt">
+		<result column="mem_no" property="memNo"/>
+		<result column="mem_name" property="memName"/>
+		<result column="dept_name" property="deptName"/>
+		<result column="job_name" property="jobName"/>
+		<result column="ojt_date" property="ojtDate"/>
+		<result column="ojt_status" property="ojtStatus"/>
+		<result column="mem_email" property="memEmail"/>
+	</resultMap>
+	
 	<resultMap type="Department" id="resultDept">
 		<result column="dept_code" property="deptCode"/>
 		<result column="dept_name" property="deptName"/>
@@ -31,6 +62,31 @@
 	<resultMap type="Job" id="resultJob">
 		<result column="job_code" property="jobCode"/>
 		<result column="job_name" property="jobName"/>
+	</resultMap>
+	
+	<resultMap type="com.finalProject.eduWorks.personnel.model.vo.Attendance" id="resultAtt">
+		<result column="att_no" property="attNo"/>
+		<result column="mem_no" property="memNo"/>
+		<result column="att_date" property="attDate"/>
+		<result column="att_fixedin" property="attFixedin"/>
+		<result column="att_fixedout" property="attFixedout"/>
+		<result column="att_in" property="attIn"/>
+		<result column="att_out" property="attOut"/>
+		<result column="att_workoff" property="attWorkoff"/>
+		<result column="att_worktime" property="attWorktime"/>
+		<result column="att_status" property="attStatus"/>
+		<result column="att_hstatus" property="attHstatus"/>
+	</resultMap>
+	
+	<resultMap type="com.finalProject.eduWorks.personnel.model.vo.Adjust" id="resultAdj">
+		<result column="adj_no" property="adjNo"/>
+		<result column="att_no" property="attNo"/>
+		<result column="adj_in" property="adjIn"/>
+		<result column="adj_out" property="adjOut"/>
+		<result column="adj_reason" property="adjReason"/>
+		<result column="adj_date" property="adjDate"/>
+		<result column="adj_file" property="adjFile"/>
+		<result column="adj_status" property="adjStatus"/>
 	</resultMap>
 	
 	<select id="teacherListCount" resultType="_int">
@@ -132,7 +188,127 @@
 		 where mem_no = #{memNo}
 	</update>
 	
-	<select id="detailTeacherInfo" resultMap="resultTeacherList">
+	<select id="detailTeacherInfo" resultMap="resultTeacherDetailList">
+		select mem_no
+		     , mem_id
+		     , mem_pwd
+		     , mem_name
+		     , dept_code
+		     , job_code
+		     , mem_phone
+		     , mem_businessnum
+		     , mem_email
+		     , mem_birth
+		     , mem_postal_code
+		     , mem_postal_ad
+		     , mem_postal_detail
+		     , mem_postal_refer
+		     , mem_enroll_date
+		     , mem_resign_date
+		     , mem_resign_status
+		     , mem_profile
+		 from tb_member 
+		 
+		where mem_no = #{memNo}
+	</select>
+	
+	<select id="selectDept" resultMap="resultDept">
+		select dept_code
+		     , dept_name
+		  from tb_department
+	</select>
+	
+	<select id="selectJob" resultMap="resultJob">
+		select job_code
+		     , job_name
+		  from tb_job
+	</select>
+	
+	<update id="returnTeacher">
+		update tb_member
+		   set mem_resign_status = 'N',
+		       mem_resign_date = null
+		 where mem_no = #{memNo}
+	</update>
+	
+	<update id="uploadProfileImg">
+		update tb_member
+		   set mem_profile = #{memProfile}
+		 where mem_no = #{memNo}
+	</update>
+	
+	<update id="defaultProfile">
+		update tb_member
+		   set mem_profile = null
+		 where mem_no = #{memNo}
+	</update>
+	
+	<update id="updateMember">
+		update tb_member
+		   set mem_id = #{memId},
+		       mem_name = #{memName},
+		       dept_code = #{deptCode},
+		       job_code = #{jobCode},
+		       mem_enroll_date = #{memEnrollDate},
+		       mem_resign_date = #{memResignDate},
+		       mem_phone = #{memPhone},
+		       mem_email = #{memEmail},
+		       mem_birth = #{memBirth},
+		       mem_postal_code = #{memPostalCode},
+		       mem_postal_ad = #{memPostalAd},
+		       mem_postal_detail = #{memPostalDetail},
+		       mem_postal_refer = #{memPostalRefer},
+		       mem_profile = #{memProfile}
+		 where mem_no = #{memNo}
+	</update>
+	
+	<insert id="addMember">
+		insert
+		  into tb_member
+		     ( mem_no
+		     , mem_id
+		     , mem_pwd
+		     , mem_name
+		     , dept_code
+		     , job_code
+		     , mem_phone
+		     , mem_businessnum
+		     , mem_email
+		     , mem_birth
+		     , mem_postal_code
+		     , mem_postal_ad
+		     , mem_postal_detail
+		     , mem_postal_refer
+		     , mem_enroll_date
+		     , mem_profile
+		     )
+		values
+			 ( seq_memno.nextval
+		     , #{memId}
+		     , #{memPwd}
+		     , #{memName}
+		     , #{deptCode}
+		     , #{jobCode}
+		     , #{memPhone}
+		     , #{memBusinessnum}
+		     , #{memEmail}
+		     , #{memBirth}
+		     , #{memPostalCode}
+		     , #{memPostalAd}
+		     , #{memPostalDetail}
+		     , #{memPostalRefer}
+		     , #{memEnrollDate}
+		     , #{memProfile}
+		     )   
+	</insert>
+	
+	<select id="employeeListCount" resultType="_int">
+		select count(*)
+		  from tb_member
+		 where dept_code != 'D0'
+	</select>
+	
+	<select id="employeeList" resultMap="resultTeacherList">
 		select mem_no
 		     , mem_id
 		     , mem_pwd
@@ -154,19 +330,210 @@
 		 from tb_member t
 		 join tb_department d on (d.dept_code = t.dept_code)
          join tb_job j on (j.job_code = t.job_code)
-		where t.mem_no = #{memNo}
+		where t.dept_code != 'D0' 
+		order 
+		   by mem_no desc
 	</select>
 	
-	<select id="selectDept" resultMap="resultDept">
-		select dept_code
+	<select id="searchEmployeeListCount" resultType="_int">
+		select count(*)
+		  from tb_member
+		 where dept_code != 'D0'
+		<if test="deptCode!='all' and jobCode!='all'">
+			and job_code = #{jobCode}
+			and dept_code = #{deptCode}
+		</if>
+		<if test="deptCode=='all' and jobCode!='all'">
+			and job_code = #{jobCode}
+		</if>
+		<if test="deptCode!='all' and jobCode=='all'">
+			and dept_code = #{deptCode}
+		</if>
+		 <choose>
+		 	<when test="check1==true and check2==false">
+		 		and mem_resign_status = 'N'
+		 		and mem_name like '%'||#{keyword}||'%'
+		 	</when>
+		 	<when test="check1==false and check2==true">
+		 		and mem_resign_status = 'Y'
+		 		and mem_name like '%'||#{keyword}||'%'
+		 	</when>
+		 	<otherwise>
+		 		and mem_name like '%'||#{keyword}||'%'
+		 	</otherwise>
+		 </choose>
+	</select>
+	
+	<select id="SearchEmployeeList" resultMap="resultTeacherList">
+		select mem_no
+		     , mem_id
+		     , mem_pwd
+		     , mem_name
 		     , dept_name
-		  from tb_department
+		     , job_name
+		     , mem_phone
+		     , mem_businessnum
+		     , mem_email
+		     , mem_birth
+		     , mem_postal_code
+		     , mem_postal_ad
+		     , mem_postal_detail
+		     , mem_postal_refer
+		     , mem_enroll_date
+		     , mem_resign_date
+		     , mem_resign_status
+		     , mem_profile
+		 from tb_member t
+		 join tb_department d on (d.dept_code = t.dept_code)
+         join tb_job j on (j.job_code = t.job_code)
+		where t.dept_code != 'D0' 
+		<if test="deptCode!='all' and jobCode!='all'">
+			and t.job_code = #{jobCode}
+			and t.dept_code = #{deptCode}
+		</if>
+		<if test="deptCode=='all' and jobCode!='all'">
+			and t.job_code = #{jobCode}
+		</if>
+		<if test="deptCode!='all' and jobCode=='all'">
+			and t.dept_code = #{deptCode}
+		</if>
+		
+		<choose>
+		 	<when test="check1==true and check2==false">
+		 		and mem_resign_status = 'N'
+		 		and mem_name like '%'||#{keyword}||'%'
+		 	</when>
+		 	<when test="check1==false and check2==true">
+		 		and mem_resign_status = 'Y'
+		 		and mem_name like '%'||#{keyword}||'%'
+		 	</when>
+		 	<otherwise>
+		 		and mem_name like '%'||#{keyword}||'%'
+		 	</otherwise>
+		 </choose>
+		order 
+		   by mem_no desc
 	</select>
 	
-	<select id="selectJob" resultMap="resultJob">
-		select job_code
-		     , job_name
-		  from tb_job
+	<select id="ojtListCount" resultType="_int">
+		select count(*)
+		  from tb_ojt
 	</select>
+	
+	<select id="ojtList" resultMap="resultOjt">
+		select o.mem_no
+		     , m.mem_name
+		     , d.dept_name
+		     , j.job_name
+		     , ojt_date
+		     , ojt_status
+		     , m.mem_email
+		  from tb_ojt o  
+		  join tb_member m on (o.mem_no = m.mem_no)
+		  join tb_department d on (d.dept_code = m.dept_code)
+		  join tb_job j on (j.job_code = m.job_code)
+		 order
+		    by o.mem_no desc
+	</select>
+	
+	<select id="searchOjtListCount" resultType="_int">
+		select count(*)
+		  from tb_ojt o
+		  join tb_member m on (o.mem_no = m.mem_no)
+		 <choose>
+		 	<when test="check1==true and check2==false and check3==false">
+		 		where o.ojt_status = 'Y'
+		 		  and m.mem_name like '%'||#{keyword}||'%'
+		 	</when>
+		 	<when test="check1==false and check2==true and check3==false">
+		 		where o.ojt_status = 'N'
+		 		  and m.mem_name like '%'||#{keyword}||'%'
+		 	</when>
+		 	<when test="check1==false and check2==false and check3==true">
+		 		where o.ojt_status = 'W'
+		 		  and m.mem_name like '%'||#{keyword}||'%'
+		 	</when>
+		 	<when test="check1==true and check2==true and check3==false">
+		 		where (o.ojt_status = 'Y' or o.ojt_status = 'N')
+		 		  and m.mem_name like '%'||#{keyword}||'%'
+		 	</when>
+		 	<when test="check1==true and check2==false and check3==true">
+		 		where (o.ojt_status = 'Y' or o.ojt_status = 'W')
+		 		  and m.mem_name like '%'||#{keyword}||'%'
+		 	</when>
+		 	<when test="check1==false and check2==true and check3==true">
+		 		where (o.ojt_status = 'N' or o.ojt_status = 'W')
+		 		  and m.mem_name like '%'||#{keyword}||'%'
+		 	</when>
+		 	<otherwise>
+		 		where m.mem_name like '%'||#{keyword}||'%'
+		 	</otherwise>
+		 </choose>
+	</select>
+	
+	<select id="SearchOjtList" resultMap="resultOjt">
+		select o.mem_no
+		     , m.mem_name
+		     , d.dept_name
+		     , j.job_name
+		     , ojt_date
+		     , ojt_status
+		     , m.mem_email
+		  from tb_ojt o  
+		  join tb_member m on (o.mem_no = m.mem_no)
+		  join tb_department d on (d.dept_code = m.dept_code)
+		  join tb_job j on (j.job_code = m.job_code)
+		  <choose>
+		 	<when test="check1==true and check2==false and check3==false">
+		 		where o.ojt_status = 'Y'
+		 		  and m.mem_name like '%'||#{keyword}||'%'
+		 	</when>
+		 	<when test="check1==false and check2==true and check3==false">
+		 		where o.ojt_status = 'N'
+		 		  and m.mem_name like '%'||#{keyword}||'%'
+		 	</when>
+		 	<when test="check1==false and check2==false and check3==true">
+		 		where o.ojt_status = 'W'
+		 		  and m.mem_name like '%'||#{keyword}||'%'
+		 	</when>
+		 	<when test="check1==true and check2==true and check3==false">
+		 		where (o.ojt_status = 'Y' or o.ojt_status = 'N')
+		 		  and m.mem_name like '%'||#{keyword}||'%'
+		 	</when>
+		 	<when test="check1==true and check2==false and check3==true">
+		 		where (o.ojt_status = 'Y' or o.ojt_status = 'W')
+		 		  and m.mem_name like '%'||#{keyword}||'%'
+		 	</when>
+		 	<when test="check1==false and check2==true and check3==true">
+		 		where (o.ojt_status = 'N' or o.ojt_status = 'W')
+		 		  and m.mem_name like '%'||#{keyword}||'%'
+		 	</when>
+		 	<otherwise>
+		 		where m.mem_name like '%'||#{keyword}||'%'
+		 	</otherwise>
+		 </choose>
+		 order
+		    by o.mem_no desc
+	</select>
+	
+	<update id="updateOjtDate">
+		update tb_ojt
+		   set ojt_status = 'W',
+		       ojt_date = #{sendDate}
+		 where mem_no = #{memNo}
+	</update>
+	
+	<update id="completeOjt">
+		update tb_ojt
+		   set ojt_status = 'Y'
+		 where mem_no = #{memNo}
+	</update>
+	
+	<update id="cancelOjt">
+		update tb_ojt
+		   set ojt_status = 'N',
+		   	   ojt_date = null
+		 where mem_no = #{memNo}
+	</update>
 	
 </mapper>
