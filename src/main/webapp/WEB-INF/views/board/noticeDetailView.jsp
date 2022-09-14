@@ -10,7 +10,7 @@
 <link href="${pageContext.request.contextPath}/resources/css/sumin.css" rel="stylesheet" type="text/css">
 <link href="${pageContext.request.contextPath}/resources/css/board.css" rel="stylesheet" type="text/css">
 
-<title>Insert title here</title>
+<title>전사 공지 상세 조회</title>
 </head>
 <body>
 

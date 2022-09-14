@@ -36,7 +36,7 @@
 	            <div class="tableOption">
 	                <div class="btn_two_spacing">
 	                    <button id="importantNotice">공지등록</button><i class="fas fa-flag"></i>
-	                    <button id="delNotice">삭제</button><i class="fas fa-trash"></i>
+	                    <button id="importantNotice">공지해제</button><i class="fas fa-font-awesome"></i>
 	                </div>
 	                
 	            </div>
@@ -45,7 +45,7 @@
 	                <table class="board-content table" align="center" id="noticeList"> 
 	                    <thead>
 	                        <tr class="table_thead_border">
-	                            <th width="2%"><input type="checkbox"></th>
+	                            <th width="2%"><input type="checkbox" id="checkAll"></th>
 	                            <th width="5%">번호</th>
 	                            <th width="30%">제목</th>
 	                            <th width="7%">작성자</th>
@@ -63,7 +63,7 @@
 	                        	<c:when test="${ not empty topList }">
 	                        		<c:forEach var="tn" items="${topList}">
 				                        <tr style="background:rgb(250, 232, 232)">
-				                            <td><input type="checkbox"></td>
+				                            <td><input type="checkbox" id="checkNo${tn.boardNo}"></td>
 				                            <td class="no">${ tn.boardNo }</td>
 				                            <td>${ tn.boardTitle }</td>
 				                            <td>${ tn.boWriter }</td>
@@ -77,7 +77,7 @@
 	                        		<c:forEach var="n" items="${list}">
 	                        			<c:if test="${ n.boardTop eq 'N'}">
 					                        <tr>
-					                            <td><input type="checkbox"></td>
+					                            <td><input type="checkbox" id="checkNo${tn.boardNo}"></td>
 					                            <td class="no">${ n.boardNo }</td>
 					                            <td>${ n.boardTitle }</td>
 					                            <td>${ n.boWriter }</td>
@@ -87,11 +87,11 @@
 				                        </c:if>
 				                    </c:forEach>
 			                    </c:if>
-	                        
+	                        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!리스트 화면 검색기능, 여러개 클릭기능 구현(하다말았음) -->
 	                    </tbody>
 	                </table>
 	                <script>
-			           	$(function(){
+			           	$(function(){ // 상세화면
 			           		$("#noticeList>tbody>tr").click(function(){
 			           			// 선택된 tr의 자식요소 중에서 no라는 클래스를 가진 자식의 text값
 			           			location.href = "detail.no?no=" + $(this).children(".no").text(); 

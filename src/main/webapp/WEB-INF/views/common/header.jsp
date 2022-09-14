@@ -408,7 +408,7 @@
 	                                <a class="dropdown-item d-flex align-items-center" href="#">
 	                                    <div class="mr-3">
 	                                        <div class="icon-circle" style="border:1px solid">
-	                                            <i class="fas fa-comments"></i>
+	                                            <i class="fa fa-comments fa-regular"></i>
 	                                        </div>
 	                                    </div>
 	                                    <div>
@@ -420,7 +420,7 @@
 	                                <a class="dropdown-item d-flex align-items-center" href="#" style="background-color:rgb(243, 243, 243);">
 	                                    <div class="mr-3">
 	                                        <div class="icon-circle" style="border:1px solid">
-	                                            <i class="fas fa-comments"></i>
+	                                            <i class="fa fa-comments fa-regular"></i>
 	                                        </div>
 	                                    </div>
 	                                    <div>
