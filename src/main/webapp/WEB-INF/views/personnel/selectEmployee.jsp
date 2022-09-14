@@ -98,6 +98,19 @@
         	text-decoration: none;
         	color:black;
         }
+        
+        select {
+            width: 90px; 
+            height: 30px;
+            padding: 0em .5em; 
+            font-family: inherit;  
+            background: url(resources/images/selectimg.jpg) no-repeat 95% 50%;  
+            border: 1px solid #999; 
+            border-radius: 0px; 
+            -webkit-appearance: none; 
+            -moz-appearance: none;
+            appearance: none;
+        }
 </style>
 </head>
 <body>
@@ -110,10 +123,10 @@
                    
                     <div class="container-fluid su_contentArea" style="padding-left: 10px;">
                         <div class="su_content_header" style="margin-left: 10px;">
-                            <h3 class="su_sub_menu_name">강사조회</h3>
+                            <h3 class="su_sub_menu_name">직원조회</h3>
                             <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b;">
                             <br>
-                            <form action="search.te">
+                            <form action="search.em">
 	                            <div style="width: 1000px; height: 60px;" class="checks" align="right" >
 	                                <div style="float: right;  height: 70px;">
 	                                    <button type="submit" id="searchbtn" style="line-height: 0px; width: 70px;" class="btn su_btn_two su_btn_all">검색</button>
@@ -125,7 +138,18 @@
 	                                    <input type="checkbox" id="check2" name="check2" value=true checked> 
 	                                    <label for="check2" >퇴사</label>
 	                                    &nbsp;&nbsp;
-	                                    
+	                                    <select name="deptCode" id="select1">
+	                                    		<option value="all">전체</option>
+                                            	<c:forEach var="d" items="${ dlist }">
+                                            		<option value="${ d.deptCode }">${ d.deptName }</option>
+                                            	</c:forEach>
+                                        </select>
+                                        <select name="jobCode" id="select2">
+                                        		<option value="all">전체</option>
+                                                <c:forEach var="j" items="${ jlist }">
+                                            		<option value="${ j.jobCode }">${ j.jobName }</option>
+                                            	</c:forEach>
+                                        </select>
 		                                    <input type="text" style="line-height: 30px; text-align:center;	 width: 200px;" name="keyword" id="searchclick" placeholder="   이름검색" value="${ keyword }">
 		                                    <label for="searchclick"></label>
 	                                    
@@ -151,6 +175,22 @@
                						</script>
                					</c:if>
                				</c:if>
+               				
+               				<script>
+	                              	$(function(){
+	                        			$("option[value='${deptCode}']").attr("selected", true);
+	                        			
+	                        		})
+	                        		
+                            </script>
+                            <c:if test="${ not empty jobCode }">
+                            	<script>
+	                            	$(function(){
+	                            		$('#select2').val('${jobCode}')
+	                            	})
+                            		
+                            	</script>
+                            </c:if>
                             
                             <div style="clear: both; width: 650px; margin-left: 150px;" class="checks">
                                 <table width="100%" style="border-collapse: separate; border-spacing: 0 10px; ">
@@ -168,7 +208,7 @@
                                     <c:choose>
                                     	<c:when test="${ empty list }">
                                     		<tr>
-                                    			<th colspan="6">조회된 강사가 없습니다</th>
+                                    			<th colspan="6">조회된 직원이 없습니다</th>
                                     		</tr>
                                     	</c:when>
                                     	<c:otherwise>
@@ -178,7 +218,7 @@
 			                                            <input type="checkbox" id="c${ m.memNo }" class="userNo" value="${ m.memNo }"> 
 			                                            <label for="c${ m.memNo }" class="tblabel"></label>
 			                                        </th>
-			                                        <td align="center" onclick=teacherDe(${m.memNo})>${ m.memName }</td>
+			                                        <td align="center" onclick=empDe(${m.memNo})>${ m.memName }</td>
 			                                        <td align="center">${ m.deptCode }</td>
 			                                        <td align="center">${ m.jobCode }</td>
 			                                        <td align="center">${ m.memEnrollDate }</td>
@@ -205,8 +245,8 @@
                             
                             <script>
                             	
-                            	function teacherDe(i){
-                            		location.href="detail.te?no="+i
+                            	function empDe(i){
+                            		location.href="detail.em?no="+i
                             	}
                             	
                             	$('#c1').on('click',function(){
@@ -262,14 +302,14 @@
 			                            <c:if test="${ pi.currentPage ne 1 }">
 				                            <c:choose>
 				                            	<c:when test="${ empty searchck }">
-				                            		<a href="list.te?p=${ pi.currentPage-1 }">
+				                            		<a href="list.em?p=${ pi.currentPage-1 }">
 						                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
 						                                    &lt;
 						                                </span>
 					                                </a>
 				                            	</c:when>
 				                            	<c:otherwise>
-				                            		<a href="search.te?p=${ pi.currentPage-1 }&check1=${ check1 }&check2=${ check2 }&keyword=${ keyword }">
+				                            		<a href="search.em?p=${ pi.currentPage-1 }&check1=${ check1 }&check2=${ check2 }&keyword=${ keyword }&deptCode=${ deptCode }&jobCode=${ jobCode }">
 						                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
 						                                    &lt;
 						                                </span>
@@ -282,14 +322,14 @@
 				                            <c:when test="${ empty searchck }">
 					                            <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 					                            	<c:if test="${ p eq pi.currentPage }">
-					                            		<a href="list.te?p=${ p }">
+					                            		<a href="list.em?p=${ p }">
 							                                <span style="width: 40px; height: 40px; background-color: #5e7e9b; display: inline-block; border-radius: 15%;padding-top: 5px;">
 							                                    ${ p }
 							                                </span>
 					                                	</a>
 					                            	</c:if>
 					                            	<c:if test="${ p ne pi.currentPage }">
-					                            		<a href="list.te?p=${ p }">
+					                            		<a href="list.em?p=${ p }">
 							                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
 							                                    ${ p }
 							                                </span>
@@ -301,14 +341,14 @@
 											<c:otherwise>
 												<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 													<c:if test="${ p eq pi.currentPage }">
-														<a href="search.te?p=${ p }&check1=${ check1 }&check2=${ check2 }&keyword=${ keyword }">
+														<a href="search.em?p=${ p }&check1=${ check1 }&check2=${ check2 }&keyword=${ keyword }&deptCode=${ deptCode }&jobCode=${ jobCode }">
 							                                <span style="width: 40px; height: 40px; background-color: #5e7e9b; display: inline-block; border-radius: 15%;padding-top: 5px;">
 							                                    ${ p }
 							                                </span>
 					                                	</a>
 													</c:if>
 													<c:if test="${ p ne pi.currentPage }">
-														<a href="search.te?p=${ p }&check1=${ check1 }&check2=${ check2 }&keyword=${ keyword }">
+														<a href="search.em?p=${ p }&check1=${ check1 }&check2=${ check2 }&keyword=${ keyword }&deptCode=${ deptCode }&jobCode=${ jobCode }">
 							                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
 							                                    ${ p }
 							                                </span>
@@ -323,14 +363,14 @@
 							         	<c:if test="${ pi.currentPage ne pi.maxPage }">
 				                            <c:choose>
 				                            	<c:when test="${ empty searchck }">
-				                            		<a href="list.te?p=${ pi.currentPage+1 }">
+				                            		<a href="list.em?p=${ pi.currentPage+1 }">
 						                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
 						                                    &gt;
 						                                </span>
 					                                </a>
 				                            	</c:when>
 				                            	<c:otherwise>
-				                            		<a href="search.te?p=${ pi.currentPage+1 }&check1=${ check1 }&check2=${ check2 }&keyword=${ keyword }">
+				                            		<a href="search.em?p=${ pi.currentPage+1 }&check1=${ check1 }&check2=${ check2 }&keyword=${ keyword }&deptCode=${ deptCode }&jobCode=${ jobCode }">
 						                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
 						                                    &gt;
 						                                </span>

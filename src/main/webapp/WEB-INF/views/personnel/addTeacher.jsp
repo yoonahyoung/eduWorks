@@ -9,7 +9,7 @@
 <link href="resources/css/personnel.css" rel="stylesheet" type="text/css">
 <link href="resources/css/personnel-2.css" rel="stylesheet" type="text/css">
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<style type="text/css">
+<style>
 	select {
             width: 200px; 
             height: 30px;
@@ -34,13 +34,6 @@
         }
         th{width: 25%; height: 50px;}
         td{width: 75%; height: 50px;}
-        
-        .su_btn_border{
-	     background-color: aliceblue;
-	     border: 2px solid #5e7e9b;
-	     color: black;
-	   }
-	   
 </style>
 </head>
 <body>
@@ -55,7 +48,7 @@
                    
                     <div class="container-fluid su_contentArea" style="padding-left: 10px;">
                         <div class="su_content_header" style="margin-left: 10px;">
-                            <h3 class="su_sub_menu_name">강사 상세정보</h3>
+                            <h3 class="su_sub_menu_name">강사 등록하기</h3>
                             <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b;">
                             <br>
                             
@@ -64,18 +57,10 @@
                             	<button type="reset" id=fileReset></button>
                             </form>
                             
-                            <form action="personnelUpdate.me" method="post">
+                            <form action="personnelAdd.pe" method="post">
                             <div style="height: 200px; width: 1000px; " align="center">
-                            	<c:choose>
-                            		<c:when test="${ empty m.memProfile }">
-                            			<img id="Profile" name="Profile" src="resources/profile_images/defaultProfile.png" width="25%" height="100%" onclick="$('#profileImgFile').click();">
-                            		</c:when>
-                            		<c:otherwise>
-                            			<img id="Profile" name="Profile" src="${ m.memProfile }" width="25%" height="100% " onclick="$('#profileImgFile').click();">
-                            		</c:otherwise>
-                            	</c:choose>
-                                
-                            <input type="text" id="memProfile" name="memProfile" value="${ m.memProfile }" style="display: none;" >    
+                                <img id="Profile" name="Profile" src="resources/profile_images/defaultProfile.png" width="25%" height="100%" onclick="$('#profileImgFile').click();">
+                            	<input type="text" id="memProfile" name="memProfile" style="display: none;" >    
                             </div>
                             <br>
                             <div align='center'>
@@ -131,30 +116,30 @@
                             <br>
                             <div style="width: 850px; ">
                                 <table width="100%">
-                                <input type="hidden" name="memNo" id="memNo" value="${ m.memNo }">
+                                
                                     <tr>
                                         <th style="background-color: #e6e9ec;">이름</th>
                                         <td>
-                                            <input type="text" value="${ m.memName }" name="memName" style="width: 40%;">
+                                            <input type="text" name="memName" style="width: 40%;">
                                         </td>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">부서</th>
                                         <td>
                                             <select name="deptCode" id="select1">
-                                            	<c:forEach var="d" items="${ dlist }">
-                                            		<option value="${ d.deptCode }">${ d.deptName }</option>
-                                            	</c:forEach>
+                                            	
+                                            		<option value="D0">강사</option>
+                                            	
                                             </select>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">직급</th>
                                         <td>
-                                            <select name="jobCode" id="select2">
-                                                <c:forEach var="j" items="${ jlist }">
-                                            		<option value="${ j.jobCode }">${ j.jobName }</option>
-                                            	</c:forEach>
+                                            <select name="jobCode" id="select1">
+                                                
+                                            		<option value="J0">강사</option>
+                                            	
                                             </select>
 
                                         </td>
@@ -162,81 +147,53 @@
                                     <tr>
                                         <th style="background-color: #e6e9ec;">입사일</th>
                                         <td>
-                                            <input type="date" name="memEnrollDate" value="${ m.memEnrollDate }">  
+                                            <input type="date" name="memEnrollDate">  
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <th style="background-color: #e6e9ec;">퇴사일</th>
-                                        <c:choose>
-                                        	<c:when test="${ empty m.memResignDate }">
-                                        		<td>
-		                                            <input type="date" name="memResignDate">
-		                                        </td>
-                                        	</c:when>
-                                        	<c:otherwise>
-                                        		<td>
-		                                            <input type="date" name="memResignDate" value="${ m.memResignDate }">
-		                                        </td>
-                                        	</c:otherwise>
-                                        </c:choose>
-                                        
-                                    </tr>
+                                    
                                 </table>
-                                <script>
-	                                $(function(){
-	                                	console.log('${m.deptCode}')
-	                        			$("option[value='${m.deptCode}']").attr("selected", true);
-	                        			$('#select2').val('${m.jobCode}')
-	                        		})
-                                </script>
+                                
                                 <br>
                                 <table>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">아이디</th>
-                                        <td>&nbsp;<input type="text" name="memId" style="width: 70%;" value=${ m.memId }></td>
+                                        <td>&nbsp;<input type="text" name="memId" style="width: 70%;"></td>
+                                        <td style="display: none;">&nbsp;<input type="text" name="memPwd" value="1111" ></td>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">전화번호</th>
-                                        <td>&nbsp;<input type="text" name="memPhone" value="${ m.memPhone }" style="width: 70%;"></td>
+                                        <td>&nbsp;<input type="text" name="memPhone"  style="width: 70%;"></td>
+                                        <td style="display: none;">&nbsp;<input type="text" name="memBusinessnum"   value="1111"></td>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">이메일</th>
-                                        <td>&nbsp;<input type="text" name="memEmail" value="${ m.memEmail }" style="width: 70%;"></td>
+                                        <td>&nbsp;<input type="text" name="memEmail"  style="width: 70%;"></td>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">생년월일</th>
-                                        <td>&nbsp;<input type="date" name="memBirth" value="${ m.memBirth }"></td>
+                                        <td>&nbsp;<input type="date" name="memBirth" ></td>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">우편번호</th>
-                                        <td>&nbsp;<input type="text" id="sample6_postcode" name="memPostalCode" value="${ m.memPostalCode }" style="width: 40%;">&nbsp;&nbsp;<button type="button" class="btn su_btn_border" style="height: 30px; padding-left: 12; padding-right: 12; padding-top: 0; padding-bottom: 0;" onclick=address();>우편번호검색</button></td>
+                                        <td>&nbsp;<input type="text" id="sample6_postcode" name="memPostalCode" style="width: 40%;">&nbsp;&nbsp;<button type="button" class="btn su_btn_border" style="height: 30px; padding-left: 12; padding-right: 12; padding-top: 0; padding-bottom: 0;" onclick=address();>우편번호검색</button></td>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">주소</th>
                                         <td>
-                                        	&nbsp;<input type="text" id="sample6_address" name="memPostalAd" value="${ m.memPostalAd }" style="width: 70%;">
+                                        	&nbsp;<input type="text" id="sample6_address" name="memPostalAd"  style="width: 70%;">
                                         </td>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">상세주소</th>
                                         <td> 
-                                        	&nbsp;<input type="text" id="sample6_detailAddress" name="memPostalDetail" value="${ m.memPostalDetail }" style="width: 50%;">&nbsp;<input type="text" id="sample6_extraAddress" name="memPostalRefer" value="${ m.memPostalRefer }" style="width: 40%;">
+                                        	&nbsp;<input type="text" id="sample6_detailAddress" name="memPostalDetail"style="width: 50%;">&nbsp;<input type="text" id="sample6_extraAddress" name="memPostalRefer" value="${ m.memPostalRefer }" style="width: 40%;">
                                         </td>
                                     </tr>
                                 </table>
                             </div>
                             <br>
                             <div style="width: 1000px;" align="center">
-                                <button type="submit" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">수정하기</button>
-                                <c:choose>
-                                	<c:when test="${ empty m.memResignDate }">
-                                		<button type="button" onclick=resignTeacher(${m.memNo}) class="btn su_btn_border" id="submitBtn" data-toggle="modal" data-target="#noContent" style="width: 13%; height: 43px;">퇴사처리</button>
-                                	</c:when>
-                                	<c:otherwise>
-                                		<button type="button" onclick=returnTeacher(${m.memNo}) class="btn su_btn_border" id="submitBtn" data-toggle="modal" data-target="#noContent" style="width: 13%; height: 43px;">복직처리</button>
-                                	</c:otherwise>
-                                </c:choose>
-                                
+                                <button type="submit" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">등록하기</button>
                             </div>
                             </form>
                             
@@ -290,63 +247,6 @@
 	                            }
 							</script>
                             
-                            <script>
-                            	function resignTeacher(memNo){
-                            		$.ajax({
-                            			url:'resign.te',
-                            			method:'POST',
-                            			data:{'memNo':memNo},
-                            			success:function(result){
-                            				if(result=="success"){
-                            					alert('퇴사처리성공')
-                            					location.href="list.te"
-                            				}else{
-                            					alert('퇴사처리실패')
-                            					console.log('실패')
-                            				}
-                            			},error:function(){
-                            				alert('퇴사처리애러')
-                            				console.log('애러')
-                            			}
-                            		})
-                            	}
-                            	
-                            	function returnTeacher(memNo){
-                            		$.ajax({
-                            			url:'return.te',
-                            			method:'POST',
-                            			data:{'memNo':memNo},
-                            			success:function(result){
-                            				if(result=="success"){
-                            					alert('복직처리성공')
-                            					location.href="list.te"
-                            				}else{
-                            					alert('복직처리실패')
-                            					console.log('실패')
-                            				}
-                            			},error:function(){
-                            				alert('복직처리애러')
-                            				console.log('애러')
-                            			}
-                            		})
-                            	}
-                            </script>
-                            
-                            <br><br>
-                            <h3 class="su_sub_menu_name">비밀번호 초기화</h3>
-                            <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b;">
-                            <div>
-                                <table style="width: 60%;">
-                                    <tr>
-                                        <th style="background-color: #e6e9ec;">비밀번호 초기화</th>
-                                        <td>&nbsp;<input type="text" style="width: 70%;" value="1111"></td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <br>
-                            <div style="width: 1000px;" align="center">
-                                <button type="button" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">초기화</button>    
-                            </div>
                         </div>
                         
 
@@ -354,9 +254,9 @@
                         
                     </div>
                     
-                </div>	
+                </div>
 	
 	<jsp:include page="../common/footer.jsp" />
-	
+
 </body>
 </html>
