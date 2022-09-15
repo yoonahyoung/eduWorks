@@ -78,9 +78,7 @@ public class MailController {
 	 */
 	@RequestMapping("insertMail.ma")
 	public String insertMail(Mail m, MultipartFile[] upfile, HttpSession session, Model model) {
-		
-		System.out.println(upfile);
-		
+
 		// 회원 번호
 		// String memNo = ((Member)session.getAttribute("loginUser")).getMemNo();
 		
@@ -108,7 +106,7 @@ public class MailController {
 			ms.setSendMail(memEmail);
 			ms.setReceiveMail(m.getReceiverMem()); // 받는 사람 이메일(전체)
 			ms.setMailFolder(1);
-			
+
 			list.add(ms); // ArrayList<MailStatus>에 추가
 			
 			// ------------- 받은 메일 ------------
@@ -127,7 +125,6 @@ public class MailController {
 
 			}
 
-			
 			// ------------ 참조 메일 ------------
 			if( !m.getCcMem().equals("") ) { // 참조 이메일이 있는 경우
 				
@@ -151,7 +148,6 @@ public class MailController {
 			result2 = mService.insertMailStatus(list);
 
 		}
-
 
 		// 첨부파일 보내기 (한개 또는 여러개)
 		for (MultipartFile file : upfile) {

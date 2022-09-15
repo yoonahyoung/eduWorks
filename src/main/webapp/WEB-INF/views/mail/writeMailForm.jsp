@@ -40,6 +40,7 @@
 			<hr style="margin: 20px 0px 10px 0px;">
 
 			<script>
+			
 				let openWin;
 
 				function preView() {
@@ -137,8 +138,8 @@
 					</tr>
 					<tr>
 						<th><span>제목</span> <span class="send-check"> <input
-								type="checkbox" name="mailImportant"><label
-								for="mailTitle">&nbsp;&nbsp;중요!</label>
+								type="checkbox" name="mailType" id="mailType" value="1"><label
+								for="mailType">&nbsp;&nbsp;중요!</label>
 						</span></th>
 						<td colspan="2"><input type="text" name="mailTitle"
 							class="input-mail" id="title"></td>
@@ -165,6 +166,20 @@
 			</div>
 
 			<script>
+			
+			
+				// 메일 제목 글자수 초과인 경우 
+				$(function(){
+					$("#title").keyup(function(e){
+						let title = $(this).val();
+						if(title.length > 50){
+							alert("최대 50자까지 입력 가능합니다.");
+							$(this).val(title.substring(0,100));
+							
+							console.log(title.length);
+						}
+					})
+				})
 
 				// '파일 추가' 누를 때 실행하는 함수
 				$(function() {

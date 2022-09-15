@@ -34,6 +34,7 @@ public class Mail {
 	private String ccMem;
 	private String mailTitle;
 	private String mailContent;
+	private String mailType;
 	private String sendDate;
 	
 	

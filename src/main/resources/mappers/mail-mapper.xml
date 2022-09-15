@@ -13,6 +13,7 @@
 		    , cc_mem
 		    , mail_title
 		    , mail_content
+		    , mail_type
 		    , send_date
 		    )
 		 values
@@ -23,6 +24,12 @@
 		    , #{ccMem}
 		    , #{mailTitle}
 		    , #{mailContent}
+		   	<if test="mailType != null">
+		   	, 1
+		   	</if>
+		    <if test="mailType == null">
+		    , 2
+		    </if>
 		    , sysdate
 		    )
 	</insert>
