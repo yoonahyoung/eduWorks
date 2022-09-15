@@ -417,3 +417,38 @@ img{
     border:2px solid #5e7e9b;
     border-radius: 5px;
 }
+
+/*========== 메일 미리보기 ===============*/
+.preview-wrap {
+	top: 0;
+	bottom: 0;
+	margin: 0;
+	left: 0;
+	right: 0;
+}
+
+.preview-title {
+	border-bottom: 1px solid rgba(128, 128, 128, 0.144);
+	padding: 1em;
+	color: black;
+}
+
+#mail-preview {
+	margin: auto;
+	margin-top: 40px;
+}
+
+#mail-preview * {
+	font-size: 15px;
+}
+
+#preview-form {
+	width: 100%;
+	height: 500px;
+	resize: none;
+}
+
+.send-title, .send-title>span, .file-name{
+	text-align:left;
+	font-size: 16px;
+}

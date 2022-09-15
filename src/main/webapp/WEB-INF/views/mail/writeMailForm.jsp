@@ -27,7 +27,8 @@
 				<button type="submit" class="reply-btn" id="sendMail">
 					<i class="fas fa-location-arrow"></i>&nbsp;&nbsp;전송
 				</button>
-				<button type="button" class="sub-btn" onclick="preView();">
+				<button type="button" class="sub-btn" data-toggle="modal"
+						data-target="#mail-preview">
 					<i class="fas fa-desktop"></i>&nbsp;&nbsp;미리보기
 				</button>
 				<button type="button" class="sub-btn" id="propertyMail">
@@ -40,17 +41,8 @@
 			<hr style="margin: 20px 0px 10px 0px;">
 
 			<script>
-			
-				let openWin;
 
-				function preView() {
 
-					window.name = "insertMail";
-
-					openWin = window.open("mailPreView.html", "mailPreView",
-							"width=1000, height=1000, resizalbe=no");
-
-				}
 
 				//    function setChildText(){
 
@@ -166,8 +158,7 @@
 			</div>
 
 			<script>
-			
-			
+
 				// 메일 제목 글자수 초과인 경우 
 				$(function(){
 					$("#title").keyup(function(e){
@@ -321,7 +312,71 @@
 			</script>
 		</form>
 	</div>
-</div>
+	
+	<!-- =================== 메일 미리보기 모달 ======================= -->
+	<div class="modal" id="mail-preview">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content" style="height: 830px">
+
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h5 class="modal-title">
+						<b>미리보기</b>
+					</h5>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<!-- 해당 버튼 클릭시 모달과 연결해제 -->
+				</div>
+
+				<!-- Modal body -->
+				<form action="updateIndivAdd.ad" method="post">
+
+					<div class="modal-body" align="center">
+
+					<div class="form-group">
+						<div class="send-title" style="width: 16%;" >
+							<span>받는사람</span>
+						</div>
+						<div class="receive-person"></div>
+					</div>
+					
+					<div class="form-group">
+						<div class="send-title" style="width: 16%;">
+							<span>참조</span>
+						</div>
+						<div class="cc-person"></div>
+					</div>
+					
+					<div class="form-group">
+						<div class="send-title" style="width: 16%;">
+							<span>제목</span>
+						</div>
+						<div class="title"></div>
+					</div>
+					
+					<div class="form-group">
+						<div class="send-title" style="width: 16%;">
+							<span>첨부파일</span>
+						</div>
+						<div class="file-name">첨부파일이 없습니다.</div>
+					</div>
+					
+					<div>
+						<textarea id="preview-form" readonly></textarea>
+					</div>
+
+						<div style="margin-top: 10px;">
+							<button type="submit" class="addBtn"
+								style="background-color: slategray; color: white; border: none;">전송</button>
+							<button type="button" data-dismiss="modal" class="class addBtn">닫기</button>
+						</div>
+
+					</div>
+				</form>
+
+			</div>
+		</div>
+	</div>
+
 	<jsp:include page="../common/footer.jsp" />
 
 </body>
