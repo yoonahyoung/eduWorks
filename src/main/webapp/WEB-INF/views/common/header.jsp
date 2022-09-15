@@ -276,58 +276,63 @@
 	                
 	            </li>
 	            
-	            <li class="nav-item">
-	                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseten"
-	                    aria-expanded="true" aria-controls="collapseUtilities">
-	                    <i class="fas fa-regular fa-chalkboard-user"></i>
-	                    <span>강의 관리</span>
-	                </a>
-	                <div id="collapseten" class="collapse" aria-labelledby="headingUtilities"
-	                    data-parent="#accordionSidebar">
-	                    <div class="bg-white py-2 collapse-inner rounded">
-	                        <h6 class="collapse-header">강의 관리</h6>
-	                        <a class="collapse-item" href="appAllList.cl">강의 개설신청</a>
-	                        <a class="collapse-item" href="bookList.bk">교재관리</a>
-	                    </div>
-	                </div>
-	            </li>
+	            <c:if test="${ loginUser.deptCode eq 'D0' || loginUser.deptCode eq 'DN'}" >
+		            <li class="nav-item">
+		                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseten"
+		                    aria-expanded="true" aria-controls="collapseUtilities">
+		                    <i class="fas fa-regular fa-chalkboard-user"></i>
+		                    <span>강의 관리</span>
+		                </a>
+		                <div id="collapseten" class="collapse" aria-labelledby="headingUtilities"
+		                    data-parent="#accordionSidebar">
+		                    <div class="bg-white py-2 collapse-inner rounded">
+		                        <h6 class="collapse-header">강의 관리</h6>
+		                        <a class="collapse-item" href="appAllList.cl">강의 개설신청</a>
+		                        <a class="collapse-item" href="bookList.bk">교재관리</a>
+		                    </div>
+		                </div>
+		            </li>
+	            </c:if>
 	            
 	            <!-- Divider -->
 	            <hr class="sidebar-divider d-none d-md-block">
 	            
-	            <li class="nav-item">
-	                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseeig"
-	                    aria-expanded="true" aria-controls="collapseUtilities">
-						<i class="fas fa-light fa-network-wired"></i>
-	                    <span>행정 관리</span>
-	                </a>
-	                <div id="collapseeig" class="collapse" aria-labelledby="headingUtilities"
-	                    data-parent="#accordionSidebar">
-	                    <div class="bg-white py-2 collapse-inner rounded">
-	                        <h6 class="collapse-header">행정 관리</h6>
-	                        <a class="collapse-item" href="">강의 관리</a>
-	                        <a class="collapse-item" href="">학생 관리</a>
-	                    </div>
-	                </div>
-	            </li>
+	            <c:if test="${ loginUser.deptCode eq 'D2' || loginUser.deptCode eq 'DN'}" >
+		            <li class="nav-item">
+		                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseeig"
+		                    aria-expanded="true" aria-controls="collapseUtilities">
+							<i class="fas fa-light fa-network-wired"></i>
+		                    <span>행정 관리</span>
+		                </a>
+		                <div id="collapseeig" class="collapse" aria-labelledby="headingUtilities"
+		                    data-parent="#accordionSidebar">
+		                    <div class="bg-white py-2 collapse-inner rounded">
+		                        <h6 class="collapse-header">행정 관리</h6>
+		                        <a class="collapse-item" href="">강의 관리</a>
+		                        <a class="collapse-item" href="">학생 관리</a>
+		                    </div>
+		                </div>
+		            </li>
+	            </c:if>
 	            
-	            <li class="nav-item">
-	                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsenine"
-	                    aria-expanded="true" aria-controls="collapseUtilities">
-	                    <i class="fas fa-light fa-rectangle-ad"></i>
-	                    <span>홍보 관리</span>
-	                </a>
-	                <div id="collapsenine" class="collapse" aria-labelledby="headingUtilities"
-	                    data-parent="#accordionSidebar">
-	                    <div class="bg-white py-2 collapse-inner rounded">
-	                        <h6 class="collapse-header">홍보 관리</h6>
-	                        <a class="collapse-item" href="list.pr">홍보물 관리</a>
-	                        <a class="collapse-item" href="">상담 일정 관리</a>
-	                        <a class="collapse-item" href="">상담 내역 관리</a>
-	                    </div>
-	                </div>
-	            </li>
-	           
+	            <c:if test="${ loginUser.deptCode eq 'D3' || loginUser.deptCode eq 'DN'}" >
+		            <li class="nav-item">
+		                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsenine"
+		                    aria-expanded="true" aria-controls="collapseUtilities">
+		                    <i class="fas fa-light fa-rectangle-ad"></i>
+		                    <span>홍보 관리</span>
+		                </a>
+		                <div id="collapsenine" class="collapse" aria-labelledby="headingUtilities"
+		                    data-parent="#accordionSidebar">
+		                    <div class="bg-white py-2 collapse-inner rounded">
+		                        <h6 class="collapse-header">홍보 관리</h6>
+		                        <a class="collapse-item" href="list.pr">홍보물 관리</a>
+		                        <a class="collapse-item" href="">상담 일정 관리</a>
+		                        <a class="collapse-item" href="">상담 내역 관리</a>
+		                    </div>
+		                </div>
+		            </li>
+	           </c:if>
 	            <!-- Sidebar Toggler (Sidebar) -->
 	            <div class="text-center d-none d-md-inline">
 	                <button class="rounded-circle border-0" id="sidebarToggle"></button>
