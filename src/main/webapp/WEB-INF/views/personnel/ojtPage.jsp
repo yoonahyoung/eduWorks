@@ -496,7 +496,7 @@
                             		<input type="hidden" id="memNos" name="memNos" value="">
 	                                <table class="tb1">
 	                                    <tr>
-	                                        <td style="background-color: #e6e9ec; width: 100px;">&nbsp;제목</td>
+	                                        <td style="width: 100px;">&nbsp;제목</td>
 	                                        <td>&nbsp;<input type="text" style="width: 70%;" name="sendTitle" value="OJT일정 안내입니다."></td>
 	                                    </tr>
 	                                    <tr>
@@ -504,7 +504,7 @@
 	                                        <td colspan="2">&nbsp;<textarea name="sendContent" id="contents" cols="60" rows="10" style="resize: none;">OJT일정을 다음과같이 알려드립니다. 반드시 참석부탁드립니다.</textarea></td>
 	                                    </tr>
 	                                    <tr>
-	                                        <td style="background-color: #e6e9ec;">&nbsp;OJT 요일</td>
+	                                        <td >&nbsp;OJT 요일</td>
 	                                        <td>&nbsp;<input type="date" id="ojtdate" name="sendDate" required></td>
 	                                    </tr>
 	                                </table>

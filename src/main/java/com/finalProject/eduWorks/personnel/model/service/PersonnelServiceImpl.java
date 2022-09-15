@@ -12,7 +12,9 @@ import com.finalProject.eduWorks.member.model.vo.Department;
 import com.finalProject.eduWorks.member.model.vo.Job;
 import com.finalProject.eduWorks.member.model.vo.Member;
 import com.finalProject.eduWorks.personnel.model.dao.PersonnelDao;
+import com.finalProject.eduWorks.personnel.model.vo.Attendance;
 import com.finalProject.eduWorks.personnel.model.vo.Ojt;
+import com.finalProject.eduWorks.personnel.model.vo.SearchAt;
 
 @Service
 public class PersonnelServiceImpl implements PersonnelService {
@@ -156,5 +158,15 @@ public class PersonnelServiceImpl implements PersonnelService {
 	@Override
 	public int sendCancelOjtMail(ArrayList<String> list, HashMap m) {
 		return 0;
+	}
+
+	@Override
+	public int AtListCount(SearchAt s) {
+		return 0;
+	}
+
+	@Override
+	public ArrayList<Attendance> searchAtList(PageInfo pi,SearchAt s) {
+		return null;
 	}
 }

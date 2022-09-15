@@ -199,23 +199,26 @@
                                         
                                     </form>
                                 </div>
+                                <form action="search.at">
                                 <table width="100%" class="tb3">
                                     
                                     <tr>
                                         <th>조회부서</th>
                                         <td>
-                                            <select name="" id="select1">
-                                                <option value="">부서명1</option>
-                                                <option value="">부서명2</option>
+                                            <select name="deptCode" id="select1" name="select1">
+                                            	<c:forEach var="d" items="${ dlist }">
+                                            		<option value="${ d.deptCode }">${ d.deptName }</option>
+                                            	</c:forEach>
                                             </select>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>조회직급</th>
                                         <td>
-                                            <select name="" id="select2">
-                                                <option value="">부서명1</option>
-                                                <option value="">부서명2</option>
+                                            <select name="jobCode" id="select2" name="select2">
+                                            	<c:forEach var="j" items="${ jlist }">
+                                            		<option value="${ j.jobCode }">${ j.jobName }</option>
+                                            	</c:forEach>
                                             </select>
 
                                         </td>
@@ -223,35 +226,35 @@
                                     <tr>
                                         <th>기간설정</th>
                                         <td>
-                                            <input type="date" id="startDate" value="">&nbsp;~&nbsp;<input type="date" id="endDate" value=""> 
+                                            <input type="date" id="startDate" name="startDate" value="">&nbsp;~&nbsp;<input type="date" id="endDate" name="endDate" value=""> 
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>이름</th>
                                         <td>
-                                            <input type="text" placeholder="이름검색">
+                                            <input type="text" name="keyword" placeholder="이름검색">
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>근무상태</th>
                                         <td>
-                                            <input type="checkbox" id="cek1" style="zoom: 1.5; vertical-align: middle;" >
+                                            <input type="checkbox" id="cek1" name="check1" style="zoom: 1.5; vertical-align: middle;" checked>
                                             <label for="cek1" style="color:black; font-weight:500 ;">정상</label>
                                             &nbsp;
-                                            <input type="checkbox" id="cek2" style="zoom: 1.5; vertical-align: middle;" >
+                                            <input type="checkbox" id="cek2" name="check2" style="zoom: 1.5; vertical-align: middle;" checked>
                                             <label for="cek2" style="color:black; font-weight:500 ;">무단지각/조퇴</label>
                                             &nbsp;
-                                            <input type="checkbox" id="cek3" style="zoom: 1.5; vertical-align: middle;" >
+                                            <input type="checkbox" id="cek3" name="check3" style="zoom: 1.5; vertical-align: middle;" checked>
                                             <label for="cek3" style="color:black; font-weight:500 ;">무단결근</label>
                                         </td>
                                     </tr>
                                 </table>
                                 <br>
                                 <div style="width: 1000px;" align="center">
-                                    <button type="button" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">조회하기</button>
+                                    <button type="submit" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">조회하기</button>
                                     
                                 </div>
-                                
+                                </form>
                                 <script>
                                 	$(function(){
                                 		var timezoneOffset = new Date().getTimezoneOffset() * 60000;
@@ -259,6 +262,7 @@
                                 		var kr2 = new Date(Date.now() - timezoneOffset);
                                 		const lastdate = new Date(kr.setDate(2)).toISOString().substring(0, 10);
                                 	    const currentdate = kr2.toISOString().substring(0, 10);
+                                	    console.log(new Date(kr.setDate(2)).toISOString())
                                         console.log(currentdate)
                                         console.log(lastdate)
                                         $('#startDate').val(lastdate)
@@ -269,7 +273,7 @@
                                 <br><br>
                                 <h3 class="su_sub_menu_name">조회내역</h3>
                                 <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b;">
-                                <table width="100%" class="tb4">
+                                <table id="total" width="100%" class="tb4" style="display:''">
                                     <tr>
                                         <th>정상</th>
                                         <th>무단지각 / 무단조퇴</th>
@@ -283,6 +287,7 @@
                                     
                                 </table>
                                 <br>
+                           		<div id="select" style="display:'';">
                                 <table class="tb5" width="100%" style="border-collapse: separate; border-spacing: 0 10px; ">
                                     <tr>
                                         <th>날짜</th>
@@ -327,7 +332,7 @@
                                         <td align="center">18:00</td>
                                     </tr>
                                 </table>
-                            </div>
+                            
                             <br>
                             <div style="margin-top: 10px; width: 1000px; height: 40px;" align="center">
                                 <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
@@ -346,7 +351,7 @@
                                     &gt;
                                 </span>
                             </div>
-                            
+                            </div>
                             
                         </div>
                         

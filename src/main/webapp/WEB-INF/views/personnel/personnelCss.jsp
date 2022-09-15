@@ -6,6 +6,10 @@
 <head>
 <link href="resources/css/personnel.css" rel="stylesheet" type="text/css">
 <link href="resources/css/personnel-2.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="resources/personnelfiles/main.css">
+<script src="resources/personnelfiles/main.js"></script>
+<script src="resources/personnelfiles/locales-all.min.js"></script>
+
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>

@@ -536,4 +536,39 @@
 		 where mem_no = #{memNo}
 	</update>
 	
+	
+	
+	<select id="AtListCount">
+		select count(*)
+		  from tb_attendance a
+		  join tb_member m on (a.mem_no = m.mem_no)
+		 where m.deptCode = #{deptCode}
+		   and m.joCode = #{jobCode}
+		   and to_date(a.att_date) between to_date(#{startDate}) and to_date(#{endDate})
+		   and m.mem_name like '%'||#{keyword}||'%'
+		   <choose>
+		 	<when test="check1==true and check2==false and check3==false">
+		 		
+		 	</when>
+		 	<when test="check1==false and check2==true and check3==false">
+		 		
+		 	</when>
+		 	<when test="check1==false and check2==false and check3==true">
+		 		
+		 	</when>
+		 	<when test="check1==true and check2==true and check3==false">
+		 		
+		 	</when>
+		 	<when test="check1==true and check2==false and check3==true">
+		 		
+		 	</when>
+		 	<when test="check1==false and check2==true and check3==true">
+		 		
+		 	</when>
+		 	<otherwise>
+		 		
+		 	</otherwise>
+		 </choose>
+	</select>
+	
 </mapper>

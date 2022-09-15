@@ -7,9 +7,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 
-<link rel="stylesheet" href="main.css">
-<script src="main.js"></script>
-<script src="locales-all.min.js"></script>
+
 
 <style>
 	td, th{
@@ -177,11 +175,18 @@
                                     center: 'title',          
                                     right: 'dayGridMonth,next,nextYear' //timeGridWeek,timeGridDay,        
                                 },
-
+                                
                                 dateClick: function(info) {
-                                    alert('Date: ' + info.dateStr);
-                                    test1(info.dateStr);
+                                    let clickDate = new Date(info.dateStr)
+                                    let currentDate = new Date()
+                                    if(clickDate<currentDate){
+                                    	test1(info.dateStr);
+                                    }else{
+                                    	alert('유효한날짜를 선택하세요.')
+                                    }
                                 },
+	
+                                
 
                                 navLinks: true,
                                 navLinkDayClick: function(date,jsEvent){
@@ -211,6 +216,56 @@
                                 ]
                             });
                             calendar.render();
+                            $(".fc-prev-button").click(function() {
+                                var date = calendar.getDate();
+                                var month = new Date(date).getMonth()
+                                var year = new Date(date).getFullYear()
+                                if(month+1<10){
+                                    alert(year+'-0'+(month+1))
+                                }else{
+                                    alert(year+'-'+(month+1))
+                                }
+                            });
+                            $(".fc-next-button").click(function() {
+                                var date = calendar.getDate();
+                                var month = new Date(date).getMonth()
+                                var year = new Date(date).getFullYear()
+                                if(month+1<10){
+                                    alert(year+'-0'+(month+1))
+                                }else{
+                                    alert(year+'-'+(month+1))
+                                }
+                            });
+                            $(".fc-prevYear-button").click(function() {
+                                var date = calendar.getDate();
+                                var month = new Date(date).getMonth()
+                                var year = new Date(date).getFullYear()
+                                if(month+1<10){
+                                    alert(year+'-0'+(month+1))
+                                }else{
+                                    alert(year+'-'+(month+1))
+                                }
+                            });
+                            $(".fc-nextYear-button").click(function() {
+                                var date = calendar.getDate();
+                                var month = new Date(date).getMonth()
+                                var year = new Date(date).getFullYear()
+                                if(month+1<10){
+                                    alert(year+'-0'+(month+1))
+                                }else{
+                                    alert(year+'-'+(month+1))
+                                }
+                            });
+                            $(".fc-today-button").click(function() {
+                                var date = calendar.getDate();
+                                var month = new Date(date).getMonth()
+                                var year = new Date(date).getFullYear()
+                                if(month+1<10){
+                                    alert(year+'-0'+(month+1))
+                                }else{
+                                    alert(year+'-'+(month+1))
+                                }
+                            });
                         });
                             </script>
                         

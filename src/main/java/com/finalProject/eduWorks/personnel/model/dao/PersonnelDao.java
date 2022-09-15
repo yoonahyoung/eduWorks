@@ -12,6 +12,7 @@ import com.finalProject.eduWorks.member.model.vo.Department;
 import com.finalProject.eduWorks.member.model.vo.Job;
 import com.finalProject.eduWorks.member.model.vo.Member;
 import com.finalProject.eduWorks.personnel.model.vo.Ojt;
+import com.finalProject.eduWorks.personnel.model.vo.SearchAt;
 
 @Repository
 public class PersonnelDao {
@@ -154,5 +155,9 @@ public class PersonnelDao {
 			result = result*i;
 		}
 		return result;
+	}
+	
+	public int AtListCount(SqlSessionTemplate sqlSession,SearchAt s) {
+		return sqlSession.selectOne("personnelMapper.AtListCount", s);
 	}
 }

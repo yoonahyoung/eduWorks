@@ -7,7 +7,9 @@ import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.member.model.vo.Department;
 import com.finalProject.eduWorks.member.model.vo.Job;
 import com.finalProject.eduWorks.member.model.vo.Member;
+import com.finalProject.eduWorks.personnel.model.vo.Attendance;
 import com.finalProject.eduWorks.personnel.model.vo.Ojt;
+import com.finalProject.eduWorks.personnel.model.vo.SearchAt;
 
 public interface PersonnelService {
 	
@@ -68,4 +70,8 @@ public interface PersonnelService {
 	//ojt 취소및취소메일보내기
 	int cancelOjt(ArrayList<String> list);
 	int sendCancelOjtMail(ArrayList<String> list,HashMap m);
+	
+	//근태조회 상세검색
+	int AtListCount(SearchAt s);
+	ArrayList<Attendance> searchAtList(PageInfo pi,SearchAt s);
 }

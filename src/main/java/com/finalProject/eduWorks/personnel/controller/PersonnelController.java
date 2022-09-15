@@ -21,7 +21,9 @@ import com.finalProject.eduWorks.member.model.vo.Department;
 import com.finalProject.eduWorks.member.model.vo.Job;
 import com.finalProject.eduWorks.member.model.vo.Member;
 import com.finalProject.eduWorks.personnel.model.service.PersonnelService;
+import com.finalProject.eduWorks.personnel.model.vo.Attendance;
 import com.finalProject.eduWorks.personnel.model.vo.Ojt;
+import com.finalProject.eduWorks.personnel.model.vo.SearchAt;
 
 @Controller
 public class PersonnelController {
@@ -325,11 +327,28 @@ public class PersonnelController {
 	}
 	
 	@RequestMapping("select.at")
-	public String selectAttendance() {
+	public String selectAttendance(Model model) {
 		ArrayList<Department> dlist = pService.selectDept();
 		ArrayList<Job> jlist = pService.selectJob();
+		model.addAttribute("jlist", jlist);
+		model.addAttribute("dlist", dlist);
 		return "personnel/selectAttendance";
 	}
+	
+	@RequestMapping("search.at")
+	public String searchAttendance(SearchAt s,@RequestParam(value="p",defaultValue = "1")int currentPage,Model model) {
+		
+		//int listCount = 
+		//ArrayList<Attendance> list = 
+		
+		ArrayList<Department> dlist = pService.selectDept();
+		ArrayList<Job> jlist = pService.selectJob();
+		model.addAttribute("jlist", jlist);
+		model.addAttribute("dlist", dlist);
+		return "personnel/selectAttendance"; 
+	}
+	
+	
 	
 	@RequestMapping("test.at")
 	public String test() {
