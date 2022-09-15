@@ -28,6 +28,58 @@
 		 order
 		    by book_no desc
 	</select>
-
+	
+	<select id="bookDetailViewSelect" resultMap="bookResult">
+		select
+			   book_no		
+		     , bk_title
+		     , bk_content
+		     , mem_name
+		  from tb_book b 
+		  join tb_member m on (b.mem_no = m.mem_no)
+		 where book_no = #{bookNo}    
+	</select>
+	
+	<insert id="bookEnrollFormInsert">
+		insert
+		  into tb_book
+		  (
+		  	book_no
+		  , mem_no
+		  , bk_title
+		  , bk_content
+		  )
+		  values
+		  (
+		    seq_bkno.nextval
+		  , #{memNo}
+		  , #{bkTitle}
+		  , #{bkContent}
+		  )
+	</insert>
+	
+	<update id="bookUpdate">
+		update
+		       tb_book
+		   set bk_title = #{bkTitle}
+		     , bk_content = #{bkContent}
+		 where book_no = #{bookNo}  
+	</update>
+	
+	<delete id="deleteBook">
+		delete
+		  from tb_book
+		 where book_no = #{bookNo}
+	</delete>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 </mapper>
