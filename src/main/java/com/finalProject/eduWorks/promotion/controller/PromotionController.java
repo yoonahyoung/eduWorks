@@ -69,17 +69,21 @@ public class PromotionController {
 			at.setAtOriginName(upfile.getOriginalFilename());
 			at.setAtChangeName(saveFilePath);
 			int no = pService.selectLastNo();
-			at.setAtRefBNo(no);
+			at.setAtRefBno(no);
 			
 			result2 = pService.insertAt(at);
 		}
 		
 		if(result1 * result2 > 0) {
-			session.setAttribute("alertMsg", "홍보물 작성에 성공하였습니다.");
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "홍보물 작성 완료");
+			session.setAttribute("alertMsg", "홍보물 작성을 완료하였습니다.");
 			return "redirect:list.pr";
 		} else {
-			//session.setAttribute("alertMsg", "수정 실패");
-			return "redirect:list.pr?ppage=2";
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "홍보물 작성 실패");
+			session.setAttribute("alertMsg", "홍보물 작성을 실패하였습니다.");
+			return "redirect:list.pr";
 		}
 		
 	}
@@ -189,13 +193,13 @@ public class PromotionController {
 				
 				at.setAtOriginName(reupfile.getOriginalFilename());
 				at.setAtChangeName(saveFilePath);
-				at.setAtRefBNo(p.getPromoNo());
+				at.setAtRefBno(p.getPromoNo());
 				
 				result2 = pService.updateAt(at);
 			} else {	// 기존 첨부파일이 없었을 경우
 				at.setAtOriginName(reupfile.getOriginalFilename());
 				at.setAtChangeName(saveFilePath);
-				at.setAtRefBNo(p.getPromoNo());
+				at.setAtRefBno(p.getPromoNo());
 				result2 = pService.insertAt(at);
 			}
 			
@@ -206,10 +210,14 @@ public class PromotionController {
 		int result1 = pService.updatePromo(p);
 		
 		if(result1 * result2 > 0) {
-			session.setAttribute("alertMsg", "홍보물 수정에 성공하였습니다.");
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "홍보물 수정 완료");
+			session.setAttribute("alertMsg", "홍보물 수정을 완료하였습니다.");
 			return "redirect:detail.pr?no=" + p.getPromoNo();
 		} else {
-			//session.setAttribute("alertMsg", "수정 실패");
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "홍보물 수정 실패");
+			session.setAttribute("alertMsg", "홍보물 수정을 실패하였습니다.");
 			return "redirect:list.pr";
 		}
 	}
@@ -235,9 +243,14 @@ public class PromotionController {
 		int result1 = pService.deletePromo(aNo);
 		
 		if(result1 * result2 > 0) {
-			session.setAttribute("alertMsg", "홍보물 삭제에 성공하였습니다.");
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "홍보물 삭제 완료");
+			session.setAttribute("alertMsg", "홍보물 삭제를 완료하였습니다.");
 			return "redirect:list.pr";
 		} else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "홍보물 삭제 실패");
+			session.setAttribute("alertMsg", "홍보물 삭제를 실패하였습니다.");
 			return "fail";
 		}
 	}
@@ -261,9 +274,14 @@ public class PromotionController {
 		int result1 = pService.deletePromo(checkCnt);
 		
 		if(result1 * result2 > 0) {
-			session.setAttribute("alertMsg", "홍보물 삭제에 성공하였습니다.");
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "홍보물 삭제 완료");
+			session.setAttribute("alertMsg", "홍보물 삭제를 완료하였습니다.");
 			return "success";
 		} else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "홍보물 삭제 실패");
+			session.setAttribute("alertMsg", "홍보물 삭제를 실패하였습니다.");
 			return "fail";
 		}
 		

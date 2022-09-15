@@ -1,13 +1,17 @@
 package com.finalProject.eduWorks.mail.model.service;
 
+import java.util.ArrayList;
+
+import com.finalProject.eduWorks.common.model.vo.Attachment;
 import com.finalProject.eduWorks.mail.model.vo.Mail;
 import com.finalProject.eduWorks.mail.model.vo.MailStatus;
 
 public interface MailService {
 
 	// 1. 메일 작성 (임시 보관 포함)
-	int insertMail(Mail m);
-	int insertMailStatus(MailStatus ms);
+	int insertMail(Mail m); // 메일 보내기
+	int insertMailStatus(ArrayList<MailStatus> list); // 메일 상태 보내기
+	int insertAttachment(ArrayList<Attachment> atList); // 첨부파일 보내기
 	
 	// 1_2. 메일 답장
 //	int replyMail(Mail m);

@@ -286,7 +286,7 @@
 		     , at_change_name = #{atChangeName}
 		     , at_upload_date = sysdate
 		 where at_category = 4
-		   and at_ref_bno = #{atRefBNo}
+		   and at_ref_bno = #{atRefBno}
 	</update>
 	
 	<insert id="insertPromo">
@@ -329,16 +329,14 @@
 		  , at_category
 		  , at_origin_name
 		  , at_change_name
-		  , at_path
 		  )
 		  values
 		  (
 		    seq_atno.nextval
-		  , #{atRefBNo}
+		  , #{atRefBno}
 		  , 4
 		  , #{atOriginName}
 		  , #{atChangeName}
-		  , '5'
 		  )
 	</insert>
   
