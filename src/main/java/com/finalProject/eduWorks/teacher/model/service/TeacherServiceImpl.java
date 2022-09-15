@@ -46,5 +46,25 @@ public class TeacherServiceImpl implements TeacherService{
 		return tDao.bookEnrollFormInsert(sqlSession, t);
 	}
 
+	@Override
+	public Book bookDetailViewSelect(int bookNo) {
+		return tDao.bookDetailViewSelect(sqlSession, bookNo);
+	}
+
+	@Override
+	public int bookEnrollFormInsert(Book b) {
+		return tDao.bookEnrollFormInsert(sqlSession, b);
+	}
+
+	@Override
+	public int bookUpdate(Book b) {
+		return tDao.bookUpdate(sqlSession, b);
+	}
+
+	@Override
+	public int deleteBook(int bookNo) {
+		return tDao.deleteBook(sqlSession, bookNo);
+	}
+
 
 }

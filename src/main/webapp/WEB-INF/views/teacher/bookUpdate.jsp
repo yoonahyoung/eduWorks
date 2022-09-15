@@ -25,19 +25,25 @@
                 
                                 <h2 class="su_sub_menu_name" style="display: inline;">교재 수정</h2>
                                 
-                                <button class="btn" id="n-btn-border" type="button" onclick="history.back();">목록으로</button>
+                                <button class="btn gogo" id="n-btn-border" type="button">목록가기</button>
                                 <hr class="hr_line">
+                               	
+                                <script>
+									$(".gogo").click(function(){
+										location.href = 'bookList.bk';
+									})
+								</script>
+							   
                 
-                
-                                <form action="" method="post">
+                                <form action="bookUpdate.bk" method="post">
                                     <div class="su_content_body">
-                    
+                    				<input type="hidden" name="bookNo" value="${ b.bookNo }">
                                         <table id="eventForm">
                                             <tr>
                                                 <td width="5%;"><span class="fas fa-star-of-life fontRed">&nbsp;</span></td>
                                                 <td><span>&nbsp;교재명</span></td>
                                                 <td>
-                                                &ensp; &ensp;<input type="text" name="eventTitle" value="자바의 정석" style="width:300px;" required>
+                                                &ensp; &ensp;<input type="text" name="bkTitle" value="${ b.bkTitle }" style="width:300px;" required>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -49,7 +55,7 @@
                                         
                                         <!-- 서머노트로 내용 작성 -->
                                         <div class="summerArea">
-                                            <textarea id="summernote" name="editordata">이거슨 내용이무니다</textarea>
+                                            <textarea id="summernote" name="bkContent">${ b.bkContent }</textarea>
                                         </div>
                 
                                         <script>
@@ -89,17 +95,26 @@
                                         <br><br>
                 
                                         <div class="su_btn_two_center">
-                                            <button type="button" class="n-btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">수정완료</button>
-                                            <button type="reset" class="n-btn su_btn_two su_btn_border">취소</button>
+                                            <button type="submit" class="n-btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">수정하기</button>
+                                            <button type="button" id="cen" class="n-btn su_btn_two su_btn_border">취소</button>
                                         </div>
                 
+                						<script>
+									    	$(function(){
+									    		$("#cen").click(function(){
+									    			location.href = 'bookDetailView.bk?no=' + ${ b.bookNo}; 
+									    		})
+									    		
+									    	})
+									    </script>
                                         <!-- 필수사항 입력 안했을 때 모달창 -->
+                                        <!-- 
                                         <div class="modal" id="noContent" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered cascading-modal modal-avatar" role="document">
-                                                <!--Content-->
+                                              
                                                 <div class="modal-content modal_alert">
                                                     
-                                                    <!--Body-->
+                                                    
                                                     <div class="modal-body text-center modal_alert_child">
                                                         <div>
                                         
@@ -113,7 +128,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                
+                					      -->
                 
                 
                                         <script>

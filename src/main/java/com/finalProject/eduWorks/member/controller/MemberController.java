@@ -35,6 +35,7 @@ public class MemberController {
 			}
 			System.out.println(loginUser.getJobCode());
 			System.out.println(loginUser.getJobName());
+			System.out.println(loginUser.getDeptCode());
 			session.setAttribute("loginUser", loginUser);
 			mv.setViewName("main");
 			return mv;
@@ -53,5 +54,23 @@ public class MemberController {
 		
 		return "member/loginForm";
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 		
 }

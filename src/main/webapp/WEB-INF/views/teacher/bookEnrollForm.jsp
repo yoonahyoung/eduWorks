@@ -31,15 +31,15 @@
                  <hr class="hr_line">
  
  
-                 <form action="" method="post">
+                 <form action="bookInsert.bk" method="post">
                      <div class="su_content_body">
-     
+     					 <input type="hidden" name="memNo" value="${ loginUser.memNo }">
                          <table id="eventForm">
                              <tr>
                                  <td width="5%;"><span class="fas fa-star-of-life fontRed">&nbsp;</span></td>
                                  <td><span>&nbsp;교재명</span></td>
                                  <td>
-                                 &ensp; &ensp;<input type="text" name="eventTitle" placeholder="교재명 입력" style="width:300px;" required>
+                                 &ensp; &ensp;<input type="text" name="bkTitle" placeholder="교재명 입력" style="width:300px;" required>
                                  </td>
                              </tr>
                              <tr>
@@ -51,7 +51,7 @@
                          
                          <!-- 서머노트로 내용 작성 -->
                          <div class="summerArea">
-                             <textarea id="summernote" name="editordata"></textarea>
+                             <textarea id="summernote" name="bkContent" required></textarea>
                          </div>
  
                          <script>
@@ -91,8 +91,8 @@
                          <br><br>
  
                          <div class="su_btn_two_center">
-                             <button type="button" class="n-btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">등록</button>
-                             <button type="button" class="n-btn su_btn_two su_btn_border">취소</button>
+                             <button type="submit" class="n-btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">등록</button>
+                             <button type="reset" class="n-btn su_btn_two su_btn_border">취소</button>
                          </div>
  
                          <!-- 필수사항 입력 안했을 때 모달창 -->

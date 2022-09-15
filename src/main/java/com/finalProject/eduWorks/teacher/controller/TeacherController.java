@@ -77,24 +77,107 @@ public class TeacherController {
 		return mv;
 	}
 	
-	// (강사) 교재 등록
+	// (강사) 교재등록페이지
 	@RequestMapping("bookEnrollForm.bk")
-	public ModelAndView bookEnrollFormInsert(ModelAndView mv) {
-		mv.setViewName("teacher/appLectureEnroll");
-		return mv;
+	public String BookEnroll() {
+		return "teacher/bookEnrollForm";
+	}
+	
+	// (강사) 교재 등록
+	@RequestMapping("bookInsert.bk")
+	public String bookEnrollFormInsert(Book b, HttpSession session) {
+		int result = tService.bookEnrollFormInsert(b);
+		
+		if(result > 0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "교재등록 완료");
+			session.setAttribute("alertMsg", "교재등록을 완료하였습니다.");
+			return "redirect:bookList.bk";
+		}else {
+			session.setAttribute("errorMsg", "교재등록 실패.");
+			return "redierct:/";
+		}
 	}
 	
 	// (강사) 교재 상세페이지
 	@RequestMapping("bookDetailView.bk")
-	public ModelAndView bookDetailViewSelect(ModelAndView mv) {
-		mv.setViewName("teacher/bookDetailView");
+	public ModelAndView bookDetailViewSelect(int no, ModelAndView mv, HttpSession session) {
+		
+		Book b = tService.bookDetailViewSelect(no);
+		
+		if(b != null) {
+			mv.addObject("b", b).setViewName("teacher/bookDetailView");
+			System.out.println(b);
+		}else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "조회 실페");
+			session.setAttribute("alertMsg", "페이지 조회를 실패하였습니다.");
+			mv.setViewName("teacher/bookList");
+		}
+		return mv;
+		
+	}
+	// (강사) 교재 수정 페이지 이동
+	@RequestMapping("bookUpdateForm.bk")
+	public ModelAndView bookUpdateForm(int no, ModelAndView mv) {
+		mv.addObject("b", tService.bookDetailViewSelect(no)).setViewName("teacher/bookUpdate");
+		System.out.println(no);
+		System.out.println(tService.bookDetailViewSelect(no));
 		return mv;
 	}
 	
 	// (강사) 교재 수정
 	@RequestMapping("bookUpdate.bk")
-	public ModelAndView bookUpdateForm(ModelAndView mv) {
-		mv.setViewName("teacher/bookUpdate");
-		return mv;
+	public String bookUpdate(Book b, HttpSession session) {
+		
+		int result = tService.bookUpdate(b);
+			
+		if(result > 0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "수정 성공");
+			session.setAttribute("alertMsg", "교재 수정을 성공하였습니다.");
+			return "redirect:bookDetailView.bk?no=" + b.getBookNo();
+		}else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "수정 실페");
+			session.setAttribute("alertMsg", "교재 수정을 실패하였습니다.");
+			return "redirect:bookDetailView.bk?no=" + b.getBookNo();
+		}
 	}
+	
+	// (강사) 교재 삭제
+	@RequestMapping("bookDelete.bk")
+	public String deletBook(int no, HttpSession session) {
+		
+		int result = tService.deleteBook(no);
+		
+		if(result > 0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "삭제 성공");
+			session.setAttribute("alertMsg", "교재 삭제를 성공하였습니다.");
+			return "redirect:bookList.bk";
+		}else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "삭제 실페");
+			session.setAttribute("alertMsg", "교재 삭제를 실패하였습니다.");
+			return "redirect:bookDetailView.bk?no=" + no;
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

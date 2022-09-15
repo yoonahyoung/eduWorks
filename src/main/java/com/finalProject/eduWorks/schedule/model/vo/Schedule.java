@@ -15,7 +15,7 @@ public class Schedule {
 	
 	private int scheNo;
 	private String scheTitle;
-	private String shceWriter;
+	private String scheWriter;
 	private String scheStartDate;
 	private String scheEndDate;
 	private String scheAll;
@@ -29,5 +29,7 @@ public class Schedule {
 	private String scheCreateDate;
 	private String scheModifyDate;
 	private String scheStatus;
+	
+	private Mycal Mycal;
 
 }

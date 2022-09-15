@@ -16,4 +16,11 @@ public interface TeacherService {
 	
 	int bookEnrollFormInsert(Teacher t);
 
+	Book bookDetailViewSelect(int bookNo);
+	
+	int bookEnrollFormInsert(Book b);
+	
+	int bookUpdate(Book b);
+	
+	int deleteBook(int bookNo);
 }

@@ -85,11 +85,69 @@
 		  )
 	</insert>
 	
+	<select id="selectAdminListCount" resultType="_int">
+		select
+		       count(*)
+		  from tb_class
+		 where class_status = 'Y'
+		   and class_approval = 2
+	</select>
 	
+	<select id="adminLectureList" resultMap="teacherResult">
+		select
+		       class_no
+		     , class_title
+		     , class_content
+		     , class_objective
+		     , class_subject
+		     , class_student
+		     , class_start_date
+		     , class_end_date
+		     , c.mem_no
+		     , class_approval
+		     , class_fee
+		     , class_signup_date
+		     , mem_name
+		  from tb_class c
+		  join tb_member m on(c.mem_no = m.mem_no)
+		 where class_status = 'Y'
+		   and class_approval = 2
+         order
+            by class_no desc
+	</select>
 	
+	<select id="selectAppListCount" resultType="_int">
+		select
+		       count(*)
+		  from tb_class
+		 where class_status = 'N'
+		   and class_approval = 1 
+		    or class_approval = 3
+	</select>
 	
-	
-	
+	<select id="adminAppLectureList" resultMap="teacherResult">
+		select
+		       class_no
+		     , class_title
+		     , class_content
+		     , class_objective
+		     , class_subject
+		     , class_student
+		     , class_start_date
+		     , class_end_date
+		     , c.mem_no
+		     , class_approval
+		     , class_fee
+		     , class_signup_date
+		     , mem_name
+		  from tb_class c
+		  join tb_member m on(c.mem_no = m.mem_no)
+		 where class_status = 'N'
+		   and class_approval = 1 
+		    or class_approval = 3
+         order
+            by class_no desc
+	</select>
 	
 	
 	
