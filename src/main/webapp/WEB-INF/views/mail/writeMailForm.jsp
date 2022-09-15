@@ -165,76 +165,7 @@
 			</div>
 
 			<script>
-			
-			/* ======= 메일 보내기 ajax ========= 
-			$(function(){
-				$("#sendMail").click(function(){
-					
-					let receive = [];
-					let receiverMem = $('input[name=receiverMem]').val();
-					if(receiverMem.contains(",")){
-						
-						let split = receiverMem.split(",");
-						console.log(split);
-						$(split).each(function(){
-							$.ajax({
-								url : "insertMail.ma",
-								data : {
-									
-								}
-							})
-						})
-						
-						// 받는 사람이 여러명인 경우
-						$.ajax({
-							url:"insertMail.ma",
-							data : {
-								memNo : ${loginUser.memNo},
-								receiverMem : receiverMem,
-								ccMem : $('input[name=ccMem]').val(),
-								mailTitle : $('input[name=title]').val(),
-								upfile : $('input[name=upfile]').val(),
-								mailContent : $('input[name=mailContent]').val()
-							},
-							success : function(result){
-								console.log("메일 전송 성공");
-							},
-							error : function(){
-								console.log("실패");	
-							}
-						})
-						
-						
-					} else {
-						// 받는 사람이 한명인 경우
-					
-						$.ajax({
-							url: "insertMail.ma",
-							data : {
-								memNo : ${loginUser.memNo},
-								receiverMem : receiverMem,
-								ccMem : $('input[name=ccMem]').val(),
-								mailTitle : $('input[name=title]').val(),
-								upfile : $('input[name=upfile]').val(),
-								mailContent : $('input[name=mailContent]').val()
-							},
-							success : function(result){
-								console.log("메일 전송 성공");
-							},
-							error : function(){
-								console.log("실패");	
-							}
-						})
-					}
-				})
-				
-			})
-			*/
-			
-			
-			
-			
-			
+
 				// '파일 추가' 누를 때 실행하는 함수
 				$(function() {
 					$('#btn-upload').click(function(e) {
