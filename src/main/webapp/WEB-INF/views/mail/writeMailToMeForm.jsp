@@ -48,7 +48,7 @@
 								type="checkbox" name="mailTitle"><label for="mailTitle">&nbsp;&nbsp;중요!</label>
 						</span></th>
 						<td colspan="2"><input type="text" name="title"
-							class="mail-title" id="title"></td>
+							class="mail-Metitle" id="title"></td>
 					</tr>
 					<tr>
 						<th>첨부파일</th>

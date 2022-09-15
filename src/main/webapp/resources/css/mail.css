@@ -259,6 +259,7 @@ table{
     white-space: nowrap;
 } 
 .mail-title{width:70%;}
+.mail-Metitle{width:100%;}
 .mail-sendtime{width:15%; font-size:12px;}
 
 .setup-tag{

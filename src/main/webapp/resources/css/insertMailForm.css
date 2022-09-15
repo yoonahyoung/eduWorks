@@ -316,6 +316,8 @@ img{
     color:white;
 }
 
+.mail-Metitle{width:100%;}
+
 /* ========== 첨부파일 ========== */
 #upfile{
 	display: none;

@@ -10,6 +10,9 @@
 <link
 	href="${pageContext.request.contextPath}/resources/css/insertMailForm.css"
 	rel="stylesheet" type="text/css">
+<link
+	href="${pageContext.request.contextPath}/resources/css/mail.css"
+	rel="stylesheet" type="text/css">
 </head>
 <body>
 
