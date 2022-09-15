@@ -2,21 +2,222 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="scheduleMapper">
 
-	<resultMap id="addressResult" type="Address">
-		<result column="add_per_no" property="addPerNo" />
+	<resultMap id="memberResult" type="Member">
 		<result column="mem_no" property="memNo" />
-		<result column="add_dept" property="addDept" />
-		<result column="add_job" property="addJob" />
+		<result column="mem_name" property="memName" />
+		<result column="dept_code" property="deptCode" />
+		<result column="job_code" property="jobCode" />
+		<result column="job_name" property="jobName" />
+		<result column="mem_profile" property="memProfile" />
 	</resultMap>
 	
-	<select id="selectAddrList" resultMap="addressResult">
-		select
-			   add_per_no
-			 , mem_no
-			 , add_name
-			 , add_dept
-			 , add_job
-		  from tb_address
+	<resultMap id="mycalResult" type="Mycal">
+		<result column="mycal_no" property="mycalNo" />
+		<result column="mem_no" property="memNo" />
+		<result column="mycal_name" property="mycalName" />
+		<result column="mycal_color" property="mycalColor" />
+	</resultMap>
+	
+	<resultMap id="scheduleResult" type="Schedule">
+		<result column="sche_no" property="scheNo" />
+		<result column="sche_title" property="scheTitle" />
+		<result column="sche_writer" property="scheWriter" />
+		<result column="sche_start_date" property="scheStartDate" />
+		<result column="sche_end_date" property="scheEndDate" />
+		<result column="sche_all" property="scheAll" />
+		<result column="sche_cmpy" property="scheCmpy" />
+		<result column="sche_open" property="scheOpen" />
+		<result column="mycal_no" property="mycalNo" />
+		<result column="sche_atnd_no" property="scheAtndNo" />
+		<result column="sche_atnd_list" property="scheAtndNo" />
+		<result column="sche_place" property="schePlace" />
+		<result column="sche_content" property="scheContent" />
+		<result column="sche_create_date" property="scheCreateDate" />
+		<result column="sche_modify_date" property="scheModifyDate" />
+		<result column="sche_status" property="scheStatus" />
+		<collection property="mycal" resultMap="mycalResult" />
+	</resultMap>
+	
+	<select id="selectScheList" resultMap="scheduleResult">
+		select sche_no
+			 , sche_title
+			 , sche_writer
+			 , sche_start_date
+			 , sche_end_date
+			 , sche_all
+			 , sche_cmpy
+			 , sche_open
+			 , mycal_no
+			 , m.mycal_color
+			 , sche_atnd_no
+			 , sche_atnd_list
+			 , sche_place
+			 , sche_content
+			 , sche_create_date
+			 , sche_modify_date
+			 , sche_status
+		  from tb_schedule
+		  join tb_mycal m using (mycal_no)
+		 where sche_writer = #{memNo}
+		   and sche_status = 'Y'
+		 union
+		select sche_no
+			 , sche_title
+			 , sche_writer
+			 , sche_start_date
+			 , sche_end_date
+			 , sche_all
+			 , sche_cmpy
+			 , sche_open
+			 , mycal_no
+			 , m.mycal_color
+			 , sche_atnd_no
+			 , sche_atnd_list
+			 , sche_place
+			 , sche_content
+			 , sche_create_date
+			 , sche_modify_date
+			 , sche_status
+		  from tb_schedule
+		  join tb_mycal m using (mycal_no)
+		 where sche_cmpy = 'Y'
+		   and sche_status = 'Y'
+		 union
+		select sche_no
+			 , sche_title
+			 , sche_writer
+			 , sche_start_date
+			 , sche_end_date
+			 , sche_all
+			 , sche_cmpy
+			 , sche_open
+			 , mycal_no
+			 , m.mycal_color
+			 , sche_atnd_no
+			 , sche_atnd_list
+			 , sche_place
+			 , sche_content
+			 , sche_create_date
+			 , sche_modify_date
+			 , sche_status
+		  from tb_schedule
+		  join tb_mycal m using (mycal_no)
+		 where sche_status = 'Y'
+		   and sche_atnd_no like '%' || #{memNo} || '%'
 	</select>
+	
+	<select id="selectMemberList" resultMap="memberResult">
+		select mem_no
+		     , mem_name
+		     , job_code
+		     , dept_code
+		  from tb_member
+		 order
+		    by mem_no
+	</select>
+	
+	<select id="selectMember" resultMap="memberResult">
+		select mem_no
+		     , mem_name
+		     , job_code
+		     , dept_code
+		  from tb_member
+		 where mem_no = #{memNo}
+	</select>
+	
+	<select id="selectMycalList" resultMap="mycalResult">
+		select mycal_no
+			 , mycal_name
+			 , mycal_color
+		  from tb_mycal
+		 where mycal_status = 'Y'
+		   and mem_no = #{memNo}
+		 order
+		    by mycal_no
+	</select>
+	
+	<insert id="insertMycal">
+		insert
+		  into tb_mycal
+		  (
+		    mycal_no
+		  , mem_no
+		  , mycal_name
+		  )
+		  values
+		  (
+		    seq_myno.nextval
+		  , #{memNo}
+		  , #{mycalName}
+		  )
+	</insert>
+	
+	<update id="deleteMycal">
+		update tb_mycal
+		   set mycal_status = 'N'
+		 where mycal_no in
+		 <foreach collection="array" item="arr" open="(" close=")" separator=",">
+		 	#{arr}
+		 </foreach>
+	</update>
+	
+	<update id="colorMycal">
+		update tb_mycal
+		   set mycal_color = #{mycalColor}
+		 where mycal_no = #{mycalNo}
+	</update>
+	
+	<insert id="insertSche">
+		insert
+		  into tb_schedule
+		  (
+		    sche_no
+		  , sche_title
+		  , sche_writer
+		  , sche_start_date
+		  , sche_end_date
+		  , sche_all
+		  , sche_cmpy
+		  , sche_open
+		  , mycal_no
+		  , sche_atnd_no
+		  , sche_atnd_list
+		  , sche_place
+		  , sche_content
+		  )
+		  values
+		  (
+		    seq_scno.nextval
+		  , #{scheTitle}
+		  , #{scheWriter}
+		  , #{scheStartDate}
+		  , #{scheEndDate}
+		  , #{scheAll}
+		  , #{scheCmpy}
+		  , #{scheOpen}
+		  , #{mycalNo}
+		  , #{scheAtndNo}
+		  , #{scheAtndList}
+		  , #{schePlace}
+		  , #{scheContent}
+		  )
+	</insert>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 </mapper>

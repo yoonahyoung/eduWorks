@@ -38,11 +38,11 @@
 	
 	                        <!-- 변경버튼 클릭 후 -->
 	                        <div class="dis_no" id="nopen1">
-	                            <span class="fas fa-xmark pen_icon" id="x1"></span>
-	                            <span class="fas fa-check pen_icon" id="check1">&nbsp;</span>
+	                            <!-- <span class="fas fa-xmark pen_icon" id="x1"></span> -->
+	                            <span class="fas fa-check pen_icon" id="check1"></span>
 	                        </div>
 	                        
-	                        <div class="collapsed su_sub_menu_list" style="width:70%;" data-toggle="collapse" data-target="#myCalendar" aria-expanded="true" aria-controls="collapseTwo">
+	                        <div class="collapsed su_sub_menu_list" id="mycalCol" style="width:70%;" data-toggle="collapse" data-target="#myCalendar" aria-expanded="true" aria-controls="collapseTwo">
 	                            <span>&nbsp;내 캘린더</span>
 	                        </div>
 	
@@ -50,48 +50,9 @@
 	                    
 	
 	                        <div id="myCalendar" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-	                            <table>
-	                                <tr style="width: 100%;">
-	                                    <td width="20%;"></td>
-	                                    <td><input type="checkbox"></td>
-	                                    <td width="90%;"> &nbsp;내 일정</td>
-	                                    <!-- 기본은 색상 편집 눌렀을 때 x -->
-	                                    <td class="su_myCalBasic">
-	                                        <a type="button">
-	                                            <div class="calColor" style="border: 1px solid red; background: red;"></div>
-	                                        </a>
-	                                    </td>
-	
-	                                    <td class="su_myCalX dis_no"></td>
-	                                </tr>
-	                                <tr>
-	                                    <td></td>
-	                                    <td><input type="checkbox"></td>
-	                                    <td> &nbsp;부서 일정</td>
-	                                    <!-- 기본은 색상 편집 눌렀을 때 x -->
-	                                    <td class="su_myCalBasic">
-	                                        <a type="button">
-	                                            <div class="calColor" style="border: 1px solid red; background: red;"></div>
-	                                        </a>
-	                                    </td>
-	
-	                                    <td class="su_myCalX dis_no"><a type="button">x</a></td>
-	                                </tr>
-	                                <tr>
-	                                    <td></td>
-	                                    <td><input type="checkbox"></td>
-	                                    <td> &nbsp;연차</td>
-	                                    <!-- 기본은 색상 편집 눌렀을 때 x -->
-	                                    <td class="su_myCalBasic">
-	                                        <a type="button">
-	                                            <div class="calColor" style="border: 1px solid red; background: red;"></div>
-	                                        </a>
-	                                    </td>
-	
-	                                    <td class="su_myCalX dis_no"><a type="button">x</a></td>
-	                                </tr>
+	                            <table id="tb_myCal">
+	                                <!-- script에서 채워짐 -->
 	                            </table>
-	                            
 	                            <a type="button" class="addCal" data-toggle="modal" data-target="#addMyCal">+ 내 캘린더 추가</a>
 	                        </div>
 	                    </li>
@@ -110,9 +71,7 @@
 	                                <br>
 	            
 	                                <div class="md-form ml-0 mr-0">
-	                                    <input type="password" id="inputpwd"
-	                                        class="form-control form-control-sm validate ml-0">
-	                                    <div id="outputResult"></div>
+	                                    <input type="text" id="myCalName" class="form-control form-control-sm validate ml-0">
 	                                </div>
 	            
 	                                <div class="text-center mt-4">
@@ -125,6 +84,202 @@
 	                        </div>
 	                    </div>
 	                </div>
+	                
+	                <!-- 내 캘린더 관련 script -->
+	                <script>
+	                	$(function(){
+	                		selectMycalList();
+	                		
+	                	})
+	                	
+	                	// 내 캘린더 리스트 출력 이벤트
+	                	function selectMycalList(){
+	                		$.ajax({
+	                			url: "mclist.ca",
+	                			data: { memNo: ${ loginUser.memNo } },
+	                			success: function(list){
+	                				
+	                				let value = "";
+	                                
+	                                for(let i = 0; i < list.length; i++){
+		                                value += '<tr style="width: 100%;">'
+		                                    		+ '<td width="20%;"><span class="myNo" style="color: white !important;">' + list[i].mycalNo + '</span></td>'
+		                                    		+ '<td><input type="checkbox" name="mycalList" checked></td>'
+		                                    		+ '<td width="90%;"> &nbsp;' + list[i].mycalName + '</td>'
+			                                  
+				                                    + '<td class="su_myCalBasic">'
+				                                        + '<a type="button">'
+				                                            + '<div class="calColor" id="colorBtn' + list[i].mycalNo + '" style="border: 1px solid ' + list[i].mycalColor + '; background: ' + list[i].mycalColor + ';" onclick="colorMycal(' + list[i].mycalNo + ');"></div>'
+				                                        	+ '<input type="hidden" id="calColor' + list[i].mycalNo + '" value="' + list[i].mycalColor + '">'	
+				                                        + '</a>'
+				                                    + '</td>';
+		
+				                                    if(i == 0){
+				                                    	value += '<td class="su_myCalX dis_no"></td>';
+				                                    } else {
+		                                    			value += '<td class="su_myCalX dis_no"><a type="button" onclick="deleteMycal(' + list[i].mycalNo + ');">x</a></td>';
+				                                    }
+		                                		+ '</tr>';
+	                                }
+		                                
+		                           //value += '</table>';
+		                           
+		                           $("#tb_myCal").html(value);
+	                			}, error: function(){
+	                				console.log("ajax 내 캘린더 조회 실패");
+	                			}
+	                		});
+	                		
+	                	}
+	                	
+	                	// 선택된 캘린더 번호 출력 이벤트
+	                	function selectMycalNo(){
+	                		var result = "";
+	                		$.ajax({
+	                			url: "mcnolist.ca",
+	                			async: false,
+	                			data: { memNo: ${ loginUser.memNo } },
+	                			success: function(list){
+	                				for(let i = 0; i < list.length; i++){
+	                					result += list[i].mycalNo + ',';
+	                				}
+	                				result = result.substring(0, result.lastIndexOf(","));
+	                			}, error: function(){
+	                				console.log("ajax 내 캘린더 번호 조회 실패");
+	                			}
+	                		});
+	                		return result;
+	                	}
+	                		
+	               		// 내 캘린더 추가
+	               		$("#insertMyCal").click(function(){
+	               			$.ajax({
+	               				url: "mcinsert.ca",
+	               				data: { 
+	               					memNo: ${ loginUser.memNo},
+	               					mycalName: $("#myCalName").val()
+	               				},
+	               				success: function(result){
+	               					if(result == "success"){
+	               						alert("내 캘린더가 추가되었습니다.");
+	               						$("#addMyCal").modal('hide');
+	               						selectMycalList();
+	               					}
+	               				}, error: function(){
+	               					console.log("ajax 내 캘린더 추가 실패");
+	               				}
+	               			});
+	               		});
+	               		
+	               		// 내 캘린더 삭제
+	               		function deleteMycal(mcNo){
+	               			// mcNo : 내 캘린더 번호
+	               			$("#delete").modal("show");
+	               			$("#realDelete").click(function(){
+	               				console.log("j");
+	               				$.ajax({
+	               					url: "mcdelete.ca",
+	               					data: {checkCnt: mcNo},
+	               					success: function(result){
+	               						if(result == "success"){
+	               							alert("삭제되었습니다.");
+	               							$("#delete").modal("hide");
+	               							selectMycalList();
+	               						}
+	               					}, error: function(){
+	               						console.log("ajax 내 캘린더 삭제 실패");
+	               					}
+	               				});
+	               			});
+	               		}
+	               		
+	               		// 캘린더 색상 변경
+	               		function colorMycal(mcNo){
+	               			let value = "";
+	               			let id = "colorBtn" + mcNo;
+	               			let c = "calColor" + mcNo;
+	               			let color = $("#" + c).val();
+	               			
+	               			value += '<input type="color" id="colorArea" value="' + color + '">'
+	    	                       + '<button type="button" class="btn btn-sm su_btn_border" id="chColorBtn" onclick="changeColor(' + mcNo + ');">변경</button>';
+	    	                
+	    	                $("#colorPal").html(value);
+	    	                $("#colorPal").show();
+	    	                $("#" + id).attr("onclick", "cancleColor(" + mcNo + ");");
+	               		}
+	               		
+	               		function cancleColor(mcNo){
+	               			$("#colorPal").hide();
+	               			let id = "colorBtn" + mcNo;
+	               		 	$("#" + id).attr("onclick", "colorMycal(" + mcNo + ");");
+	               		}
+	               		
+	               		// 색상 기본값 설정하기
+	               		function changeColor(mcNo){
+	               			let c = $("#colorArea").val();
+	               			let color = c;
+	               			$.ajax({
+	               				url: "mccolor.ca",
+	               				data: {
+	               					mycalNo: mcNo,
+	               					mycalColor: c
+	               				},
+	               				success: function(result){
+	               					if(result == "success"){
+	               						selectMycalList();
+	               						location.reload();	// 이벤트 색상 변경을 위해
+	               					}
+	               				}, error: function(){
+	               					console.log("ajax 캘린더 색상 변경 실패");
+	               				}
+	               			});
+	               		}
+	               		
+	               		// color HEX to rgb
+                        function hexToRgb ( hexType ){ 
+                            /* 맨 앞의 "#" 기호를 삭제하기. */ 
+                            var hex = hexType.trim().replace( "#", "" ); 
+                            
+                            /* rgb로 각각 분리해서 배열에 담기. */ 
+                            var rgb = ( 3 === hex.length ) ? 
+                                hex.match( /[a-f\d]/gi ) : hex.match( /[a-f\d]{2}/gi );     
+                            
+                            rgb.forEach(function (str, x, arr){     
+                                /* rgb 각각의 헥사값이 한자리일 경우, 두자리로 변경하기. */ 
+                                if ( str.length == 1 ) str = str + str; 
+                                
+                                /* 10진수로 변환하기. */ 
+                                arr[ x ] = parseInt( str, 16 ); 
+                            }); 
+                            
+                            return "rgba(" + rgb.join(", ") + ", 0.5)"; 
+                        };
+                        
+	                </script>
+	                
+	                
+	                
+	                <!-- 삭제 모달창 -->
+	                <div class="modal" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	                <div class="modal-dialog modal-dialog-centered cascading-modal modal-avatar" role="document">
+	                    <!--Content-->
+	                    <div class="modal-content modal_alert">
+	                        
+	                        <!--Body-->
+	                        <div class="modal-body text-center modal_alert_child">
+	                            <div style="margin-top: 1.5rem;">
+	            
+	                                <h5 class="mt-1 mb-2" style="color: black;">정말 삭제하시겠습니까?</h5>
+	                                <br>
+	                                <div class="text-center mt-4"> 
+	                                    <button type="button" id="realDelete" class="btn su_btn_all su_btn_medium">확인</button>
+	                                    <button type="button" id="next" class="btn su_btn_border su_btn_medium" data-dismiss="modal">취소</button>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
 	
 	                <!-- 서브메뉴 관심 캘린더 -->
 	                <ul class="accordion" id="accordionSidebar" >
@@ -415,7 +570,7 @@
 	                    		
 	                    		
 	                    		//console.log(d);
-	                    		location.href="enrollForm.ca?day=" + d;
+	                    		location.href="enrollForm.ca?day=" + d + "&memNo=" + ${ loginUser.memNo };
 	                    	});
 	                    	
 	                    	
@@ -518,94 +673,31 @@
 	                            <td><input type="checkbox"></td>
 	                            <td> &nbsp;전사 일정</td>
 	                            <td width="15%"></td>
-	                            <!-- 기본은 색상 편집 눌렀을 때 x -->
-	                            <td>
-	                                <a type="button">
-	                                    <!-- 색상 컬럼도 추가하자 -->
-	                                    <div class="calColor" style="border: 1px solid red; background: red;"></div>
-	                                </a>
-	                            </td>
 	                        </tr>
 	                        <tr>
 	                            <td></td>
 	                            <td><input type="checkbox"></td>
 	                            <td> &nbsp;임원 일정</td>
 	                            <td></td>
-	                            <td>
-	                                <a type="button">
-	                                    <!-- 색상 컬럼도 추가하자 -->
-	                                    <div class="calColor" style="border: 1px solid red; background: red;" onclick="colorChange();"></div>
-	                                </a>
-	                            </td>
 	                        </tr>
 	                    </table>
 	                </div>
-	
+	                
 	                <!-- 캘린더 관리 페이지로 이동 -->
 	                <br>
 	                    <a href="manage.ca" class="su_sub_menu_list" style="color: black;">
 	                        <h6><span class="fas fa-fw fa-cog"></span> &nbsp;캘린더 관리</h6>
 	                    </a>
 	                    <!-- <a href=""><h6>항목</h6></a> -->
+	                    <input type="hidden" id="checkCntVal" value="">
 	
 	
 	                <br><br>
 	
 	                <!-- 색상 팔레트 -->
-	                <div class="colorPal dis_no" id="colorPal">
-	                    <input type="color" id="colorArea">
-	                    <button type="button" class="btn btn-sm su_btn_border" id="chColorBtn">변경</button>
+	                <div class="colorPal" id="colorPal">
+	                    
 	                </div>
-	
-	
-	                <script>
-	                    $(document).ready(function(){
-	                        $(".calColor").click(function(){
-	                            if( $("#colorPal").hasClass("dis_no") ){
-	                                $("#colorPal").addClass("dis_bl");
-	                                $("#colorPal").removeClass("dis_no");
-	                            } else {
-	                                $("#colorPal").addClass("dis_no");
-	                                $("#colorPal").removeClass("dis_bl");
-	                            }
-	                        });
-	
-	                        // color HEX to rgb
-	                        function hexToRgb ( hexType ){ 
-	                            /* 맨 앞의 "#" 기호를 삭제하기. */ 
-	                            var hex = hexType.trim().replace( "#", "" ); 
-	                            
-	                            /* rgb로 각각 분리해서 배열에 담기. */ 
-	                            var rgb = ( 3 === hex.length ) ? 
-	                                hex.match( /[a-f\d]/gi ) : hex.match( /[a-f\d]{2}/gi );     
-	                            
-	                            rgb.forEach(function (str, x, arr){     
-	                                /* rgb 각각의 헥사값이 한자리일 경우, 두자리로 변경하기. */ 
-	                                if ( str.length == 1 ) str = str + str; 
-	                                
-	                                /* 10진수로 변환하기. */ 
-	                                arr[ x ] = parseInt( str, 16 ); 
-	                            }); 
-	                            
-	                            return "rgba(" + rgb.join(", ") + ", 0.5)"; 
-	                        }; 
-	
-	                        // 색상 값 출력해보기
-	                        $("#chColorBtn").click(function(){
-	                            console.log( $("input[type='color']").val() );
-	                            //console.log(hexToRgb($("input[type='color']").val()));
-	                            console.log(hexToRgb("#5e7e9b"));
-	                        });
-	
-	                        // 색상 컬럼 값 입력해주기 (#~~~)
-	                        $("#colorArea").val("#");
-	
-	                        function colorChange(){
-	                            document.getElementById("area1").style.backgroundColor = document.getElementById("color").value;
-	                        }
-	
-	                    })
-	                </script> 
 	  
 	            </div>
 	                                
@@ -617,112 +709,88 @@
 	    <div class="container-fluid" style="margin: auto; width: 85%">
 	        <div id='calendar' class="su_calendar_size"></div>
 	    </div>
+	    
 	
 	<script>
-	document.addEventListener('DOMContentLoaded', function() {
-	var calendarEl = document.getElementById('calendar');
+	    document.addEventListener('DOMContentLoaded', function() {
+	    var calendarEl = document.getElementById('calendar');
 	
-	var calendar = new FullCalendar.Calendar(calendarEl, {
-	plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'list' ],
-	
-	// 날짜 칸 클릭시 해당 날짜 데이터를 갖고 일정 입력 페이지로 이동 
-	dateClick:function(arg){
-	    console.log(arg.dateStr); // 날짜 출력
-	    location.href="enrollForm.ca?day=" + arg.dateStr;
-	},
-	
-	// 이벤트 클릭시 일정 상세 조회 페이지로 이동
-	eventClick:function(e){
-		// location.href = "detail.ca?no=일정 번호"
-		//console.log(e.event.title);
+	    var calendar = new FullCalendar.Calendar(calendarEl, {
+	    plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'list' ],
+	 	// 날짜 칸 클릭시 해당 날짜 데이터를 갖고 일정 입력 페이지로 이동 
+		dateClick:function(arg){
+		    console.log(arg.dateStr); // 날짜 출력
+		    location.href="enrollForm.ca?day=" + arg.dateStr + "&memNo=" + ${ loginUser.memNo };
+		},
 		
-		
-	},
-	
-	header: {
-	    left: 'prev,next today',
-	    center: 'title',
-	    right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
-	},
-	locale: "ko",
-	// defaultDate: '2020-02-12',
-	navLinks: true, // can click day/week names to navigate views
-	businessHours: true, // display business hours
-	editable: true,
-	events: [
-	    {
-	    title: 'Business Lunch',
-	    start: '2022-09-03T13:00:00',
-	    constraint: 'businessHours'
+		// 이벤트 클릭시 일정 상세 조회 페이지로 이동
+		eventClick:function(e){
+			// location.href = "detail.ca?no=일정 번호"
+			//console.log(e.event.title);
+		},
+	    
+	    header: {
+	        left: 'prev,next today',
+	        center: 'title',
+	        right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
 	    },
-	    {
-	    title: 'Meeting',
-	    start: '2022-09-13T11:00:00',
-	    constraint: 'availableForMeeting', // defined below
-	    color: '#257e4a'
-	    },
-	    {
-	    title: 'Conference',
-	    start: '2022-09-18',
-	    end: '2022-09-20'
-	    },
-	    {
-	    title: 'Party',
-	    start: '2022-09-29T20:00:00',
-	    end: '2022-09-30T20:00:00',
-	    color: 'rgba(74, 211, 109)'
-	    },
-	    {
-	    start: '2022-09-29',
-	    end: '2022-09-31',  // 31로 해야 30일까지로 채워짐;;
-	    overlap: false,
-	    rendering: 'background',
-	    color: 'rgba(94, 126, 155, 0.6)'
-	    },
-	
-	    // areas where "Meeting" must be dropped
-	    {
-	    groupId: 'availableForMeeting',
-	    start: '2022-09-11T10:00:00',
-	    end: '2022-09-11T16:00:00',
-	    rendering: 'background'
-	    },
-	    {
-	    groupId: 'availableForMeeting',
-	    start: '2022-09-13T10:00:00',
-	    end: '2022-09-13T16:00:00',
-	    rendering: 'background'
-	    },
-	
-	    // red areas where no events can be dropped
-	    {
-	    start: '2022-09-24',
-	    end: '2022-09-28',
-	    overlap: false,
-	    rendering: 'background',
-	    color: 'rgba(74, 211, 109, 0.5)'
-	    },
-	    {
-	    start: '2022-09-06',
-	    end: '2022-09-08',
-	    overlap: false,
-	    rendering: 'background',
-	    color: '#ff9f89'
+	    locale: "ko",
+	    // defaultDate: '2020-02-12',
+	    navLinks: true, // can click day/week names to navigate views
+	    businessHours: true, // display business hours
+	    editable: true,
+	    events: function(info, successCallback, failureCallback){
+	    	$.ajax({
+	    		type: 'post',
+	    		cache: false,
+	    		url: "sclist.ca",
+	    		dataType:'json',
+	    		data:{
+              		memNo: ${ loginUser.memNo }				              		
+              	},
+              	//contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+              	success: function(param){
+              		var event = [];
+              		
+              		$.each(param, function(index, data){
+	              		event.push({
+	              			title: data.title,
+	              			start: data.start,
+	              			end: data.end,
+	              			color: hexToRgb(data.color)
+	              			//backgroundColor: 'rgba(94, 126, 155, 0.6)'
+	              		});
+              	    });
+              		event.push({
+              			title: "kk",
+              			start: '2022-09-09 12:30',
+              			end: '2022-09-10 13:40'
+              		});
+              		event.push({
+              			title: "kk",
+              			start: '2022-09-09 14:30',
+              			end: '2022-09-10 15:40'
+              		});
+              		console.log(event);
+              		successCallback(event);
+              	}
+              	
+              	
+	    	});
 	    }
-	]
-	});
+	    
+	    	
+	    	
+	    });
 	
-	calendar.render();
-	});
+	    calendar.render();
+	    calendar.refetchEvents();
+	    });
 	</script>
 	
-	           </div>
+	</div>
 	           
-	           <!--End of Main Content -->
-	
-	<!-- Footer -->
-	
-	<!-- End of Footer -->
+
                 
 	<jsp:include page="../common/footer.jsp" />
 

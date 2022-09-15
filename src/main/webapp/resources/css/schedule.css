@@ -6,7 +6,15 @@
   margin: auto;
   width: 90%;
 }
-
+.su_atndDiv{
+  border-radius: 15px;
+  border: 2px solid slategray;
+  display: inline-flex;
+  padding: 0px 3px;
+}
+.su_atndDiv button{
+  padding: 0px 8px;
+}
 
 /* =================== 추가 =================== */
 body{

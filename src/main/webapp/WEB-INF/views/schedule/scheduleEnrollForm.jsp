@@ -23,7 +23,7 @@
 	
 	            <hr class="hr_line_top">
 	
-	            <form action="" method="post">
+	            <form action="insert.ca" method="post" id="insertForm">
 	                <div class="su_content_body" style="width: 90%;">
 	                
 	                    <table id="eventForm">
@@ -32,7 +32,8 @@
 	                            <td style="width: 114px;"><span>&nbsp;일정명</span></td>
 	                            <td style="width: 80%;">
 	                            &ensp; &ensp;<input type="text" id="scheTitle" name="scheTitle" placeholder="일정명 입력" style="width:300px;" required>
-	                            &ensp;&ensp;<input type="checkbox" id="scheOpen" name="scheOpen"><span> &nbsp;비공개</span>
+	                            &ensp;&ensp;<input type="checkbox" id="scheOpen"><span> &nbsp;비공개</span>
+	                            <input type="hidden" name="scheOpen" value='N'>
 	                            </td>
 	                        </tr>
 	
@@ -43,11 +44,12 @@
 	                                &ensp; &ensp;<input type="date" id="scheStartD" value="${ day }" required>&nbsp;<input type="time" id="scheStartT" required>
 	                                <span> ~ </span>
 	                                <input type="date" name="scheEndD" id="scheEndD" required>&nbsp;<input type="time" name="scheEndT" id="scheEndT" required>
-	                                &ensp;&ensp;<input type="checkbox" id="scheAll" name="scheAll"><span> &nbsp;종일</span>
+	                                &ensp;&ensp;<input type="checkbox" id="scheAll"><span> &nbsp;종일</span>
 	                                <!-- &ensp;&ensp;<input type="checkbox"><span> &nbsp;반복</span> -->
 	                                
 	                                <input type="hidden" name="scheStartDate">
 	                                <input type="hidden" name="scheEndDate">
+	                                <input type="hidden" name="scheAll" value="0">
 	                            </td>
 	                        </tr>
 	
@@ -55,7 +57,8 @@
 	                            <td width="5%;"><span>&nbsp;</span></td>
 	                            <td><span>&nbsp;전사 일정</span></td>
 	                            <td>
-	                            &ensp;&ensp;&ensp;<input type="checkbox" id="scheCmpy" name="scheCmpy"><span> &nbsp;전사 일정</span>
+	                            &ensp;&ensp;&ensp;<input type="checkbox" id="scheCmpy"><span> &nbsp;전사 일정</span>
+	                            <input type="hidden" name='scheCmpy' value="N">
 	                            </td>
 	                        </tr>
 	
@@ -66,9 +69,9 @@
 	                                &ensp;&ensp;&nbsp;
 	                                <!-- 내 캘린더 리스트 -->
 	                                <select name="mycalNo">
-	                                    <option value="1" selected>내 일정</option>
-	                                    <option value="2">부서 일정</option>
-	                                    <option value="3">연차</option>
+	                                	<c:forEach var="m" items="${ list }">
+		                                    <option value="${ m.mycalNo }">${ m.mycalName }</option>
+	                                    </c:forEach>
 	                                </select>
 	                            </td>
 	                        </tr>
@@ -76,13 +79,23 @@
 	                        <tr>
 	                            <td width="5%;"><span>&nbsp;</span></td>
 	                            <td><span>&nbsp;참석자</span></td>
-	                            <td id="attendeeArea">
+	                            <td id="attendeeArea" style="padding-left: 23px;">
 	                                <!-- 선택한 참석자 영역 -->
-	
-	                                <span style="cursor: pointer;" id="addAttendee"> &ensp;&ensp;+ 참석자 추가</span>
+									<!-- <div class="su_atndDiv">
+										<span>최명진 대표</span>  
+										<button class="btn" type="button">X</button>
+									</div> -->
+									
+	                                <span style="cursor: pointer;" id="addAttendee"> + 참석자 추가</span>
 	                            </td>
+								<span style="display: none;" id="atndNo2"></span>
+								<span style="display: none;" id="atndList2"></span>
+								<input type="hidden" id="scheAtndNo" name="scheAtndNo" value="">
+								<input type="hidden" id="scheAtndList" name="scheAtndList" value="">
+								<input type="hidden" name="scheWriter" value="${ loginUser.memNo }">
+									
 	                        </tr>
-	
+	                        
 	                        <tr>
 	                            <td width="5%;"><span>&nbsp;</span></td>
 	                            <td><span>&nbsp;장소</span></td>
@@ -118,17 +131,21 @@
 	                        </div>
 	                        
 	                        <hr class="hr_line">
-	
+			<!-- ================================================= job_name 으로 바꾸기 -->
 	                        <div class="su_ph_body">
 	                            <div class="div_left_line" style="margin-top: -1rem;">
-	                                <div class="su_ph_line" id="ceo">
-	                                    <span style="font-size: 20px;">&nbsp;</span>
-	                                    <span class="fas fa-user"></span>
-	                                    <span>&nbsp; 이승엽 대표</span>
-	                                </div>
+	                                	<c:forEach var="a" items="${ aList }">
+	                                		<c:if test="${ a.deptCode eq 'DN' }">
+	                                			<div class="su_ph_line ph_padding" onclick="chooseAtnd(${ a.memNo });">
+				                                    <span style="font-size: 20px;">&nbsp;</span>
+				                                    <span class="fas fa-user"></span>
+				                                    <span>&nbsp; ${ a.memName } &nbsp; ${ a.jobCode }</span>
+				                                </div>
+			                                </c:if>
+			                            </c:forEach>
 	
 	                                <!-- 강사진 주소록 -->
-	                                <div class="su_ph_line">
+	                                <div>
 	                                    <div class="collapsed ph_padding" data-toggle="collapse" data-target="#teacherList" aria-expanded="true" aria-controls="collapseTwo">
 	                                        <span style="font-size: 20px;">-&nbsp;</span>
 	                                        <span style="font-size: 20px;">+&nbsp;</span>
@@ -136,40 +153,29 @@
 	                                    </div>
 	
 	                                    <div id="teacherList" class="collapse div_left_line" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-	                                        <table class="su_Tb">
-	                                            <tr style="width: 100%;" class="ph_padding">
-	                                                <td width="90%;">
-	                                                    <div class="su_ph_line">
-	                                                        <span style="font-size: 20px;">-&nbsp;</span>
-	                                                        <span class="fas fa-user"></span>
-	                                                        <span>&nbsp; 강보람 강사님</span>
-	                                                    </div>
-	                                                </td>
-	                                            </tr>
-	                                            <tr>
-	                                                <td>
-	                                                    <div class="su_ph_line" class="ph_padding">
-	                                                        <span style="font-size: 20px;">-&nbsp;</span>
-	                                                        <span class="fas fa-user"></span>
-	                                                        <span>&nbsp; 나강사 강사님</span>
-	                                                    </div>
-	                                                </td>
-	                                            </tr>
-	                                            <tr>
-	                                                <td>
-	                                                    <div class="su_ph_line" class="ph_padding">
-	                                                        <span style="font-size: 20px;">-&nbsp;</span>
-	                                                        <span class="fas fa-user"></span>
-	                                                        <span>&nbsp; 도강사 강사님</span>
-	                                                    </div>
-	                                                </td>
-	                                            </tr>
+	                                        <table class="su_Tb_Te">
+	                                        
+	                                        	<c:forEach var="a" items="${ aList }">
+	                                        		<c:if test="${ a.deptCode eq 'D0' }">
+			                                            <tr style="width: 100%;" class="ph_padding">
+			                                                <td width="90%;">
+			                                                    <div class="su_ph_line" onclick="chooseAtnd(${ a.memNo });">
+			                                                    	<input type="hidden" value="${ a.memNo }">
+			                                                        <span style="font-size: 20px;">-&nbsp;</span>
+			                                                        <span class="fas fa-user"></span>
+			                                                        <span>&nbsp; ${ a.memName } &nbsp; ${ a.jobCode }</span>
+			                                                    </div>
+			                                                </td>
+			                                            </tr>
+			                                        </c:if>
+			                                    </c:forEach>
+	                                           
 	                                        </table>
 	                                    </div>
 	                                </div>
 	
 	                                <!-- 운영부 주소록 -->
-	                                <div class="su_ph_line">
+	                                <div>
 	                                    <div class="collapsed ph_padding" data-toggle="collapse" data-target="#opList" aria-expanded="true" aria-controls="collapseTwo">
 	                                        <span style="font-size: 20px;">-&nbsp;</span>
 	                                        <span style="font-size: 20px;">+&nbsp;</span>
@@ -185,34 +191,22 @@
 	
 	                                        <!-- 홍봉팀 리스트 -->
 	                                    <div id="promoList" class="collapse div_left_line" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-	                                        <table class="su_Tb">
-	                                            <tr style="width: 100%;" class="ph_padding">
-	                                                <td width="90%;">
-	                                                    <div class="su_ph_line">
-	                                                        <span style="font-size: 20px;">-&nbsp;</span>
-	                                                        <span class="fas fa-user"></span>
-	                                                        <span>&nbsp; 강부장 부장</span>
-	                                                    </div>
-	                                                </td>
-	                                            </tr>
-	                                            <tr>
-	                                                <td>
-	                                                    <div class="su_ph_line" class="ph_padding">
-	                                                        <span style="font-size: 20px;">-&nbsp;</span>
-	                                                        <span class="fas fa-user"></span>
-	                                                        <span>&nbsp; 나대리 대리</span>
-	                                                    </div>
-	                                                </td>
-	                                            </tr>
-	                                            <tr>
-	                                                <td>
-	                                                    <div class="su_ph_line" class="ph_padding">
-	                                                        <span style="font-size: 20px;">-&nbsp;</span>
-	                                                        <span class="fas fa-user"></span>
-	                                                        <span>&nbsp; 도사원 사원</span>
-	                                                    </div>
-	                                                </td>
-	                                            </tr>
+	                                        <table class="su_Tb_Pr">
+	                                        
+			                                    <c:forEach var="a" items="${ aList }">
+	                                        		<c:if test="${ a.deptCode eq 'D2' }">
+			                                            <tr style="width: 100%;" class="ph_padding">
+			                                                <td width="90%;">
+			                                                    <div class="su_ph_line" onclick="chooseAtnd(${ a.memNo });">
+			                                                        <span style="font-size: 20px;">-&nbsp;</span>
+			                                                        <span class="fas fa-user"></span>
+			                                                        <span>&nbsp; ${ a.memName } &nbsp; ${ a.jobCode }</span>
+			                                                    </div>
+			                                                </td>
+			                                            </tr>
+			                                        </c:if>
+			                                    </c:forEach>
+	                                            
 	                                        </table>
 	                                    </div>
 	
@@ -224,34 +218,21 @@
 	
 	                                        <!-- 행정팀 리스트 -->
 	                                    <div id="adminiList" class="collapse div_left_line" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-	                                        <table class="su_Tb">
-	                                            <tr style="width: 100%;" class="ph_padding">
-	                                                <td width="90%;">
-	                                                    <div class="su_ph_line">
-	                                                        <span style="font-size: 20px;">-&nbsp;</span>
-	                                                        <span class="fas fa-user"></span>
-	                                                        <span>&nbsp; 강부장 부장</span>
-	                                                    </div>
-	                                                </td>
-	                                            </tr>
-	                                            <tr>
-	                                                <td>
-	                                                    <div class="su_ph_line" class="ph_padding">
-	                                                        <span style="font-size: 20px;">-&nbsp;</span>
-	                                                        <span class="fas fa-user"></span>
-	                                                        <span>&nbsp; 나대리 대리</span>
-	                                                    </div>
-	                                                </td>
-	                                            </tr>
-	                                            <tr>
-	                                                <td>
-	                                                    <div class="su_ph_line" class="ph_padding">
-	                                                        <span style="font-size: 20px;">-&nbsp;</span>
-	                                                        <span class="fas fa-user"></span>
-	                                                        <span>&nbsp; 도사원 사원</span>
-	                                                    </div>
-	                                                </td>
-	                                            </tr>
+	                                        <table class="su_Tb_Ad">
+	                                            <c:forEach var="a" items="${ aList }">
+	                                        		<c:if test="${ a.deptCode eq 'D2' }">
+			                                            <tr style="width: 100%;" class="ph_padding">
+			                                                <td width="90%;">
+			                                                    <div class="su_ph_line" onclick="chooseAtnd(${ a.memNo });">
+			                                                        <span style="font-size: 20px;">-&nbsp;</span>
+			                                                        <span class="fas fa-user"></span>
+			                                                        <span>&nbsp; ${ a.memName } &nbsp; ${ a.jobCode }</span>
+			                                                    </div>
+			                                                </td>
+			                                            </tr>
+			                                        </c:if>
+			                                    </c:forEach>
+	                                            
 	                                        </table>
 	                                    </div>
 	                                </div>
@@ -260,7 +241,7 @@
 	
 	                                    
 	                                <!-- 인사팀 주소록 -->
-	                                <div class="su_ph_line">
+	                                <div>
 	                                    <div class="collapsed ph_padding" data-toggle="collapse" data-target="#hrList" aria-expanded="true" aria-controls="collapseTwo">
 	                                        <span style="font-size: 20px;">-&nbsp;</span>
 	                                        <span style="font-size: 20px;">+&nbsp;</span>
@@ -268,34 +249,21 @@
 	                                    </div>
 	
 	                                    <div id="hrList" class="collapse div_left_line" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-	                                        <table class="su_Tb">
-	                                            <tr style="width: 100%;" class="ph_padding">
-	                                                <td width="90%;">
-	                                                    <div class="su_ph_line">
-	                                                        <span style="font-size: 20px;">-&nbsp;</span>
-	                                                        <span class="fas fa-user"></span>
-	                                                        <span>&nbsp; 강부장 부장</span>
-	                                                    </div>
-	                                                </td>
-	                                            </tr>
-	                                            <tr>
-	                                                <td>
-	                                                    <div class="su_ph_line" class="ph_padding">
-	                                                        <span style="font-size: 20px;">-&nbsp;</span>
-	                                                        <span class="fas fa-user"></span>
-	                                                        <span>&nbsp; 나대리 대리</span>
-	                                                    </div>
-	                                                </td>
-	                                            </tr>
-	                                            <tr>
-	                                                <td>
-	                                                    <div class="su_ph_line" class="ph_padding">
-	                                                        <span style="font-size: 20px;">-&nbsp;</span>
-	                                                        <span class="fas fa-user"></span>
-	                                                        <span>&nbsp; 도사원 사원</span>
-	                                                    </div>
-	                                                </td>
-	                                            </tr>
+	                                        <table class="su_Tb_Hr">
+	                                            <c:forEach var="a" items="${ aList }">
+	                                        		<c:if test="${ a.deptCode eq 'D1' }">
+			                                            <tr style="width: 100%;" class="ph_padding">
+			                                                <td width="90%;">
+			                                                    <div class="su_ph_line" onclick="chooseAtnd(${ a.memNo });">
+			                                                        <span style="font-size: 20px;">-&nbsp;</span>
+			                                                        <span class="fas fa-user"></span>
+			                                                        <span>&nbsp; ${ a.memName } &nbsp; ${ a.jobCode }</span>
+			                                                    </div>
+			                                                </td>
+			                                            </tr>
+			                                        </c:if>
+			                                    </c:forEach>
+	                                            
 	                                        </table>
 	                                    </div>
 	                                </div>
@@ -311,69 +279,96 @@
 	                            $("#addAttendee").click(function(){
 	                                $("#attCalList").removeClass("dis_no");
 	                                $("#attCalList").addClass("dis_bl");
-	                            })
+	                            });
 	
 	                            $("#xBtn").click(function(){
 	                                $("#attCalList").removeClass("dis_bl");
 	                                $("#attCalList").addClass("dis_no");
-	                            })
-	
-	                            // 위치 드래그 기능
-	                            //Make the DIV element draggagle:
-	                            // dragElement(document.getElementById("attCalList"));
-	
-	                            // function dragElement(elmnt) {
-	                            //     var pos1 = 210, pos2 = 0, pos3 = 0, pos4 = 450;
-	                            //     if (document.getElementById(elmnt.id + "header")) {
-	                            //         /* if present, the header is where you move the DIV from:*/
-	                            //         document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
-	                            //     } else {
-	                            //         /* otherwise, move the DIV from anywhere inside the DIV:*/
-	                            //         elmnt.onmousedown = dragMouseDown;
-	                            //     }
-	
-	                            //     function dragMouseDown(e) {
-	                            //         e = e || window.event;
-	                            //         e.preventDefault();
-	                            //         // get the mouse cursor position at startup:
-	                            //         pos3 = e.clientX;
-	                            //         pos4 = e.clientY;
-	                            //         document.onmouseup = closeDragElement;
-	                            //         // call a function whenever the cursor moves:
-	                            //         document.onmousemove = elementDrag;
-	                            //     }
-	
-	                            //     function elementDrag(e) {
-	                            //         e = e || window.event;
-	                            //         e.preventDefault();
-	                            //         // calculate the new cursor position:
-	                            //         pos1 = pos3 - e.clientX;
-	                            //         pos2 = pos4 - e.clientY;
-	                            //         pos3 = e.clientX;
-	                            //         pos4 = e.clientY;
-	                            //         // set the element's new position:
-	                            //         elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-	                            //         elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-	                            //     }
-	
-	                            //     function closeDragElement() {
-	                            //         /* stop moving when mouse button is released:*/
-	                            //         document.onmouseup = null;
-	                            //         document.onmousemove = null;
-	                            //     }
-	                            // }
-	
-	                            // 선택한 참석자 추가
-	                            $("#ceo").click(function(){
-	                                $("#attendeeArea").html("<span>이영섭 대표</span>");
 	                            });
-	
-	                            /* $( '#attCalList' ).draggable({
-	                                scroll : false,
-	                                containment : 'parent', //부모 요소 안에서만 이동 범위 제한
-	                                handle : '.su_ph_title' // drag 대상 안 특정 요소에 제한 (여러개 사용 가능)
-	                            }); */
+	                            
+	                            /* let checkCnt = "";
+	                            // 참석자 클릭 이벤트
+	                            $(document).on("click", ".su_ph_line", function(){
+	                            	checkCnt = "";
+	                            	// console.log($(this).parent().children().children().eq(0).val()); // 멤버 번호
+	                            	checkCnt += ($(this).parent().children().children().eq(0).val()) + ",";	// 클릭한 멤버 번호 뽑기
+	                            });
+	                            checkCnt = checkCnt.substring(0, checkCnt.lastIndexOf(","));
+								
+	                        	console.log(checkCnt);
+	                        	console.log('g'); */
 	                        })
+	                        	
+	                         // 선택한 참석자 추가
+                            function chooseAtnd(mNo){
+	                        	var value = $("#attendeeArea").html();
+	                        	var atndNoStr = $("#atndNo2").val();
+	                        	var atndListStr = $("#atndList2").val();
+	                        	
+                            	$.ajax({
+                            		url: "chatnd.ca",
+                            		data: {memNo: mNo},
+                            		success: function(m){
+                            			//console.log(m);	// 멤버 객체
+                            			var atndNo = m.memNo;
+                            			var atndList = m.memName + " " + m.jobCode;
+                            			atndNoStr += atndNo + ",";
+                            			atndListStr += atndList + ",";
+                            			
+                            			$("#atndNo2").val(atndNoStr);	// 참석자 번호 리스트
+                            			$("#atndList2").val(atndListStr);	// 참석자 명단 리스트
+                            			$("#scheAtndNo").val($("#atndNo2").val());
+                            			$("#scheAtndList").val($("#atndList2").val());
+                            			
+                            			var noList = atndNo + atndList;
+                            			
+										value += ' <div class="su_atndDiv" id="atnd' + atndNo + '">'
+												+ '<span>' + atndList + '</span>'  
+												+ '<button class="btn" type="button" onclick="back(' + atndNo + ');">X</button>'
+											   + '</div> &nbsp;';
+											   
+										$("#attendeeArea").html(value);
+                            			
+                            		}, error: function(){
+                            			console.log("ajax 참석차 추가 실패");
+                            		}
+                            	});
+                                
+                            }
+	                        
+	                        // 참석자 번호 리스트 삭제 클릭 이벤트
+	                        function back(no){
+	                        	// no : 선택한 멤버 변호
+	                        	var id="atnd" + no;
+	                        	var nolist = $("#atndNo2").val();
+	                        	//console.log(nolist);
+	                        	
+	                        	//console.log($("#" + id).children().eq(0).text());
+	                        	var name = $("#" + id).children().eq(0).text();
+	                        	
+	                        	$("#" + id).remove();
+	                        	
+	                        	no = no + ",";
+	                        	nolist = nolist.replace(no, "");
+	                        	$("#atndNo2").val(nolist);
+	                        	$("#scheAtndNo").val($("#atndNo2").val());
+	                        	//console.log($("#atndNo2").val());
+	                        	backList(name);
+	                        }
+	                        
+	                        // 참석자 이름 리스트 삭제 이벤트
+	                        function backList(name){
+	                        	//console.log(name);
+	                        	var namelist = $("#atndList2").val();
+	                        	
+	                        	name = name + ",";
+	                        	//console.log(name);
+	                        	namelist = namelist.replace(name, "");
+	                        	console.log(namelist);
+	                        	$("#atndList2").val(namelist);
+	                        	$("#scheAtndList").val($("#atndList2").val());
+	                        }
+	                        
 	
 	                    </script>
 	                    
@@ -381,7 +376,7 @@
 	
 	                    <div class="su_btn_two_center" style="width: 66%;">
 	                        <button type="button" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">등록</button>
-	                        <button type="button" class="btn su_btn_two su_btn_border">취소</button>
+	                        <button type="button" class="btn su_btn_two su_btn_border" onclick="location.href='list.ca';">취소</button>
 	                    </div>
 	
 	                    <!-- 필수사항 입력 안했을 때 모달창 -->
@@ -416,8 +411,6 @@
 	                                if( ($("#scheTitle").val() != "") && ($("#scheStartD").val() != "") && ($("#scheEndD").val() != "") ){
 	                                	$("#submitBtn").removeAttr("data-target");
 	                                	
-										// 폼 서브밋
-	                                	
 	                                	// 시작일 종료일에 날짜 시간 합치기
 	                                	let scheStartDate = $("#scheStartD").val();
 										scheStartDate += " ";
@@ -431,6 +424,8 @@
 		                                $("input[name=scheStartDate]").val(scheStartDate);
 		                                $("input[name=scheEndDate]").val(scheEndDate);
 		                                
+		                                $("#insertForm").submit();
+		                                
 		                                
 	                                } else{
 	                                	
@@ -438,6 +433,16 @@
 	                                	
 	                                }
 	                                
+	                            });
+	                            
+	                            // 비공개 선택하면
+	                            $("#scheOpen").change(function(){
+	                            	if( $("#scheOpen").is(":checked") ){
+	                            		$("input[name=scheOpen]").val("Y");
+	                            	} else{
+	                            		$("input[name=scheOpen]").val("N");
+	                            	}
+	                            	
 	                            });
 	                            
 	                            // 종일을 체크하면 input type time 없애기, 시작일 종료일 동일하게 하기
@@ -450,10 +455,12 @@
 	                            		$("#scheStartT").hide();
 	                            		$("#scheEndT").hide();
 	                            		$("#scheEndD").val($("#scheStartD").val());
+	                            		$("input[name=scheAll]").val("1");
 	                            		
 	                            	} else{
 	                            		$("#scheStartT").show();
 	                            		$("#scheEndT").show();
+	                            		$("input[name=scheAll]").val("0");
 	                            	}
 	                            	
 	                            	// 시작일이 변할 때 마다 종료일도 동일하게 만들어 줌
@@ -464,6 +471,17 @@
 	                            		
 	                            	});
 	                            });
+	                            
+	                            // 전사일정 DB값 전달
+	                            $("#scheCmpy").change(function(){
+	                            	if( $("#scheCmpy").is(":checked") ){
+	                            		$("input[name=scheCmpy]").val("Y");
+	                            	} else{
+	                            		$("input[name=scheCmpy]").val("N");
+	                            	}
+	                            });
+	 
+	                            
 	                            
 	                            
 	
