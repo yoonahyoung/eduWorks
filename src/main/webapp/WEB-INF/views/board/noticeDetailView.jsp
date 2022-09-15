@@ -36,7 +36,7 @@
 	        <div class="su_board_body">
 	
 	            <div class="su_board_title" id="n-title">
-	                <h3>${ b.boardTitle }</h3><span> [<!-- 댓글 갯수 -->]</span>
+	                <h3>${ b.boardTitle }</h3>[<span class="replyCount"> </span>]
 	            </div>
 	
 	            <!-- 작성자에게만 보이는 수정삭제 버튼 -->
@@ -157,7 +157,7 @@
 	                <div style="display:flex">
 	                    <div class="board-plus-box">
 	                        <span class="fas fa-comments"></span>
-	                        <span>댓글 <span id="reCount">0</span> 개</span>
+	                        <span>댓글 <span class="replyCount"></span> 개</span>
 	                    </div>
 	                    &ensp;&ensp;
 	                    <div class="board-plus-box">
@@ -216,6 +216,7 @@
 								let value = "";
 								let user = "${loginUser.memName}";
 								let root = "${pageContext.request.contextPath}";
+								let replyCount = 0;
 								
 								for(let i=0; i<rList.length; i++){
 									// 원댓글 or 대댓글 조건문
@@ -260,6 +261,7 @@
 										value += '</div>'
 											   + '<div class="pReply' + rList[i].replyNo + '">'
 											   + '</div>';
+										replyCount += 1;
 									}else if(i < (rList.length - 1)){
 										console.log("삭제된 꼬리 있는 원댓글");
 										if((rList[i].replyParent == 0) && (rList[i+1].replyParent != 0) && (rList[i+1].replyStatus == 'Y')){ // 대댓글 있는 원댓글이면서 삭제됐을 경우
@@ -272,7 +274,7 @@
 								}
 								
 								$(".ajaxReply").html(value);
-			    				$("#reCount").text(rList.length);
+			    				$(".replyCount").text(replyCount);
 							}, 
 							error:function(){
 								console.log("댓글리스트 조회용 ajax통신 실패");

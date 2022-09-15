@@ -113,15 +113,5 @@ public class NoticeServiceImpl implements NoticeService{
 		return nDao.deleteNotice(sqlSession, noticeNo);
 	}
 	
-	
-	
-
-	
-
-	
-
-	
-	
-	
 
 }

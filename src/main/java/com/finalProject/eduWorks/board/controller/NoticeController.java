@@ -33,10 +33,10 @@ public class NoticeController {
 	
 	/**
 	 * 전사공지 리스트 조회
-	 * @param currentPage 현재 페이지 전달값
+	 * @param currentPage	현재 페이지 전달값
 	 * @param mv 
-	 * @param cpage 페이지 키값
-	 * @param defaultValue 처음 리스트에 들어갈땐 페이지 기본값 1
+	 * @param cpage 		페이지 키값
+	 * @param defaultValue 	처음 리스트에 들어갈땐 페이지 기본값 1
 	 * @return 전사 공지 조회 화면
 	 */
 	@RequestMapping("list.no")
@@ -54,7 +54,7 @@ public class NoticeController {
 	
 	/**
 	 * 전사 공지 상세 조회
-	 * @param no 게시글 번호
+	 * @param no 	게시글 번호
 	 * @param model
 	 * @return 전사 공지 상세 화면
 	 */
@@ -79,7 +79,7 @@ public class NoticeController {
 	
 	/**
 	 * 댓글 리스트 조회
-	 * @param no 게시글 번호
+	 * @param no 	게시글 번호
 	 * @param model
 	 * @return 댓글 리스트
 	 */
@@ -92,10 +92,10 @@ public class NoticeController {
 	
 	/**
 	 * 댓글 등록
-	 * @param no 참조 게시글 번호
-	 * @param replyDepth 댓글 깊이
-	 * @param replyParent 부모 댓글 번호
-	 * @param replyContent 댓글 내용
+	 * @param no 			참조 게시글 번호
+	 * @param replyDepth 	댓글 깊이
+	 * @param replyParent 	부모 댓글 번호
+	 * @param replyContent 	댓글 내용
 	 * @param session
 	 * @param model
 	 * @return 성공여부
@@ -122,7 +122,7 @@ public class NoticeController {
 	
 	/**
 	 * 댓글조회(한개)
-	 * @param no 댓글 번호
+	 * @param no 	댓글 번호
 	 * @return 댓글 전체 정보
 	 */
 	@ResponseBody
@@ -134,8 +134,8 @@ public class NoticeController {
 	
 	/**
 	 * 댓글 수정
-	 * @param no 댓글 번호
-	 * @param replyContent 댓글 내용
+	 * @param no 			댓글 번호
+	 * @param replyContent 	댓글 내용
 	 * @return 성공 여부
 	 */
 	@ResponseBody
@@ -170,10 +170,18 @@ public class NoticeController {
 		return "board/noticeEnrollForm";
 	}
 	
+	/**
+	 * 공지사항 등록
+	 * @param b				게시판 정보
+	 * @param atOriginName	첨부파일 원본명
+	 * @param model
+	 * @param session
+	 * @return 전사 공지 게시판 리스트
+	 */
 	@RequestMapping("insert.no")
 	public String insertNotice(Board b, MultipartFile atOriginName, Model model, HttpSession session) {
 		Attachment at = new Attachment();
-		b.setDeptCode(((Member)session.getAttribute("loginUser")).getDeptCode());
+		
 		int result1 = 0;
 		// 전달된 파일이 있을 경우
 		if(!atOriginName.getOriginalFilename().equals("")) {
@@ -204,6 +212,14 @@ public class NoticeController {
 		return "redirect:list.no";
 	}
 	
+	/**
+	 * 공지사항 삭제
+	 * @param boardNo 	게시글 번호
+	 * @param atPath 	기존 첨부파일 경로
+	 * @param model
+	 * @param session
+	 * @return 성공여부
+	 */
 	@ResponseBody
 	@RequestMapping(value="delete.no", produces="application/json; charset=utf-8")
 	public String deleteNotice(int boardNo, String atPath, Model model, HttpSession session) {
@@ -224,6 +240,13 @@ public class NoticeController {
 		return new Gson().toJson(result);
 	}
 	
+	/**
+	 * 공지사항 수정 화면
+	 * @param no 		게시글 번호
+	 * @param model
+	 * @param session
+	 * @return 공지사항 수정 화면
+	 */
 	@RequestMapping("updateForm.no")
 	public String updateFormNotice(int no, Model model, HttpSession session) {
 		Board b = nService.selectNotice(no);
@@ -235,6 +258,15 @@ public class NoticeController {
 		return "board/noticeUpdateForm";
 	}
 	
+	/**
+	 * 공지사항 수정 기능
+	 * @param b			게시글 정보
+	 * @param at		기존 첨부파일 정보
+	 * @param reupfile	새로운 첨부파일
+	 * @param model
+	 * @param session
+	 * @return 성공여부
+	 */
 	@RequestMapping("update.no")
 	public String updateNotice(Board b, Attachment at, MultipartFile reupfile , Model model, HttpSession session) {
 		int result1 = 0;

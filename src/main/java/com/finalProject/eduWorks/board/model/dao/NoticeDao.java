@@ -19,12 +19,8 @@ public class NoticeDao {
 		return sqlSession.selectOne("noticeMapper.selectListCount");
 	}
 	
-	
-	
 	// 게시글 리스트 조회
 	public HashMap<String, ArrayList<Board>> selectList(SqlSessionTemplate sqlSession, PageInfo pi) {
-		
-		
 		
 		HashMap<String, ArrayList<Board>> map = new HashMap<>();
 

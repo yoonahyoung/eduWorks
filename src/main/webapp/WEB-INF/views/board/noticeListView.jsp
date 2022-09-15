@@ -77,7 +77,7 @@
 	                        		<c:forEach var="n" items="${list}">
 	                        			<c:if test="${ n.boardTop eq 'N'}">
 					                        <tr>
-					                            <td><input type="checkbox" id="checkNo${tn.boardNo}"></td>
+					                            <td><input type="checkbox" id="checkNo${n.boardNo}"></td>
 					                            <td class="no">${ n.boardNo }</td>
 					                            <td>${ n.boardTitle }</td>
 					                            <td>${ n.boWriter }</td>
