@@ -20,17 +20,17 @@
 
 	<!-- 메인 콘텐츠 영역 -->
 	<div class="main-content">
-		<form method="post" action="insert.mail" enctype="multipart/form-data">
+		<form method="post" action="insertMail.ma" enctype="multipart/form-data">
 
 			<div class="second-title">
 				<div style="font-weight: bold;">메일 작성</div>
-				<button type="submit" class="reply-btn">
+				<button type="submit" class="reply-btn" id="sendMail">
 					<i class="fas fa-location-arrow"></i>&nbsp;&nbsp;전송
 				</button>
 				<button type="button" class="sub-btn" onclick="preView();">
 					<i class="fas fa-desktop"></i>&nbsp;&nbsp;미리보기
 				</button>
-				<button type="button" class="sub-btn">
+				<button type="button" class="sub-btn" id="propertyMail">
 					<i class="far fa-save"></i>&nbsp;&nbsp;임시저장
 				</button>
 				<button type="button" class="sub-btn">
@@ -125,7 +125,7 @@
 
 					<tr>
 						<th>받는사람</th>
-						<td style="width: 75%;"><input type="text" name="receiveMem"
+						<td style="width: 75%;"><input type="text" name="receiverMem"
 							class="input-mail" id="receive"></td>
 						<td><button type="button" class="address-btn"
 								data-toggle="modal" data-target="#findAdd">주소록에서 찾기</button></td>
@@ -137,10 +137,10 @@
 					</tr>
 					<tr>
 						<th><span>제목</span> <span class="send-check"> <input
-								type="checkbox" name="mailImportant" value="Y"><label
+								type="checkbox" name="mailImportant"><label
 								for="mailTitle">&nbsp;&nbsp;중요!</label>
 						</span></th>
-						<td colspan="2"><input type="text" name="title"
+						<td colspan="2"><input type="text" name="mailTitle"
 							class="input-mail" id="title"></td>
 					</tr>
 					<tr>
@@ -165,6 +165,75 @@
 			</div>
 
 			<script>
+			
+			/* ======= 메일 보내기 ajax ========= 
+			$(function(){
+				$("#sendMail").click(function(){
+					
+					let receive = [];
+					let receiverMem = $('input[name=receiverMem]').val();
+					if(receiverMem.contains(",")){
+						
+						let split = receiverMem.split(",");
+						console.log(split);
+						$(split).each(function(){
+							$.ajax({
+								url : "insertMail.ma",
+								data : {
+									
+								}
+							})
+						})
+						
+						// 받는 사람이 여러명인 경우
+						$.ajax({
+							url:"insertMail.ma",
+							data : {
+								memNo : ${loginUser.memNo},
+								receiverMem : receiverMem,
+								ccMem : $('input[name=ccMem]').val(),
+								mailTitle : $('input[name=title]').val(),
+								upfile : $('input[name=upfile]').val(),
+								mailContent : $('input[name=mailContent]').val()
+							},
+							success : function(result){
+								console.log("메일 전송 성공");
+							},
+							error : function(){
+								console.log("실패");	
+							}
+						})
+						
+						
+					} else {
+						// 받는 사람이 한명인 경우
+					
+						$.ajax({
+							url: "insertMail.ma",
+							data : {
+								memNo : ${loginUser.memNo},
+								receiverMem : receiverMem,
+								ccMem : $('input[name=ccMem]').val(),
+								mailTitle : $('input[name=title]').val(),
+								upfile : $('input[name=upfile]').val(),
+								mailContent : $('input[name=mailContent]').val()
+							},
+							success : function(result){
+								console.log("메일 전송 성공");
+							},
+							error : function(){
+								console.log("실패");	
+							}
+						})
+					}
+				})
+				
+			})
+			*/
+			
+			
+			
+			
 			
 				// '파일 추가' 누를 때 실행하는 함수
 				$(function() {

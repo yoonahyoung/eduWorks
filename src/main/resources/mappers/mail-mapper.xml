@@ -2,4 +2,66 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="mailMapper">
 
+	<insert id="insertMail">
+		insert
+		    into tb_mail
+		    (
+		      mail_no
+		    , mem_no
+		    , receiver_mem
+		    , cc_mem
+		    , mail_title
+		    , mail_content
+		    , send_date
+		    )
+		 values
+		    (
+		      seq_mano.nextval
+		    , #{memNo}
+		    , #{receiverMem}
+		    , #{ccMem}
+		    , #{mailTitle}
+		    , #{mailContent}
+		    , sysdate
+		    )
+	</insert>
+	
+	<insert id="insertMailStatus">
+		insert 
+		    into tb_mail_status
+		    (
+		      mail_no
+		    , send_mail
+		    , receive_mail
+		    , mail_folder
+		    )
+		 values
+		    (
+		      seq_mano.currval
+		    , #{sendMail}
+		    , #{receiveMail}
+		    , #{mailFolder}
+		     )
+	</insert>
+	
+	<insert id="insertAttachment">
+  		insert
+  		  into tb_attachment
+  		  (
+  		  	at_no
+  		  , at_ref_bno
+  		  , at_category
+  		  , at_origin_name
+  		  , at_change_name
+  		  )
+  		  values
+  		  (
+  		  	seq_atno.nextval
+  		  , seq_mano.currval
+  		  , 2
+  		  , #{atOriginName}
+  		  , #{atChangeName}
+  		  )
+	</insert>
+
 </mapper>
