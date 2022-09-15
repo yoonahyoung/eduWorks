@@ -82,7 +82,7 @@
 			    <script>
 			    	$(function(){
 			    		$("#book>tbody>tr").click(function(){
-			    			location.href = 'bookDetailView.bk';
+			    			location.href = 'bookDetailView.bk?no=' + $(this).children(".no").text();
 			    		})
 			    		
 			    	})

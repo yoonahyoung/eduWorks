@@ -25,76 +25,102 @@
 			<br>
 			
 			
-			<div class="tableOption" style="display:flex; justify-content: space-between;">
-			
-			
-			<!------- 케밥 메뉴 -------->
-				<ul class="navK">
-				 
-				 <div class="kebab">
-				   <figure></figure>
-				   <figure class="middleK"></figure>
-				   <p class="crossK">x</p>
-				   <figure></figure>
-				   <ul class="dropdownK">
-				     <li><a onclick="updateForm('bookUpdate.bk');">교재 수정</a></li>
-				<hr>
-				<li><a onclick="deleteForm('delete.bk')">교재 삭제</a></li>
-				    </ul>
-				    
-				  </div>
-				</ul>
+			<form id="postForm" action="bookUpdateForm.bk" method="post">
+				<div class="tableOption" style="display:flex; justify-content: space-between;">
 				
-				<form id="postForm" action="" method="post">
-				    <input type="hidden" value="" name="">
-				</form>
 				
-				<script>
-				function deleteForm(url){
-				    var result = confirm('정말 삭제하시겠습니까?');
-				    if(result == true){
-				        $("#postForm").attr("action", url).submit();
-				    }
-				}
+				<!------- 케밥 메뉴 -------->
+					<ul class="navK">
+					 
+					 <div class="kebab">
+					   <figure></figure>
+					   <figure class="middleK"></figure>
+					   <p class="crossK">x</p>
+					   <figure></figure>
+					   <ul class="dropdownK">
+					     <li><a href="bookUpdateForm.bk?no=${b.bookNo}" >교재수정</a></li>
+					<hr>
+					<li><a onclick="deleteForm('bookDelete.bk')">교재 삭제</a></li>
+					    </ul>
+					    
+					  </div>
+					</ul>
+					
 				
-				function updateForm(url){
-				    $("#postForm").attr("action", url).submit();
-				}
-				</script>
-			
-			
-			
-				<script>
-				var kebab = document.querySelector('.kebab'),
-				middle = document.querySelector('.middleK'),
-				cross = document.querySelector('.crossK'),
-				dropdown = document.querySelector('.dropdownK');
+				    <input type="hidden" value="${ b.bookNo }" name="no">
 				
-				kebab.addEventListener('click', function() {
-				middle.classList.toggle('active');
-				cross.classList.toggle('active');
-				dropdown.classList.toggle('active');
-				})
-				</script>
+				</div>
+			</form>
+					<script>
+						function postFormSubmit(){
+							$("#postForm").submit();
+						}
+						
+						function deleteForm(url){
+							console.log(url);
+							/*
+						    var result = confirm('정말 삭제하시겠습니까?');
+						    if(result == true){
+						        $("#postForm").attr("action", url).submit();
+						    }
+						    */
+	
+						    Swal.fire({
+						       title: '정말 삭제하시겠습니까?',
+						       text: '다시 되돌릴 수 없습니다. 신중하세요.',
+						       icon: 'warning',
+						       
+						       showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+						       confirmButtonColor: 'slategray', // confrim 버튼 색깔 지정
+						       cancelButtonColor: 'lightgray', // cancel 버튼 색깔 지정
+						       confirmButtonText: '삭제', // confirm 버튼 텍스트 지정
+						       cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+						       
+						       reverseButtons: true, // 버튼 순서 거꾸로
+						       
+						    }).then(result => {
+						       // 만약 Promise리턴을 받으면,
+						       if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
+						    	   $("#postForm").attr("action", url).submit();
+						           Swal.fire('삭제가 완료되었습니다.', '', 'success');
+						       }
+						    });
+						}
+						
+					</script>
+				
+				
+				
+					<script>
+					var kebab = document.querySelector('.kebab'),
+					middle = document.querySelector('.middleK'),
+					cross = document.querySelector('.crossK'),
+					dropdown = document.querySelector('.dropdownK');
+					
+					kebab.addEventListener('click', function() {
+					middle.classList.toggle('active');
+					cross.classList.toggle('active');
+					dropdown.classList.toggle('active');
+					})
+					</script>
 				   
 			    
 			   
 			    
-			</div>
 		
 			<div class="main_width">
 			     <table class="board-content table"  align="center">
 			          <tr>
 			               <th>교재명</th>
-			               <td>c언어 알아보기</td>
+			               <td>${ b.bkTitle }</td>
 			          </tr>
 			          <tr>
 			               <th>강사명</th>
-			               <td>김강사</td>
+			               <td>${ b.memName }</td>
 			          </tr>
 			          <tr>
 			               <th>교재 내용</th>
-			               <td>자바 기초에 대한 모든 정수를 담은 이시대 최고의 교재</td>
+			               <td>${ b.bkContent }</td>
 			          </tr>
 			          
 			       </table>
@@ -102,9 +128,15 @@
 			      
 			</div>
 			<div class="btn_two_spacing">
-			  <button type="submit" style="float:right; padding-right: 10%;" onclick="history.back();">목록가기</button>
+			  <button id="gogo" type="submit" style="float:right; padding-right: 10%;">목록가기</button>
 			</div>
 		</div>  
+		
+		<script>
+			$("#gogo").click(function(){
+				location.href = 'bookList.bk';
+			})
+		</script>
 	
 
         <!-- End of Content Wrapper -->

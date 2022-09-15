@@ -45,10 +45,21 @@ public class TeacherDao {
 		return sqlSession.insert("teacherMapper.bookEnrollFormInsert", t);
 	}
 	
+	public Book bookDetailViewSelect(SqlSessionTemplate sqlSession, int bookNo) {
+		return sqlSession.selectOne("bookMapper.bookDetailViewSelect", bookNo);
+	}
 	
+	public int bookEnrollFormInsert(SqlSessionTemplate sqlSession, Book b) {
+		return sqlSession.insert("bookMapper.bookEnrollFormInsert", b);
+	}
 	
+	public int bookUpdate(SqlSessionTemplate sqlSession, Book b) {
+		return sqlSession.update("bookMapper.bookUpdate", b);
+	}
 	
-	
+	public int deleteBook(SqlSessionTemplate sqlSession, int bookNo) {
+		return sqlSession.delete("bookMapper.deleteBook", bookNo);
+	}
 	
 	
 	
