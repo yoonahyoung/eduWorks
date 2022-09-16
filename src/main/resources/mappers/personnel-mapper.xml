@@ -523,6 +523,46 @@
 		 where mem_no = #{memNo}
 	</update>
 	
+	<insert id="sendOjtMail">
+		insert 
+		  into tb_mail
+		     (mail_no
+		    , mem_no
+		    , receiver_mem
+		    , mail_title
+		    , mail_content
+		    , mail_type
+		     )
+		values
+			(
+		     seq_mano.nextval
+		   , #{sendUserNo}
+		   , #{memEmailStr}
+		   , #{sendTitle}
+		   , #{sendContent}
+		   , 1
+			)
+		   
+	</insert>
+	
+	<insert id="addOjtMailStatus">
+		<foreach collection="list" item="li" open="INSERT ALL" separator=" " close="SELECT * FROM DUAL">
+			  into tb_mail_status
+			     (mail_no
+			    , send_mail
+			    , receive_mail
+			    , mail_folder
+			     )
+			values
+				(
+			     seq_mano.currval
+			   , #{li.sendMail}
+			   , #{li.receiveMail}
+			   , #{li.mailFolder}
+				)
+		</foreach>
+	</insert>
+	
 	<update id="completeOjt">
 		update tb_ojt
 		   set ojt_status = 'Y'

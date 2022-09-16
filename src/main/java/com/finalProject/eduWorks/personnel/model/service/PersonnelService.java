@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
+import com.finalProject.eduWorks.mail.model.vo.MailStatus;
 import com.finalProject.eduWorks.member.model.vo.Department;
 import com.finalProject.eduWorks.member.model.vo.Job;
 import com.finalProject.eduWorks.member.model.vo.Member;
@@ -62,7 +63,7 @@ public interface PersonnelService {
 	
 	//ojt 일정등록및 메일보내기
 	int updateOjtDate(String[] memNos,HashMap m);
-	int sendOjtMail(String[] memNos,HashMap m);
+	int sendOjtMail(HashMap m,ArrayList<MailStatus> list);
 	
 	//ojt 수료완료처리
 	int completeOjt(ArrayList<String> list);

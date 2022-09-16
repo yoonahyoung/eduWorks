@@ -319,6 +319,7 @@
                             	
                             	function cancel(){
                             		let userNo =[]
+                            		let userEamil =[]
                             		let li = $('input[class="userNo"]:checked')
                             		if($(li).length==0){
                             			alert('지정된 직원이 없습니다.')
@@ -329,15 +330,18 @@
                             				result = 0
                             			}
                                 		userNo.push($(this).val())
+                                		userEamil.push($(this).siblings('.userNo2').val())
                                 	})
                                 	console.log(userNo)
+                                	console.log(userEamil)
                                 	if(result>0){
                                 		$.ajax({
                                 			url:'cancel.oj',
                                 			method:'POST',
                                 			data:{'memNo':userNo,
                                 			      'title':$('#cancelTitle').val(),
-                                			      'content':$('#cancelContent').val()},
+                                			      'content':$('#cancelContent').val(),
+                                			      'memEmail':userEamil},
                                 			success:function(result){
                                 				if(result=="success"){
                                 					alert('성공')
@@ -369,6 +373,7 @@
                             			}
                                 		userNo.push($(this).val())
                                 	})
+                                	console.log(userEmail)
                                 	console.log(userNo)
                                 	if(result>0){
                                 		$.ajax({
@@ -494,6 +499,7 @@
                             <form action="sendOjt.oj">
                             	<div>
                             		<input type="hidden" id="memNos" name="memNos" value="">
+                            		<input type="hidden" id="memEmail" name="memEmail" value="">
 	                                <table class="tb1">
 	                                    <tr>
 	                                        <td style="width: 100px;">&nbsp;제목</td>
@@ -528,6 +534,7 @@
                             	
                             	function test(){
                             		let userNo =[]
+                            		let userEmail =[]
                             		let li = $('input[class="userNo"]:checked')
                             		if($(li).length==0){
                             			alert('지정된 직원이 없습니다.')
@@ -540,14 +547,17 @@
                             				result = 0
                             			}
                                 		userNo.push($(this).val())
+                                		userEmail.push($(this).siblings('.userNo2').val())
                                 	})
                                 	console.log(userNo)
+                                	console.log(userEmail)
                                 	if(result>0){
                                 		if(new Date($('#ojtdate').val())<new Date()){
                                 			alert('오늘날짜보다 뒤로입력해주세요')
                                 			return false;
                                 		}else{
                                 			$('#memNos').val(userNo)
+                                			$('#memEmail').val(userEmail)
                                 			return true;
                                 		}
                                 	}else{
