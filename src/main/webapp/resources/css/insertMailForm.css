@@ -444,13 +444,26 @@ img{
 	font-size: 15px;
 }
 
-#preview-form {
+#preview-form{
+	border:1px solid black;
 	width: 100%;
 	height: 500px;
 	resize: none;
+	text-align:left;
 }
 
-.send-title, .send-title>span, .file-name{
+.send-title{
+	width:13%;
+}
+
+.send-title, .send-title>span{
 	text-align:left;
 	font-size: 16px;
+}
+.send-title>span, .file-name{
+	margin-left:10px;
+}
+
+.border-line{
+	float:right;
 }

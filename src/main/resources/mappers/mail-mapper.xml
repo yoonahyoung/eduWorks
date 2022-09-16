@@ -2,6 +2,79 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="mailMapper">
 
+	<resultMap id="mailResult" type="Mail">
+		<result column="mail_no" property="mailNo" />
+		<result column="mem_no" property="memNo" />
+		<result column="tag_no" property="tagNo" />
+		<result column="mail_temporary" property="mailTemporary" />
+		<result column="receiver_mem" property="receiverMem" />
+		<result column="cc_mem" property="ccMem" />
+		<result column="mail_title" property="mailTitle" />
+		<result column="mail_content" property="mailContent" />
+		<result column="mail_type" property="mailType" />
+		<result column="send_date" property="sendDate" />
+		<association property="mailStatus" resultMap="mailStatusResult" />
+		<association property="attachment" resultMap="attachmentResult" />
+	</resultMap>
+
+	<resultMap id="mailStatusResult" type="MailStatus">
+		<result column="send_mail" property="sendMail" />
+		<result column="receive_mail" property="receiveMail" />
+		<result column="mail_folder" property="mailFolder" />
+		<result column="mail_read" property="mailRead" />
+		<result column="mail_delete" property="mailDelete" />
+		<result column="mail_spam" property="mailSpam" />
+		<result column="mail_important" property="mailImportant" />
+	</resultMap>
+	
+	<resultMap id="attachmentResult" type="Attachment">
+		<result column="at_no" property="atNo" />
+		<result column="at_ref_bno" property="atRefBno" />
+		<result column="at_category" property="atCategory" />
+		<result column="at_origin_name" property="atOriginName" />
+		<result column="at_change_name" property="atChangeName" />
+		<result column="at_status" property="atStatus" />
+		<result column="at_count" property="atCount" />
+	</resultMap>
+
+	<!-- 보낸 메일 개수 조회 -->
+	<select id="sendListCount" resultType="_int">
+		select
+		    count(*)
+		from tb_mail
+		where mem_no = #{memNo}
+	</select>
+
+	<!-- 보낸 메일함 조회 -->
+	<select id="selectSendMailList" resultMap="mailResult">
+		select
+		    mail_no
+		  , mem_no
+		  , m.tag_no
+		  , receiver_mem
+		  , cc_mem
+		  , mail_title
+		  , mail_content
+		  , mail_type
+		  , mail_folder
+		  , mail_read
+		  , mail_delete
+		  , mail_spam
+		  , mail_important
+		  , (
+		        select
+		            count(*)
+		        from tb_attachment
+		        where at_category = 2
+		          and at_ref_bno = mail_no
+		  
+		     ) "at_count"
+		from tb_mail m
+		join tb_mail_status ms using (mail_no)
+		where mem_no = #{memNo}
+		  and mail_folder = 1
+	</select>
+	
 	<!-- 메일 전송 -->
 	<insert id="insertMail">
 		insert

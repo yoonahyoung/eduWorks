@@ -3,6 +3,7 @@ package com.finalProject.eduWorks.mail.model.service;
 import java.util.ArrayList;
 
 import com.finalProject.eduWorks.common.model.vo.Attachment;
+import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.mail.model.vo.Mail;
 import com.finalProject.eduWorks.mail.model.vo.MailStatus;
 
@@ -13,15 +14,31 @@ public interface MailService {
 	int insertMailStatus(ArrayList<MailStatus> list); // 메일 상태 보내기
 	int insertAttachment(ArrayList<Attachment> atList); // 첨부파일 보내기
 	
+	// 2. 임시저장
+	// int insertTemporaryMail(Mail m); // 임시저장 보내기
+	
+	// 3. 보낸 메일 조회
+	int sendListCount(String memNo); // 보낸 메일 개수 조회
+	ArrayList<Mail> selectSendMailList(PageInfo pi, String memNo); // 메일 목록 조회
+	// 3_2. 보낸 메일글 상세조회
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	// 1_2. 메일 답장
 //	int replyMail(Mail m);
 	
 	// 2. 메일 작성 (나에게)
 //	int insertMailMe(Mail m);
 	
-	// 3. 보낸 메일 조회
-	
-	// 3_2. 보낸 메일글 상세조회
 		
 	// 4. 받은 메일 조회
 	

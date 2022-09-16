@@ -1,8 +1,6 @@
 package com.finalProject.eduWorks.mail.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -10,10 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.finalProject.eduWorks.common.model.vo.Attachment;
+import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.template.FileUpload;
+import com.finalProject.eduWorks.common.template.Pagination;
 import com.finalProject.eduWorks.mail.model.service.MailServiceImpl;
 import com.finalProject.eduWorks.mail.model.vo.Mail;
 import com.finalProject.eduWorks.mail.model.vo.MailStatus;
@@ -29,17 +31,33 @@ public class MailController {
 	 * 1. 보낸 메일함으로 이동
 	 * @return : 보낸 메일함 페이지
 	 */
-	@RequestMapping("sendMailForm.ma")
-	public String sendMailForm(Model model) {
-		return "mail/sendMailList";
+	@RequestMapping("sendMailList.ma")
+	public ModelAndView sendMailList(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv, HttpSession session) {
+		
+		String memNo = ( (Member)session.getAttribute("loginUser") ).getMemNo();
+		
+		// 보낸 메일 개수 조회
+		int listCount = mService.sendListCount(memNo);
+		
+		// 페이징
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
+		
+		// 보낸 메일 조회
+		ArrayList<Mail> list = mService.selectSendMailList(pi, memNo);
+				
+		mv.addObject("list", list);
+		mv.addObject("pi", pi);
+		mv.setViewName("mail/sendMailList");
+		
+		return mv;
 	}
 	
 	/**
 	 * 2. 받은 메일함으로 이동
 	 * @return : 받은 메일함 페이지
 	 */
-	@RequestMapping("receiveMailForm.ma")
-	public String receiveMailForm(Model model) {
+	@RequestMapping("receiveMailList.ma")
+	public String receiveMailList(Model model) {
 		return "mail/receiveMailList";
 	}
 	
@@ -62,26 +80,23 @@ public class MailController {
 	}
 	
 	/**
-	 * 중요 메일함으로 이동
+	 * 5. 중요 메일함으로 이동
 	 * @return : 중요 메일함 페이지
 	 */
-	@RequestMapping("importantMailForm.ma")
-	public String importantMailForm(Model model) {
+	@RequestMapping("importantMailList.ma")
+	public String importantMailList(Model model) {
 		return "mail/importantMailList";
 	}
 	
 	/**
-	 * 5. 메일 전송
+	 * 6. 메일 전송
 	 * @param m : 전송할 메일 정보
 	 * @param upfile : 전송할 파일 정보
 	 * @return : 보낸메일함 페이지
 	 */
 	@RequestMapping("insertMail.ma")
-	public String insertMail(Mail m, MultipartFile[] upfile, HttpSession session, Model model) {
+	public String insertMail(Mail m, MultipartFile[] upfile, HttpSession session) {
 
-		// 회원 번호
-		// String memNo = ((Member)session.getAttribute("loginUser")).getMemNo();
-		
 		// 보낸 사람 이메일
 		String memEmail = ((Member)session.getAttribute("loginUser")).getMemEmail();
 
@@ -114,7 +129,6 @@ public class MailController {
 			System.out.println(receiveArr);
 			
 			for(String r : receiveArr) {
-				System.out.println(r);
 				
 				MailStatus ms2 = new MailStatus();
 				ms2.setSendMail(memEmail);
@@ -132,8 +146,7 @@ public class MailController {
 				System.out.println(ccArr);
 				
 				for(String c : ccArr) {
-					System.out.println(c);
-					
+
 					MailStatus ms3 = new MailStatus();
 					ms3.setSendMail(memEmail);
 					ms3.setReceiveMail(c); // 받는 사람 이메일(','로 구분지은것)
@@ -141,12 +154,10 @@ public class MailController {
 					
 					list.add(ms3); // ArrayList<MailStatus>에 추가
 				}
-				
-			}
 
+			}
 			// 메일 상태에 보내기 (성공 : 1 | 실패 : 0)
 			result2 = mService.insertMailStatus(list);
-
 		}
 
 		// 첨부파일 보내기 (한개 또는 여러개)
@@ -165,14 +176,13 @@ public class MailController {
 
 				// at를 attachmentList에 담기
 				atList.add(at);
-
-				// 첨부파일 보내기 (성공 : 1 | 실패 : 0)
-
-				System.out.println(file);
-
 			}
-
-			result3 += mService.insertAttachment(atList);
+			
+		}
+		
+		// 첨부파일 보내기
+		if(atList.size() > 0) { // 첨부파일이 추가된 경우
+			result3 = mService.insertAttachment(atList);
 		}
 
 		if(result1 > 0 && result2 > 0 && result3 > 0) {
@@ -185,10 +195,9 @@ public class MailController {
 			session.setAttribute("alertMsg","메일 전송을 실패했습니다.");
 		}
 
-		return "redirect:sendMailForm.ma";
+		return "redirect:sendMailList.ma";
 		
 	}
-	
 	
 	
 }
