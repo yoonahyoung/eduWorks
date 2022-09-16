@@ -18,4 +18,6 @@ public interface LectureService {
 	ArrayList<Member> teacherList();
 	
 	int adminLectureUpdate(Teacher t);
+	
+	int adminLectureDelete(int classNo);
 }

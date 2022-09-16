@@ -181,7 +181,11 @@
 		 where class_no = #{classNo}  
 	</update>
 	
-	
+	<delete id="adminLectureDelete">
+		delete
+		  from tb_class
+		 where class_no = #{classNo}
+	</delete>
 	
 	
 	

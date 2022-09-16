@@ -89,7 +89,7 @@ public class LectureController {
 		return mv;
 	}
 	
-	// (강사) 승인된 강의 수정 페이지 이동
+	// (행정) 승인된 강의 수정 페이지 이동
 	@RequestMapping("donUpdateForm.cl")
 	public ModelAndView adminLectureUpdateForm(int no, ModelAndView mv) {
 		
@@ -99,7 +99,7 @@ public class LectureController {
 		return mv;
 	}
 	
-	// (강사) 승인된 강의 수정
+	// (행정) 승인된 강의 수정
 	@RequestMapping("donUpdate.cl")
 	public String adminLectureUpdate(Teacher t, HttpSession session) {
 		
@@ -118,7 +118,24 @@ public class LectureController {
 		}
 	}
 	
-	
+	// (행정) 승인된 강의 삭제
+		@RequestMapping("doneDelete.cl")
+		public String adminLectureDelete(int no, HttpSession session) {
+			
+			int result = lService.adminLectureDelete(no);
+			
+			if(result > 0) {
+				session.setAttribute("alertIcon", "success");
+				session.setAttribute("alertTitle", "삭제 성공");
+				session.setAttribute("alertMsg", "교재 삭제를 성공하였습니다.");
+				return "redirect:doneDetail.cl";
+			}else {
+				session.setAttribute("alertIcon", "error");
+				session.setAttribute("alertTitle", "삭제 실페");
+				session.setAttribute("alertMsg", "교재 삭제를 실패하였습니다.");
+				return "redirect:doneDetail.cl?no=" + no;
+			}
+		}
 	
 	
 	

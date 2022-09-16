@@ -55,6 +55,11 @@ public class LectureServiceImpl implements LectureService{
 		return lDao.adminLectureUpdate(sqlSession, t);
 	}
 
+	@Override
+	public int adminLectureDelete(int classNo) {
+		return lDao.adminLectureDelete(sqlSession, classNo);
+	}
+
 
 	
 

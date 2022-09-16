@@ -53,6 +53,9 @@ public class LectureDao {
 		return sqlSession.update("teacherMapper.adminLectureUpdate", t);
 	}
 	
+	public int adminLectureDelete(SqlSessionTemplate sqlSession, int classNo) {
+		return sqlSession.delete("teacherMapper.adminLectureDelete", classNo);
+	}
 	
 	
 	
