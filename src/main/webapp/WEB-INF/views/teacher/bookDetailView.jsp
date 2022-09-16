@@ -25,35 +25,38 @@
 			<br>
 			
 			
-			<form id="postForm" action="bookUpdateForm.bk" method="post">
+			
 				<div class="tableOption" style="display:flex; justify-content: space-between;">
 				
 				
 				<!------- 케밥 메뉴 -------->
 					<ul class="navK">
-					 
-					 <div class="kebab">
-					   <figure></figure>
-					   <figure class="middleK"></figure>
-					   <p class="crossK">x</p>
-					   <figure></figure>
-					   <ul class="dropdownK">
-					     <li><a href="bookUpdateForm.bk?no=${b.bookNo}" >교재수정</a></li>
-					<hr>
-					<li><a onclick="deleteForm('bookDelete.bk')">교재 삭제</a></li>
-					    </ul>
-					    
-					  </div>
+						 <div class="kebab">
+						   <figure></figure>
+						   <figure class="middleK"></figure>
+						   <p class="crossK">x</p>
+						   <figure></figure>
+						   <ul class="dropdownK">
+						     <li><a onclick="postFormSubmit2('bookUpdateForm.bk');">교재수정</a></li>
+							 <hr>
+							 <li><a onclick="deleteForm('bookDelete.bk')">교재 삭제</a></li>
+						   </ul>
+						</div>
 					</ul>
 					
 				
-				    <input type="hidden" value="${ b.bookNo }" name="no">
+				    
 				
 				</div>
+				
+			<form id="postForm2" action="" method="post">
+				<input type="hidden" value="${ b.bookNo }" name="no">
 			</form>
+			
 					<script>
-						function postFormSubmit(){
-							$("#postForm").submit();
+						function postFormSubmit2(url){
+							$("#postForm2").attr("action", url);
+							$("#postForm2").submit();
 						}
 						
 						function deleteForm(url){
@@ -81,10 +84,11 @@
 						    }).then(result => {
 						       // 만약 Promise리턴을 받으면,
 						       if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
-						    	   $("#postForm").attr("action", url).submit();
+						    	   $("#postForm2").attr("action", url).submit();
 						           Swal.fire('삭제가 완료되었습니다.', '', 'success');
 						       }
 						    });
+
 						}
 						
 					</script>
