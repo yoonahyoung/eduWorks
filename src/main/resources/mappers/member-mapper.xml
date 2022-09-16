@@ -49,4 +49,14 @@
        and mem_pwd = #{memPwd}
   </select>
   
+   <select id="teacherList" resultMap="memberResult">
+  	select
+  		   mem_no
+  		 , mem_id
+  		 , mem_name
+      from tb_member
+     where mem_resign_status = 'N'
+       and dept_code = 'D0'
+  </select>
+  
 </mapper>
