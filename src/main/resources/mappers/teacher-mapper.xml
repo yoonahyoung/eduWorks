@@ -44,12 +44,11 @@
 		     , mem_name
 		  from tb_class c
 		  join tb_member m on(c.mem_no = m.mem_no)
-		 where class_status = 'Y'
          order
             by class_no desc
 	</select>
 	
-	<insert id="bookEnrollFormInsert">
+	<insert id="appEnrollFormInsert">
 		insert
 		  into tb_class
 		  (
@@ -149,9 +148,38 @@
             by class_no desc
 	</select>
 	
+	<select id="adminLectureDetailSelect" resultMap="teacherResult">
+		select
+			 class_no
+		     , class_title
+		     , class_content
+		     , class_objective
+		     , class_subject
+		     , class_student
+		     , class_start_date
+		     , class_end_date
+		     , c.mem_no
+		     , class_approval
+		     , class_fee
+		     , class_signup_date
+		     , mem_name
+		  from tb_class c
+		  join tb_member m on(c.mem_no = m.mem_no)
+		 where class_no = #{classNo}    
+	</select>
 	
-	
-	
+	<update id="adminLectureUpdate">
+		update
+		       tb_class
+		   set class_title = #{classTitle}
+		     , mem_no = #{memNo}
+		     , class_start_date = #{classStartDate}
+		     , class_end_date = #{classEndDate}
+		     , class_fee = #{classFee}
+		     , class_signup_date = sysdate
+		     , class_content = #{classContent}
+		 where class_no = #{classNo}  
+	</update>
 	
 	
 	
