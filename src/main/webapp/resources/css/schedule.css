@@ -387,7 +387,7 @@ input[type=checkbox]{
   width: 90%;
 }
 .su_reply_content p{
-  white-space: pre;
+  /* white-space: pre; */
 }
 .su_reReply span{
   transform: scaleY(-1);
@@ -408,14 +408,14 @@ input[type=checkbox]{
   align-items: center;
 }
 .su_insert_reReply img{
-  width: 30px;
-  margin: 0px 3px;
+  width: 40px;
+  margin: 0px 5px;
 }
 .su_reReply_input{
   float: right;
 }
 .su_reReply_input input{
-  width: 35%;
+  width: 55%;
 }
 .su_reReply_input button{
   margin: 0px 2px;

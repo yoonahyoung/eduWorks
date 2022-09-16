@@ -6,6 +6,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.finalProject.eduWorks.common.model.vo.Reply;
 import com.finalProject.eduWorks.member.model.vo.Member;
 import com.finalProject.eduWorks.schedule.model.dao.ScheduleDao;
 import com.finalProject.eduWorks.schedule.model.vo.Mycal;
@@ -74,6 +75,31 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Override
 	public int deleteSche(int scheNo) {
 		return sDao.deleteSche(sqlSession, scheNo);
+	}
+
+	@Override
+	public ArrayList<Reply> selectReplyList(int scheNo) {
+		return sDao.selectReplyList(sqlSession, scheNo);
+	}
+
+	@Override
+	public int insertReply(Reply r) {
+		return sDao.insertReply(sqlSession, r);
+	}
+
+	@Override
+	public int updateReply(Reply r) {
+		return sDao.updateReply(sqlSession, r);
+	}
+
+	@Override
+	public Reply selectReply(int replyNo) {
+		return sDao.selectReply(sqlSession, replyNo);
+	}
+
+	@Override
+	public int deleteReply(int replyNo) {
+		return sDao.deleteReply(sqlSession, replyNo);
 	}
 	
 

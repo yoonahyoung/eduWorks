@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.finalProject.eduWorks.common.model.vo.Reply;
 import com.finalProject.eduWorks.member.model.vo.Member;
 import com.finalProject.eduWorks.schedule.model.service.ScheduleService;
 import com.finalProject.eduWorks.schedule.model.vo.Mycal;
@@ -218,5 +219,63 @@ public class ScheduleController {
 			return "redirect:list.ca";
 		}
 	}
-
+	
+	// 댓글 리스트 조회
+	@ResponseBody
+	@RequestMapping(value="rlist.ca", produces="application/json; charset=UTF-8")
+	public String ajaxSelectReplyList(int no) {
+		
+		ArrayList<Reply> list = sService.selectReplyList(no);
+		
+		return new Gson().toJson(list);
+	}
+	
+	// 댓글, 대댓글 입력
+	@ResponseBody
+	@RequestMapping("rinsert.ca")
+	public String ajaxInsertReply(Reply r) {
+		
+		if(r.getReplyParent() == 0) { // 원댓글일 때
+			r.setReplyDepth(0);
+		} else {
+			r.setReplyDepth(1);
+		}
+		
+		int result = sService.insertReply(r);
+		
+		return result > 0 ? "success" : "fail";
+	}
+	
+	// 댓글 수정
+	@ResponseBody
+	@RequestMapping(value="rupdate.ca", produces="application/json; charset=UTF-8")
+	public String ajaxUpdateReply(Reply rr) {
+		int result = sService.updateReply(rr);
+		Reply r = sService.selectReply(rr.getReplyNo());
+		
+		if(result > 0) {
+			return new Gson().toJson(r);
+		} else {
+			return "fail";
+		}
+	}
+	
+	// 댓글 취소
+	@ResponseBody
+	@RequestMapping(value="rcancel.ca", produces="application/json; charset=UTF-8")
+	public String ajaxCancelReply(int replyNo) {
+		Reply r = sService.selectReply(replyNo);
+		
+		return new Gson().toJson(r);
+	}
+	
+	// 댓글 삭제
+	@ResponseBody
+	@RequestMapping("rdelete.ca")
+	public int ajaxDeleteReply(int replyNo) {
+		int result = sService.deleteReply(replyNo);
+		
+		return result;
+	}
+	
 }

@@ -38,6 +38,18 @@
 		<collection property="mycal" resultMap="mycalResult" />
 	</resultMap>
 	
+	<resultMap id="replyResult" type="Reply">
+		<result column="reply_no" property="replyNo" />
+		<result column="re_board_no" property="reBoardNo" />
+		<result column="reply_depth" property="replyDepth" />
+		<result column="reply_parent" property="replyParent" />
+		<result column="reply_content" property="replyContent" />
+		<result column="reply_writer" property="replyWriter" />
+		<result column="reply_job" property="replyJob" />
+		<result column="reply_date" property="replyDate" />
+		<result column="reply_status" property="replyStatus" />
+	</resultMap>
+	
 	<select id="selectScheList" resultMap="scheduleResult">
 		select sche_no
 			 , sche_title
@@ -244,15 +256,75 @@
 		 where sche_no = #{scheNo}
 	</update>
 	
+	<select id="selectReplyList" resultMap="replyResult">
+		select reply_no
+			 , re_board_no
+			 , reply_depth
+			 , reply_parent
+			 , reply_content
+			 , reply_writer
+			 , reply_job
+			 , to_char(reply_date, 'YYYY-MM-DD (DY) HH24:MI') as "reply_date"
+			 , reply_status
+		  from tb_reply
+		 where reply_type = 1
+		   and re_board_no = #{scheNo}
+		 start with reply_parent = 0
+		 connect by prior reply_no = reply_parent
+		 order siblings by reply_no asc, reply_parent asc 
+	</select>
 	
+	<insert id="insertReply">
+		insert
+		  into tb_reply
+		  (
+		    reply_no
+		  , reply_type
+		  , re_board_no
+		  , reply_depth
+		  , reply_parent
+		  , reply_content
+		  , reply_writer
+		  , reply_job
+		  )
+		  values
+		  (
+		    seq_reno.nextval
+		  , 1
+		  , #{reBoardNo}
+		  , #{replyDepth}
+		  , #{replyParent}
+		  , #{replyContent}
+		  , #{replyWriter}
+		  , #{replyJob}
+		  )
+	</insert>
 	
+	<update id="updateReply">
+		update tb_reply
+		   set reply_content = #{replyContent}
+		     , reply_mo_date = sysdate
+		 where reply_no = #{replyNo}
+	</update>
 	
+	<select id="selectReply" resultMap="replyResult">
+		select reply_no
+			 , re_board_no
+			 , reply_depth
+			 , reply_parent
+			 , reply_content
+			 , reply_writer
+			 , reply_job
+			 , to_char(reply_date, 'YYYY-MM-DD (DY) HH24:MI') as "reply_date"
+			 , reply_status
+		  from tb_reply
+		 where reply_no = #{replyNo}
+	</select>
 	
-	
-	
-	
-	
-	
-	
+	<update id="deleteReply">
+		update tb_reply
+		   set reply_status = 'N'
+		 where reply_no = #{replyNo}
+	</update>
 	
 </mapper>

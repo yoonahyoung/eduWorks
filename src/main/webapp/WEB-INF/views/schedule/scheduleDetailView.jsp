@@ -601,6 +601,28 @@
 		                            </div>
 		                        </div>
 		                    </div>
+		                    
+		                    <!-- 댓글 삭제 모달창 -->
+				            <div class="modal" id="deleteReply" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				                <div class="modal-dialog modal-dialog-centered cascading-modal modal-avatar" role="document">
+				                    <!--Content-->
+				                    <div class="modal-content modal_alert">
+				                        
+				                        <!--Body-->
+				                        <div class="modal-body text-center modal_alert_child">
+				                            <div style="margin-top: 1.5rem;">
+				            
+				                                <h5 class="mt-1 mb-2" style="color: black;">정말 삭제하시겠습니까?</h5>
+				                                <br>
+				                                <div class="text-center mt-4"> 
+				                                    <button type="button" id="realDeleteReply" class="btn su_btn_all su_btn_medium">확인</button>
+				                                    <button type="button" id="next" class="btn su_btn_border su_btn_medium" data-dismiss="modal">취소</button>
+				                                </div>
+				                            </div>
+				                        </div>
+				                    </div>
+				                </div>
+				            </div>
 		                
 		    
 		                
@@ -608,88 +630,373 @@
 	                
 	                </form>
 	                
-	                <!-- 댓글 영역 -->
+	                <!-- 댓글 영역=================================================================================== -->
 	                <!-- 내가 작성한 댓글은 옆에 삭제 버튼 추가 -->
-                    <div class="su_sub_menu_div_left">
+                    <div class="su_sub_menu_div_left" style="margin: 0px;">
                         <div class="reply_header">
-                            <h4> &ensp;댓글 <span>1</span></h4>
+                            <h4> &ensp;댓글 <span id="rCountSpan"></span></h4>
                         </div>
 
                         <hr class="hr_line">
                         
-                        <div class="su_one_reply">
-                            <div>
-                                <img src="resources/defaultProfile.png" alt="">
+                        <!-- 댓글 작성 영역 -->
+                        <div class="su_insert_reply" style="margin-bottom: 15px;">
+                            <!-- 로그인 한 사원 사진 -->
+                            <img style="margin-left: 14px;" src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">
+                        
+                            <div class="su_reply_input">
+                                <input type="text" placeholder="댓글 입력" id="replyContent0">
+                                &nbsp;
+                                <button type="button" class="btn btn-sm su_btn_border" onclick="addReply(0);">작성</button>
                             </div>
-                            <div class="su_reply_content">
-                                <h5 class="font-weight-bold">김미영 팀장</h5>
-	                                            <p>세미나 끝나고 회식 있습니다.
-	다들 참석해주세요~</p>
-	                                            <!-- 자기가 쓴 댓글에만 출력, 자기가 쓴 댓글엔 대댓글 작성 영역 표시 안함 -->
-	                            <!-- <button type="button" class="btn btn-sm su_btn_border" style="float: right;">삭제</button> -->
-	
-	                            <div class="su_reReply">
-	                                <div class="su_beforeReRe dis_bl">
-	                                    <span class="fas fa-share">&ensp;</span>
-	                                    
-	                                    <a id="insertReReplyBtn">댓글</a>
-	                                </div>
-	
-	                                <!-- 댓글 작성 영역 -->
-	                                
-	                                <div class="su_insert_reReply">
-	                                    <div class="su_afterReRe dis_no">
-	                                        <div class="su_reReply_input">
-	                                            <span class="fas fa-share"> </span>
-	                                            <!-- 로그인 한 사원 사진 -->
-	                                            <img src="resources/defaultProfile.png" alt="">
-	                                    
-	                                            <input type="text" placeholder="댓글 입력" name="" id="reReContent">
-	                                            <button type="button" class="btn btn-sm su_btn_border">작성</button>
-	                                            
-	                                            <span class="fas fa-xmark" id="replyX"> </span>
-	                                        </div>
-	                                    </div>
-	                                </div>
-	                    
-	                            </div>
-	
-	                            </div>
-	                        </div>
+                               
+                        </div>
+                        
+                       	<!-- 댓글 리스트 조회 영역 -->
+                       	<div id="scheReplyArea" style="padding-left: 5px;"></div>
 	                        
-	                         <!-- 대댓글 작성 버튼 누르면 바뀜 -->
-	                        <script>
-	                            $(document).ready(function(){
-	                                $("#insertReReplyBtn").click(function(){
-	                                    $(".su_beforeReRe").hide();
-	                                    $(".su_afterReRe").show();
-	                                    $(".su_afterReRe input").focus();
-	                                });
+                        <br>
+                        
+                        
 	
-	                                $("#replyX").click(function(){
-	                                    $(".su_beforeReRe").show();
-	                                    $(".su_afterReRe").hide();
-	                                    $("#reReContent").val("");
-	                                });
-	                            })
-	                        </script>
-	
-	                        <br>
+	                </div>
+	              
+                  <!-- 댓글관련 script =====================================================================================-->
+                  <script>
+                  	$(function(){
+                  		selectReplyList();
+                  		
+                  		
+                  	})	
+                  	
+                  	// 댓글 조회용
+                  	function selectReplyList(){
+                  		
+                  		$.ajax({
+                  			url: "rlist.ca",
+                  			data: {no: ${ s.scheNo }},
+                  			success: function(rlist){
+                  				//console.log(rlist);
+                  				
+                  				let value = "";
+                  				let rCount = rlist.length;
+                  				var deCount = 0;
+                  				
+                  				$("#rCountSpan").text("[" + rCount + "]");
+                  				
+                  				for(let i = 0; i < rCount; i++){
+                  					
+                  					if(rlist[i].replyParent == 0 && rlist[i].replyStatus == 'Y'){ // 원댓글 이면
+                  						value += '<div class="su_one_reply" style="margin-bottom: 12px;" id="sReply'+ rlist[i].replyNo + '">';
+                  					} else if(rlist[i].replyStatus == 'Y'){ // 대댓글이면
+                  						value += '<div class="su_one_reply" style="margin-left: 30px; margin-bottom: 12px;" id="sReply'+ rlist[i].replyNo + '">';
+                					} else if(rlist[i].replyStatus == 'N'){	// 대댓글이 삭제되었으면
+                						value += '<div style="margin: 25px 0px 25px 12px;">';
+                					}
+                  					
+                  					if(rlist[i].replyStatus == 'Y'){
+                  						value += '<div>'
+                  									+ '<img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">'
+                                        	   + '</div>'
+                                        	   + '<div class="su_reply_content">';
+                                   		if(rlist[i].replyParent == 0){	// 원댓글
+                                   			value += '<h5 style="font-weight: 600; color: black;">' + rlist[i].replyWriter + ' '+ rlist[i].replyJob + '</h5>';
+                                   		} else {
+                                   			value += '<h5 style="font-weight: 600; color: black;">ㄴ ' + rlist[i].replyWriter + ' '+ rlist[i].replyJob + '</h5>';
+                                   		}
+                                   		value += '<p id="rContent' + rlist[i].replyNo + '">' + rlist[i].replyContent + '</p>';
+                                   		
+                                   		if( rlist[i].replyWriter == "${ loginUser.memName }" ){
+                                   			value += '<button type="button" class="btn btn-sm" style="float: right; border: 0px; color: black;" onclick="deleteReply(' + rlist[i].replyNo + ');">삭제</button>'
+                                   				   + '<button type="button" class="btn btn-sm" style="float: right; border: 0px; color: black;" onclick="updateReplyDiv(' + rlist[i].replyNo + ');">수정</button>'
+                                   		}
+                                   		
+                                   		if(rlist[i].replyParent == 0){	// 원댓글
+                                   			value += '<div class="su_reReply">'
+		        	                                	+ '<div class="su_beforeReRe dis_bl" id="sReplyEvent' + rlist[i].replyNo + '" onclick="rReply(' + rlist[i].replyNo + ');">'
+		    	                                    		+ '<a id="insertReReplyBtn"><span class="fas fa-share"></span>댓글</a>'
+		    	                                		+ '</div>'
+		    	
+		    	                            		+ '</div>';
+		    	                            
+                                   		}
+                                   		
+                  					} else{
+                  						for(j = i + 1; j < rCount; j++){
+	                  						if( (rlist[i].replyParent == 0) && (rlist[j].replyParent != 0) && (rlist[j].replyStatus == 'Y') && (rlist[j].replyParent == rlist[i].replyNo) ){	// 원댓이 삭제됬는데 원댓이 부모인 대댓이 있는 경우
+	                  							deCount++;
+	                  						} 
+                  						}
+                  						if(deCount > 0){
+                  							if(rlist[i].replyParent == 0){
+                  								value += '<span>삭제된 댓글입니다.</span>';
+                  							}
+                  						}
+                  					}
+                  					value += '</div></div>';
+                  					
+                  				}
+                  				
+                  				$("#scheReplyArea").html(value);
+                  			}, error: function(){
+                  				console.log("ajax 댓글 조회 실패");
+                  			}
+                  		});
+                  	}
+                  	
+                 	// 대댓글 작성 영역 추가 이벤트
+                    function rReply(rNo){
+                    	let reId = 'sReplyEvent' + rNo;
+                		let id = "sReply" + rNo;
+                		let caId = "cancleReReply" + rNo;
+                		let inputId = "replyContent" + rNo;
+                		
+                		const rReplyDiv = '<div class="su_insert_reReply" style="margin-bottom: 13px;" id="reReplyDiv' + rNo + '">'
+                        						+ '<div class="su_afterReRe">'
+                        							+ '<div class="su_reReply_input" style="margin-bottom: 13px;">'
+                            							//+ '<span class="fas fa-share"> </span>'
+                            							+ '<img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">'                                        
+    	                                                // + '<img src="${ loginUser.memProfile }">'
+                    
+                            							+ '<input type="text" style="width: 65%;" placeholder="댓글 입력" id="replyContent' + rNo + '">'
+                            							+ '<button type="button" class="btn btn-sm su_btn_border" style="margin-left: 6px;" onclick="addReply(' + rNo + ');">작성</button>'
+                        							+ '</div></div></div>';
+                        							
+                		 $("#" + id).after(rReplyDiv);
+	                        // 원 댓의 이벤트 제거
+	                        $("#" + reId).attr("onclick", "cancleReReply(" + rNo + ")");
+	                        // 댓글 입력칸 focus
+	                        $("#" + inputId).focus();
+                 	}
+                 	
+                 	// 대댓 작성 취소
+                	function cancleReReply(rNo){
+                		let reId = 'sReplyEvent' + rNo;
+                		let divId = 'reReplyDiv' + rNo;
+                		
+                		let value = "";
+                		$("#" + divId).remove();
+                		 $("#" + reId).attr("onclick", "rReply(" + rNo + ");");
+                	}
+                 	
+                	 // 댓글 작성 이벤트
+                    function addReply(num){
+                    	// num : 부모 댓글 번호
+                    	let id = "replyContent" + num;
+                    	/* const job = ${ loginUser.jobCode };
+                    	if(job == 'J0'){
+                    		job = '강사';
+                    	} else if(job == 'J1'){
+                    		job = '사원';
+                    	} else if(job == 'J2'){
+                    		job = '대리';
+                    	} else if(job == 'J3'){
+                    		job = '팀장';
+                    	} else {
+                    		job = '대표';
+                    	} */
+                    		
+                    	if( $("#" + id).val().trim().length != 0 ){	// 유효한 댓글 작성시 => ajax로 insert 요청
+                    		
+                    		$.ajax({
+                    			url: "rinsert.ca",
+                    			data: {
+                    				replyContent: $("#" + id).val(),
+                    				reBoardNo: ${ s.scheNo },
+                    				replyParent: num,
+                    				replyWriter: "${loginUser.memName}",
+                    				replyJob: "${loginUser.jobName}"
+                    			},
+                    			success: function(result){
+                    				if(result == "success"){
+                    					$("#"+ id).val("");
+                    					selectReplyList();
+                    				} else{
+                    					alert("댓글 작성에 실패하였습니다.");
+                    				}
+                    			}, error: function(){
+                    				console.log("ajax 댓글 작성 실패");
+                    			}
+                    		});
+                    	} else{	// 댓글 내용 무
+                    		 alert("댓글 내용을 입력해주세요!");
+                    	}
+                    }
+                 	
+                 	// 댓글 수정 이벤트들
+                    // 영역 전환
+                    function updateReplyDiv(num){
+                    	// num : 댓글 번호
+                    	let id = "sReply" + num;
+                    	let cId = "rContent" + num;
+                    	let contentValue = $("#" + cId).text();
+                    	console.log(contentValue);
+                    	let contentId = "updateContent" + num;
+                    	let value = "";
+                    	value += '<div class="su_insert_reply" style="margin-bottom: 15px;">'
+                        			+ '<img style="margin-left: 14px;" src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">'
+                    
+			                        + '<div class="su_reply_input">'
+			                           + '<input type="text" style="width: 92%;" placeholder="댓글 입력"  id="' + contentId + '" value="' + contentValue + '">'
+			                           + '&nbsp;'
+	                       				+ '<button type="button" class="btn btn-sm" style="width: 45px; border: 0px; color: black; float: right;"'
+	                       				+ 'onclick="cancelReply(' + num + ');">취소</button>'
+			                           + '<button type="button" class="btn btn-sm" style="width: 45px; border: 0px; color: black; float: right;"'
+	                       				+ 'onclick="updateReply(' + num + ');">수정</button>'
+			                        + '</div>'
+			                           
+                     + '</div>';
+                				
+                		$("#" + id).html(value);
+                		$("#" + contentId).focus();
+                    }
+                 	
+                 	// 댓글 수정
+                 	function updateReply(num){
+	                    	// num : 댓글 번호
+	                    	let id = "sReply" + num;
+	                    	let contentId = "updateContent" + num; // 댓글 내용 아이디
+	                    	
+	                    	let value = "";
+	                    	if( $("#" + contentId).val().trim().length != 0 ){
+	                    		
+	                    		$.ajax({
+	                    			url: "rupdate.ca",
+	                    			data: {
+	                    				replyNo: num,
+	                    				replyContent: $("#" + contentId).val()
+	                    			}, success: function(r){
+	                    				if(r != "fail"){
+	                    					
+	                    					value += '<div>'
+	                    								+ '<img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">'
+	                    								+ '</div>'
+	                                             	   + '<div class="su_reply_content">';
+					
+					                        			if(r.replyParent == 0){	// 원댓글
+					                        				value += '<h5 style="font-weight: 600; color: black;">' + r.replyWriter + ' ' + r.replyJob + '</h5>';
+					                        			} else{
+					                        				value += '<h5 style="font-weight: 600; color: black;">ㄴ ' + r.replyWriter + ' ' + r.replyJob + '</h5>';
+					                        			}
+					                        			value += '<p id="rContent' + r.replyNo + '">' + r.replyContent + '</p>';
+					                        			
+					                        			if( r.replyWriter != "${ loginUser.memName }" ){
+				                                   			value += '<button type="button" class="btn btn-sm" style="float: right; border: 0px; color: black;" onclick="deleteReply(' + r.replyNo + ');">삭제</button>'
+				                                   				   + '<button type="button" class="btn btn-sm" style="float: right; border: 0px; color: black;" onclick="updateReplyDiv(' + r.replyNo + ');">수정</button>'
+				                                   		}
+					                        			if(r.replyParent == 0){	// 원댓글
+				                                   			value += '<div class="su_reReply">'
+						        	                                	+ '<div class="su_beforeReRe dis_bl" id="sReplyEvent' + r.replyNo + '" onclick="rReply(' + r.replyNo + ');">'
+						    	                                    		+ '<a id="insertReReplyBtn"><span class="fas fa-share"></span>댓글</a>'
+						    	                                		+ '</div>'
+						    	
+						    	                            		+ '</div>';
+						    	                            
+				                                   		}
+					                        			
+					                        			value += '</div></div>';
+											
+												$("#" + id).html(value);
+	                    					
+	                    					selectReplyList();
+	                    					
+	                    				} else{
+	                    					alert("댓글 수정에 실패하였습니다.");
+	                    				}
+	                    			}, error: function(){
+	    	                    		console.log("ajax 댓글 수정에 실패하였습니다.");
+	    	                    	} 
+	                    		});
+	                    	
+	                    	} else{
+            					alert("댓글 내용을 입력해주세요!");
+            				}
+	                    }
+                 	
+                 	function cancelReply(num){
+                    	// num : 댓글 번호
+                    	let id = "sReply" + num;
+                    	
+                    	let value = "";
+                    		
+                    		$.ajax({
+                    			url: "rcancel.ca",
+                    			data: {
+                    				replyNo: num,
+                    			}, success: function(r){
+                    				if(r != "fail"){
+                    					
+                    					value += '<div>'
+            								+ '<img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">'
+            								+ '</div>'
+                                     	   + '<div class="su_reply_content">';
+		
+		                        			if(r.replyParent == 0){	// 원댓글
+		                        				value += '<h5 style="font-weight: 600; color: black;">' + r.replyWriter + ' ' + r.replyJob + '</h5>';
+		                        			} else{
+		                        				value += '<h5 style="font-weight: 600; color: black;">ㄴ ' + r.replyWriter + ' ' + r.replyJob + '</h5>';
+		                        			}
+		                        			value += '<p id="rContent' + r.replyNo + '">' + r.replyContent + '</p>';
+		                        			
+		                        			if( r.replyWriter != "${ loginUser.memName }" ){
+	                                   			value += '<button type="button" class="btn btn-sm" style="float: right; border: 0px; color: black;" onclick="deleteReply(' + r.replyNo + ');">삭제</button>'
+	                                   				   + '<button type="button" class="btn btn-sm" style="float: right; border: 0px; color: black;" onclick="updateReplyDiv(' + r.replyNo + ');">수정</button>'
+	                                   		}
+		                        			if(r.replyParent == 0){	// 원댓글
+	                                   			value += '<div class="su_reReply">'
+			        	                                	+ '<div class="su_beforeReRe dis_bl" id="sReplyEvent' + r.replyNo + '" onclick="rReply(' + r.replyNo + ');">'
+			    	                                    		+ '<a id="insertReReplyBtn"><span class="fas fa-share"></span>댓글</a>'
+			    	                                		+ '</div>'
+			    	
+			    	                            		+ '</div>';
+			    	                            
+	                                   		}
+		                        			
+		                        			value += '</div></div>';
+										
+												$("#" + id).html(value);
+			                    					
+			                    				//selectReplyList();
+			                    					
+			                    			} else{
+			                    				alert("댓글 수정 취소에 실패하였습니다.");
+			                    			}
+			                    		}, error: function(){
+			                    				console.log("ajax 댓글 수정 취소에 실패하였습니다.");
+			                    		}
+			                    	});
+                    	
+                    }
+                 	
+                 	// 댓글 삭제
+                    function deleteReply(num){
+                    	$("#deleteReply").modal("show");
+                    	
+                    	$(document).on("click", "#realDeleteReply", function(){
+                    		$.ajax({
+                    			url: "rdelete.ca",
+                    			data: {replyNo: num},
+                    			success: function(result){
+                    				if(result > 0){
+                    					$("#deleteReply").modal("hide");
+                    					
+                    					selectReplyList();
+                    				} else{
+                    					alert("댓글 삭제에 실패하였습니다.");
+                    				}
+                    			}, error: function(){
+                    				console.log("ajax 댓글 삭제 실패");
+                    			}
+                    		});
+                    	});
+                    	
+                    }
+                  
+                  
+                  </script>
 	                        
-	                        <!-- 댓글 작성 영역 -->
-	                        <div class="su_insert_reply">
-	                                <!-- 로그인 한 사원 사진 -->
-	                                    <img src="resources/defaultProfile.png" alt="">
-	                                
-	                                    <div class="su_reply_input">
-	                                        <input type="text" placeholder="댓글 입력" name="">
-	                                        &nbsp;
-	                                        <button type="button" class="btn btn-sm su_btn_border">작성</button>
-	                                    </div>
-	                                
-	                            </div>
-	
-	                        </div>
+	                        
+	                        
 	
 	                    </div>
 	

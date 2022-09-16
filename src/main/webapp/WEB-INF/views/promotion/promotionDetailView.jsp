@@ -253,6 +253,7 @@
 	                				let value = "";
 	                				//let userName = "${ loginUser.memName}";
 	                				let rCount = list.length;
+	                				var deCount = 0;
 	                				
 	                				$("#rCountTitle").html(" &ensp;[" + rCount + "]");
 	                				$("#rCounstSpan").html("댓글 " + rCount + " 개");
@@ -305,14 +306,23 @@
 												value += '</div>';
 											
 	                					
-	                					} else if(i < (list.length - 1)){
-	                						if( (list[i].replyParent == 0) && (list[i+1].replyParent != 0) && (list[i+1].replyStatus == 'Y') ){
-		                						value += '<div class="su_reply">'
-		            	                    			+ '<p style="vertical-algin: middle;">삭제된 댓글입니다.</p>'
-		            	                    		+ '</div>'
-		            	                    		+ '</div>';
-	                						} else{
-	                							value += '</div>';
+	                					} else{
+	                						for(j = i + 1; j < rCount; j++){
+		                						if( (list[i].replyParent == 0) && (list[j].replyParent != 0) && (list[j].replyStatus == 'Y') && (rlist[j].replyParent == rlist[i].replyNo) ){
+			                						deCount++;
+		                						}
+		                						
+	                						}
+	                						
+	                						if(dCount > 0){
+	                							if(list[i].replyParent == 0){
+		                							value += '<div class="su_reply">'
+			            	                    			+ '<p style="vertical-algin: middle;">삭제된 댓글입니다.</p>'
+			            	                    		+ '</div>'
+			            	                    		+ '</div>';
+		                						} else{
+		                							value += '</div>';
+		                						}
 	                						}
 	                					}
 	                				}

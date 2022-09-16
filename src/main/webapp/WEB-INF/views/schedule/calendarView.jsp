@@ -15,6 +15,11 @@
 	
 	<jsp:include page="../common/header.jsp" />
 	
+	<c:if test="${ loginUser eq null }">
+		location.href="login.me";
+	</c:if>
+	
+	
 	<div style="display:flex;">
 	
 	    <!-- sub menu -->
