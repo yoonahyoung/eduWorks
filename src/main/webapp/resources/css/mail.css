@@ -152,7 +152,7 @@ a:hover{
     margin-left:20px;
 }
 
-.mail-list{height:75%;}
+.mail-list{height:65%;}
 /* .page-nav{height:10%;} */
 
 .second-title>div{ margin-bottom: 10px; font-size:30px;}
@@ -285,7 +285,7 @@ table{
 
 .mail tr{
     cursor: pointer;
-    height: 40px;
+    height: 50px;
 }
 
 .mail tr:hover{

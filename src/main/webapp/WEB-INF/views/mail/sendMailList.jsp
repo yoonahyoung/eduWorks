@@ -125,19 +125,65 @@
 
 		<!-- 페이지 바 -->
 		<div class="page-nav" style="margin: 30px 0 30px 0">
-			<nav aria-label="Page navigation example">
-				<ul class="pagination justify-content-center">
-					<li class="page-item"><a class="page-link" href="#"
-						aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
-					</a></li>
-					<li class="page-item"><a class="page-link" href="#">1</a></li>
-					<li class="page-item"><a class="page-link" href="#">2</a></li>
-					<li class="page-item"><a class="page-link" href="#">3</a></li>
-					<li class="page-item"><a class="page-link" href="#"
-						aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-					</a></li>
-				</ul>
-			</nav>
+			<c:choose>
+				<c:when test="${empty list }">
+					<!-- 연락처 목록 없는 경우 -->
+					<nav aria-label="Page navigation example">
+						<ul class="pagination justify-content-center"></ul>
+					</nav>
+				</c:when>
+				<c:otherwise>
+					<!-- 연락처 목록 있는 경우 -->
+					<nav aria-label="Page navigation example">
+						<ul class="pagination justify-content-center">
+						
+							<c:choose>
+								<c:when test="${pi.currentPage eq 1 }">
+									<!-- 현재 페이지가 1인 경우 -->
+									<li class="page-item">
+										<a class="page-link disabled" aria-label="Previous"> 
+											<span aria-hidden="true">&laquo;</span>
+										</a>
+									</li>
+								</c:when>
+								<c:otherwise>
+									<!-- 현재 페이지가 1이 아닌 경우 -->
+									<li class="page-item">
+										<a class="page-link"
+											href="sendMailList.ma?page=${pi.currentPage - 1 }"
+											aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+										</a>
+									</li>
+								</c:otherwise>
+							</c:choose>
+							
+							<c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage }">
+								<li class="page-item">
+									<a class="page-link"
+									   href="sendMailList.ma?page=${p }">${p }</a>
+								</li>
+							</c:forEach>
+							
+							<c:choose>
+								<c:when test="${pi.currentPage eq pi.maxPage }">
+									<!-- 현재 페이지가 마지막인 경우 -->
+									<li class="page-item"><a class="page-link disabled"
+										aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+									</a></li>
+								</c:when>
+								<c:otherwise>
+									<!-- 현재 페이지가 마지막이 아닌 경우 -->
+									<li class="page-item"><a class="page-link"
+										href="sendMailList.ma?page=${pi.currentPage + 1}"
+										aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+									</a></li>
+								</c:otherwise>
+							</c:choose>
+							
+						</ul>
+					</nav>
+				</c:otherwise>
+			</c:choose>
 		</div>
 	</div>
 
