@@ -76,7 +76,7 @@ tbody tr:hover{
 /*------------------ notice, deptBoard ------------------  */
 /* noticeListView, deptBoardListView */
 
-.board-content td, table th{
+.board-content td, .board-content th{
     color:black;
     text-align:center;
     cursor: pointer;
@@ -145,6 +145,7 @@ tbody tr:hover{
 
 #w-day{
 	color:grey;
+	margin-left:20px;
 }
 
 .boardTable{
@@ -193,6 +194,10 @@ tbody tr:hover{
     justify-content:space-between;
 }
 
+.side_side {
+	margin-left:20px;
+}
+
 #likeReply span{
     margin:0 10px 0 10px;
 }
@@ -208,6 +213,14 @@ tbody tr:hover{
     font-size: 17px;
 }
 
+#likeReply {
+	margin-right:20px;
+}
+
+#like {
+	text-align: center;
+}
+
 #col-10{
 	margin-left:0.5px;
 }
@@ -215,20 +228,61 @@ tbody tr:hover{
 #col-2{
 	padding:0;
 	margin-left:-13px;
-	border-left:1px solid grey
+	border-left:4px solid rgba(0, 0, 0, 0.1);
 }
 
 .bestTable tr:hover{
 	background:none;
 }
 
+.bestTable th{
+	font-size:20px;
+}
 
+/* blindDetailView */
 
+.modal_alertB{
+	margin: auto;
+    width: 380px !important;
+    height: 262px;
+}
 
+#radioDiv{
+	text-align:left; 
+	margin-left:80px;
+}
 
+#thumbsDiv:hover{
+	cursor:pointer;
+}
 
+#thumbsSpan:hover{
+	font-size:0;
+	cursor:pointer;
+}
 
+.noThumbs:hover:before{
+    content:'추천하기 ';
+    font-size:17px;
+}
 
+.yesThumbs:hover:before{
+    content:'추천취소 ';
+    font-size:17px;
+}
 
+#modalContent{
+	z-index:1042;
+}
 
+#reportModal{
+	z-index:1041;
+}
 
+.reReport:hover{
+	cursor:pointer;
+}
+
+.boReport:hover{
+	cursor:pointer;
+}

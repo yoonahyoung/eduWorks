@@ -14,7 +14,7 @@
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 
-<title>익명 게시판 등록</title>
+<title>익명 게시판 수정</title>
 </head>
 <body>
 	<jsp:include page="../common/header.jsp" />
@@ -23,14 +23,14 @@
         <div class="su_contentArea">
             <div class="su_content_header">
 
-                <h2 class="su_sub_menu_name">익명 게시판 등록</h2>
+                <h2 class="su_sub_menu_name">익명 게시판 수정</h2>
                 
-                <button class="btn" id="n-btn-border" type="button" onclick="location.href='list.bl'">목록으로</button>
+                <button class="btn" id="n-btn-border" type="button" onclick="history.back()">목록으로</button>
                 <hr class="hr_line">
 
 
-                <form action="insert.bl" method="post" enctype="multipart/form-data" id="insertForm">
-                	<input type="hidden" name="boardWriter" value="${ loginUser.memNo }">
+                <form action="update.bl" method="post" id="insertForm">
+                	<input type="hidden" name="boardNo" value="${ b.boardNo }">
                     <div class="su_content_body">
     
                         <table id="eventForm">
@@ -38,7 +38,7 @@
                                 <td width="5%;"><span class="fas fa-star-of-life fontRed">&nbsp;</span></td>
                                 <td><span>&nbsp;제목</span></td>
                                 <td>
-                                &ensp; &ensp;<input type="text" name="boardTitle" placeholder="제목 입력" style="width:300px;" id="boardTitle" required>
+                                &ensp; &ensp;<input type="text" name="boardTitle" value="${ b.boardTitle }" style="width:300px;" id="boardTitle" required>
                                 </td>
                             </tr>
 
@@ -47,7 +47,7 @@
                         <br>
                         <!-- 서머노트로 내용 작성 -->
                         <div class="summerArea">
-                            <textarea id="summernote" name="boardContent"></textarea>
+                            <textarea id="summernote" name="boardContent">${ b.boardContent }</textarea>
                         </div>
 
                         <script>

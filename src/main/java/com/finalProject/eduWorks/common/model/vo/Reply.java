@@ -25,5 +25,5 @@ public class Reply {
 	private String replyDate;
 	private String replyNoDate;
 	private String replyStatus;
-	
+	private int replyCount; // 게시판 listView에서 boardNo에 따른 댓글 갯수 뿌려주기 위한 용도
 }
