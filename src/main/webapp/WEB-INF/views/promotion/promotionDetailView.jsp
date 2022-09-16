@@ -253,10 +253,7 @@
 	                				let value = "";
 	                				//let userName = "${ loginUser.memName}";
 	                				let rCount = list.length;
-	                				var deCount = 0;
-	                				
-	                				$("#rCountTitle").html(" &ensp;[" + rCount + "]");
-	                				$("#rCounstSpan").html("댓글 " + rCount + " 개");
+	                				let ryCount = 0;
 	                				
 	                				for(let i = 0; i < rCount; i++){
 	                					
@@ -271,6 +268,7 @@
 	                					}
 	                					
 	                					if(list[i].replyStatus == 'Y'){
+	                						ryCount++;
 		                					value += '<div class="su_reply">'
 					                        			+ '<div>'
 					                        				+ '<img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">'
@@ -307,27 +305,28 @@
 											
 	                					
 	                					} else{
+	                						var deCount = 0;
 	                						for(j = i + 1; j < rCount; j++){
-		                						if( (list[i].replyParent == 0) && (list[j].replyParent != 0) && (list[j].replyStatus == 'Y') && (rlist[j].replyParent == rlist[i].replyNo) ){
+		                						if( (list[i].replyParent == 0) && (list[j].replyParent != 0) && (list[j].replyStatus == 'Y') && (list[j].replyParent == list[i].replyNo) ){
 			                						deCount++;
 		                						}
 		                						
 	                						}
 	                						
-	                						if(dCount > 0){
-	                							if(list[i].replyParent == 0){
-		                							value += '<div class="su_reply">'
-			            	                    			+ '<p style="vertical-algin: middle;">삭제된 댓글입니다.</p>'
-			            	                    		+ '</div>'
-			            	                    		+ '</div>';
-		                						} else{
-		                							value += '</div>';
-		                						}
-	                						}
+	                						if(deCount > 0){
+		                							if( (list[i].replyParent == 0) ){
+			                							value += '<div class="su_reply">'
+				            	                    			+ '<p style="vertical-algin: middle; margin: 8px;">삭제된 댓글입니다.</p>'
+				            	                    		+ '</div>';
+				            	                    		//+ '</div>';
+		                							}
+	                						} 
 	                					}
+		                				value += '</div>';
 	                				}
-	                				
 	                				$(".su_board_reply #replyArea").html(value);	
+	                				$("#rCountTitle").html(" &ensp;[" + ryCount + "]");
+	                				$("#rCounstSpan").html("댓글 " + ryCount + " 개");
 	                					
 	                			}, error:function(){
 	                				console.log("ajax 댓글 리스트 조회 실패");
@@ -404,8 +403,8 @@
 	                    				replyContent: $("#" + id).val(),
 	                    				reBoardNo: ${ p.promoNo },
 	                    				replyParent: num,
-	                    				replyWriter: ${loginUser.memName},
-	                    				replyJob: ${loginUser.jobName}
+	                    				replyWriter: "${loginUser.memName}",
+	                    				replyJob: "${loginUser.jobName}"
 	                    			},
 	                    			success: function(result){
 	                    				if(result == "success"){
