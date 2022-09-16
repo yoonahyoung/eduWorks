@@ -1,0 +1,183 @@
+@charset "UTF-8";
+
+/* 공통 메뉴바 */
+.container-fluid .menu-sidebar{
+    width:15%;
+    min-height: 100vh;
+    border-right:2px solid lightgray;
+    text-decoration: none;
+    color:black;
+}
+
+.container-fluid .menu-sidebar h4{
+    padding: 1rem;
+    font-weight: 600;
+}
+
+.container-fluid .menu-sidebar h6{
+    margin-left: 27px;
+    padding: 0.3rem;
+    color:black;
+}
+
+a:hover{
+    text-decoration: none;
+}
+
+.menu-sidebar h6:hover{
+    color:slategray;
+}
+
+.menu-sidebar{
+    padding-top:20px;
+}
+
+.container-fluid{
+    display:flex;
+    padding-left:0px;
+}
+
+.insider{
+    padding-left:20px;
+    margin-bottom: 30px;
+}
+
+/* 전자결재 사이드 메뉴바 */
+
+.container-fluid .menu-sidebar h2{
+    padding-bottom:10px;
+    font-weight: 600;
+}
+
+.setup{
+    padding: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    color:black;
+    cursor: pointer;
+}
+
+.setup:hover{
+    color:black;
+}
+
+.insider h4{
+	color:black;
+}
+
+/*기안 공통 양식*/
+.aprvNew{
+    display:inline-block;
+   
+    font-size:16px;
+   
+    background-color: white;
+    border:2px solid #5e7e9b;
+   
+}
+.j_btn-lg{
+	padding: 0.5rem 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.3rem;
+}
+/* 연차신청서 */
+
+
+
+
+/* 지출결의서 */
+
+#btn_w{
+    margin-left:10px;color:black;background-color:white; border:0.5px solid grey; border-radius:0;
+}
+
+h1{
+    margin:50px !important;
+    text-align: center;
+    font-size:25px !important;
+    font-weight: 700;
+}
+
+.top-part{
+    width:80%;
+    margin:auto;
+    /* display:flex; */
+    justify-content: space-between;
+    margin-bottom:40px;
+}
+
+
+#left-top{
+    margin-left:40px;
+    margin-top:15px;
+    float:left;
+}
+#right-top{
+    margin-right:70px;
+    float:right;
+}
+.wrapper{
+    margin:0 40px;
+    border:4px solid rgba(128, 128, 128, 0.199);
+    display:flex;
+    flex-direction:column;
+    width:800px;
+}
+
+#upper-btns{
+    margin:20px 20px 15px 35px;
+}
+#uppter-btns>button{
+    background-color:white;
+}
+#main-table{
+    float: center;
+    
+}
+.table_m, .table_m>tr,.table_m th, .table_m td {
+/* .table_m, .table_m> tr, .table_m>th, .table_m>td { */
+    border:1px solid black;
+    border-collapse: collapse;
+    text-align:center;
+     
+}
+
+th{
+    background-color:rgba(128, 128, 128, 0.233);
+}
+
+#main-table{
+     /* table가운데정렬 */
+     margin-left:auto;
+    margin-right:auto; 
+    width:600px;
+    height:200px;
+}
+#expd_each_table{
+    margin:60px 0px;
+    margin-left:auto;
+    margin-right:auto; 
+    width:600px;
+
+}
+
+
+
+/* 파일첨부 */
+#file-attach-box{
+    margin:0 auto;width:600px;
+}
+#file-attach-box div{
+    border:2px dashed grey; 
+    height:100px; width:500px; 
+    height:auto; width:auto; 
+    padding:20px 80px 20px 90px;
+}
+#file-attach-box td{
+    font-weight:700;
+}
+#file-attach-box span,#file-attach-box a{
+    color:rgb(92, 90, 90);
+}
+

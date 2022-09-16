@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ApprMapper">
+<resultMap type="ApprForm" id="apprFormResultMap">
+<id property="aprvNo" column="FORM_NO"></id>
+<id property="memNo" column="FORM_NO"></id>
+<id property="shelfLife" column="FORM_NO"></id>
+<id property="secLevel" column="FORM_NO"></id>
+<id property="type" column="FORM_NO"></id>
+<id property="type" column="FORM_NO"></id>
+<id property="type" column="FORM_NO"></id>
+<id property="type" column="FORM_NO"></id>
+<id property="type" column="FORM_NO"></id>
+</resultMap>
+
+<insert id="insertDraft">
+insert
+	into tb_aprv_draft
+	(aprv_no
+	,mem_no
+	,aprv_draft_date
+	,appv_draft_content
+	,dept_code
+	)
+	values
+	(
+	#{aprvNo}
+	,#{memNo}
+	,#{draftDate}
+	,#{draftContent}
+	,#{deptCode}
+	)
+</insert>
+
+</mapper>
