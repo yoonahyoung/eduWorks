@@ -2,11 +2,14 @@ package com.finalProject.eduWorks.approval.model.service;
 
 import java.util.ArrayList;
 
+import org.springframework.stereotype.Service;
+
 import com.finalProject.eduWorks.approval.model.vo.Draft;
 import com.finalProject.eduWorks.approval.model.vo.Expd;
 import com.finalProject.eduWorks.approval.model.vo.Leave;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 
+@Service
 public class ApprovalServiceImpl implements ApprovalService {
 
 	@Override
