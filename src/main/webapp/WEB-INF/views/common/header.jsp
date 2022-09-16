@@ -207,9 +207,9 @@
 	                    <div class="bg-white py-2 collapse-inner rounded">
 	                        <h6 class="collapse-header">메일</h6>
 	                        <a class="collapse-item" href="writeMailForm.ma">메일 작성</a>
-	                        <a class="collapse-item" onclick="postFormSubmit('sendMailForm.ma')">보낸 메일함</a>
-	                        <a class="collapse-item" onclick="postFormSubmit('receiveMailForm.ma')">받은 메일함</a>
-	                        <a class="collapse-item" onclick="postFormSubmit('importantMailForm.ma')">중요 메일함</a>
+	                        <a class="collapse-item" href="sendMailList.ma">보낸 메일함</a>
+	                        <a class="collapse-item" href="receiveMailList.ma">받은 메일함</a>
+	                        <a class="collapse-item" href="importantMailForm.ma">중요 메일함</a>
 	                    </div>
 	                </div>
 	            </li>

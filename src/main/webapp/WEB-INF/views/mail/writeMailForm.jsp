@@ -20,94 +20,77 @@
 
 	<!-- 메인 콘텐츠 영역 -->
 	<div class="main-content">
-		<form method="post" action="insertMail.ma" enctype="multipart/form-data">
+		<form method="post" action="insertMail.ma" id="mailForm" enctype="multipart/form-data">
 
 			<div class="second-title">
 				<div style="font-weight: bold;">메일 작성</div>
-				<button type="submit" class="reply-btn" id="sendMail">
+				<button type="button" class="reply-btn" onclick="return sendMail()">
 					<i class="fas fa-location-arrow"></i>&nbsp;&nbsp;전송
 				</button>
-				<button type="button" class="sub-btn" data-toggle="modal"
+				<button type="button" class="sub-btn" data-toggle="modal" id="preview"
 						data-target="#mail-preview">
 					<i class="fas fa-desktop"></i>&nbsp;&nbsp;미리보기
 				</button>
 				<button type="button" class="sub-btn" id="propertyMail">
 					<i class="far fa-save"></i>&nbsp;&nbsp;임시저장
 				</button>
-				<button type="button" class="sub-btn">
+				<button type="button" class="sub-btn" onclick="location.href='sendMailForm.ma'">
 					<i class="fas fa-undo"></i>&nbsp;&nbsp;취소
 				</button>
 			</div>
 			<hr style="margin: 20px 0px 10px 0px;">
 
 			<script>
+				
 
-
-
-				//    function setChildText(){
-
-				//     let p = document.getElementById("pInput").value;
-				//     console.log(p);   
-
-				//     openWin.document.getElementById("cInput").value = document.getElementById("pInput").value;
-				//     }
-
-				// $(function() {
-				//     selectPreView();
-				// })
-
-				//   function selectPreView(){
-				//     let receive;
-				//     $("#receive").change(function(){
-				//         receive = $(this).val();
-				//     })
-
-				//     let $cc = $("#cc").val();
-				//     let $title = $("#title").val();
-
-				//     console.log(receive);
-				//     console.log($cc);
-				//     console.log($title);
-				//   }
-
-				$(function() {
-
-					let content = $('input[name=contents]').val();
-					console.log(content);
-
-					let title = $('input[name=title]').val();
-					console.log(title);
-
-					var summernoteContent = $('#summernote').summernote('code'); //썸머노트(설명)
-					console.log("summernoteContent : " + summernoteContent);
-
-					$('#summernote').summernote('code', '');
-
-					let $receive = "";
-					let $cc = "";
-					let $title = "";
-					let $file = "";
-
-					$("#receive").change(function() {
-						$receive = $(this).val();
-						console.log($receive);
+				// 메일 '전송'시 실행하는 함수
+				function sendMail() {
+					if ($("#receive").val() == "") {
+						// 받는 사람 주소 없는 경우
+						alert("받는 사람 주소를 입력해 주세요.");
+					} else {
+						if ($("#title").val() == "") {
+							// 메일 제목이 없는 경우
+							let answer = confirm("제목이 지정되지 않았습니다. 제목 없이 메일을 보내시겠습니까?");
+							if (answer) {
+								$("#mailForm").submit(); // 메일 전송
+							} else {
+								$("#title").focus();
+								return false; // 메일 전송 안됨
+							}
+						}
+						// 제목이 입력된 경우
+						// 메일 전송
+						$("#mailForm").submit();
+					}
+				}
+				
+				// 메일 '임시저장'시 실행하는 함수
+				/*
+				$(function(){
+					$("#propertyMail").click(function(){
+						$.ajax({
+							url :"insertTemporaryMail.ma",
+							data : {
+								memNo : ${loginUser.memNo},
+								receiverMem : $("#receive").val(),
+								ccMem : $("#cc").val(),
+								mailType : $("#mailType").val(),
+								mailTitle : $("#title").val(),
+								upfile : $("#upfile").val(),
+								mailContent : $("#summernote").val()
+							},
+							success : function(result){
+								console.log("임시저장 성공");
+							},
+							error : function(){
+								console.log("임시저장 실패");
+							}
+						})
 					})
-
-					$("#cc").change(function() {
-						$cc = $(this).val();
-						console.log($cc);
-					})
-
-					// $("#title").change(function() {
-					//     $title = $(this).val();
-					//     console.log( $title );
-					// })
-
-					$("#file").change(function() {
-						$file = $(this).val();
-					})
-
-				});
+				})
+				*/
+				
 			</script>
 
 			<div class="send-form" id="mailForm">
@@ -125,7 +108,7 @@
 					</tr>
 					<tr>
 						<th>참조</th>
-						<td colspan="2"><input type="text" name="ccMem"
+						<td colspan="2"><input type="text" name="ccMem" id="cc"
 							class="input-mail" id="cc"></td>
 					</tr>
 					<tr>
@@ -256,7 +239,6 @@
 						fileDataTransfer();
 					    
 					}
-					console.log(filesArr);
 					renderingFileDiv(); // 추가 및 삭제할 때 마다 호출해서 index번호 초기화
 					
 				}
@@ -320,9 +302,9 @@
 
 				<!-- Modal Header -->
 				<div class="modal-header">
-					<h5 class="modal-title">
+					<h4 class="modal-title">
 						<b>미리보기</b>
-					</h5>
+					</h4>
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 					<!-- 해당 버튼 클릭시 모달과 연결해제 -->
 				</div>
@@ -333,35 +315,37 @@
 					<div class="modal-body" align="center">
 
 					<div class="form-group">
-						<div class="send-title" style="width: 16%;" >
-							<span>받는사람</span>
+						<div class="send-title">
+							<span>받는사람 <span class="border-line">:</span></span>
 						</div>
 						<div class="receive-person"></div>
 					</div>
 					
 					<div class="form-group">
-						<div class="send-title" style="width: 16%;">
-							<span>참조</span>
+						<div class="send-title">
+							<span>참조 <span class="border-line">:</span></span>
 						</div>
 						<div class="cc-person"></div>
 					</div>
 					
 					<div class="form-group">
-						<div class="send-title" style="width: 16%;">
-							<span>제목</span>
+						<div class="send-title">
+							<span>제목 <span class="border-line">:</span></span>
 						</div>
 						<div class="title"></div>
 					</div>
 					
 					<div class="form-group">
-						<div class="send-title" style="width: 16%;">
-							<span>첨부파일</span>
+						<div class="send-title">
+							<span>첨부파일 <span class="border-line">:</span></span>
 						</div>
-						<div class="file-name">첨부파일이 없습니다.</div>
+						<div class="file-name"></div>
 					</div>
 					
 					<div>
-						<textarea id="preview-form" readonly></textarea>
+						<p id="preview-form" readonly>
+
+						</p>
 					</div>
 
 						<div style="margin-top: 10px;">
@@ -376,7 +360,30 @@
 			</div>
 		</div>
 	</div>
+	
+	<script>
+		
+		// 메일 '미리보기'클릭시 실행하는 함수
+		$("#preview").click(function(){
+			
+			let file = $('#upfile')[0].files.length;
 
+			$(".receive-person").html( $("#receive").val() );
+			$(".cc-person").html( $("#cc").val() );
+			$(".title").html( $("#title").val() );
+			$("#preview-form").html( $("#summernote").val() );
+			if(file > 0){
+				// 첨부파일이 있는 경우
+				$(".file-name").html("<i class='icon fas fa-paperclip'></i>일반 첨부파일 " + file + "개");
+			} else {
+				// 첨부파일이 없는 경우
+				$(".file-name").html("첨부파일이 없습니다.");
+			}
+
+		})
+		
+	</script>
+	
 	<jsp:include page="../common/footer.jsp" />
 
 </body>

@@ -10,8 +10,7 @@
 <link
 	href="${pageContext.request.contextPath}/resources/css/insertMailForm.css"
 	rel="stylesheet" type="text/css">
-<link
-	href="${pageContext.request.contextPath}/resources/css/mail.css"
+<link href="${pageContext.request.contextPath}/resources/css/mail.css"
 	rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -25,9 +24,8 @@
 				<div>
 					<button type="button" class="writeForm key_btn-lg"
 						onclick="location.href='writeMailForm.ma'">메일 작성</button>
-					<button type="button" class="writeForm key_btn-lg" 
-						onclick="location.href='writeMailToMeForm.ma'">나에게
-						작성</button>
+					<button type="button" class="writeForm key_btn-lg"
+						onclick="location.href='writeMailToMeForm.ma'">나에게 작성</button>
 				</div>
 			</div>
 
@@ -83,17 +81,20 @@
 
 			<div class="insider">
 				<h4>메일함</h4>
-				<a href="sendMailForm.ma"><h6>보낸메일</h6></a> <a
-					href="receiveMailForm.ma"><h6>받은메일</h6></a> <a href=""><h6>내게쓴메일</h6></a>
-				<a href=""><h6>임시보관함</h6></a> <a href=""
-					style="display: inline-block;"><h6>휴지통</h6></a>
+				<a href="sendMailList.ma" ><h6>보낸메일</h6></a> 
+				<a href="receiveMailList.ma" ><h6>받은메일</h6></a> 
+				<a href="sendMailToMeList.ma"><h6>내게쓴메일</h6></a>
+				<a href="TemporaryMailList.ma"><h6>임시보관함</h6></a> 
+				<a href="deleteMailList.ma" style="display: inline-block;"><h6>휴지통</h6></a>
 				<button type="button" id="empty" onclick="emptyMail();">비우기</button>
 			</div>
 
 			<div class="insider">
 				<h4>빠른 검색</h4>
-				<a href="importantMailForm.ma"><h6>중요메일함</h6></a> <a href=""><h6>읽은메일함</h6></a>
-				<a href=""><h6>안읽은메일함</h6></a> <a href=""><h6>스팸메일함</h6></a>
+				<a href="importantMailForm.ma"><h6>중요메일함</h6></a> 
+				<a href="readMailList.ma"><h6>읽은메일함</h6></a>
+				<a href="unReadMailList.ma"><h6>안읽은메일함</h6></a> 
+				<a href="spamMailList.ma"><h6>스팸메일함</h6></a>
 			</div>
 
 			<div class="insider">
@@ -104,24 +105,23 @@
 
 		<script>
 
-             // '태그 삭제'클릭시 실행하는 함수
-            function deleteTags(){
-            	confirm("태그를 삭제하시겠습니까?");
+			// '태그 삭제'클릭시 실행하는 함수
+			function deleteTags() {
+				confirm("태그를 삭제하시겠습니까?");
 
-                    // if(ok){
-                    //     태그 삭제;
-                    // }
-            }
+				// if(ok){
+				//     태그 삭제;
+				// }
+			}
 
-            // '비우기' 클릭시 실행하는 함수
-            function emptyMail(){
-                 confirm("휴지통을 비우시면 지워진 메일(중요메일 포함)들은 복구할 수 없습니다.\n\n휴지통을 비우시겠습니까?");
+			// '비우기' 클릭시 실행하는 함수
+			function emptyMail() {
+				confirm("휴지통을 비우시면 지워진 메일(중요메일 포함)들은 복구할 수 없습니다.\n\n휴지통을 비우시겠습니까?");
 
-                    // if(true){
-                    //     휴지통 비우기
-                    // }
-            }
-
-       </script>
+				// if(true){
+				//     휴지통 비우기
+				// }
+			}
+		</script>
 </body>
 </html>
