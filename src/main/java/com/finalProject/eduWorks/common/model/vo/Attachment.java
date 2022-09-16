@@ -23,4 +23,7 @@ public class Attachment {
 	private Date atUploadDate;
 	private String atStatus;
 	
+	// ------- 추가 --------
+	private int atCount;
+	
 }
