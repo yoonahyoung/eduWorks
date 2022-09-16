@@ -14,7 +14,7 @@ public interface TeacherService {
 	int selectBookListCount();
 	ArrayList<Book> bookListSelect(PageInfo pi);
 	
-	int bookEnrollFormInsert(Teacher t);
+	int appEnrollFormInsert(Teacher t);
 
 	Book bookDetailViewSelect(int bookNo);
 	

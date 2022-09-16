@@ -42,8 +42,8 @@ public class TeacherServiceImpl implements TeacherService{
 	}
 
 	@Override
-	public int bookEnrollFormInsert(Teacher t) {
-		return tDao.bookEnrollFormInsert(sqlSession, t);
+	public int appEnrollFormInsert(Teacher t) {
+		return tDao.appEnrollFormInsert(sqlSession, t);
 	}
 
 	@Override
