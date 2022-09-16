@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.template.FileUpload;
 import com.finalProject.eduWorks.common.template.Pagination;
+import com.finalProject.eduWorks.mail.model.vo.MailStatus;
 import com.finalProject.eduWorks.member.model.vo.Department;
 import com.finalProject.eduWorks.member.model.vo.Job;
 import com.finalProject.eduWorks.member.model.vo.Member;
@@ -297,14 +298,43 @@ public class PersonnelController {
 	
 	// 메일기능추가!!
 	@RequestMapping("sendOjt.oj")
-	public String sendOjt(String[] memNos,String sendTitle,String sendContent,String sendDate,HttpSession session) {
+	public String sendOjt(String[] memNos,String[] memEmail,String sendTitle,String sendContent,String sendDate,HttpSession session) {
 		HashMap m = new HashMap();
 		m.put("sendDate", sendDate);
 		int result = pService.updateOjtDate(memNos, m);
 		
 		if(result>0) {
-			session.setAttribute("alertMsg", "등록성공");
-			return "redirect:ojtMain.oj";
+			Member loginUser = (Member)session.getAttribute("loginUser");
+			String sendUserNo = loginUser.getMemNo();
+			String sendUserEmail = loginUser.getMemEmail();
+			String memEmailStr = String.join(",", memEmail);
+			HashMap m2 = new HashMap();
+			m2.put("memEmailStr", memEmailStr);
+			m2.put("sendContent", sendContent);
+			m2.put("sendTitle", sendTitle);
+			m2.put("sendUserNo", sendUserNo);
+			ArrayList<MailStatus> list = new ArrayList<>();
+			MailStatus ms = new MailStatus();
+			ms.setSendMail(sendUserEmail);
+			ms.setReceiveMail(memEmailStr);
+			ms.setMailFolder(1);
+			list.add(ms);
+			for(String e : memEmail) {
+				MailStatus ms1 = new MailStatus();
+				ms1.setSendMail(sendUserEmail);
+				ms1.setReceiveMail(e);
+				ms1.setMailFolder(2);
+				list.add(ms1);
+			}
+			int result2 = pService.sendOjtMail(m2, list);
+			if(result2>0) {
+				session.setAttribute("alertMsg", "등록성공");
+				return "redirect:ojtMain.oj";
+			}else {
+				session.setAttribute("alertMsg", "메일전송실패");
+				return "redirect:ojtMain.oj";
+			}
+			
 		}else {
 			session.setAttribute("alertMsg", "등록실패");
 			return "redirect:ojtMain.oj";
@@ -321,9 +351,41 @@ public class PersonnelController {
 	// 메일기능추가!!
 	@ResponseBody
 	@RequestMapping("cancel.oj")
-	public String cancelOjt(@RequestParam(value="memNo[]")ArrayList<String> list,String title,String content) {
+	public String cancelOjt(@RequestParam(value="memNo[]")ArrayList<String> list,@RequestParam(value="memEmail[]")ArrayList<String> list2,
+							String title,String content,HttpSession session) {
 		int result = pService.cancelOjt(list);
-		return result > 0 ? "success" : "fail";
+		if(result>0) {
+			Member loginUser = (Member)session.getAttribute("loginUser");
+			String sendUserNo = loginUser.getMemNo();
+			String sendUserEmail = loginUser.getMemEmail();
+			String memEmailStr = String.join(",", list2);
+			HashMap m2 = new HashMap();
+			m2.put("memEmailStr", memEmailStr);
+			m2.put("sendContent", content);
+			m2.put("sendTitle", title);
+			m2.put("sendUserNo", sendUserNo);
+			ArrayList<MailStatus> alist = new ArrayList<>();
+			MailStatus ms = new MailStatus();
+			ms.setSendMail(sendUserEmail);
+			ms.setReceiveMail(memEmailStr);
+			ms.setMailFolder(1);
+			alist.add(ms);
+			for(String e : list2) {
+				MailStatus ms1 = new MailStatus();
+				ms1.setSendMail(sendUserEmail);
+				ms1.setReceiveMail(e);
+				ms1.setMailFolder(2);
+				alist.add(ms1);
+			}
+			int result2 = pService.sendOjtMail(m2, alist);
+			if(result2>0) {
+				return "success";
+			}else {
+				return "fail";
+			}
+		}else {
+			return "fail";
+		}
 	}
 	
 	@RequestMapping("select.at")

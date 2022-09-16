@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
+import com.finalProject.eduWorks.mail.model.vo.MailStatus;
 import com.finalProject.eduWorks.member.model.vo.Department;
 import com.finalProject.eduWorks.member.model.vo.Job;
 import com.finalProject.eduWorks.member.model.vo.Member;
@@ -141,8 +142,8 @@ public class PersonnelServiceImpl implements PersonnelService {
 	}
 
 	@Override
-	public int sendOjtMail(String[] memNos, HashMap m) {
-		return 0;
+	public int sendOjtMail(HashMap m,ArrayList<MailStatus> list) {
+		return pDao.sendOjtMail(sqlSession, m,list);
 	}
 
 	@Override

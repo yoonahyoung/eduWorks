@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
+import com.finalProject.eduWorks.mail.model.vo.MailStatus;
 import com.finalProject.eduWorks.member.model.vo.Department;
 import com.finalProject.eduWorks.member.model.vo.Job;
 import com.finalProject.eduWorks.member.model.vo.Member;
@@ -137,6 +139,19 @@ public class PersonnelDao {
 			result = result*i;
 		}
 		return result;
+	}
+	
+	public int sendOjtMail(SqlSession sqlSession,HashMap m,ArrayList<MailStatus> list) {
+		int result = sqlSession.insert("personnelMapper.sendOjtMail", m);
+		if(result>0) {
+			return addOjtMailStatus(sqlSession,list);
+		}else {
+			return result;
+		}
+	}
+	
+	public int addOjtMailStatus(SqlSession sqlSession,ArrayList<MailStatus> list) {
+		return sqlSession.insert("personnelMapper.addOjtMailStatus", list);
 	}
 	
 	public int completeOjt(SqlSessionTemplate sqlSession,ArrayList<String> list) {
