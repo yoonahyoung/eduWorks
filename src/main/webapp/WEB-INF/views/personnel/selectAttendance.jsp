@@ -257,12 +257,21 @@
                                 </form>
                                 <script>
                                 	$(function(){
-                                		var timezoneOffset = new Date().getTimezoneOffset() * 60000;
+                                		/* var timezoneOffset = new Date().getTimezoneOffset() * 60000;
                                 		var kr = new Date(Date.now() - timezoneOffset);
                                 		var kr2 = new Date(Date.now() - timezoneOffset);
-                                		const lastdate = new Date(kr.setDate(2)).toISOString().substring(0, 10);
+                                		const lastdate = new Date(kr.setDate(1)).toISOString().substring(0, 10);
                                 	    const currentdate = kr2.toISOString().substring(0, 10);
-                                	    console.log(new Date(kr.setDate(2)).toISOString())
+                                	    console.log(new Date(kr.setDate(1)).toISOString())
+                                        console.log(currentdate)
+                                        console.log(lastdate) */
+                                        var date = new Date()
+                                        date.setHours(date.getHours() + 9)
+                                        currentdate = date.toISOString().replace('T', ' ').substring(0, 10)
+                                        var date2 = new Date()
+                                	    date2.setHours(date.getHours() + 9)
+                                        date2.setDate(1)
+                                        lastdate = date2.toISOString().replace('T', ' ').substring(0, 10)
                                         console.log(currentdate)
                                         console.log(lastdate)
                                         $('#startDate').val(lastdate)

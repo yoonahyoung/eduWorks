@@ -52,6 +52,10 @@
         font-size:25pt;
         line-height:45px;
         }
+        
+        .fc-sun {color:#e31b23}
+		.fc-sat {color:#007dc3}
+
 </style>
 </head>
 <body>
@@ -169,6 +173,7 @@
                                     color:'red'
                                 }],
                                 initialView: 'dayGridMonth',
+                                
                                 locale: 'ko',
                                 headerToolbar: {         
                                     left: 'prevYear,prev,today',          
@@ -178,8 +183,11 @@
                                 
                                 dateClick: function(info) {
                                     let clickDate = new Date(info.dateStr)
+                                    clickDate.setHours(clickDate.getHours() - 9)
                                     let currentDate = new Date()
-                                    if(clickDate<currentDate){
+                                    console.log(clickDate)
+                                    console.log(currentDate)
+                                    if(clickDate<=currentDate){
                                     	test1(info.dateStr);
                                     }else{
                                     	alert('유효한날짜를 선택하세요.')
@@ -190,23 +198,31 @@
 
                                 navLinks: true,
                                 navLinkDayClick: function(date,jsEvent){
-                    
-                                    console.log('day',date.toISOString().slice(0, 10));
-                    
-                                    //console.log('coords',jsEvent.pageX,jsEvent.pageY);
-                                    var timezoneOffset = date.getTimezoneOffset() * 60000;
-                                    var kr = new Date(date - timezoneOffset);
-                                    alert(kr.toISOString());
+                    				
+                                	
+                                	var date = new Date(date)
+                                    date.setHours(date.getHours() + 9)
+                                    clickDate = date.toISOString().replace('T', ' ').substring(0, 10)
+                                    let date2 = new Date()
+                                	date2.setHours(date.getHours() + 9)
+                                    currentDate = date2.toISOString().replace('T', ' ').substring(0, 10)
+                                	console.log(clickDate)
+                                	console.log(currentDate)
+                                    if(clickDate<=currentDate){
+                                    	test1(clickDate);
+                                    }else{
+                                    	alert('유효한날짜를 선택하세요.')
+                                    }
                                    
                 
-                                    $('#div1').css('display','')
-                                    $('#date1').val(kr.toISOString().slice(0, 10))
+                                    
                     
                                 }, 
                                 events : [
                                     {
                                         title: '출근 08:55',
                                         start: '2022-09-01',
+                                        color: 'green'
                                         
                                     },
                                     {
@@ -216,55 +232,44 @@
                                 ]
                             });
                             calendar.render();
+                            
                             $(".fc-prev-button").click(function() {
-                                var date = calendar.getDate();
+                                /* var date = calendar.getDate();
                                 var month = new Date(date).getMonth()
                                 var year = new Date(date).getFullYear()
                                 if(month+1<10){
                                     alert(year+'-0'+(month+1))
                                 }else{
                                     alert(year+'-'+(month+1))
-                                }
+                                } */
+                            	var date = calendar.getDate();
+                                date.setHours(date.getHours() + 9)
+                                var month = date.toISOString().replace('T', ' ').substring(0, 10)
+                                alert(month)
                             });
                             $(".fc-next-button").click(function() {
-                                var date = calendar.getDate();
-                                var month = new Date(date).getMonth()
-                                var year = new Date(date).getFullYear()
-                                if(month+1<10){
-                                    alert(year+'-0'+(month+1))
-                                }else{
-                                    alert(year+'-'+(month+1))
-                                }
+                            	var date = calendar.getDate();
+                                date.setHours(date.getHours() + 9)
+                                var month = date.toISOString().replace('T', ' ').substring(0, 10)
+                                alert(month)
                             });
                             $(".fc-prevYear-button").click(function() {
-                                var date = calendar.getDate();
-                                var month = new Date(date).getMonth()
-                                var year = new Date(date).getFullYear()
-                                if(month+1<10){
-                                    alert(year+'-0'+(month+1))
-                                }else{
-                                    alert(year+'-'+(month+1))
-                                }
+                            	var date = calendar.getDate();
+                                date.setHours(date.getHours() + 9)
+                                var month = date.toISOString().replace('T', ' ').substring(0, 10)
+                                alert(month)
                             });
                             $(".fc-nextYear-button").click(function() {
-                                var date = calendar.getDate();
-                                var month = new Date(date).getMonth()
-                                var year = new Date(date).getFullYear()
-                                if(month+1<10){
-                                    alert(year+'-0'+(month+1))
-                                }else{
-                                    alert(year+'-'+(month+1))
-                                }
+                            	var date = calendar.getDate();
+                                date.setHours(date.getHours() + 9)
+                                var month = date.toISOString().replace('T', ' ').substring(0, 10)
+                                alert(month)
                             });
                             $(".fc-today-button").click(function() {
-                                var date = calendar.getDate();
-                                var month = new Date(date).getMonth()
-                                var year = new Date(date).getFullYear()
-                                if(month+1<10){
-                                    alert(year+'-0'+(month+1))
-                                }else{
-                                    alert(year+'-'+(month+1))
-                                }
+                            	var date = calendar.getDate();
+                                date.setHours(date.getHours() + 9)
+                                var month = date.toISOString().replace('T', ' ').substring(0, 10)
+                                alert(month)
                             });
                         });
                             </script>
