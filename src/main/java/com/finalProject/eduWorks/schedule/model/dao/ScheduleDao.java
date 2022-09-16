@@ -51,5 +51,16 @@ public class ScheduleDao {
 		return sqlSession.insert("scheduleMapper.insertSche", s);
 	}
 	
+	public Schedule selectSche(SqlSessionTemplate sqlSession, int scheNo) {
+		return sqlSession.selectOne("scheduleMapper.selectSche", scheNo);
+	}
+	
+	public int updateSche(SqlSessionTemplate sqlSession, Schedule s) {
+		return sqlSession.update("scheduleMapper.updateSche", s);
+	}
+	
+	public int deleteSche(SqlSessionTemplate sqlSession, int scheNo) {
+		return sqlSession.update("scheduleMapper.deleteSche", scheNo);
+	}
 
 }

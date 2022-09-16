@@ -719,14 +719,14 @@
 	    plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'list' ],
 	 	// 날짜 칸 클릭시 해당 날짜 데이터를 갖고 일정 입력 페이지로 이동 
 		dateClick:function(arg){
-		    console.log(arg.dateStr); // 날짜 출력
+		    //console.log(arg.dateStr); // 날짜 출력
 		    location.href="enrollForm.ca?day=" + arg.dateStr + "&memNo=" + ${ loginUser.memNo };
 		},
 		
 		// 이벤트 클릭시 일정 상세 조회 페이지로 이동
 		eventClick:function(e){
-			// location.href = "detail.ca?no=일정 번호"
-			//console.log(e.event.title);
+			location.href = "detail.ca?sNo=" + e.event.id + "&memNo=" + ${ loginUser.memNo };
+			//console.log(e.event.id);
 		},
 	    
 	    header: {
@@ -739,6 +739,7 @@
 	    navLinks: true, // can click day/week names to navigate views
 	    businessHours: true, // display business hours
 	    editable: true,
+	    timeFormat:'H(:mm)',
 	    events: function(info, successCallback, failureCallback){
 	    	$.ajax({
 	    		type: 'post',
@@ -754,6 +755,7 @@
               		
               		$.each(param, function(index, data){
 	              		event.push({
+	              			id: data.id,
 	              			title: data.title,
 	              			start: data.start,
 	              			end: data.end,

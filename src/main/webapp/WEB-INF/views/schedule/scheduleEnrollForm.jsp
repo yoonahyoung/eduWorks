@@ -81,10 +81,6 @@
 	                            <td><span>&nbsp;참석자</span></td>
 	                            <td id="attendeeArea" style="padding-left: 23px;">
 	                                <!-- 선택한 참석자 영역 -->
-									<!-- <div class="su_atndDiv">
-										<span>최명진 대표</span>  
-										<button class="btn" type="button">X</button>
-									</div> -->
 									
 	                                <span style="cursor: pointer;" id="addAttendee"> + 참석자 추가</span>
 	                            </td>
@@ -110,7 +106,7 @@
 	                                <span style="display: inline-block; margin-top: 10px;">&nbsp;내용</span>
 	                            </td>
 	                            <td>
-	                            &ensp;&ensp;&ensp;<textarea name="scheContent"></textarea>
+	                            	&ensp;&ensp;&ensp;<textarea name="scheContent"></textarea>
 	                            </td>
 	                        </tr>
 	
@@ -286,20 +282,9 @@
 	                                $("#attCalList").addClass("dis_no");
 	                            });
 	                            
-	                            /* let checkCnt = "";
-	                            // 참석자 클릭 이벤트
-	                            $(document).on("click", ".su_ph_line", function(){
-	                            	checkCnt = "";
-	                            	// console.log($(this).parent().children().children().eq(0).val()); // 멤버 번호
-	                            	checkCnt += ($(this).parent().children().children().eq(0).val()) + ",";	// 클릭한 멤버 번호 뽑기
-	                            });
-	                            checkCnt = checkCnt.substring(0, checkCnt.lastIndexOf(","));
-								
-	                        	console.log(checkCnt);
-	                        	console.log('g'); */
 	                        })
 	                        	
-	                         // 선택한 참석자 추가
+	                        // 선택한 참석자 추가
                             function chooseAtnd(mNo){
 	                        	var value = $("#attendeeArea").html();
 	                        	var atndNoStr = $("#atndNo2").val();
@@ -455,6 +440,8 @@
 	                            		$("#scheStartT").hide();
 	                            		$("#scheEndT").hide();
 	                            		$("#scheEndD").val($("#scheStartD").val());
+	                            		$("#scheStartT").val('00:00');
+	                            		$("#scheEndT").val('23:59');
 	                            		$("input[name=scheAll]").val("1");
 	                            		
 	                            	} else{
@@ -466,6 +453,7 @@
 	                            	// 시작일이 변할 때 마다 종료일도 동일하게 만들어 줌
 	                            	$("#scheStartD").change(function(){
 	                            		if( $("#scheAll").is(":checked") ){
+	                            			console.log($("#scheStartD").val() + 1);
 	                            			$("#scheEndD").val($("#scheStartD").val());
 	                            		}
 	                            		

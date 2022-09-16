@@ -15,18 +15,19 @@ public interface ScheduleService {
 	int colorMycal(Mycal m);	// 캘린더 색상 변경
 	ArrayList<Member> selectMemberList();	// 주소록
 	
+	// 일정 조회
+	Schedule selectSche(int scheNo);
 	
-	// 개인 일정 조회
-	
-	// 일정 추가
+	// 일정 등록
 	ArrayList<Mycal> selectMycalList(String memNo);	// 내 캘린더 리스트 조회
 	Member selectMember(String memNo);	// 참석자 조회
 	int insertSche(Schedule s);	// 일정 등록
 	
 	// 일정 수정
+	int updateSche(Schedule s);
 	
 	// 일정 삭제
+	int deleteSche(int scheNo);
 	
-	// 마이 캘린더 추가
 
 }
