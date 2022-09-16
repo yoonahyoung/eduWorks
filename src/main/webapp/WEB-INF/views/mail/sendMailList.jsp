@@ -75,66 +75,50 @@
 		<hr style="margin: 20px 0px 15px 0px;">
 		<div class="mail-list">
 			<table class="mail">
+				
 				<!-- 반복문 사용 시작 -->
+				<c:forEach var="m" items="${list}">
 				<tr>
 					<td><input type="checkbox" class="mail-select"></td>
 					<td>
-						<!-- 찜하기 전 --> <i class="icon far fa-star"></i> <!-- 찜하기 후 --> <!-- <i class="icon fas fa-star" style="color:gold;"></i> -->
+						<c:choose>
+							<c:when test="${m.mailStatus.mailImportant == 'N' }">
+								<!-- 찜하기 전 --> 
+								<i class="icon far fa-star"></i> 
+							</c:when>
+							<c:otherwise>
+								<!-- 찜하기 후 -->
+								<i class="icon fas fa-star" style="color:gold;"></i>
+							</c:otherwise>
+						</c:choose>
 					</td>
 					<td>
-						<!-- 안읽은 메일 --> <i class="icon fas fa-envelope"></i> <!-- 읽은 메일 -->
-						<!-- <i class="icon far fa-envelope-open"></i> -->
+						<c:choose>
+							<c:when test="${m.mailStatus.mailRead == 'N' }">
+								<!-- 안읽은 메일 --> 
+								<i class="icon fas fa-envelope"></i> 
+							</c:when>
+							<c:otherwise>
+								<!-- 읽은 메일 -->
+								<i class="icon far fa-envelope-open"></i> 
+							</c:otherwise>
+						</c:choose>
 					</td>
 					<td>
-						<!-- 첨부파일 있는 경우 생성 
-                                        <i class="icon fas fa-paperclip"></i>
-                                        -->
+
+						<!-- 첨부파일 있는 경우 생성 -->
+						<c:if test="${m.attachment.atCount > 0 }">
+                         	<i class="icon fas fa-paperclip"></i>
+                        </c:if>
+                         
 					</td>
-					<td class="mail-person" width="15%"><div class="person">이나라</div></td>
-					<td class="mail-title">[결재완료] '사전 마케팅을 위한 카페 제휴&운영 건'이(가) 결재가
-						완료되었습니다.</td>
+					<td class="mail-person" width="15%"><div class="person">${loginUser.memName }</div></td>
+					<td class="mail-title">${m.mailTitle }</td>
 					<td class="mail-sendtime">2022-08-10 10:23:22</td>
 				</tr>
+				
 				<!-- 반복문 끝 -->
-				<tr>
-					<td><input type="checkbox" class="mail-select"></td>
-					<td>
-						<!-- 찜하기 전 --> <i class="icon far fa-star"></i> <!-- 찜하기 후 --> <!-- <i class="icon fas fa-star" style="color:gold;"></i> -->
-					</td>
-					<td>
-						<!-- 안읽은 메일 --> <!-- <i class="icon fas fa-envelope"></i> --> <!-- 읽은 메일 -->
-						<i class="icon far fa-envelope-open"></i>
-					</td>
-					<td>
-						<!-- 첨부파일 있는 경우 생성 
-                                        <i class="icon fas fa-paperclip"></i>
-                                        -->
-					</td>
-					<td class="mail-person" width="15%"><div class="person">김민수</div></td>
-					<td class="mail-title">[결재완료] '사전 마케팅을 위한 카페 제휴&운영 건'이(가) 결재가
-						완료되었습니다.</td>
-					<td class="mail-sendtime">2022-08-10 10:23:22</td>
-				</tr>
-				<tr>
-					<td><input type="checkbox" class="mail-select"></td>
-					<td>
-						<!-- 찜하기 전 --> <!-- <i class="icon far fa-star"></i> --> <!-- 찜하기 후 -->
-						<i class="icon fas fa-star" style="color: gold;"></i>
-					</td>
-					<td>
-						<!-- 안읽은 메일 --> <!-- <i class="icon fas fa-envelope"></i> --> <!-- 읽은 메일 -->
-						<i class="icon far fa-envelope-open"></i>
-					</td>
-					<td>
-						<!-- 첨부파일 있는 경우 생성 --> <i class="icon fas fa-paperclip"></i>
-
-					</td>
-					<td class="mail-person" width="15%"><div class="person">홍재희</div></td>
-					<td class="mail-title">[결재완료] '사전 마케팅을 위한 카페 제휴&운영 건'이(가) 결재가
-						완료되었습니다.</td>
-					<td class="mail-sendtime">2022-08-10 10:23:22</td>
-				</tr>
-
+				</c:forEach>	
 			</table>
 
 		</div>

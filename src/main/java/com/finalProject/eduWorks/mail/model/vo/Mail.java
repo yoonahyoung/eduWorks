@@ -1,5 +1,8 @@
 package com.finalProject.eduWorks.mail.model.vo;
 
+import com.finalProject.eduWorks.common.model.vo.Attachment;
+import com.finalProject.eduWorks.member.model.vo.Member;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -36,7 +39,8 @@ public class Mail {
 	private String mailContent;
 	private String mailType;
 	private String sendDate;
-	
-	
+
+	private MailStatus mailStatus;
+	private Attachment attachment;
 
 }
