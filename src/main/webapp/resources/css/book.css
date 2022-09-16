@@ -97,6 +97,11 @@ tbody tr:hover{
 	justify-content:space-between;
 }
 
+#ttable input{
+	border:none;
+	text-align:center
+}
+
 
 /* noticeEnrollForm, deptBoardEnrollForm, blindEnrollForm */
 
@@ -511,3 +516,5 @@ tbody tr:hover{
     flex: 0 0 100%;
     max-width: 100%;
 	}
+	
+	
