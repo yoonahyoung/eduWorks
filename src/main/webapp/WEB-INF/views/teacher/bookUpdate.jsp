@@ -107,41 +107,6 @@
 									    		
 									    	})
 									    </script>
-                                        <!-- 필수사항 입력 안했을 때 모달창 -->
-                                        <!-- 
-                                        <div class="modal" id="noContent" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered cascading-modal modal-avatar" role="document">
-                                              
-                                                <div class="modal-content modal_alert">
-                                                    
-                                                    
-                                                    <div class="modal-body text-center modal_alert_child">
-                                                        <div>
-                                        
-                                                            <h5 class="mt-1 mb-2">필수 사항을 입력해주세요.</h5>
-                                                            <br>                                
-                                                            <div class="text-center mt-4"> 
-                                                                <button type="button" class="btn su_btn_all su_btn_medium" data-dismiss="modal">확인</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                					      -->
-                
-                
-                                        <script>
-                                            $(document).ready(function(){
-                                                $("#submitBtn").click(function(){
-                                                    // 필수사항의 value가 비어있으면 모달창
-                                                    // 입력했으면 data-target attr 지우기
-                                                });
-                
-                                            })
-                                        </script>
-                                        
-                    
                                     </div>
                                 </form>
                             </div>
