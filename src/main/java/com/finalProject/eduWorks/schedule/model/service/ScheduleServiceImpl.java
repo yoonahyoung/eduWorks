@@ -60,6 +60,21 @@ public class ScheduleServiceImpl implements ScheduleService {
 	public int insertSche(Schedule s) {
 		return sDao.insertSche(sqlSession, s);
 	}
+
+	@Override
+	public Schedule selectSche(int scheNo) {
+		return sDao.selectSche(sqlSession, scheNo);
+	}
+
+	@Override
+	public int updateSche(Schedule s) {
+		return sDao.updateSche(sqlSession, s);
+	}
+
+	@Override
+	public int deleteSche(int scheNo) {
+		return sDao.deleteSche(sqlSession, scheNo);
+	}
 	
 
 

@@ -96,6 +96,7 @@ public class ScheduleController {
 	     
 	     
 	     for (int i = 0; i < list.size(); i++) {
+	    	 	map.put("id", list.get(i).getScheNo());
 	            map.put("start", list.get(i).getScheStartDate());
 	            map.put("end", list.get(i).getScheEndDate());
 	            map.put("color", list.get(i).getMycal().getMycalColor());
@@ -131,12 +132,6 @@ public class ScheduleController {
 	// 일정 등록
 	@RequestMapping("insert.ca")
 	public String insertSche(Schedule s, HttpSession session) {
-		String no = s.getScheAtndNo();
-		no = no.substring(0, no.lastIndexOf(",")); // 맨 뒤 콤마 제거
-		String list = s.getScheAtndList();
-		list = list.substring(0, list.lastIndexOf(","));
-		s.setScheAtndNo(no);
-		s.setScheAtndList(list);
 		
 		int result = sService.insertSche(s);
 		
@@ -153,7 +148,75 @@ public class ScheduleController {
 		}
 		
 	}
-		
 	
+	// 일정 상세
+	@RequestMapping("detail.ca")
+	public ModelAndView selectSche(int sNo, String memNo, ModelAndView mv) {
+		Schedule s = sService.selectSche(sNo);
+		
+		String no = s.getScheAtndNo();
+		String list = s.getScheAtndList();
+		String[] nArr = {};
+		String[] lArr = {};
+		
+		// 배열로 만들기
+		
+		if(no != null) {
+			nArr = no.split(",");
+		}
+		if(list != null) {
+			lArr = list.split(",");
+		}
+		
+		// 내 캘린더 항목
+		ArrayList<Mycal> mlist = sService.selectMycalList(memNo);
+		// 멤버 리스트
+		ArrayList<Member> aList = sService.selectMemberList() ;
+		
+		mv.addObject("s", s).addObject("n", nArr).addObject("l", lArr)
+		  .addObject("mlist", mlist).addObject("aList", aList);
+		mv.setViewName("schedule/scheduleDetailView");
+		return mv;
+	}
+	
+	// 일정 수정
+	@RequestMapping("update.ca")
+	public String updateSche(Schedule s, HttpSession session) {
+		//System.out.println(s);
+		
+		int result = sService.updateSche(s);
+		
+		if(result > 0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "일정 수정 완료");
+			session.setAttribute("alertMsg", "일정 수정을 완료하였습니다.");
+			return "redirect:detail.ca?sNo=" + s.getScheNo() + "&memNo=" + s.getScheWriter();
+		} else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "일정 수정 실패");
+			session.setAttribute("alertMsg", "일정 수정을 실패하였습니다.");
+			return "redirect:detail.ca?sNo=" + s.getScheNo() + "&memNo=" + s.getScheWriter();
+		}
+		
+	}
+	
+	
+	// 일정 삭제
+	@RequestMapping("delete.ca")
+	public String deleteSche(int sNo, HttpSession session) {
+		int result = sService.deleteSche(sNo);
+		
+		if(result > 0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "일정 삭제 완료");
+			session.setAttribute("alertMsg", "일정 삭제를 완료하였습니다.");
+			return "redirect:list.ca";
+		} else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "일정 삭제 실패");
+			session.setAttribute("alertMsg", "일정 삭제를 실패하였습니다.");
+			return "redirect:list.ca";
+		}
+	}
 
 }
