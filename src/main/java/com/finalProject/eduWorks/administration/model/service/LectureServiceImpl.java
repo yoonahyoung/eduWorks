@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.finalProject.eduWorks.administration.model.dao.LectureDao;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
+import com.finalProject.eduWorks.member.model.vo.Member;
 import com.finalProject.eduWorks.teacher.model.vo.Teacher;
 
 @Service
@@ -38,6 +39,22 @@ public class LectureServiceImpl implements LectureService{
 	public ArrayList<Teacher> adminAppLectureList(PageInfo pi) {
 		return lDao.adminAppLectureList(sqlSession, pi);
 	}
+
+	@Override
+	public Teacher adminLectureDetailSelect(int classNo) {
+		return lDao.adminLectureDetailSelect(sqlSession, classNo);
+	}
+
+	@Override
+	public ArrayList<Member> teacherList() {
+		return lDao.teacherList(sqlSession);
+	}
+	
+	@Override
+	public int adminLectureUpdate(Teacher t) {
+		return lDao.adminLectureUpdate(sqlSession, t);
+	}
+
 
 	
 

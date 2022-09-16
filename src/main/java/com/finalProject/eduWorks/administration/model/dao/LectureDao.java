@@ -7,6 +7,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
+import com.finalProject.eduWorks.member.model.vo.Member;
 import com.finalProject.eduWorks.teacher.model.vo.Teacher;
 
 @Repository
@@ -39,4 +40,31 @@ public class LectureDao {
 		
 		return (ArrayList)sqlSession.selectList("teacherMapper.adminAppLectureList", null, rowBounds);
 	}
+	
+	public Teacher adminLectureDetailSelect(SqlSessionTemplate sqlSession, int classNo) {
+		return sqlSession.selectOne("teacherMapper.adminLectureDetailSelect", classNo);
+	}
+	
+	public ArrayList<Member> teacherList(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("memberMapper.teacherList");
+	}
+	
+	public int adminLectureUpdate(SqlSessionTemplate sqlSession, Teacher t) {
+		return sqlSession.update("teacherMapper.adminLectureUpdate", t);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
