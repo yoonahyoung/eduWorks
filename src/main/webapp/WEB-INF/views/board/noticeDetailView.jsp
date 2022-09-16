@@ -432,10 +432,12 @@
                     				$("#modalContent").html("글이 삭제 되었습니다.");
 	                    			$("#resultUrl").attr("onclick", "location.href='list.no'");
 	                    			$("#moContent").modal("show");
+	                    			$("#delete").modal("hide");
                     			}else{
                     				$("#modalContent").html("삭제에 실패하였습니다.");
 	                    			$("#resultUrl").attr("onclick", "");
 	                    			$("#moContent").modal("show");
+	                    			$("#delete").modal("hide");
                     			}
                     			
                     		},

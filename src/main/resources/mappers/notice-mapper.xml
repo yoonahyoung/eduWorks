@@ -224,7 +224,6 @@
   		  , board_title
   		  , board_content
   		  , board_writer
-  		  , dept_code
   		  , board_category
   		  , board_en_date
   		  )
@@ -234,7 +233,6 @@
   		  , #{boardTitle}
   		  , #{boardContent}
   		  , #{boardWriter}
-  		  , #{deptCode}
   		  , 1
   		  , sysdate
   		  )
