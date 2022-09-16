@@ -52,7 +52,7 @@
             </div>
             
             <div class="main_width">
-                <table class="board-content table" align="center">
+                <table id="admLecture" class="board-content table" align="center">
                     <thead>
                         <tr class="table_thead_border">
                             <th width="5%">번호</th>
@@ -90,6 +90,13 @@
                 
                 <br><br>
                 
+                 <script>
+			    	$(function(){
+			    		$("#admLecture>tbody>tr").click(function(){
+			    			location.href = 'doneDetail.cl?no=' + $(this).children(".no").text();
+			    		})
+			    	})
+			    </script>
                 
                 
             </div>
