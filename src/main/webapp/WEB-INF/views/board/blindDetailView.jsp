@@ -21,11 +21,20 @@
 	    <div class="su_contentArea">
 	        <div class="su_content_header">
 	            <h2 class="su_sub_menu_name">익명 게시판</h2>
+	            	<c:if test="${ isReport eq 1 }">
+	            		 신고 관리
+	            	</c:if>
+	            
 	
 	            <div class="su_btn_two_area">
 	                <div class="su_left_area"><!-- 자리 채우기용 div --></div>
 	                <div>
-	                    <button type="button" class="n-btn su_btn_border" onclick="location.href='list.bl'">목록으로</button>
+	                	<c:if test="${ empty isReport }">
+	                    	<button type="button" class="n-btn su_btn_border" onclick="location.href='list.bl'">목록으로</button>
+	                    </c:if>
+	                    <c:if test="${ isReport eq 1 }">
+	                    	<button type="button" class="n-btn su_btn_border" onclick="location.href='reportList.ad'">목록으로</button>
+	                    </c:if>
 	                </div>
 	            </div>
 	            <hr class="hr_line">
@@ -40,7 +49,7 @@
 	            </div>
 	
 	            <!-- 작성자에게만 보이는 수정삭제 버튼 -->
-	            <c:if test="${ loginUser.memNo eq b.boardWriter }">
+	            <c:if test="${ loginUser.memNo eq b.boardWriter}">
 		            <div class="detailDot" style="float:right; width:10%; margin-right:-130px">
 		                <ul class="navbar-nav ml-auto moDelte">
 		                    <li class="nav-item dropdown no-arrow mx-1">
@@ -55,6 +64,34 @@
 		                            <a class="dropdown-item d-flex align-items-center" href="#" data-toggle="modal" data-target="#delete">
 		                                <span class="font-weight-bold">삭제하기</span>
 		                            </a>
+	                        	</div>
+		                    </li>
+		                </ul>
+		            </div>
+				</c:if>
+				
+				<!-- 신고 관리자에게만 보이는 블라인드 처리 버튼 -->
+				<c:if test="${ isReport eq 1 }">
+		            <div class="detailDot" style="float:right; width:10%; margin-right:-130px">
+		                <ul class="navbar-nav ml-auto moDelte">
+		                    <li class="nav-item dropdown no-arrow mx-1">
+		                        <a class="nav-link dropdown-toggle" href="#" id="dotDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" 
+		                            aria-expanded="false">
+		                            <i class="fas fa-ellipsis-v" style="color:black; font-size: 25px;"></i>
+		                        </a>
+	                        	<div class="dropdown-list dropdown-menu shadow" aria-labelledby="dotDropdown" style="margin-left:-180px; margin-top: -10px;">
+		                            <c:choose>
+		                            	<c:when test="${ b.boardStatus ne 'B' }">
+				                            <a class="dropdown-item d-flex align-items-center" onclick="goBlind(1);" data-toggle="modal" style="cursor:pointer">
+				                                <span class="font-weight-bold">블라인드 처리</span>
+				                            </a>
+				                        </c:when>
+				                        <c:otherwise>
+				                            <a class="dropdown-item d-flex align-items-center" onclick="goBlind(2);" data-toggle="modal" style="cursor:pointer">
+				                                <span class="font-weight-bold">블라인드 해제</span>
+				                            </a>
+		                            	</c:otherwise>
+		                            </c:choose>
 	                        	</div>
 		                    </li>
 		                </ul>
@@ -166,11 +203,14 @@
 	                </div>
 	                <div class="boReport">
 	                	<c:choose>
+	                		<c:when test="${ isReport eq 1 }">
+	                			<a class="nav-link" style="color:grey; padding-top:0; padding-bottom:0; cursor:default;">
+	                		</c:when>
 	                		<c:when test="${ b.boardWriter ne loginUser.memNo }">
-	                    		<a onclick="insertReport(1);" class="nav-link" style="color:black; padding-top:0; padding-bottom:0;" data-toggle="modal" data-target="#reportModal">
+	                    		<a onclick="insertReport(0);" class="nav-link" style="color:black; padding-top:0; padding-bottom:0;" data-toggle="modal" data-target="#reportModal">
 	                    	</c:when>
 	                    	<c:otherwise>
-	                    		<a onclick="insertReport(1);" class="nav-link" style="color:black; padding-top:0; padding-bottom:0;" data-toggle="modal">
+	                    		<a onclick="insertReport(0);" class="nav-link" style="color:black; padding-top:0; padding-bottom:0;" data-toggle="modal">
 	                    	</c:otherwise>
 	                    </c:choose>
                             <span class="material-symbols-outlined" style="color:rgb(250, 71, 71); font-size: 24px; vertical-align:top;">E911_Emergency</span>
@@ -236,11 +276,14 @@
 						selectReplyList();
 						selectLikeCount();
 						
+						// 추천하기/해제 보여지는 구문
 						$("#thumbsSpan").hover(function(){
 							$(".likeCount").css("font-size", "0");
 						}, function(){
 							$(".likeCount").css("font-size", "17px");
 						})
+						
+						
 					})
 					
 					function selectReplyList(){ // 댓글 조회
@@ -252,6 +295,7 @@
 								let value = "";
 								let user = "${loginUser.memName}";
 								let root = "${pageContext.request.contextPath}";
+								let isReport = "${isReport}";
 								let replyCount = 0;
 								let idArea = '<input type="text" placeholder="6자 이내 입력" id="blindId">&ensp;'
 											+ '<button type="button" class="n-btn su_btn_border btn-sm" onclick="ajaxBlindId(0);" id="blindBtn">등록</button>';
@@ -264,7 +308,7 @@
 									}else if(rList[i].replyStatus == 'Y'){ // 대댓글
 										value += '<div class="su_reply_Barea su_rreply_Barea selNo' + rList[i].replyNo + '">';
 										
-									}else if(rList[i].replyStatus == 'N'){ // 대댓글이면서 삭제됐을 경우
+									}else if(rList[i].replyStatus == 'N' || rList[i].replyStatus == 'B' ){ // 대댓글이면서 삭제됐을 경우
 										value += '<div>';
 									}
 									
@@ -280,9 +324,15 @@
 															+ '<span style="margin-right:10px"> | ' + rList[i].replyDate + '</span>';
 															// 원댓글만 댓글 추가 버튼 보이게끔 (댓글 작성자 본인 또한 본인 댓글에 대댓글 가능)
 															if(rList[i].replyParent == 0){
-																value += '<a id="pReplyEvent' + rList[i].replyNo + '" style="cursor: pointer;" onclick="rReply(' + rList[i].replyNo + ');"><i class="fas fa-reply" style="transform: rotate(180deg);"></i> 댓글</a>';
+																value += '<a id="pReplyEvent' + rList[i].replyNo + '" style="cursor: pointer;" onclick="rReply(' + rList[i].replyNo + ');"><i class="fas fa-reply" style="transform: rotate(180deg);"></i> 댓글 </a>';
 															}
-												 value += '</div>'
+															if(isReport == 1){ // 관리자가 신고 게시판에서 들어왔을 시 보여지는 버튼
+																value += '&ensp;<a onclick="goReBlind(' + rList[i].replyNo + ')" style="color:black; cursor:pointer;">'
+															 				+ '<i class="fas fa-eye-slash" style="color:#5e7e9b"></i>'
+						                                                 	+ ' 숨김처리'
+				                                            			+ '</a>';
+															}
+												  value += '</div>'
 														+ '<div class="su_reply_Bcontent conNo' + rList[i].replyNo + '" style="width:95%;">'
 															+ '<p style="width:100%">' + rList[i].replyContent +'</p>'
 														+ '</div>'
@@ -294,26 +344,41 @@
 														+ '<button type="button" class="btn btn-sm su_btn_border" style="border:0px" onclick="updateReBtn(' + rList[i].replyNo + ');">수정</button>|'
 														+ '<button type="button" class="btn btn-sm su_btn_border" style="border:0px" onclick="deleteReBtn(' + rList[i].replyNo + ');">삭제</button>'
 												   + '</div>';
-										}else{ // 본인이 작성 하지 않은 글에는 신고버튼
-											value += '<div class="su_reply_btn reReport">'
-														+ '<a onclick="insertReport(2);" class="nav-link" style="color:black; padding-top:0; padding-bottom:0;" data-toggle="modal" data-target="#reportModal">'
-		                                        			+ '<span class="material-symbols-outlined" style="color:rgb(250, 71, 71); font-size: 23px; vertical-align:top;">E911_Emergency</span>'
-		                                        			+ '<span>신고</span>'
-	                                            		+ '</a>'
-	                                            	+ '</div>';
+										}else{ // 본인이 작성 하지 않은 글에는 신고버튼보여짐
+											 if(isReport == 1){ // 신고 관리로 들어왔다면 신고 버튼 비활성화
+												value += '<div class="su_reply_btn reReport">'
+															+ '<a class="nav-link" style="color:grey; padding-top:0; padding-bottom:0; cursor:default;">'
+			                                        			+ '<span class="material-symbols-outlined" style="color:rgb(250, 71, 71); font-size: 23px; vertical-align:top;">E911_Emergency</span>'
+			                                        			+ '<span>신고</span>'
+			                                        		+ '</a>'
+			                                        	+ '</div>';
+											 }else {
+												value += '<div class="su_reply_btn reReport">'
+															+ '<a onclick="insertReport(' + rList[i].replyNo + ');" class="nav-link" style="color:black; padding-top:0; padding-bottom:0;" data-toggle="modal" data-target="#reportModal">'
+			                                        			+ '<span class="material-symbols-outlined" style="color:rgb(250, 71, 71); font-size: 23px; vertical-align:top;">E911_Emergency</span>'
+			                                        			+ '<span>신고</span>'
+		                                            		+ '</a>'
+		                                            	+ '</div>';
+											}
 										}
 										value += '</div>'
 											   + '<div class="pReply' + rList[i].replyNo + '">'
 											   + '</div>';
 										replyCount += 1;
-									}else if(i < (rList.length - 1)){
-										
-										if((rList[i].replyParent == 0) && (rList[i+1].replyParent != 0) && (rList[i+1].replyStatus == 'Y')){ // 대댓글 있는 원댓글이면서 삭제됐을 경우
-											value += '<div class="su_reply">'
-			                							+'<div style="height:48px; line-height:48px">삭제된 댓글입니다.</div>'
-			                						+'</div></div>';
-										}
+									}else if(rList[i].replyStatus == 'B'){
+										value += '<div class="su_reply">'
+		                							+'<div style="height:48px; line-height:48px">관리자에 의해 규제된 댓글입니다.</div>'
+		                						+'</div></div>';
+									}else
+										if(i < (rList.length - 1)){ // 블라인드 처리된 댓글
+											if((rList[i].replyParent == 0) && (rList[i+1].replyParent != 0) && (rList[i+1].replyStatus == 'Y')){ // 대댓글 있는 원댓글이면서 삭제됐을 경우
+												value += '<div class="su_reply">'
+				                							+'<div style="height:48px; line-height:48px">삭제된 댓글입니다.</div>'
+				                						+'</div></div>';
+											}
 									}
+									
+									
 									
 									// 댓글 작성 시 익명 아이디 뿌려주기
 									if(rList[i].replyWriter == user){ // 댓글 작성자가 로그인한 유저와 같다 == 즉, 댓글 작성한 익명 아이디가 있다
@@ -325,6 +390,8 @@
 								$(".ajaxReply").html(value);
 			    				$(".replyCount").text(replyCount);
 			    				$("#idArea").html(idArea);
+			    				// 신고 당한 댓글 배경 색 바뀌게끔
+								$(".selNo"+"${rNo}").css("background", "rgb(252, 226, 226)");
 							}, 
 							error:function(){
 								console.log("댓글리스트 조회용 ajax통신 실패");
@@ -616,14 +683,22 @@
                     	}
                     })
                     
+                    
                     // 신고 insert
-                    function insertReport(rptRefCat){
+                    function insertReport(rptBoardNo){
                     	if(${loginUser.memNo} == ${b.boardWriter}){
                     		$("#reportModal").hide();
                     		$("#modalContent").html("본인이 작성한 글은 신고가 불가능합니다!");
                 			$("#moContent").modal("show");
                     	}else{
                     		$("#reportModal").on("click", "#realReport", function(){
+                    			let rptRefCat = 0;
+                    			if(rptBoardNo == 0){ // 게시글 신고일 시
+                    				rptBoardNo = ${b.boardNo};
+                    				rptRefCat = 1;
+                    			}else{ // 댓글 신고일 시
+                    				rptRefCat = 2;
+                    			}
                         		let rptRsn = $("input[name^='rpt_reason_no']:checked").val();
     	                    	if(!rptRsn){
     	                    		// 사유 미 체크시
@@ -634,13 +709,13 @@
     	                    			url:"insertReport.bl",
     	                    			data:{
     	                    				rptRefCat:rptRefCat,
-    	                    				rptBoardNo:${b.boardNo},
+    	                    				rptBoardNo:rptBoardNo,
     	                    				rptMemNo:${loginUser.memNo},
     	                    				rptReasonNo:rptRsn
     	                    			},
     	                    			success(result){
     	                    				if(result > 0){
-    	                    					$("#modalContent").html("신고되었습니다");
+    	                    					$("#modalContent").html("신고 완료");
     	        	                			$("#moContent").modal("show");
     	        	                			$("#reportModal").modal("hide");
     	                    				}else{
@@ -656,8 +731,56 @@
     	                    	}
                         	})
                     	}
-                    	
+                    }
                     
+                    // 게시글 블라인드 
+                    function goBlind(category){
+                    	// category 1일시 블라인드 처리, 2일 시 해제
+                   		$.ajax({
+                   			url:"goBlind.ad",
+                   			data:{
+                   				no:${b.boardNo},
+                   				category:category
+                   			},
+                   			success(result){
+                   				if(result > 0){
+                   					$("#modalContent").html("블라인드 처리/해제 되었습니다");
+    	                			$("#moContent").modal("show");
+                   				}else{
+                   					$("#modalContent").html("블라인드 처리/해제에 실패하였습니다.");
+    	                			$("#moContent").modal("show");
+                   				}
+                   				
+                   			},error(){
+                   				console.log("ajax통신 실패");
+                   			}
+                   		})
+                    }
+                    
+                 	// 댓글 블라인드 
+                    function goReBlind(replyNo){
+                 		
+                   		$.ajax({
+                   			url:"goReBlind.ad",
+                   			data:{replyNo:replyNo},
+                   			success(result){
+                   				value = "";
+                   				
+                  				$("#modalContent").html("블라인드 처리/해제 되었습니다");
+   	                			$("#moContent").modal("show");
+   	                			
+   	                			value += '<div class="su_reply">'
+	            							+'<div style="height:48px; line-height:48px">관리자에 의해 규제된 댓글입니다.</div>'
+	            						+'</div></div>';
+   	                			$(".selNo"+replyNo).html(value);
+                   				selectReplyList();
+                   				
+                   				
+                   			},
+                   			error(){
+                   				console.log("ajax통신 실패");
+                   			}
+                   		})
                     }
                     
 				</script>
