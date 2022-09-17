@@ -41,7 +41,37 @@ public class MailServiceImpl implements MailService {
 	public ArrayList<Mail> selectSendMailList(PageInfo pi, String memNo) {
 		return mDao.selectSendMailList(sqlSession, pi, memNo);
 	}
-
+	
+	/**
+	 * 2_1. 받은 메일 개수 조회
+	 * @param memEmail : 로그인한 회원 이메일
+	 * @return : 받은 메일 개수
+	 */
+	@Override
+	public int receiveListCount(String memEmail) {
+		return mDao.receiveListCount(sqlSession, memEmail);
+	}
+	
+	/**
+	 * 2_2. 받은 메일 목록 조회
+	 * @param memEmail : 로그인한 회원 이메일
+	 * @return : 받은 메일 목록
+	 */
+	@Override
+	public ArrayList<Mail> selectReceiveMailList(PageInfo pi, String memEmail) {
+		return mDao.selectReceiveMailList(sqlSession, pi, memEmail);
+	}
+	
+	/**
+	 * 2_3. 받은 메일 중 안읽은 메일 개수 조회
+	 * @param memEmail : 로그인한 회원 이메일
+	 * @return : 받은 메일 중 안읽은 메일 개수
+	 */
+	@Override
+	public int receiveUnReadCount(String memEmail) {
+		return mDao.receiveUnReadCount(sqlSession, memEmail);
+	}
+	
 	/**
 	 * 6_1. 메일 전송 (TB_MAIL)
 	 * @param m : 보낸 메일 정보
@@ -72,8 +102,14 @@ public class MailServiceImpl implements MailService {
 		return mDao.insertAttachment(sqlSession, atList);
 	}
 
-
-
-
+	/**
+	 * 7. 중요 메일 설정
+	 * @param ms : 중요메일 표시한 메일의 정보 
+	 * @return : 중요 메일 설정 성공 여부가 담긴 int형 변수 (성공 : 1 | 실패 : 0)
+	 */
+	@Override
+	public int updateImportant(MailStatus ms) {
+		return mDao.updateImportant(sqlSession, ms);
+	}
 
 }

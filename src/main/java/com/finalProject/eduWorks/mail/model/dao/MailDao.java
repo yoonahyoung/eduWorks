@@ -1,6 +1,7 @@
 package com.finalProject.eduWorks.mail.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -41,6 +42,38 @@ public class MailDao {
 	}
 	
 	/**
+	 * 2_1. 받은 메일 개수 조회
+	 * @param memEmail : 로그인한 회원 이메일
+	 * @return : 받은 메일 개수
+	 */
+	public int receiveListCount(SqlSessionTemplate sqlSession, String memEmail) {
+		return sqlSession.selectOne("mailMapper.receiveListCount", memEmail);
+	}
+	
+	/**
+	 * 2_2. 받은 메일 목록 조회
+	 * @param memEmail : 로그인한 회원 이메일
+	 * @return : 받은 메일 목록
+	 */
+	public ArrayList<Mail> selectReceiveMailList(SqlSessionTemplate sqlSession, PageInfo pi, String memEmail){
+		
+		int limit = pi.getBoardLimit(); // 조회해야되는 게시글 갯수
+		int offset = (pi.getCurrentPage() - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+
+		return (ArrayList)sqlSession.selectList("mailMapper.selectReceiveMailList", memEmail, rowBounds);
+	}
+	
+	/**
+	 * 2_3. 받은 메일 중 안읽은 메일 개수 조회
+	 * @param memEmail : 로그인한 회원 이메일
+	 * @return : 받은 메일 중 안읽은 메일 개수
+	 */
+	public int receiveUnReadCount(SqlSessionTemplate sqlSession, String memEmail) {
+		return sqlSession.selectOne("mailMapper.receiveUnReadCount", memEmail);
+	}
+	
+	/**
 	 * 6_1. 메일 전송 (TB_MAIL)
 	 * @param m : 보낸 메일 정보
 	 * @return : 메일 전송 성공 여부가 담긴 int형 변수 (성공 : 1 | 실패 : 0)
@@ -76,6 +109,16 @@ public class MailDao {
 			result += sqlSession.insert("mailMapper.insertAttachment", at);
 		}
 		return result;
+	}	
+	
+	/**
+	 * 7. 중요 메일 설정
+	 * @param ms : 중요메일 표시한 메일의 정보 
+	 * @return : 중요 메일 설정 성공 여부가 담긴 int형 변수 (성공 : 1 | 실패 : 0)
+	 */
+	public int updateImportant(SqlSessionTemplate sqlSession, MailStatus ms) {
+		return sqlSession.update("mailMapper.updateImportant", ms);
 	}
+
 
 }

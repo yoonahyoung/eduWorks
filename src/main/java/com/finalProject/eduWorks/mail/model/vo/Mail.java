@@ -40,7 +40,9 @@ public class Mail {
 	private String mailType;
 	private String sendDate;
 
+	// --------- 추가 ----------
 	private MailStatus mailStatus;
 	private Attachment attachment;
+	private String sendName;
 
 }

@@ -292,6 +292,10 @@ table{
     background-color: #ebebeb;
 }
 
+#import{
+	color: gold;
+}
+
 /* ========= 모달 ========= */
 .modal-title{
 	color:black;

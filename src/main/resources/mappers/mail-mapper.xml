@@ -13,6 +13,7 @@
 		<result column="mail_content" property="mailContent" />
 		<result column="mail_type" property="mailType" />
 		<result column="send_date" property="sendDate" />
+		<result column="send_name" property="sendName" />
 		<association property="mailStatus" resultMap="mailStatusResult" />
 		<association property="attachment" resultMap="attachmentResult" />
 	</resultMap>
@@ -53,6 +54,7 @@
 		  , m.tag_no
 		  , receiver_mem
 		  , cc_mem
+		  , to_char(send_date, 'YYYY-MM-DD(DY) HH24:MI:SS') "send_date"
 		  , mail_title
 		  , mail_content
 		  , mail_type
@@ -74,6 +76,85 @@
 		where mem_no = #{memNo}
 		  and mail_folder = 1
 	</select>
+	
+	<!-- 받은 메일 개수 조회 -->
+	<select id="receiveListCount" resultType="_int">
+		select
+		    count(*)
+		from tb_mail_status
+		where receive_mail = #{memEmail}
+		  and mail_folder = 2
+	</select>
+	
+	<!-- 받은 메일 중 안읽은 메일 개수 조회 -->
+	<select id="receiveUnReadCount" resultType="_int">
+		select
+		    count(*)
+		from tb_mail_status
+		where receive_mail = #{memEmail}
+		  and mail_folder = 2
+		  and mail_read = 'N'
+	</select>
+	
+	<!-- 받은 메일 목록 조회 -->
+	<select id="selectReceiveMailList" resultMap="mailResult">
+		select
+		    mail_no
+		  , mem_no
+		  , m.tag_no
+		  , (
+                select
+                    mem_name
+                from tb_member
+                where mem_email = send_mail
+            ) "send_name"
+          , send_mail
+		  , receive_mail
+		  , cc_mem
+		  , to_char(send_date, 'YYYY-MM-DD(DY) HH24:MI:SS') "send_date"
+		  , mail_title
+		  , mail_content
+		  , mail_type
+		  , mail_folder
+		  , mail_read
+		  , mail_delete
+		  , mail_spam
+		  , mail_important
+		  , (
+		        select
+		            count(*)
+		        from tb_attachment
+		        where at_category = 2
+		          and at_ref_bno = mail_no
+		     ) "at_count"
+		from tb_mail m
+		join tb_mail_status ms using (mail_no)
+		where mail_folder in (2,3)
+		  and receive_mail = #{memEmail}
+	</select>
+	
+	<!-- 중요메일 설정 -->
+	<update id="updateImportant">
+		update tb_mail_status
+			<choose>
+				<when test='mailImportant == "N"'>
+					set mail_important = 'Y'
+				</when>
+				<otherwise>
+					set mail_important = 'N'
+				</otherwise>
+			</choose>
+		where mail_no = #{mailNo}
+			<choose>
+				<when test="receiveMail == null">
+					and send_mail = #{sendMail}
+				</when>
+				<otherwise>
+				  and receive_mail = #{receiveMail}
+				</otherwise>
+			</choose>
+		  and mail_folder = #{mailFolder}
+	</update>
 	
 	<!-- 메일 전송 -->
 	<insert id="insertMail">
