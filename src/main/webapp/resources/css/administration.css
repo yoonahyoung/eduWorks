@@ -1,0 +1,106 @@
+/*공통*/
+.container-fluid{
+    width:15%;
+    min-height: 100vh;
+    text-decoration: none;
+    padding-left:0px;
+}
+
+a:hover{
+    text-decoration: none;
+}
+
+.su_board_reply{
+    border:0px;
+    width:80%
+}
+
+.n-btn{
+	border-radius: 0.35rem;
+	padding: 0.375rem 0.75rem;
+}
+
+table th:hover{
+	cursor:default;
+}
+
+
+/* adStudentAdBookDetail */
+.ad_content_body{
+	padding:0; 
+	width:100%;
+}
+
+.su_sub_menu_name{
+	color:black;
+	margin:20px;
+}
+
+.addBookheader{
+	border-bottom:2px solid gainsboro; 
+	display:flex;
+	justify-content: space-between; 
+	margin:20px 0 10px 20px;
+}
+
+.addBookheader h4{
+	display:inline-block; 
+	color:black;
+	padding: 1rem;
+    font-weight: 600;
+}
+
+..addBookheader div{
+	margin-top:15px; 
+	margin-right:10px;
+}
+
+.info-title{
+	color:red; 
+	margin:20px 20px; 
+	font-size:18px; 
+	font-weight: 500; 
+}
+
+.detailDot{
+	float:right; 
+	width:10%;
+}
+
+.detailDot ul{
+	margin-top:-50px;
+}
+
+.detailDot i{
+	color:black; 
+	font-size: 25px;
+}
+
+.detailDot div{
+	margin-left:-180px; 
+	margin-top: -10px;
+}
+
+#studentTable{
+	width:100%; 
+	border-bottom:1px solid gainsboro;
+}
+
+#studentTable tr *{
+    padding:20px;
+}
+
+.tdLine{
+	border-right:1px solid gainsboro;
+}
+
+#student-plus-table{
+	width:80%; 
+    margin:20px; 
+    margin-left:50px;
+}
+    
+#student-plus-table *{
+    border:1px solid gainsboro;
+}
+
