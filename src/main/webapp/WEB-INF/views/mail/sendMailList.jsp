@@ -27,12 +27,12 @@
 	<div class="main-content">
 		<div class="second-title">
 			<div>
-				보낸 메일함 <span class="mail-count">전체메일 102 / 안읽은 메일 22</span>
+				보낸 메일함 <span class="mail-count">전체메일 ${count }</span>
 			</div>
 
 			<ul class="navbar-nav ml-auto moDelte">
 				<li class="nav-item dropdown no-arrow navigation"><span
-					class="mailListCheck"><input type="checkbox"></span>
+					class="mailListCheck"><input type="checkbox" id="allCheck" onclick="allCheck(this)"></span>
 					<button type="button" class="reply-btn">
 						<i class="fas fa-location-arrow"></i>&nbsp;&nbsp;답장
 					</button>
@@ -84,11 +84,13 @@
 						<c:choose>
 							<c:when test="${m.mailStatus.mailImportant == 'N' }">
 								<!-- 찜하기 전 --> 
-								<i class="icon far fa-star"></i> 
+								<i class="icon far fa-star"
+									onclick="importantBtn(${m.mailNo}, '${m.mailStatus.mailImportant }');"></i> 
 							</c:when>
 							<c:otherwise>
 								<!-- 찜하기 후 -->
-								<i class="icon fas fa-star" style="color:gold;"></i>
+								<i class="icon fas fa-star" id="import"
+									onclick="importantBtn(${m.mailNo}, '${m.mailStatus.mailImportant }');"></i>
 							</c:otherwise>
 						</c:choose>
 					</td>
@@ -113,16 +115,78 @@
                          
 					</td>
 					<td class="mail-person" width="15%"><div class="person">${loginUser.memName }</div></td>
-					<td class="mail-title">${m.mailTitle }</td>
-					<td class="mail-sendtime">2022-08-10 10:23:22</td>
+					<td class="mail-title">${m.mailTitle }
+						<input type="hidden" name="mailNo" value="${m.mailNo }">
+					</td>
+					<td class="mail-sendtime">${m.sendDate }</td>
 				</tr>
 				
 				<!-- 반복문 끝 -->
-				</c:forEach>	
+				</c:forEach>
+					
 			</table>
 
 		</div>
+		
+		<form id="postMailDetail" action="mailDetail.ma" method="post">
+			<input type="hidden" name="memEmail" value="${loginUser.memEmail }">
+			<input type="hidden" name="mailFolder" value="1">
+			<input type="hidden" name="mailNo" id="detailNo">
+		</form>
+		
+		<script>
+		
+		    // '전체클릭'버튼 클릭시 실행하는 함수
+		    function allCheck(allCheck){
+			  				  
+			 let checkboxes = document.querySelectorAll('input[type="checkbox"]');
+	
+			  console.log( checkboxes);
+	           checkboxes.forEach((checkbox)=>{
+	        	   
+	              checkbox.checked = allCheck.checked; // 전체 클릭 클릭시 => 항목 전체 선택 실행
+	              
+	           });
+	        }
+					
+			// '중요메일' 설정시 실행하는 함수
+			function importantBtn(mailNo, important){
 
+				$.ajax({
+					url : "updateImportant.ma",
+					data : {
+						mailNo : mailNo
+					  , sendMail : '${loginUser.memEmail}'
+					  , mailFolder : 1
+					  , mailImportant : important
+					},
+					success : function(result){
+						console.log(result);
+						if(result == 'success'){
+							location.reload();
+						}
+					},
+					error : function(){
+						console.log("좋아요 실패");
+					}
+				})
+
+			}
+			
+			// '메일 조회'시 실행하는 함수
+			$(function(){
+				$(".mail-title").click(function(){
+					
+					let mailNo = $(this).children('input[type=hidden]').val();
+					console.log(mailNo);
+					$("#detailNo").val(mailNo);
+					$("#postMailDetail").submit();
+
+				})
+			})
+
+		</script>
+		
 		<!-- 페이지 바 -->
 		<div class="page-nav" style="margin: 30px 0 30px 0">
 			<c:choose>

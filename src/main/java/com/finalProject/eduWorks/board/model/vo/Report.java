@@ -13,12 +13,14 @@ import lombok.ToString;
 @ToString
 public class Report {
 	private int rptNo;
-	private int rptRefCat;
+	private String rptRefCat;
 	private int rptBoardNo;
+	private String boardTitle;
 	private String rptMemNo;
 	private int rptReasonNo;
 	private Date rptDate;
 	private String rptStatus;
 	private Date rptStDate;
-
+	private String rptReason;
+	private int rptCount;
 }

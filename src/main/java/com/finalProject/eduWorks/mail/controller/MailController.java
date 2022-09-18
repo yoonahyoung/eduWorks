@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -20,6 +21,7 @@ import com.finalProject.eduWorks.mail.model.service.MailServiceImpl;
 import com.finalProject.eduWorks.mail.model.vo.Mail;
 import com.finalProject.eduWorks.mail.model.vo.MailStatus;
 import com.finalProject.eduWorks.member.model.vo.Member;
+import com.google.gson.Gson;
 
 @Controller
 public class MailController {
@@ -45,6 +47,7 @@ public class MailController {
 		// 보낸 메일 조회
 		ArrayList<Mail> list = mService.selectSendMailList(pi, memNo);
 				
+		mv.addObject("count", listCount);
 		mv.addObject("list", list);
 		mv.addObject("pi", pi);
 		mv.setViewName("mail/sendMailList");
@@ -57,10 +60,33 @@ public class MailController {
 	 * @return : 받은 메일함 페이지
 	 */
 	@RequestMapping("receiveMailList.ma")
-	public String receiveMailList(Model model) {
-		return "mail/receiveMailList";
+	public ModelAndView receiveMailList(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv, HttpSession session) {
+		
+		// 로그인한 회원 이메일
+		String memEmail = ( (Member)session.getAttribute("loginUser") ).getMemEmail();
+		
+		// 받은 메일 개수 조회
+		int listCount = mService.receiveListCount(memEmail);
+
+		// 페이징
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
+		
+		// 받은 메일 조회
+		ArrayList<Mail> list = mService.selectReceiveMailList(pi, memEmail);
+		
+		// 안읽은 메일 개수 조회
+		int unreadList = mService.receiveUnReadCount(memEmail);
+		
+		mv.addObject("count", listCount);
+		mv.addObject("unread", unreadList);
+		mv.addObject("list", list);
+		mv.addObject("pi", pi);
+		mv.setViewName("mail/receiveMailList");
+		
+		return mv;
+
 	}
-	
+		
 	/**
 	 * 3. 메일 작성 페이지로 이동
 	 * @return : 메일 작성 페이지
@@ -199,5 +225,20 @@ public class MailController {
 		
 	}
 	
+	/**
+	 * 7. 중요 메일 설정
+	 * @param ms : 중요메일 표시한 메일의 정보 
+	 * @return : 중요 메일 설정 성공 여부가 담긴 int형 변수 (성공 : 1 | 실패 : 0)
+	 */
+	@ResponseBody
+	@RequestMapping("updateImportant.ma")
+	public String ajaxUpdateImportant(MailStatus ms) {
+		System.out.println(ms);
+		int result = mService.updateImportant(ms);
+		
+		return result > 0 ? "success" : "fail";
+		
+	}
+
 	
 }

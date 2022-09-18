@@ -39,6 +39,19 @@
 		<result column="like_date" property="likceDate" />
 		<result column="like_count" property="likeCount" />
 	</resultMap>
+	
+	<resultMap id="reportResult" type="Report">
+		<result column="rpt_no" property="rptNo" />
+		<result column="rpt_ref_cat" property="rptRefCat" />
+		<result column="rpt_board_no" property="rptBoardNo" />
+		<result column="board_title" property="boardTitle" />
+		<result column="rpt_mem_no" property="rptMemNo" />
+		<result column="rpt_date" property="rptDate" />
+		<result column="rpt_status" property="rptStatus" />
+		<result column="rpt_st_date" property="rptStDate" />
+		<result column="rpt_reason" property="rptReason" />
+		<result column="rpt_count" property="rptCount" />
+	</resultMap>
 
 	<!-- 게시글 페이징 처리 -->
 	<select id="selectListCountB" resultType="_int">
@@ -84,11 +97,11 @@
   			 , m.mem_name as "b_writer"
   			 , board_count
   			 , to_char(board_en_date, 'YYYY/MM/DD HH24:MI') as "board_en_date"
+  			 , board_status
   		  from tb_board b
   		  join tb_member m on(b.board_writer = m.mem_no)
   		 where board_no = #{boardNo}
   		   and board_category = 3
-  		   and board_status = 'Y'
   	</select>
   	
   	<!-- 댓글 수 조회 -->
@@ -166,6 +179,7 @@
 		order siblings by reply_no asc, reply_parent asc
   	</select>
   	
+  	<!-- 익명 댓글 작성시 사용하는 아이디 중복 여부 -->
   	<select id="checkReplyId" resultType="_int">
   		select
   			   count(*)
@@ -306,6 +320,70 @@
   		  , #{rptMemNo}
   		  , #{rptReasonNo}
   		  )
-  		  
   	</insert>
+  	
+  	<!-- 신고 게시글 페이징 처리 -->
+	<select id="selectListCountR" resultType="_int">
+		select
+			   count(*)
+		  from (select
+				       decode(rpt_ref_cat, 1, '게시글', 2, '댓글') as "rpt_ref_cat"
+				     , rpt_board_no
+				     , count(*) as "rpt_count"
+				     , rpt_status
+				  from tb_report r
+				 group by rpt_ref_cat, rpt_board_no, rpt_status
+				 order by 3 desc
+		  )
+	</select>
+	
+	<!-- 신고 게시글 리스트 조회 -->
+	<select id="selectReportList" resultMap="reportResult">
+		select
+		       decode(rpt_ref_cat, 1, '게시글', 2, '댓글') as "rpt_ref_cat"
+		     , rpt_board_no
+		     , count(*) as "rpt_count"
+		     , rpt_status
+		  from tb_report r
+		 group by rpt_ref_cat, rpt_board_no, rpt_status
+		 order by 3 desc
+	</select>
+	
+	<!-- 댓글이 등록된 게시글 번호 조회 -->
+	<select id="checkReBoardNo" resultType="_int">
+		select
+			   re_board_no
+		  from tb_reply
+		 where reply_no = #{replyNo} 
+	</select>
+  	
+  	<!-- 게시글 블라인드 처리 -->
+  	<update id="goBoBlind">
+  		update tb_board
+  		   set board_status = 'B'
+  		 where board_no = #{boardNo}
+  	</update>
+  	
+  	<!-- 게시글 블라인드 해제 -->
+  	<update id="clearBoBlind">
+  		update tb_board
+  		   set board_status = 'Y'
+  		 where board_no = #{boardNo}
+  	</update>
+  	
+  	<!-- 신고 처리 여부 변경 -->
+  	<update id="reportStatus">
+  		update tb_report
+  		   set rpt_status = 'Y'
+  		     , rpt_st_date = sysdate
+  		 where rpt_ref_cat = #{rptRefCat}
+  		   and rpt_board_no = #{rptBoardNo}
+  	</update>
+  	
+  	<!-- 댓글 블라인드 처리 -->
+  	<update id="goReBlind">
+  		update tb_reply
+  		   set reply_status = 'B'
+  		 where reply_no = #{replyNo}
+  	</update>
 </mapper>
