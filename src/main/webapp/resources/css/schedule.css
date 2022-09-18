@@ -398,7 +398,7 @@ input[type=checkbox]{
   vertical-align: middle;
 }
 .su_reply_input input{
-  width: 70%;
+  width: 148px;
 }
 .su_reReply{
   cursor: pointer;
@@ -408,14 +408,14 @@ input[type=checkbox]{
   align-items: center;
 }
 .su_insert_reReply img{
-  width: 40px;
-  margin: 0px 5px;
+  width: 45px;
+  margin: 0px 20px 0px 10px;
 }
 .su_reReply_input{
   float: right;
 }
 .su_reReply_input input{
-  width: 55%;
+  width: 148px;
 }
 .su_reReply_input button{
   margin: 0px 2px;

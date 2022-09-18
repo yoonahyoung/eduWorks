@@ -27,6 +27,18 @@
 		<result column="mem_profile" property="memProfile" />
 	</resultMap>
 	
+	<resultMap id="replyResult" type="Reply">
+		<result column="reply_no" property="replyNo" />
+		<result column="re_board_no" property="reBoardNo" />
+		<result column="reply_depth" property="replyDepth" />
+		<result column="reply_parent" property="replyParent" />
+		<result column="reply_content" property="replyContent" />
+		<result column="reply_writer" property="replyWriter" />
+		<result column="reply_job" property="replyJob" />
+		<result column="reply_date" property="replyDate" />
+		<result column="reply_status" property="replyStatus" />
+	</resultMap>
+	
 	<select id="selectCnslnList" resultMap="cnslnResult">
 		select cnsln_no
 			 , cnsln_title
@@ -170,6 +182,99 @@
 		   set cnsln_count = cnsln_count + 1
 		 where cnsln_no = #{cNo}
 		   and cnsln_status = 'Y'
+	</update>
+	
+	<update id="updateCnsln">
+		update tb_cnsln
+		   set cnsln_title = #{cnslnTitle}
+			 , cnsln_writer = #{cnslnWriter}
+			 , cnsln_start_date = #{cnslnStartDate}
+			 , cnsln_end_date = #{cnslnEndDate}
+			 , cnsln_charge_no = #{cnslnChargeNo}
+			 , cnsln_charge_list = #{cnslnChargeList}
+			 , cnsln_phone = #{cnslnPhone}
+			 , cnsln_topic = #{cnslnTopic}
+			 , cnsln_content = #{cnslnContent}
+			 , cnsln_real = #{cnslnReal}
+			 , cnsln_modify_date = sysdate
+		 where cnsln_no = #{cnslnNo}
+	</update>
+	
+	<update id="deleteCnsln">
+		update tb_cnsln
+		   set cnsln_status = 'N'
+		 where cnsln_no = #{cNo}
+	</update>
+	
+	<select id="selectReplyList" resultMap="replyResult">
+		select reply_no
+			 , re_board_no
+			 , reply_depth
+			 , reply_parent
+			 , reply_content
+			 , reply_writer
+			 , reply_job
+			 , to_char(reply_date, 'YYYY-MM-DD (DY) HH24:MI') as "reply_date"
+			 , reply_status
+		  from tb_reply
+		 where reply_type = 2
+		   and re_board_no = #{cNo}
+		 start with reply_parent = 0
+		 connect by prior reply_no = reply_parent
+		 order siblings by reply_no asc, reply_parent asc 
+	</select>
+	
+	<insert id="insertReply">
+		insert
+		  into tb_reply
+		  (
+		    reply_no
+		  , reply_type
+		  , re_board_no
+		  , reply_depth
+		  , reply_parent
+		  , reply_content
+		  , reply_writer
+		  , reply_job
+		  )
+		  values
+		  (
+		    seq_reno.nextval
+		  , 2
+		  , #{reBoardNo}
+		  , #{replyDepth}
+		  , #{replyParent}
+		  , #{replyContent}
+		  , #{replyWriter}
+		  , #{replyJob}
+		  )
+	</insert>
+	
+	<update id="updateReply">
+		update tb_reply
+		   set reply_content = #{replyContent}
+		     , reply_mo_date = sysdate
+		 where reply_no = #{replyNo}
+	</update>
+	
+	<select id="selectReply" resultMap="replyResult">
+		select reply_no
+			 , re_board_no
+			 , reply_depth
+			 , reply_parent
+			 , reply_content
+			 , reply_writer
+			 , reply_job
+			 , to_char(reply_date, 'YYYY-MM-DD (DY) HH24:MI') as "reply_date"
+			 , reply_status
+		  from tb_reply
+		 where reply_no = #{replyNo}
+	</select>
+	
+	<update id="deleteReply">
+		update tb_reply
+		   set reply_status = 'N'
+		 where reply_no = #{replyNo}
 	</update>
 	
   

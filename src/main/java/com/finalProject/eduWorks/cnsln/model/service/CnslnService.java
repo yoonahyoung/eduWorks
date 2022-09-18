@@ -3,6 +3,7 @@ package com.finalProject.eduWorks.cnsln.model.service;
 import java.util.ArrayList;
 
 import com.finalProject.eduWorks.cnsln.model.vo.Cnsln;
+import com.finalProject.eduWorks.common.model.vo.Reply;
 import com.finalProject.eduWorks.member.model.vo.Member;
 
 public interface CnslnService {
@@ -18,5 +19,24 @@ public interface CnslnService {
 	// 상담 일정 조회
 	int increaseCount(int cNo);
 	Cnsln selectCnsln(int cNo);
+	
+	// 상담 일정 수정
+	int updateCnsln(Cnsln c);
+	
+	// 상담 일정 삭제
+	int deleteCnsln(int cNo);
+	
+	// ajax 댓글 리스트 조회
+	ArrayList<Reply> selectReplyList(int cNo);
+	
+	// 댓글 작성 서비스 (ajax)
+	int insertReply(Reply r);
+	
+	// 댓글 수정 서비스 (ajax)
+	int updateReply(Reply r);
+	Reply selectReply(int replyNo);
+	
+	// 댓글 삭제 서비스 (ajax)
+	int deleteReply(int replyNo);
 
 }

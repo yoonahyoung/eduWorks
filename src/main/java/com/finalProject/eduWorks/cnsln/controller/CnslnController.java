@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.finalProject.eduWorks.cnsln.model.service.CnslnService;
 import com.finalProject.eduWorks.cnsln.model.vo.Cnsln;
+import com.finalProject.eduWorks.common.model.vo.Reply;
 import com.finalProject.eduWorks.member.model.vo.Member;
 import com.google.gson.Gson;
 
@@ -99,20 +100,19 @@ public class CnslnController {
 	@ResponseBody
 	@RequestMapping(value="search.cn", produces="application/json; charset=UTF-8")
 	public String ajaxSearchCharge(String keyword) {
-		System.out.println(keyword);
 		ArrayList<Member> list = cService.selectMemberList(keyword);
 		return new Gson().toJson(list);
 	}
 	
 	// 상담 일정 상세 조회
 	@RequestMapping("detail.cn")
-	public ModelAndView selectCnsln(int cNo, String memNo, ModelAndView mv) {
+	public ModelAndView selectCnsln(int cNo, ModelAndView mv) {
 		String keyword = "";
 		ArrayList<Member> mList = cService.selectMemberList(keyword) ;
 		
 		int result = cService.increaseCount(cNo);
 		Cnsln c = cService.selectCnsln(cNo);
-		
+		System.out.println(c);
 		String no = c.getCnslnChargeNo();
 		String list = c.getCnslnChargeList();
 		String[] nArr = {};
@@ -126,32 +126,104 @@ public class CnslnController {
 		if(list != null) {
 			lArr = list.split(",");
 		}
-		
-		mv.addObject("c", c).addObject("n", nArr).addObject("l", lArr).addObject("mList", mList);
+		if(result > 0) {
+			mv.addObject("c", c).addObject("n", nArr).addObject("l", lArr).addObject("mList", mList);
+		}
 		mv.setViewName("cnsln/counselingDetailView");
 		return mv;
+		
 	}
 	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	// 상담 일정 수정
+	@RequestMapping("update.cn")
+	public String updateCnsln(Cnsln c, HttpSession session) {
+		int result = cService.updateCnsln(c);
 		
+		if(result > 0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "상담 일정 수정 완료");
+			session.setAttribute("alertMsg", "상담 일정 수정을 완료하였습니다.");
+		} else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "상담 일정 수정 실패");
+			session.setAttribute("alertMsg", "상담 일정 수정을 실패하였습니다.");
+		}
+		return "redirect:detail.cn?cNo=" + c.getCnslnNo();
+	}
+	
+	// 상담 일정 삭제
+	@RequestMapping("delete.cn")
+	public String deleteCnsln(int cNo, HttpSession session) {
+		int result = cService.deleteCnsln(cNo);
 		
+		if(result > 0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "상담 일정 삭제 완료");
+			session.setAttribute("alertMsg", "상담 일정 삭제를 완료하였습니다.");
+		} else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "일정 삭제 실패");
+			session.setAttribute("alertMsg", "일정 삭제를 실패하였습니다.");
+		}
+		return "redirect:list.cn";
+	}
+	
+	// 댓글 리스트 조회
+	@ResponseBody
+	@RequestMapping(value="rlist.cn", produces="application/json; charset=UTF-8")
+	public String ajaxSelectReplyList(int no) {
 		
-
+		ArrayList<Reply> list = cService.selectReplyList(no);
+		
+		return new Gson().toJson(list);
+	}
+	
+	// 댓글, 대댓글 입력
+	@ResponseBody
+	@RequestMapping("rinsert.cn")
+	public String ajaxInsertReply(Reply r) {
+		
+		if(r.getReplyParent() == 0) { // 원댓글일 때
+			r.setReplyDepth(0);
+		} else {
+			r.setReplyDepth(1);
+		}
+		
+		int result = cService.insertReply(r);
+		
+		return result > 0 ? "success" : "fail";
+	}
+	
+	// 댓글 수정
+	@ResponseBody
+	@RequestMapping(value="rupdate.cn", produces="application/json; charset=UTF-8")
+	public String ajaxUpdateReply(Reply rr) {
+		int result = cService.updateReply(rr);
+		Reply r = cService.selectReply(rr.getReplyNo());
+		
+		if(result > 0) {
+			return new Gson().toJson(r);
+		} else {
+			return "fail";
+		}
+	}
+	
+	// 댓글 취소
+	@ResponseBody
+	@RequestMapping(value="rcancel.cn", produces="application/json; charset=UTF-8")
+	public String ajaxCancelReply(int replyNo) {
+		Reply r = cService.selectReply(replyNo);
+		
+		return new Gson().toJson(r);
+	}
+	
+	// 댓글 삭제
+	@ResponseBody
+	@RequestMapping("rdelete.cn")
+	public int ajaxDeleteReply(int replyNo) {
+		int result = cService.deleteReply(replyNo);
+		
+		return result;
+	}
+	
 }

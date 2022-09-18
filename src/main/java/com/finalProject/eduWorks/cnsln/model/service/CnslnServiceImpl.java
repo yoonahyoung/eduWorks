@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.finalProject.eduWorks.cnsln.model.dao.CnslnDao;
 import com.finalProject.eduWorks.cnsln.model.vo.Cnsln;
+import com.finalProject.eduWorks.common.model.vo.Reply;
 import com.finalProject.eduWorks.member.model.vo.Member;
 
 @Service
@@ -47,6 +48,41 @@ public class CnslnServiceImpl implements CnslnService{
 	@Override
 	public int increaseCount(int cNo) {
 		return cDao.increaseCount(sqlSession, cNo);
+	}
+
+	@Override
+	public int updateCnsln(Cnsln c) {
+		return cDao.updateCnsln(sqlSession, c);
+	}
+
+	@Override
+	public int deleteCnsln(int cNo) {
+		return cDao.deleteCnsln(sqlSession, cNo);
+	}
+
+	@Override
+	public ArrayList<Reply> selectReplyList(int cNo) {
+		return cDao.selectReplyList(sqlSession, cNo);
+	}
+
+	@Override
+	public int insertReply(Reply r) {
+		return cDao.insertReply(sqlSession, r);
+	}
+
+	@Override
+	public int updateReply(Reply r) {
+		return cDao.updateReply(sqlSession, r);
+	}
+
+	@Override
+	public Reply selectReply(int replyNo) {
+		return cDao.selectReply(sqlSession, replyNo);
+	}
+
+	@Override
+	public int deleteReply(int replyNo) {
+		return cDao.deleteReply(sqlSession, replyNo);
 	}
 	
 	

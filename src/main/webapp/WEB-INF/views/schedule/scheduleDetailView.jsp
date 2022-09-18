@@ -934,7 +934,7 @@
                             							+ '<img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">'                                        
     	                                                // + '<img src="${ loginUser.memProfile }">'
                     
-                            							+ '<input type="text" style="width: 65%;" placeholder="댓글 입력" id="replyContent' + rNo + '">'
+                            							+ '<input type="text" placeholder="댓글 입력" id="replyContent' + rNo + '">'
                             							+ '<button type="button" class="btn btn-sm su_btn_border" style="margin-left: 6px;" onclick="addReply(' + rNo + ');">작성</button>'
                         							+ '</div></div></div>';
                         							
