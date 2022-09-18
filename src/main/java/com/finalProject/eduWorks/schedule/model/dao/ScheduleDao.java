@@ -2,6 +2,7 @@
 package com.finalProject.eduWorks.schedule.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -16,17 +17,12 @@ public class ScheduleDao {
 	
 	// 일정 리스트 조회
 	public ArrayList<Schedule> selectScheList(SqlSessionTemplate sqlSession, String memNo){
-		
-		//String[] cArr = checkCnt.split(",");
-		//HashMap map = new HashMap();
-		//map.put("memNo", memNo);
-		//map.put("cArr", cArr);
 		return (ArrayList) sqlSession.selectList("scheduleMapper.selectScheList", memNo);
 	}
 	
 	// 멤버 명단 조회
-	public ArrayList<Member> selectMemberList(SqlSessionTemplate sqlSession){
-		return (ArrayList) sqlSession.selectList("scheduleMapper.selectMemberList");
+	public ArrayList<Member> selectMemberList(SqlSessionTemplate sqlSession, String keyword){
+		return (ArrayList) sqlSession.selectList("scheduleMapper.selectMemberList", keyword);
 	}
 	
 	//  내 캘린더 리스트 조회
@@ -37,6 +33,15 @@ public class ScheduleDao {
 	// 내 캘린더 추가
 	public int insertMycal(SqlSessionTemplate sqlSession, Mycal m) {
 		return sqlSession.insert("scheduleMapper.insertMycal", m);
+	}
+	
+	// 내 캘린더 수정
+	public int updateMycal(SqlSessionTemplate sqlSession, int mcNo, String mcName) {
+		HashMap<Object, Object> map = new HashMap<>();
+		map.put("mcNo", mcNo);
+		map.put("mcName", mcName);
+		
+		return sqlSession.update("scheduleMapper.updateMycal", map);
 	}
 	
 	// 내 캘린더 삭제

@@ -36,7 +36,8 @@ public class ScheduleController {
 	@RequestMapping("list.ca")
 	public ModelAndView calendar(ModelAndView mv) {
 		// 멤버 리스트
-		ArrayList<Member> aList = sService.selectMemberList() ;
+		String keyword = "";
+		ArrayList<Member> aList = sService.selectMemberList(keyword) ;
 		
 		mv.addObject("aList", aList)
 		  .setViewName("schedule/calendarView");
@@ -57,9 +58,17 @@ public class ScheduleController {
 	// 내 캘린더 추가
 	@ResponseBody
 	@RequestMapping("mcinsert.ca")
-	public String insertMycal(Mycal m) {
+	public String ajaxInsertMycal(Mycal m) {
 		int result = sService.insertMycal(m);
 		
+		return result > 0 ? "success" : "fail";
+	}
+	
+	// 내 캘린더 수정
+	@ResponseBody
+	@RequestMapping("mcupdate.ca")
+	public String ajaxUpdateMycal(int mcNo, String mcName) {
+		int result = sService.updateMycal(mcNo, mcName);
 		return result > 0 ? "success" : "fail";
 	}
 	
@@ -89,7 +98,6 @@ public class ScheduleController {
 	@ResponseBody
 	@RequestMapping(value="sclist.ca", produces="application/json; charset=UTF-8")
 	public List<Map<String, Object>> ajaxSelectScheduleList(String memNo) throws Exception{
-		
 	     ArrayList<Schedule> list = sService.selectScheList(memNo);
 	     
 	     List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
@@ -102,7 +110,9 @@ public class ScheduleController {
 	            map.put("end", list.get(i).getScheEndDate());
 	            map.put("color", list.get(i).getMycal().getMycalColor());
 	            map.put("title", list.get(i).getScheTitle());
-	            
+	            map.put("atnd", list.get(i).getScheAtndNo());
+	            map.put("cmpy", list.get(i).getScheCmpy());
+	            map.put("mycal", list.get(i).getMycalNo());
 	            
 	            mapList.add(map);
 	            map = new HashMap<String, Object>();
@@ -114,7 +124,8 @@ public class ScheduleController {
 	@RequestMapping("enrollForm.ca")
 	public ModelAndView enrollForm(String day, String memNo, ModelAndView mv) {
 		ArrayList<Mycal> list = sService.selectMycalList(memNo);
-		ArrayList<Member> aList = sService.selectMemberList() ;
+		String keyword = "";
+		ArrayList<Member> aList = sService.selectMemberList(keyword) ;
 		
 		mv.addObject("day", day).addObject("list", list).addObject("aList", aList);
 		mv.setViewName("schedule/scheduleEnrollForm");
@@ -172,7 +183,8 @@ public class ScheduleController {
 		// 내 캘린더 항목
 		ArrayList<Mycal> mlist = sService.selectMycalList(memNo);
 		// 멤버 리스트
-		ArrayList<Member> aList = sService.selectMemberList() ;
+		String keyword = "";
+		ArrayList<Member> aList = sService.selectMemberList(keyword) ;
 		
 		mv.addObject("s", s).addObject("n", nArr).addObject("l", lArr)
 		  .addObject("mlist", mlist).addObject("aList", aList);
@@ -277,5 +289,14 @@ public class ScheduleController {
 		
 		return result;
 	}
+	
+	// 참석자 검색
+	@ResponseBody
+	@RequestMapping(value="search.ca", produces="application/json; charset=UTF-8")
+	public String ajaxSearchAtnd(String keyword) {
+		ArrayList<Member> list = sService.selectMemberList(keyword);
+		return new Gson().toJson(list);
+	}
+	
 	
 }

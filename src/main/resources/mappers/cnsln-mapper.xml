@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cnslnMapper">
+	
+	<resultMap id="cnslnResult" type="Cnsln">
+		<result column="cnsln_no" property="cnslnNo" />
+		<result column="cnsln_title" property="cnslnTitle" />
+		<result column="cnsln_writer" property="cnslnWriter" />
+		<result column="cnsln_start_date" property="cnslnStartDate" />
+		<result column="cnsln_end_date" property="cnslnEndDate" />
+		<result column="cnsln_charge_no" property="cnslnChargeNo" />
+		<result column="cnsln_charge_list" property="cnslnChargeList" />
+		<result column="cnsln_phone" property="cnslnPhone" />
+		<result column="cnsln_topic" property="cnslnTopic" />
+		<result column="cnsln_content" property="cnslnContent" />
+		<result column="cnsln_real" property="cnslnReal" />
+		<result column="cnsln_create_date" property="cnslnCreateDate" />
+		<result column="cnsln_count" property="cnslnCount" />
+	</resultMap>
+	
+	<resultMap id="memberResult" type="Member">
+		<result column="mem_no" property="memNo" />
+		<result column="mem_name" property="memName" />
+		<result column="dept_code" property="deptCode" />
+		<result column="job_code" property="jobCode" />
+		<result column="job_name" property="jobName" />
+		<result column="mem_profile" property="memProfile" />
+	</resultMap>
+	
+	<select id="selectCnslnList" resultMap="cnslnResult">
+		select cnsln_no
+			 , cnsln_title
+			 , cnsln_writer
+			 , cnsln_start_date
+			 , cnsln_end_date
+			 , cnsln_charge_no
+			 , cnsln_charge_list
+			 , cnsln_phone
+			 , cnsln_topic
+			 , cnsln_content
+			 , cnsln_real
+			 , cnsln_create_date
+			 , cnsln_count
+		  from tb_cnsln
+		 where cnsln_writer = #{memNo}
+		   and cnsln_status = 'Y'
+		union
+		select cnsln_no
+			 , cnsln_title
+			 , cnsln_writer
+			 , cnsln_start_date
+			 , cnsln_end_date
+			 , cnsln_charge_no
+			 , cnsln_charge_list
+			 , cnsln_phone
+			 , cnsln_topic
+			 , cnsln_content
+			 , cnsln_real
+			 , cnsln_create_date
+			 , cnsln_count
+		  from tb_cnsln
+		 where cnsln_real = #{memNo}
+		   and cnsln_status = 'Y'
+		union
+		select cnsln_no
+			 , cnsln_title
+			 , cnsln_writer
+			 , cnsln_start_date
+			 , cnsln_end_date
+			 , cnsln_charge_no
+			 , cnsln_charge_list
+			 , cnsln_phone
+			 , cnsln_topic
+			 , cnsln_content
+			 , cnsln_real
+			 , cnsln_create_date
+			 , cnsln_count
+		  from tb_cnsln
+		 where cnsln_charge_no like '%' || #{memNo} || '%'
+		   and cnsln_status = 'Y'
+	</select>
+	
+	<insert id="insertCnsln">
+		insert
+		  into tb_cnsln
+		  (
+		    cnsln_no
+		  , cnsln_title
+		  , cnsln_writer
+		  , cnsln_start_date
+		  , cnsln_end_date
+		  , cnsln_charge_no
+		  , cnsln_charge_list
+		  , cnsln_phone
+		  , cnsln_topic
+		  , cnsln_real
+		  )
+		  values
+		  (
+		    seq_cnno.nextval
+		  , #{cnslnTitle}
+		  , #{cnslnWriter}
+		  , #{cnslnStartDate}
+		  , #{cnslnEndDate}
+		  , #{cnslnChargeNo}
+		  , #{cnslnChargeList}
+		  , #{cnslnPhone}
+		  , #{cnslnTopic}
+		  , #{cnslnReal}
+		  )
+	</insert>
+	
+	<select id="selectMemberList" resultMap="memberResult">
+		select *
+		  from
+		  (select mem_no
+		     , mem_name
+		     , job_name
+		     , dept_code
+		  from tb_member
+		  join tb_job using (job_code)
+		 where mem_name like '%' || #{keyword} || '%'
+		   and dept_code in ('DN', 'D3')
+		 union
+		 select mem_no
+		     , mem_name
+		     , job_name
+		     , dept_code
+		  from tb_member
+		  join tb_job using (job_code)
+		 where job_name like '%' || #{keyword} || '%'
+		   and dept_code in ('DN', 'D3')
+		 )
+		 order
+		    by mem_no
+	</select>
+	
+	<select id="selectMember" resultMap="memberResult">
+		select mem_no
+		     , mem_name
+		     , job_name
+		     , dept_code
+		  from tb_member
+		  join tb_job using (job_code)
+		 where mem_no = #{memNo}
+	</select>
+	
+	<select id="selectCnsln" resultMap="cnslnResult">
+		select cnsln_no
+			 , cnsln_title
+			 , cnsln_writer
+			 , cnsln_start_date
+			 , cnsln_end_date
+			 , cnsln_status
+			 , cnsln_charge_no
+			 , cnsln_charge_list
+			 , cnsln_phone
+			 , cnsln_topic
+			 , cnsln_content
+			 , cnsln_real
+			 , cnsln_create_date
+			 , cnsln_count
+		  from tb_cnsln
+		 where cnsln_status = 'Y'
+		   and cnsln_no = #{cNo}
+	</select>
+	
+	<update id="increaseCount">
+		update tb_cnsln
+		   set cnsln_count = cnsln_count + 1
+		 where cnsln_no = #{cNo}
+		   and cnsln_status = 'Y'
+	</update>
+	
+  
+</mapper>
