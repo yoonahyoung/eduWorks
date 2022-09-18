@@ -327,8 +327,8 @@
 		                    <div class="bg-white py-2 collapse-inner rounded">
 		                        <h6 class="collapse-header">홍보 관리</h6>
 		                        <a class="collapse-item" href="list.pr">홍보물 관리</a>
-		                        <a class="collapse-item" href="">상담 일정 관리</a>
-		                        <a class="collapse-item" href="">상담 내역 관리</a>
+		                        <a class="collapse-item" href="list.cn">상담 일정 관리</a>
+		                        <a class="collapse-item" href="list.tcn">상담 내역 관리</a>
 		                    </div>
 		                </div>
 		            </li>
