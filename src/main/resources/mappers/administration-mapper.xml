@@ -11,16 +11,22 @@
 		<result column="student_birth" property="studentBirth" />
 		<result column="student_gender" property="studentGender" />
 		<result column="student_en_date" property="studentEnDate" />
+		<result column="class_title" property="classTitle" />
 	</resultMap>
 	
 	<resultMap id="regClassResult" type="RegClass">
 		<result column="reg_no" property="regNo" />
 		<result column="class_no" property="classNo" />
 		<result column="student_no" property="studentNo" />
+		<result column="mem_name" property="memName" />
+		<result column="student_id" property="studentId" />
+		<result column="student_name" property="studentName" />
 		<result column="class_title" property="classTitle" />
 		<result column="class_start_date" property="classStartDate" />
 		<result column="class_end_date" property="classEndDate" />
 		<result column="class_fee" property="classFee" />
+		<result column="reg_date" property="regDate" />
+		<result column="reg_return" property="regReturn" />
 	</resultMap>
 
 	<!-- 학생 주소록 페이징 처리 (전체) -->
@@ -85,6 +91,85 @@
 		   	 , student_birth = #{studentBirth}
 		 where student_no = #{studentNo} 
 	</update>
+	
+	<!-- 학생 주소록 페이징 처리 (강사) -->
+	<select id="selectListTeCount" resultType="_int">
+		select
+		       count(*)
+		  from tb_student s
+		  join tb_reg_class rc using(student_no)
+		  join tb_class c using(class_no)
+		 where c.mem_no = #{memNo}
+		   and rc.reg_status = 2
+	</select>
+	
+	<!-- 학생 주소록 리스트 조회 (강사) -->
+	<select id="selectTeAddressList" resultMap="studentResult">
+		select
+		       student_no
+		     , student_name
+		     , student_id
+		     , class_title
+		     , student_email
+		  from tb_student s
+		  join tb_reg_class rc using(student_no)
+		  join tb_class c using(class_no)
+		 where c.mem_no = #{memNo}
+		   and reg_status = 2
+		<choose>
+			<when test="range == 'desc'">
+			order 
+				by reg_date desc
+			</when>
+			<otherwise>
+			order 
+				by reg_date
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 수강 신청 목록 페이징 처리 -->
+	<select id="selectListCount" resultType="_int">
+		select
+		       count(*)
+		  from tb_reg_class
+		 where reg_status = #{regStatus}
+	</select>
+	
+	<!-- 수강 신청 목록 조회 -->
+	<select id="selectRegClassList" resultMap="regClassResult">
+		select
+		       reg_no
+		     , class_title
+		     , reg_date
+		     , mem_name
+		     , student_id
+		     , student_name
+		     , reg_return
+		  from tb_reg_class r
+		  join tb_class c using(class_no)
+		  join tb_student s using(student_no)
+		  join tb_member m using(mem_no)
+		 where reg_status = #{regStatus}
+	</select>
+	
+	<!-- 수강 신청 승인 -->
+	<update id="updateRegClass">
+		update tb_reg_class
+		   set reg_status = 2
+		 where reg_no = #{regNo}
+	</update>
+	
+	<!-- 수강 신청 반려 -->
+	<update id="returnRegClass">
+		update tb_reg_class
+		   set reg_status = 3
+		     , reg_return = #{regReturn}
+		 where reg_no = #{regNo}
+	</update>
+	
+	
+	
 	
 	
 </mapper>

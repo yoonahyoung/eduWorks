@@ -16,6 +16,9 @@ public class RegClass {
 	private int regNo;
 	private int classNo;
 	private int studentNo;
+	private String memName; // 강사명
+	private String studentId;
+	private String studentName;
 	private String classTitle;
 	private Date classStartDate;
 	private Date classEndDate;

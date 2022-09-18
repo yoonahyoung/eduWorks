@@ -104,3 +104,130 @@ table th:hover{
     border:1px solid gainsboro;
 }
 
+/* adminRegClassList */
+
+.menu-sidebar h4{
+	padding: 1rem;
+    font-weight: 600;
+}
+
+.menu-sidebar h6{
+	margin-left: 27px;
+    padding: 0.3rem;
+    color:black;
+}
+
+.menu-sidebar h6:hover, .n-btn:hover{
+    color:slategray;
+}
+
+.menu-sidebar h2{
+	padding-bottom: 10px;
+    font-weight: 600;
+    color: black;
+    margin-top:-5px; 
+    margin-left:15px;
+}
+
+.menu-sidebar{
+    padding-top:20px;
+}
+
+.menu-sidebar *{
+    color:black;
+}
+
+.insider{
+    padding-left:20px;
+	margin-bottom: 30px;
+}
+
+.col-2{
+    min-height: 100vh;
+    border-right:2px solid lightgray;
+    text-decoration: none;
+}
+
+.col-10{
+	padding-left:0px !important;
+}
+
+#boardHeader h2{
+	margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: black;
+    font-weight: 600;
+}
+
+#reg-btn{
+	line-height:100px;
+	margin-right:20px;
+}
+
+.boardTable{
+	width:100%;
+}
+
+.boardTable td{
+    padding-left:15px;
+    margin:30px 0 30px 0;
+}
+
+td[class^='fContent']{
+    border-top:1px solid gainsboro;
+    border-bottom:1px solid gainsboro;
+}
+
+.boardTable span{
+    font-size: 15px;
+}
+
+.side_side{
+    display: flex;
+    justify-content:space-between;
+}
+
+.bWrite-btn{
+    background-color: white;
+    border: 2px solid #5e7e9b;
+    color: black;
+    height:35px;
+    line-height: 20px;
+    margin: 0 5px 5px 0;
+}
+
+.noBtn{
+    background-color: white;
+    border: 2px solid #dc3545;
+    color: black;
+    height:35px;
+    line-height: 20px;
+    margin: 0 5px 5px 0;
+}
+
+.reg-data td{
+	border: 0px;
+}
+
+#realReturn:hover, #resultUrl:hover{
+	color:#fff;
+}
+
+#regReturn{
+	width:300px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

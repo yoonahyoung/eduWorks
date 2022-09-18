@@ -314,7 +314,7 @@
 		                    <div class="bg-white py-2 collapse-inner rounded">
 		                        <h6 class="collapse-header">행정 관리</h6>
 		                        <a class="collapse-item" href="doneList.cl">강의 관리</a>
-		                        <a class="collapse-item" href="">학생 관리</a>
+		                        <a class="collapse-item" href="list.rc">수강 신청 관리</a>
 		                        <a class="collapse-item" href="reportList.ad">신고 관리</a>
 		                    </div>
 		                </div>

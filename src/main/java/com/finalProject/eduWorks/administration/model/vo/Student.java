@@ -21,4 +21,5 @@ public class Student {
 	private String studentBirth;
 	private String studentGender;
 	private Date studentEnDate;
+	private String classTitle;
 }
