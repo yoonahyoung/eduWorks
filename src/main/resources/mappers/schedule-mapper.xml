@@ -72,7 +72,7 @@
 		  join tb_mycal m using (mycal_no)
 		 where sche_writer = #{memNo}
 		   and sche_status = 'Y'
-		 union
+		   union
 		select sche_no
 			 , sche_title
 			 , sche_writer
@@ -94,7 +94,7 @@
 		  join tb_mycal m using (mycal_no)
 		 where sche_cmpy = 'Y'
 		   and sche_status = 'Y'
-		 union
+		   union
 		select sche_no
 			 , sche_title
 			 , sche_writer
@@ -119,11 +119,24 @@
 	</select>
 	
 	<select id="selectMemberList" resultMap="memberResult">
-		select mem_no
+		select *
+		  from
+		  (select mem_no
 		     , mem_name
-		     , job_code
+		     , job_name
 		     , dept_code
 		  from tb_member
+		  join tb_job using (job_code)
+		 where mem_name like '%' || #{keyword} || '%'
+		 union
+		 select mem_no
+		     , mem_name
+		     , job_name
+		     , dept_code
+		  from tb_member
+		  join tb_job using (job_code)
+		 where job_name like '%' || #{keyword} || '%'
+		 )
 		 order
 		    by mem_no
 	</select>
@@ -131,9 +144,10 @@
 	<select id="selectMember" resultMap="memberResult">
 		select mem_no
 		     , mem_name
-		     , job_code
+		     , job_name
 		     , dept_code
 		  from tb_member
+		  join tb_job using (job_code)
 		 where mem_no = #{memNo}
 	</select>
 	
@@ -163,6 +177,12 @@
 		  , #{mycalName}
 		  )
 	</insert>
+	
+	<update id="updateMycal">
+		update tb_mycal
+		   set mycal_name = #{mcName}
+		 where mycal_no = #{mcNo}
+	</update>
 	
 	<update id="deleteMycal">
 		update tb_mycal

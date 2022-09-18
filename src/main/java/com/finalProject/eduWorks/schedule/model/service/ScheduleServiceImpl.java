@@ -27,8 +27,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 	}
 
 	@Override
-	public ArrayList<Member> selectMemberList() {
-		return sDao.selectMemberList(sqlSession);
+	public ArrayList<Member> selectMemberList(String keyword) {
+		return sDao.selectMemberList(sqlSession, keyword);
 	}
 
 	@Override
@@ -39,6 +39,11 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Override
 	public int insertMycal(Mycal m) {
 		return sDao.insertMycal(sqlSession, m);
+	}
+
+	@Override
+	public int updateMycal(int mcNo, String mcName) {
+		return sDao.updateMycal(sqlSession, mcNo, mcName);
 	}
 	
 	@Override
@@ -101,6 +106,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	public int deleteReply(int replyNo) {
 		return sDao.deleteReply(sqlSession, replyNo);
 	}
+
 	
 
 

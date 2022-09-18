@@ -15,11 +15,6 @@
 	
 	<jsp:include page="../common/header.jsp" />
 	
-	<c:if test="${ loginUser eq null }">
-		location.href="login.me";
-	</c:if>
-	
-	
 	<div style="display:flex;">
 	
 	    <!-- sub menu -->
@@ -51,7 +46,7 @@
 	                            <span>&nbsp;내 캘린더</span>
 	                        </div>
 	
-	                        
+	                        <span style="display:none" id="calArr"></span>
 	                    
 	
 	                        <div id="myCalendar" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -90,9 +85,37 @@
 	                    </div>
 	                </div>
 	                
+	                <!-- 내 캘린더 수정 모달창 -->
+	                <div class="modal fade" id="updateMyCal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	                    <div class="modal-dialog modal-dialog-centered cascading-modal modal-avatar" role="document">
+	                        <!--Content-->
+	                        <div class="modal-content modal_alert">
+	            
+	                            <!--Body-->
+	                            <div class="modal-body text-center modal_alert_child">
+	            
+	                                <h5 class="mt-1 mb-2" style="color: black;">내 캘린더 이름 변경</h5>
+	                                <br>
+	            
+	                                <div class="md-form ml-0 mr-0">
+	                                    <input type="text" id="chCalName" class="form-control form-control-sm validate ml-0">
+	                                </div>
+	            
+	                                <div class="text-center mt-4">
+	                                    <button type="button" id="updateMyCalBtn" class="btn su_btn_all su_btn_medium">수정</button>
+	                                    <button type="button" class="btn su_btn_border su_btn_medium" data-dismiss="modal">취소</button>
+	                                </div>
+	                                
+	                            </div>
+	            
+	                        </div>
+	                    </div>
+	                </div>
+	                
 	                <!-- 내 캘린더 관련 script -->
 	                <script>
 	                	$(function(){
+	                		calList();
 	                		selectMycalList();
 	                		
 	                	})
@@ -105,14 +128,19 @@
 	                			success: function(list){
 	                				
 	                				let value = "";
+	                				let str = "";
 	                                
 	                                for(let i = 0; i < list.length; i++){
 		                                value += '<tr style="width: 100%;">'
 		                                    		+ '<td width="20%;"><span class="myNo" style="color: white !important;">' + list[i].mycalNo + '</span></td>'
-		                                    		+ '<td><input type="checkbox" name="mycalList" checked></td>'
-		                                    		+ '<td width="90%;"> &nbsp;' + list[i].mycalName + '</td>'
+		                                    		+ '<td><input type="checkbox" name="mycalList" checked></td>';
+		                                    	if(i == 0){
+		                                    		value += '<td width="90%;" id="mcName' + list[i].mycalNo + '"> &nbsp;' + list[i].mycalName + '</td>';
+		                                    	} else{
+		                                    		value += '<td width="90%;" id="mcName' + list[i].mycalNo + '" onclick="changeMycal(' + list[i].mycalNo + ')"> &nbsp;' + list[i].mycalName + '</td>';
+		                                    	}
 			                                  
-				                                    + '<td class="su_myCalBasic">'
+				                                    value += '<td class="su_myCalBasic">'
 				                                        + '<a type="button">'
 				                                            + '<div class="calColor" id="colorBtn' + list[i].mycalNo + '" style="border: 1px solid ' + list[i].mycalColor + '; background: ' + list[i].mycalColor + ';" onclick="colorMycal(' + list[i].mycalNo + ');"></div>'
 				                                        	+ '<input type="hidden" id="calColor' + list[i].mycalNo + '" value="' + list[i].mycalColor + '">'	
@@ -125,11 +153,16 @@
 		                                    			value += '<td class="su_myCalX dis_no"><a type="button" onclick="deleteMycal(' + list[i].mycalNo + ');">x</a></td>';
 				                                    }
 		                                		+ '</tr>';
+		                                		
+		                                str += list[i].mycalNo + ",";
 	                                }
 		                                
 		                           //value += '</table>';
 		                           
 		                           $("#tb_myCal").html(value);
+		                           //console.log(str);
+		                           str = str.substring(0, str.lastIndexOf(","));
+		                           $("#calArr").text(str);
 	                			}, error: function(){
 	                				console.log("ajax 내 캘린더 조회 실패");
 	                			}
@@ -137,6 +170,27 @@
 	                		
 	                	}
 	                	
+	                	var checkCnt = "";
+	            		
+	            		// 내 캘린더 체크 리스트
+	            		function calList(){
+	            	        checkCnt = "";
+	            	        $("input[name='mycalList']:checked").each(function(){
+	            	        	
+	            	        	//console.log($(this).parent().parent().children().eq(0).text());
+	            	            checkCnt += ($(this).parent().parent().children().eq(0).text()) + ","; // 체크된 것만 게시글번호 뽑기 "2,3,4,"
+	            	        });
+	            	        
+	            	        checkCnt = checkCnt.substring(0,checkCnt.lastIndexOf(",")); // 맨 뒤 콤마 삭제 "2,3,4"
+	            	        //console.log(checkCnt);
+	            	        $("#calArr").text(checkCnt);
+	            		}
+	            		
+	            		$(document).on("change", "input[name='mycalList']", function(){
+	            			calList();
+	            			console.log($("#calArr").text());
+	            		});
+	            		
 	                	// 선택된 캘린더 번호 출력 이벤트
 	                	function selectMycalNo(){
 	                		var result = "";
@@ -149,6 +203,7 @@
 	                					result += list[i].mycalNo + ',';
 	                				}
 	                				result = result.substring(0, result.lastIndexOf(","));
+	                				$("#calArr").text(result);
 	                			}, error: function(){
 	                				console.log("ajax 내 캘린더 번호 조회 실패");
 	                			}
@@ -167,6 +222,7 @@
 	               				success: function(result){
 	               					if(result == "success"){
 	               						alert("내 캘린더가 추가되었습니다.");
+	               						$("#myCalName").val("");
 	               						$("#addMyCal").modal('hide');
 	               						selectMycalList();
 	               					}
@@ -175,6 +231,36 @@
 	               				}
 	               			});
 	               		});
+	               		
+	               		// 내 캘린더 이름 변경
+	               		function changeMycal(mcNo){
+	               		// mcNo : 내 캘린더 번호
+	               		var id = "mcName" + mcNo;
+	               			var name = $("#" + id).text();
+	               			//console.log(name);
+	               			$("#chCalName").val(name);
+	               			$("#updateMyCal").modal("show");
+	               			$("#updateMyCalBtn").click(function(){
+	               				//console.log("j");
+	               				$.ajax({
+	               					url: "mcupdate.ca",
+	               					data: {
+	               						mcNo: mcNo,
+	               						mcName: $('#chCalName').val()
+	               						},
+	               					success: function(result){
+	               						if(result == "success"){
+	               							alert("수정되었습니다.");
+	               							$("#chCalName").val("");
+	               							$("#updateMyCal").modal("hide");
+	               							selectMycalList();
+	               						}
+	               					}, error: function(){
+	               						console.log("ajax 내 캘린더 수정 실패");
+	               					}
+	               				});
+	               			});
+	               		}
 	               		
 	               		// 내 캘린더 삭제
 	               		function deleteMycal(mcNo){
@@ -287,13 +373,13 @@
 	            </div>
 	
 	                <!-- 서브메뉴 관심 캘린더 -->
-	                <ul class="accordion" id="accordionSidebar" >
+	                <!-- <ul class="accordion" id="accordionSidebar" >
 	                    <li class="su_sub_menu_item">
 	
-	                        <!-- 변경 버튼 클릭 전 -->
+	                        변경 버튼 클릭 전
 	                        <span class="fas fa-pen pen_icon dis_bl" id="pen2"></span>
 	
-	                        <!-- 변경버튼 클릭 후 -->
+	                        변경버튼 클릭 후
 	                        <div class="dis_no" id="nopen2">
 	                            <span class="fas fa-xmark pen_icon" id="x1"></span>
 	                            <span class="fas fa-check pen_icon" id="check1">&nbsp;</span>
@@ -309,7 +395,7 @@
 	                                    <td width="20%;"></td>
 	                                    <td><input type="checkbox"></td>
 	                                    <td width="90%;"> &nbsp;이승엽 대표</td>
-	                                    <!-- 기본은 색상 편집 눌렀을 때 x -->
+	                                    기본은 색상 편집 눌렀을 때 x
 	                                    <td class="su_attCalBasic">
 	                                        <a type="button">
 	                                            <div class="calColor" style="border: 1px solid red; background: red;"></div>
@@ -322,7 +408,7 @@
 	                                    <td></td>
 	                                    <td><input type="checkbox"></td>
 	                                    <td> &nbsp;강보람 부장</td>
-	                                    <!-- 기본은 색상 편집 눌렀을 때 x -->
+	                                    기본은 색상 편집 눌렀을 때 x
 	                                    <td class="su_attCalBasic">
 	                                        <a type="button">
 	                                            <div class="calColor" style="border: 1px solid red; background: red;"></div>
@@ -335,7 +421,7 @@
 	                                    <td></td>
 	                                    <td><input type="checkbox"></td>
 	                                    <td> &nbsp;박대리 대리</td>
-	                                    <!-- 기본은 색상 편집 눌렀을 때 x -->
+	                                    기본은 색상 편집 눌렀을 때 x
 	                                    <td class="su_attCalBasic">
 	                                        <a type="button">
 	                                            <div class="calColor" style="border: 1px solid red; background: red;"></div>
@@ -351,7 +437,7 @@
 	                    </li>
 	                </ul>
 	
-	                <!-- 관심 캘린더 추가 창 -->
+	                관심 캘린더 추가 창
 	                <div class="su_ph_div draggable dis_no" id="attCalList">
 	                    <div class="su_ph_header">
 	                        <h5 class="mt-1 mb-2" style="text-align: center; color: black;" id="moveCal">관심 캘린더 추가<span class="fas fa-xmark" id="xBtn" style="cursor: pointer;"></span></h5>
@@ -371,7 +457,7 @@
 	                                <span>&nbsp; 이승엽 대표</span>
 	                            </div>
 	
-	                            <!-- 강사진 주소록 -->
+	                            강사진 주소록
 	                            <div class="su_ph_line">
 	                                <div class="collapsed ph_padding" data-toggle="collapse" data-target="#teacherList" aria-expanded="true" aria-controls="collapseTwo">
 	                                    <span style="font-size: 20px;">-&nbsp;</span>
@@ -412,7 +498,7 @@
 	                                </div>
 	                            </div>
 	
-	                            <!-- 운영부 주소록 -->
+	                            운영부 주소록
 	                            <div class="su_ph_line">
 	                                <div class="collapsed ph_padding" data-toggle="collapse" data-target="#opList" aria-expanded="true" aria-controls="collapseTwo">
 	                                    <span style="font-size: 20px;">-&nbsp;</span>
@@ -427,7 +513,7 @@
 	                                        <span>&nbsp; 홍보팀</span>
 	                                    </div>
 	
-	                                    <!-- 홍봉팀 리스트 -->
+	                                    홍봉팀 리스트
 	                                <div id="promoList" class="collapse div_left_line" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
 	                                    <table>
 	                                        <tr style="width: 100%;" class="ph_padding">
@@ -466,7 +552,7 @@
 	                                        <span>&nbsp; 행정팀</span>
 	                                    </div>
 	
-	                                    <!-- 행정팀 리스트 -->
+	                                    행정팀 리스트
 	                                <div id="adminiList" class="collapse div_left_line" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
 	                                    <table>
 	                                        <tr style="width: 100%;" class="ph_padding">
@@ -503,7 +589,7 @@
 	                                </div>
 	
 	                                
-	                            <!-- 인사팀 주소록 -->
+	                            인사팀 주소록
 	                            <div class="su_ph_line">
 	                                <div class="collapsed ph_padding" data-toggle="collapse" data-target="#hrList" aria-expanded="true" aria-controls="collapseTwo">
 	                                    <span style="font-size: 20px;">-&nbsp;</span>
@@ -546,7 +632,7 @@
 	
 	                        </div>
 	                    </div>
-	                </div>
+	                </div> -->
 	
 	                <script>
 	                    $(document).ready(function(){
@@ -616,55 +702,30 @@
 	                            $("#attCalList").hide();
 	                        });
 	
-	                        // 내/관심캘린더 기본/수정 상태에 따른 설정
-	                        if( $("#pen1").is(":visible")){
+	                     	// 전사일정, 참석자 일정 체크박스 이벤트
+		            		$("#cmpyBox").change(function(){
+		            			
+			            		if( $("#cmpyBox").is(":checked") ){
+			            			$("#cmpy").text('Y');
+			            		} else{
+			            			$("#cmpy").text('N');
+			            		}
+			            		
+			            		$("#calendar").reload();
+		            		});
+	                     	
+		            		$("#atndBox").change(function(){
+			            		if( $("#atndBox").is(":checked") ){
+			            			$("#atnd").text('Y');
+			            		} else{
+			            			$("#atnd").text('N');
+			            		}
+		            			
+		            		});
+		            		
+		            		
 	
-	                        }
-	
-	                        // 위치 드래그 기능
-	                        //Make the DIV element draggagle:
-	                        dragElement(document.getElementById("attCalList"));
-	
-	                        function dragElement(elmnt) {
-	                        var pos1 = 210, pos2 = 0, pos3 = 0, pos4 = 450;
-	                        if (document.getElementById(elmnt.id + "header")) {
-	                            /* if present, the header is where you move the DIV from:*/
-	                            document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
-	                        } else {
-	                            /* otherwise, move the DIV from anywhere inside the DIV:*/
-	                            elmnt.onmousedown = dragMouseDown;
-	                        }
-	
-	                        function dragMouseDown(e) {
-	                            e = e || window.event;
-	                            e.preventDefault();
-	                            // get the mouse cursor position at startup:
-	                            pos3 = e.clientX;
-	                            pos4 = e.clientY;
-	                            document.onmouseup = closeDragElement;
-	                            // call a function whenever the cursor moves:
-	                            document.onmousemove = elementDrag;
-	                        }
-	
-	                        function elementDrag(e) {
-	                            e = e || window.event;
-	                            e.preventDefault();
-	                            // calculate the new cursor position:
-	                            pos1 = pos3 - e.clientX;
-	                            pos2 = pos4 - e.clientY;
-	                            pos3 = e.clientX;
-	                            pos4 = e.clientY;
-	                            // set the element's new position:
-	                            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-	                            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-	                        }
-	
-	                        function closeDragElement() {
-	                            /* stop moving when mouse button is released:*/
-	                            document.onmouseup = null;
-	                            document.onmousemove = null;
-	                        }
-	                        }
+	                        
 	                    });
 	                </script>
 	
@@ -675,26 +736,28 @@
 	                    <table>
 	                        <tr style="width: 100%;">
 	                            <td width="30%;"></td>
-	                            <td><input type="checkbox"></td>
+	                            <td><input type="checkbox" id="cmpyBox" checked></td>
 	                            <td> &nbsp;전사 일정</td>
-	                            <td width="15%"></td>
+	                            <td width="10%"></td>
 	                        </tr>
 	                        <tr>
 	                            <td></td>
-	                            <td><input type="checkbox"></td>
-	                            <td> &nbsp;임원 일정</td>
+	                            <td><input type="checkbox" id="atndBox" checked></td>
+	                            <td> &nbsp;참석자 일정</td>
 	                            <td></td>
 	                        </tr>
 	                    </table>
 	                </div>
 	                
+	                <span style="display:none;" id="cmpy">Y</span>
+	                <span style="display:none;" id="atnd">Y</span>
+	                
 	                <!-- 캘린더 관리 페이지로 이동 -->
 	                <br>
-	                    <a href="manage.ca" class="su_sub_menu_list" style="color: black;">
+	                    <!-- <a href="manage.ca" class="su_sub_menu_list" style="color: black;">
 	                        <h6><span class="fas fa-fw fa-cog"></span> &nbsp;캘린더 관리</h6>
-	                    </a>
+	                    </a> -->
 	                    <!-- <a href=""><h6>항목</h6></a> -->
-	                    <input type="hidden" id="checkCntVal" value="">
 	
 	
 	                <br><br>
@@ -717,6 +780,9 @@
 	    
 	
 	<script>
+	
+		// function getEvent로 이벤트 연결하기 
+		
 	    document.addEventListener('DOMContentLoaded', function() {
 	    var calendarEl = document.getElementById('calendar');
 	
@@ -746,19 +812,25 @@
 	    editable: true,
 	    timeFormat:'H(:mm)',
 	    events: function(info, successCallback, failureCallback){
+	    	console.log($("#calArr").text());
+	    	
 	    	$.ajax({
 	    		type: 'post',
 	    		cache: false,
 	    		url: "sclist.ca",
 	    		dataType:'json',
 	    		data:{
-              		memNo: ${ loginUser.memNo }				              		
+              		memNo: ${ loginUser.memNo },
+              		checkCnt: $("#calArr").text(),
+              		atnd: $("#atnd").text(),
+              		cmpy: $("#cmpy").text()
               	},
               	//contentType:"application/x-www-form-urlencoded; charset=UTF-8",
               	success: function(param){
               		var event = [];
               		
               		$.each(param, function(index, data){
+              			// map에서 값 불러와서 조건넣어서 이벤트 푸쉬하기...
 	              		event.push({
 	              			id: data.id,
 	              			title: data.title,
@@ -768,16 +840,7 @@
 	              			//backgroundColor: 'rgba(94, 126, 155, 0.6)'
 	              		});
               	    });
-              		event.push({
-              			title: "kk",
-              			start: '2022-09-09 12:30',
-              			end: '2022-09-10 13:40'
-              		});
-              		event.push({
-              			title: "kk",
-              			start: '2022-09-09 14:30',
-              			end: '2022-09-10 15:40'
-              		});
+              		
               		console.log(event);
               		successCallback(event);
               	}

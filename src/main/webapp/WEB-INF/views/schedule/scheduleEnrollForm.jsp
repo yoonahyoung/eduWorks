@@ -84,13 +84,12 @@
 									
 	                                <span style="cursor: pointer;" id="addAttendee"> + 참석자 추가</span>
 	                            </td>
-								<span style="display: none;" id="atndNo2"></span>
+	                        </tr>
+	                        <span style="display: none;" id="atndNo2"></span>
 								<span style="display: none;" id="atndList2"></span>
 								<input type="hidden" id="scheAtndNo" name="scheAtndNo" value="">
 								<input type="hidden" id="scheAtndList" name="scheAtndList" value="">
 								<input type="hidden" name="scheWriter" value="${ loginUser.memNo }">
-									
-	                        </tr>
 	                        
 	                        <tr>
 	                            <td width="5%;"><span>&nbsp;</span></td>
@@ -122,20 +121,20 @@
 	                            </div>
 	                        </aside>
 	                        <div style="text-align: center;">
-	                            <input type="text" name="suPhKeyword" placeholder="이름/부서/직위/직책">
-	                            <button type="button" class="su_btn_border btn-sm">검색</button>
+	                            <input type="text" id="atndKeyword" name="suPhKeyword" placeholder="이름/직책">
+	                            <button type="button" class="su_btn_border btn-sm" onclick="searchAtnd();">검색</button>
 	                        </div>
 	                        
 	                        <hr class="hr_line">
 			<!-- ================================================= job_name 으로 바꾸기 -->
 	                        <div class="su_ph_body">
-	                            <div class="div_left_line" style="margin-top: -1rem;">
+	                            <div class="div_left_line" id="atndArea" style="margin-top: -1rem;">
 	                                	<c:forEach var="a" items="${ aList }">
 	                                		<c:if test="${ a.deptCode eq 'DN' }">
 	                                			<div class="su_ph_line ph_padding" onclick="chooseAtnd(${ a.memNo });">
 				                                    <span style="font-size: 20px;">&nbsp;</span>
 				                                    <span class="fas fa-user"></span>
-				                                    <span>&nbsp; ${ a.memName } &nbsp; ${ a.jobCode }</span>
+				                                    <span>&nbsp; ${ a.memName } &nbsp; ${ a.jobName }</span>
 				                                </div>
 			                                </c:if>
 			                            </c:forEach>
@@ -159,7 +158,7 @@
 			                                                    	<input type="hidden" value="${ a.memNo }">
 			                                                        <span style="font-size: 20px;">-&nbsp;</span>
 			                                                        <span class="fas fa-user"></span>
-			                                                        <span>&nbsp; ${ a.memName } &nbsp; ${ a.jobCode }</span>
+			                                                        <span>&nbsp; ${ a.memName } &nbsp; ${ a.jobName }</span>
 			                                                    </div>
 			                                                </td>
 			                                            </tr>
@@ -190,13 +189,13 @@
 	                                        <table class="su_Tb_Pr">
 	                                        
 			                                    <c:forEach var="a" items="${ aList }">
-	                                        		<c:if test="${ a.deptCode eq 'D2' }">
+	                                        		<c:if test="${ a.deptCode eq 'D3' }">
 			                                            <tr style="width: 100%;" class="ph_padding">
 			                                                <td width="90%;">
 			                                                    <div class="su_ph_line" onclick="chooseAtnd(${ a.memNo });">
 			                                                        <span style="font-size: 20px;">-&nbsp;</span>
 			                                                        <span class="fas fa-user"></span>
-			                                                        <span>&nbsp; ${ a.memName } &nbsp; ${ a.jobCode }</span>
+			                                                        <span>&nbsp; ${ a.memName } &nbsp; ${ a.jobName }</span>
 			                                                    </div>
 			                                                </td>
 			                                            </tr>
@@ -222,7 +221,7 @@
 			                                                    <div class="su_ph_line" onclick="chooseAtnd(${ a.memNo });">
 			                                                        <span style="font-size: 20px;">-&nbsp;</span>
 			                                                        <span class="fas fa-user"></span>
-			                                                        <span>&nbsp; ${ a.memName } &nbsp; ${ a.jobCode }</span>
+			                                                        <span>&nbsp; ${ a.memName } &nbsp; ${ a.jobName }</span>
 			                                                    </div>
 			                                                </td>
 			                                            </tr>
@@ -253,7 +252,7 @@
 			                                                    <div class="su_ph_line" onclick="chooseAtnd(${ a.memNo });">
 			                                                        <span style="font-size: 20px;">-&nbsp;</span>
 			                                                        <span class="fas fa-user"></span>
-			                                                        <span>&nbsp; ${ a.memName } &nbsp; ${ a.jobCode }</span>
+			                                                        <span>&nbsp; ${ a.memName } &nbsp; ${ a.jobName }</span>
 			                                                    </div>
 			                                                </td>
 			                                            </tr>
@@ -272,7 +271,7 @@
 	                    <script>
 	                        $(document).ready(function(){
 	                            // 참석자 추가 창 display
-	                            $("#addAttendee").click(function(){
+	                            $(document).on("click", "#addAttendee", function(){
 	                                $("#attCalList").removeClass("dis_no");
 	                                $("#attCalList").addClass("dis_bl");
 	                            });
@@ -296,7 +295,7 @@
                             		success: function(m){
                             			//console.log(m);	// 멤버 객체
                             			var atndNo = m.memNo;
-                            			var atndList = m.memName + " " + m.jobCode;
+                            			var atndList = m.memName + " " + m.jobName;
                             			atndNoStr += atndNo + ",";
                             			atndListStr += atndList + ",";
                             			
@@ -352,6 +351,183 @@
 	                        	console.log(namelist);
 	                        	$("#atndList2").val(namelist);
 	                        	$("#scheAtndList").val($("#atndList2").val());
+	                        }
+	                        
+	                        // 참석자 검색 이벤트
+	                        function searchAtnd(){
+	                        	var key = $("#atndKeyword").val();
+	                        	var value = "";
+	                        	var tCount = 0;	// 강사
+	                        	var pCount = 0;	// 홍보
+	                        	var dCount = 0;	// 행정
+	                        	var hCount = 0;	// 인사
+	                        	$.ajax({
+	                        		url: "search.ca",
+	                        		data: {keyword: key},
+	                        		success: function(list){
+	                        			console.log(list);
+	                        			
+	                        			for(let i = 0; i < list.length; i++){
+	                        				if(list[i].deptCode == 'DN'){
+	                        					value += '<div class="su_ph_line ph_padding" onclick="chooseAtnd(' + list[i].memNo + ');">'
+	                        								+ '<span style="font-size: 20px;">&nbsp;</span>'
+	                        								+ '<span class="fas fa-user"></span>'
+	            		                                    + '<span>&nbsp; ' + list[i].memName + ' &nbsp; ' + list[i].jobName + '</span>'
+	            		                                    + '</div>';
+	                        				}
+	                        			}
+                            			
+	                        			for(let i = 0; i < list.length; i++){
+	                        				if(list[i].deptCode == 'D0'){
+	                        					tCount++;
+	                        				}
+	                        			}
+	                        			
+	                        			value += '<div>';
+	                        			
+	                        			if(tCount > 0){
+	                        				value += '<div class="collapsed ph_padding" data-toggle="collapse" data-target="#teacherList" aria-expanded="true" aria-controls="collapseTwo">'
+	                                            		+ '<span style="font-size: 20px;">-&nbsp;</span>'
+	                                            		+ '<span style="font-size: 20px;">+&nbsp;</span>'
+	                                            		+ '<span>&nbsp; 강사진</span>'
+	                                        	   + '</div>'
+	                                        	   + '<div id="teacherList" class="collapse div_left_line" aria-labelledby="headingTwo" data-parent="#accordionSidebar">'
+	                                               		+ '<table class="su_Tb_Te">';
+	                        			}
+		                                    
+		                                 for(let i = 0; i < list.length; i++){
+		                                	 if(list[i].deptCode == 'D0'){
+		                                		 value += '<tr style="width: 100%;" class="ph_padding">'
+	                                                		+ '<td width="90%;">'
+	                                                    		+ '<div class="su_ph_line" onclick="chooseAtnd(' + list[i].memNo + ');">'
+	                                                    			+ '<input type="hidden" value="' + list[i].memNo + '">'
+	                                                        		+ '<span style="font-size: 20px;">-&nbsp;</span>'
+	                                                        		+ '<span class="fas fa-user"></span>'
+	                                                        		+ '<span>&nbsp; ' + list[i].memName + ' &nbsp; ' + list[i].jobName + '</span>'
+	                                                       + '</div></td></tr>';
+		                                	 }
+		                                 }   
+		                       
+										if(tCount > 0){
+											value += '</table></div>';
+										}
+                          
+										value += '</div><div>';
+	                                            
+										for(let i = 0; i < list.length; i++){
+	                        				if(list[i].deptCode == 'D3'){
+	                        					pCount++;
+	                        				}
+	                        			}  
+										for(let i = 0; i < list.length; i++){
+	                        				if(list[i].deptCode == 'D2'){
+	                        					dCount++;
+	                        				}
+	                        			} 
+										
+										if(pCount > 0 || dCount > 0){
+											value += '<div class="collapsed ph_padding" data-toggle="collapse" data-target="#opList" aria-expanded="true" aria-controls="collapseTwo">'
+	                                        			+ '<span style="font-size: 20px;">-&nbsp;</span>'
+	                                        			+ '<span style="font-size: 20px;">+&nbsp;</span>'
+	                                        			+ '<span>&nbsp; 운영부</span>'
+	                                    		   + '</div>'
+	
+	                                    		   + '<div id="opList" class="collapse div_left_line" aria-expanded="true" data-parent="#accordionSidebar">';
+										}
+                                       
+										if(pCount > 0){
+											value += '<div class="collapsed ph_padding" data-toggle="collapse" data-target="#promoList" aria-expanded="true" aria-controls="collapseTwo">'
+	                                        			+ '<span style="font-size: 20px;">-&nbsp;</span>'
+	                                        			+ '<span style="font-size: 20px;">+&nbsp;</span>'
+	                                        			+ '<span>&nbsp; 홍보팀</span>'
+	                                    		   + '</div>'
+
+	                                			   + '<div id="promoList" class="collapse div_left_line" aria-labelledby="headingTwo" data-parent="#accordionSidebar">'
+	                                    				+ '<table class="su_Tb_Pr">';
+										}
+										
+                                    	for(let i = 0; i < list.length; i++){
+                                    		if(list[i].deptCode == 'D3'){
+	                                    		value += '<tr style="width: 100%;" class="ph_padding">'
+                                                			+ '<td width="90%;">'
+                                                				+ '<div class="su_ph_line" onclick="chooseAtnd(' + list[i].memNo + ');">'
+                                                    				+ '<span style="font-size: 20px;">-&nbsp;</span>'
+                                                    				+ '<span class="fas fa-user"></span>'
+                                                    				+ '<span>&nbsp; ' + list[i].memName + ' &nbsp; ' + list[i].jobName + '</span>'
+                                                    			+ '</div></td></tr>';
+                                    		}
+                                    	}
+                                    	
+                                    	if(pCount > 0){
+                                    		value += '</table></div>';
+                                    	}
+                                
+										if(dCount > 0){
+											value += '<div class="collapsed ph_padding" data-toggle="collapse" data-target="#adminiList" aria-expanded="true" aria-controls="collapseTwo">'
+	                                        			+ '<span style="font-size: 20px;">-&nbsp;</span>'
+	                                        			+ '<span style="font-size: 20px;">+&nbsp;</span>'
+	                                        			+ '<span>&nbsp; 행정팀</span>'
+	                                    		   + '</div>'
+
+	                                			   + '<div id="adminiList" class="collapse div_left_line" aria-labelledby="headingTwo" data-parent="#accordionSidebar">'
+	                                    				+ '<table class="su_Tb_Ad">';
+										}
+                            
+                                    	for(let i = 0; i < list.length; i++){
+                                    		if(list[i].deptCode == 'D2'){
+                                    			value += '<tr style="width: 100%;" class="ph_padding">'
+                                        			+ '<td width="90%;">'
+                                        				+ '<div class="su_ph_line" onclick="chooseAtnd(' + list[i].memNo + ');">'
+                                            				+ '<span style="font-size: 20px;">-&nbsp;</span>'
+                                            				+ '<span class="fas fa-user"></span>'
+                                            				+ '<span>&nbsp; ' + list[i].memName + ' &nbsp; ' + list[i].jobName + '</span>'
+                                            			+ '</div></td></tr>';
+                                    		}
+                                    	}
+                                    	
+                                    	if(dCount > 0){
+                                    		value += '</table></div>';
+                                    	}
+                                    
+	                                    if(pCount > 0 || dCount > 0){
+	                                    	value += '</div></div>';
+	                                    }
+	                                    
+	                                    for(let i = 0; i < list.length; i++){
+	                        				if(list[i].deptCode == 'D1'){
+	                        					hCount++;
+	                        				}
+	                        			} 
+	                                        
+                                        if(hCount > 0){
+                                        	value += '<div>'
+                                            			+ '<div class="collapsed ph_padding" data-toggle="collapse" data-target="#hrList" aria-expanded="true" aria-controls="collapseTwo">'
+                                            				+ '<span style="font-size: 20px;">-&nbsp;</span>'
+                                            				+ '<span style="font-size: 20px;">+&nbsp;</span>'
+                                            				+ '<span>&nbsp; 인사팀</span>'
+                                        				+ '</div>'
+
+                                        				+ '<div id="hrList" class="collapse div_left_line" aria-labelledby="headingTwo" data-parent="#accordionSidebar">'
+                                            				+ '<table class="su_Tb_Hr">';
+                                        }
+                                    	
+                                        for(let i = 0; i < list.length; i++){
+                                    		if(list[i].deptCode == 'D1'){
+                                    			value += '<tr style="width: 100%;" class="ph_padding">'
+                                        			+ '<td width="90%;">'
+                                    				+ '<div class="su_ph_line" onclick="chooseAtnd(' + list[i].memNo + ');">'
+                                        				+ '<span style="font-size: 20px;">-&nbsp;</span>'
+                                        				+ '<span class="fas fa-user"></span>'
+                                        				+ '<span>&nbsp; ' + list[i].memName + ' &nbsp; ' + list[i].jobName + '</span>'
+                                        			+ '</div></td></tr>';
+                                    		}
+                                        }
+
+	                        			$("#atndArea").html(value);   
+	                        			}, error: function(){
+	                        			console.log("ajax 검색 실패");
+	                        		}
+	                        	});
 	                        }
 	                        
 	
