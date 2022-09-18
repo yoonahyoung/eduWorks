@@ -226,7 +226,12 @@
 	                        <h6 class="collapse-header">주소록</h6>
 	                        <a class="collapse-item" href="publicAddress.ad">전사 주소록</a>
 	                        <a class="collapse-item" onclick="postFormSubmit('individualAddress.ad')">개인 주소록</a>
-	                        <a class="collapse-item" href="list.st">학생 주소록</a>
+	                        <c:if test="${ loginUser.deptCode eq 'D2' || loginUser.deptCode eq 'DN'}">
+	                        	<a class="collapse-item" href="listSt.ad">학생 주소록</a>
+	                        </c:if>
+	                        <c:if test="${ loginUser.deptCode eq 'D0' || loginUser.deptCode eq 'DN'}">
+	                        	<a class="collapse-item" href="listSt.te">학생 주소록</a>
+	                        </c:if>
 	                    </div>
 	                </div>
 	            </li>

@@ -20,7 +20,8 @@
 		<typeAlias type="com.finalProject.eduWorks.member.model.vo.Job" alias="Job" />
 		<typeAlias type="com.finalProject.eduWorks.addressBook.model.vo.Address" alias="Address" />
 		<typeAlias type="com.finalProject.eduWorks.addressBook.model.vo.AddressOut" alias="AddressOut" />
-		<typeAlias type="com.finalProject.eduWorks.common.model.vo.Reply" alias="Reply" />
+		<typeAlias type="com.finalProject.eduWorks.administration.model.vo.Student" alias="Student" />
+		<typeAlias type="com.finalProject.eduWorks.administration.model.vo.RegClass" alias="RegClass" />
 		<typeAlias type="com.finalProject.eduWorks.mail.model.vo.Mail" alias="Mail" />
 		<typeAlias type="com.finalProject.eduWorks.mail.model.vo.MailStatus" alias="MailStatus" />
 		<typeAlias type="com.finalProject.eduWorks.mail.model.vo.Spam" alias="Spam" />
@@ -43,6 +44,7 @@
 	 	<mapper resource="/mappers/schedule-mapper.xml" />
 	 	<mapper resource="/mappers/personnel-mapper.xml" />
 	 	<mapper resource="/mappers/address-mapper.xml" />
+	 	<mapper resource="/mappers/administration-mapper.xml" />
 	 	<mapper resource="/mappers/member-mapper.xml" />
 	 	<mapper resource="/mappers/mail-mapper.xml" />
 	 	<mapper resource="/mappers/teacher-mapper.xml" />
