@@ -75,6 +75,37 @@ public class MailDao {
 		return sqlSession.selectOne("mailMapper.receiveUnReadCount", memEmail);
 	}
 	
+	/**
+	 * 5_1. 중요 메일함 개수 조회
+	 * @param m : 로그인한 회원 이메일
+	 * @return : 중요 메일함 개수
+	 */
+	public int importantListCount(SqlSessionTemplate sqlSession, Mail m) {
+		return sqlSession.selectOne("mailMapper.importantListCount",m);
+	}
+	
+	/**
+	 * 5_2. 중요 메일함 중 안읽은 메일 조회
+	 * @param m : 로그인한 회원 이메일
+	 * @return : 중요 메일함 중 안읽은 메일
+	 */
+	public int importantUnReadCount(SqlSessionTemplate sqlSession, Mail m) {
+		return sqlSession.selectOne("mailMapper.importantUnReadCount", m);
+	}
+	
+	/**
+	 * 5_3. 중요 메일함 목록 조회
+	 * @param m : 로그인한 회원 이메일
+	 * @return : 중요 메일함 목록
+	 */
+	public ArrayList<Mail> selectImportantMailList(SqlSessionTemplate sqlSession, PageInfo pi, Mail m){
+		
+		int limit = pi.getBoardLimit(); // 조회해야되는 게시글 갯수
+		int offset = (pi.getCurrentPage() - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return (ArrayList)sqlSession.selectList("mailMapper.selectImportantMailList", m, rowBounds);
+	}
 
 	/**
 	 * 6_1. 메일 전송 (TB_MAIL)

@@ -119,8 +119,37 @@ public class MailController {
 	 * @return : 중요 메일함 페이지
 	 */
 	@RequestMapping("importantMailList.ma")
-	public String importantMailList(Model model) {
-		return "mail/importantMailList";
+	public ModelAndView importantMailList(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv, HttpSession session) {
+		
+		String memNo = ( (Member)session.getAttribute("loginUser") ).getMemNo();
+		String memEmail = ( (Member)session.getAttribute("loginUser") ).getMemEmail();
+		
+		Mail m = new Mail();
+		m.setMemNo(memNo);
+		m.setReceiverMem(memEmail);
+		
+		// 내게 쓴 메일 개수 조회
+		int listCount = mService.importantListCount(m);
+		
+		// 페이징
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
+		
+		// 내게 쓴 메일 조회
+		ArrayList<Mail> list = mService.selectImportantMailList(pi, m);
+		
+		// 안읽은 메일 조회
+		int unread = mService.importantUnReadCount(m);
+
+		System.out.println(listCount);
+		System.out.println(list);
+				
+		mv.addObject("count", listCount);
+		mv.addObject("list", list);
+		mv.addObject("pi", pi);
+		mv.addObject("unread", unread);
+		mv.setViewName("mail/importantMailList");
+		
+		return mv;
 	}
 	
 	/**
@@ -539,6 +568,7 @@ public class MailController {
 		
 		return mv;
 	}
+	
 
 	
 }

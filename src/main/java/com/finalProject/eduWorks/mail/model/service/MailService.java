@@ -57,5 +57,10 @@ public interface MailService {
 	int unReadListCount(Mail m);
 	ArrayList<Mail> selectUnReadMailList(PageInfo pi, Mail m);
 	
+	// 11. 중요 메일 조회
+	int importantListCount(Mail m);
+	int importantUnReadCount(Mail m);
+	ArrayList<Mail> selectImportantMailList(PageInfo pi, Mail m);
+	
 
 }
