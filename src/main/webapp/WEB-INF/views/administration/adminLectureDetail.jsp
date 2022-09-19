@@ -41,9 +41,9 @@
 					   <p class="crossK">x</p>
 					   <figure></figure>
 					   <ul class="dropdownK">
-					     <li><a onclick="postFormSubmit3('donUpdateForm.cl');">교재수정</a></li>
+					     <li><a onclick="postFormSubmit3('donUpdateForm.cl');">강의수정</a></li>
 						 <hr>
-						 <li><a onclick="deleteForm2('doneDelete.cl')">교재 삭제</a></li>
+						 <li><a onclick="deleteForm2('doneDelete.cl')">강의삭제</a></li>
 					   </ul>
 					</div>
 				</ul>
@@ -90,7 +90,6 @@
 							       // 만약 Promise리턴을 받으면,
 							       if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
 							    	   $("#postForm3").attr("action", url).submit();
-							           Swal.fire('삭제가 완료되었습니다.', '', 'success');
 							       }
 							    });
 	
