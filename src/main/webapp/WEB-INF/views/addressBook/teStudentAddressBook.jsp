@@ -84,7 +84,6 @@
 						<tr class="table_thead_border">
 							<th width="3%" class="no">번호</th>
 							<th width="10%">이름</th>
-							<th width="10%">아이디</th>
 							<th width="10%">전화번호</th>
 							<th width="18%">신청강의</th>
 							<th width="18%">이메일</th>
@@ -103,7 +102,6 @@
 									<tr>
 										<td>${a.studentNo}</td>
 										<td>${a.studentName}</td>
-										<td>${a.studentId}</td>
 										<td>${a.studentPhone}</td>
 										<td>${a.className}</td>
 										<td>${a.studentEmail}</td>

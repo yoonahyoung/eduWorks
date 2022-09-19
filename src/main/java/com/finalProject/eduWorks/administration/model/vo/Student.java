@@ -15,7 +15,6 @@ public class Student {
 	
 	private int studentNo;
 	private String studentName;
-	private String studentId;
 	private String studentPhone;
 	private String studentEmail;
 	private String studentBirth;

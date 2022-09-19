@@ -49,17 +49,16 @@ public class StudentAddressServiceImpl implements StudentAddressService{
 		return sDao.updateStudent(sqlSession, s);
 	}
 	
-	
-	
 	// 학생 주소록 페이징 처리 (강사)
 	@Override
-	public int selectListTeCount() {
-		return 0;
+	public int selectListTeCount(int memNo) {
+		return sDao.selectListTeCount(sqlSession, memNo);
 	}
 
+	// 학생 주소록 조회 (강사)
 	@Override
-	public ArrayList<Student> selectTeAddressList(PageInfo pi) {
-		return null;
+	public ArrayList<Student> selectTeAddressList(PageInfo pi, int memNo, String range) {
+		return sDao.selectTeAddressList(sqlSession, pi, memNo, range);
 	}
 
 	

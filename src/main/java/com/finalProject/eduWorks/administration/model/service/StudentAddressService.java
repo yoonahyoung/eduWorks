@@ -19,6 +19,6 @@ public interface StudentAddressService {
 	int updateStudent(Student s);
 	
 	// 2. 강사 학생 주소록 조회 (페이징)
-	int selectListTeCount(); 
-	ArrayList<Student> selectTeAddressList(PageInfo pi);
+	int selectListTeCount(int memNo); 
+	ArrayList<Student> selectTeAddressList(PageInfo pi, int memNo, String range);
 }

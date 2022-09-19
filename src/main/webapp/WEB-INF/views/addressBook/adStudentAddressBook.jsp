@@ -8,14 +8,12 @@
 
 <!-- css -->
 <link
-	href="${pageContext.request.contextPath}/resources/css/addressBook.css"
-	rel="stylesheet" type="text/css">
+	href="${pageContext.request.contextPath}/resources/css/addressBook.css" rel="stylesheet" type="text/css">
 
 <title>학생 주소록(전체)</title>
 </head>
 <body>
 
-	<!-- 은영 -->
 	<jsp:include page="../common/header.jsp" />
 
 	<div class="container-fluid" style="display: flex;">
@@ -86,15 +84,12 @@
 						<tr class="table_thead_border">
 							<th width="3%">번호</th>
 							<th width="10%">이름</th>
-							<th width="10%">아이디</th>
 							<th width="10%">전화번호</th>
 							<th width="18%">이메일</th>
 							<th width="10%">등록일</th>
 						</tr>
 					</thead>
 					<tbody>
-						<!-- 값은 다 DB와 연결될 것 -->
-						<!-- 반복문 시작 -->
 						<c:choose>
 							<c:when test="${empty list }">
 								<td colspan="6">현재 주소록이 없습니다.</td>
@@ -104,7 +99,6 @@
 									<tr>
 										<td class="no">${a.studentNo}</td>
 										<td>${a.studentName}</td>
-										<td>${a.studentId}</td>
 										<td>${a.studentPhone}</td>
 										<td>${a.studentEmail}</td>
 										<td>${a.studentEnDate}</td>

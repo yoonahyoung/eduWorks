@@ -17,6 +17,7 @@ import com.finalProject.eduWorks.administration.model.vo.RegClass;
 import com.finalProject.eduWorks.administration.model.vo.Student;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.template.Pagination;
+import com.finalProject.eduWorks.member.model.vo.Member;
 import com.google.gson.Gson;
 
 @Controller
@@ -32,7 +33,7 @@ public class StudentAddressController {
 	 * @param session
 	 * @return 학생 주소록 리스트, 주소록 리스트 화면
 	 */
-	@RequestMapping("listSt.ad") // 강사는 listSt.ad
+	@RequestMapping("listSt.ad") // 강사는 listSt.te
 	public ModelAndView selectStAddressList(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv, HttpSession session) {
 		int listCount = sService.selectListStCount();
 		
@@ -43,6 +44,29 @@ public class StudentAddressController {
 		
 		return mv;
 	}
+	
+	/**
+	 * 학생 주소록 리스트 조회(강사)
+	 * @param currentPage
+	 * @param mv
+	 * @param session
+	 * @return 학생 주소록 리스트, 주소록 리스트 화면
+	 */
+	@RequestMapping("listSt.te")
+	public ModelAndView selectTeAddressList(@RequestParam(value="cpage", defaultValue="1") int currentPage, 
+											@RequestParam(value="range", defaultValue="desc") String range, ModelAndView mv, HttpSession session) {
+		int memNo = Integer.parseInt(((Member)session.getAttribute("loginUser")).getMemNo());		
+		// 페이징 처리
+		int listCount = sService.selectListTeCount(memNo);
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
+		
+		// 학생 조회
+		ArrayList<Student> list = sService.selectTeAddressList(pi, memNo, range);
+		mv.addObject("pi", pi).addObject("list", list).addObject("range", range).setViewName("teacher/studentAddressBookView");
+		
+		return mv;
+	}
+
 	
 	/**
 	 * 학생 주소록 상세 조회 (전체)
@@ -63,7 +87,12 @@ public class StudentAddressController {
 		return "addressBook/adStudentAdBookDetail";
 	}
 	
-	
+	/**
+	 * 학생 정보 수정 화면
+	 * @param no	학생 번호
+	 * @param model
+	 * @return 학생 상세 화면에서의 수정 화면
+	 */
 	@RequestMapping("updateStForm.ad")
 	public String updateStudentForm(int no, Model model) {
 		model.addAttribute("update", 1);
@@ -78,6 +107,12 @@ public class StudentAddressController {
 		return "addressBook/adStudentAdBookDetail";
 	}
 	
+	/**
+	 * 학생 정보 수정
+	 * @param s		학생 정보
+	 * @param model
+	 * @return 성공 여부
+	 */
 	@ResponseBody
 	@RequestMapping("updateSt.ad")
 	public String updateStudent(Student s, Model model) {

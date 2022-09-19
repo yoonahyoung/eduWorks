@@ -72,7 +72,7 @@
                                                     </tr>
                                                     <tr>
                                                         <th>신 청 자 : </th>
-                                                        <td>${ r.studentId } | ${ r.studentName }</td>
+                                                        <td> 관리번호 ${ r.studentNo} | ${ r.studentName }</td>
                                                     </tr>
                                                     <c:if test="${ not empty r.regReturn }">
                                                     	<tr>

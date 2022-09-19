@@ -45,9 +45,14 @@
 			                    <button type="button" class="n-btn su_btn_border" onclick="updateSt();">수정완료</button>
 			                </div>
                         </c:if>
-                        <c:if test="${ empty update }">
+                        <c:if test="${ empty update && loginUser.jobName ne '강사'}">
 	                        <div>
 			                    <button type="button" class="n-btn su_btn_border" onclick="location.href='listSt.ad'">목록으로</button>
+			                </div>
+		                </c:if>
+		                <c:if test="${ loginUser.jobName eq '강사' }">
+		                	<div>
+			                    <button type="button" class="n-btn su_btn_border" onclick="location.href='listSt.te'">목록으로</button>
 			                </div>
 		                </c:if>
                     </div>
@@ -55,6 +60,7 @@
                     <div class="addBookContent">
                         <div class="info-title">◆ 기본정보</div>
                         <!-- 수정삭제 버튼 -->
+                        <c:if test="${ loginUser.jobName ne '강사' }"> <!-- 이거 두개 왜 || 문으로 안 이어지는...? -->
                         <c:if test="${ empty update }">
 	                        <div class="detailDot">
 	                            <ul class="navbar-nav ml-auto moDelte">
@@ -72,12 +78,13 @@
 	                            </ul>
 	                        </div>
                         </c:if>
+                        </c:if>
                         <table id="studentTable">
                             <tr>
-                                <th>등록일자 </th>
-                                <td class="tdLine">${ s.studentEnDate }</td>
                                 <th>관리번호</th>
-                                <td>${ s.studentNo }</td>
+                                <td class="tdLine">${ s.studentNo }</td>
+                                <th>등록일자 </th>
+                                <td>${ s.studentEnDate }</td>
                             </tr>
                             <tr>
                                 <th colspan="4"></th>
@@ -225,10 +232,18 @@
                                 </div>
 
                             </div>
-                            <div class="su_reply_btn">
-                                <button type="button" class="n-btn su_btn_border btn-sm" id="writeReplyBtn">등록</button>
-                            </div>
-
+                            <c:choose>
+	                            <c:when test="${ loginUser.jobName eq '강사' }">
+	                            	<div class="su_reply_btn">
+		                                <button type="button" class="n-btn su_btn_border btn-sm" id="writeReplyBtn" disabled style="background:grey">등록</button>
+		                            </div>
+	                            </c:when>
+	                            <c:otherwise>
+		                            <div class="su_reply_btn">
+		                                <button type="button" class="n-btn su_btn_border btn-sm" id="writeReplyBtn">등록</button>
+		                            </div>
+	                            </c:otherwise>
+							</c:choose>
                             
                         </div>
                     </div>

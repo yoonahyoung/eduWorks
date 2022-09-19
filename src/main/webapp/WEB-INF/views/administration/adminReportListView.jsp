@@ -88,7 +88,7 @@
 			           		})
 			          	})
 			          	
-			          	function goStatus(bNo){
+			          	function goStatus(bNo){ // 블라인드 처리가 필요 없다고 느낄시 처리 완료 버튼
 			           		let rptBoardNo = $(".no"+bNo).text();
 			           		let rptRefCat = $(".no"+bNo).siblings("#rptRefCat").text();
 			           		
