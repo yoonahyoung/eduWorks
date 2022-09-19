@@ -544,6 +544,42 @@
 				            </div>
 				        </div>
 				    </div>
-        
+        <script>
+			// websocket
+			/* var socket = null;
+
+		   $(document).ready(function (){
+			   connectWs();
+		   });
+		   
+		   function connectWs(){
+			    var ws = new WebSocket("ws://localhost:8585/eduWorks/replyEcho");
+				
+				sock = new SockJS( "<c:url value="/echo"/>" );
+				sock.onopen = function() {
+			           console.log('info: sock connection opened.');
+			     };
+				ws.onopen = function()	{
+					console.log("Info : connection opend.");
+					
+					
+					ws.onmessage = function(event){
+					console.log(event.data+"\n");
+					};
+				};
+				
+				ws.onclose = function(event) {
+					console.log("Info : connection closed.");
+					//setTimeout( function() { connection(); }, 1000); // retry connection 즉, 연결 재시도 하라는 뜻
+				};
+				ws.onerror = function(err) {console.log("Error : err")};
+		   }
+					/* $("#~~btn").on("click", function(evt){
+						evt.preventDefault();
+						if(socket.readyStatus != 1) return;
+							let msg = $("$~~").val();
+							ws.send(msg);
+					}) */ 
+		</script>
 </body>
 </html>
