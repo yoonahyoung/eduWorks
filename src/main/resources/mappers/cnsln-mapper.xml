@@ -16,6 +16,8 @@
 		<result column="cnsln_real" property="cnslnReal" />
 		<result column="cnsln_create_date" property="cnslnCreateDate" />
 		<result column="cnsln_count" property="cnslnCount" />
+		<result column="cnsln_status" property="cnslnStatus" />		
+		<collection property="member" resultMap="memberResult" />
 	</resultMap>
 	
 	<resultMap id="memberResult" type="Member">
@@ -51,7 +53,7 @@
 			 , cnsln_topic
 			 , cnsln_content
 			 , cnsln_real
-			 , cnsln_create_date
+			 , to_char(cnsln_create_date, 'YYYY-MM-DD') as "cnsln_create_date"
 			 , cnsln_count
 		  from tb_cnsln
 		 where cnsln_writer = #{memNo}
@@ -68,7 +70,7 @@
 			 , cnsln_topic
 			 , cnsln_content
 			 , cnsln_real
-			 , cnsln_create_date
+			 , to_char(cnsln_create_date, 'YYYY-MM-DD') as "cnsln_create_date"
 			 , cnsln_count
 		  from tb_cnsln
 		 where cnsln_real = #{memNo}
@@ -85,7 +87,7 @@
 			 , cnsln_topic
 			 , cnsln_content
 			 , cnsln_real
-			 , cnsln_create_date
+			 , to_char(cnsln_create_date, 'YYYY-MM-DD') as "cnsln_create_date"
 			 , cnsln_count
 		  from tb_cnsln
 		 where cnsln_charge_no like '%' || #{memNo} || '%'
@@ -161,6 +163,8 @@
 		select cnsln_no
 			 , cnsln_title
 			 , cnsln_writer
+			 , m.mem_name
+			 , j.job_name as "job_name"
 			 , cnsln_start_date
 			 , cnsln_end_date
 			 , cnsln_status
@@ -173,6 +177,8 @@
 			 , cnsln_create_date
 			 , cnsln_count
 		  from tb_cnsln
+		  join tb_member m on (cnsln_writer = m.mem_no)
+		  join tb_job j on (j.job_code = m.job_code)
 		 where cnsln_status = 'Y'
 		   and cnsln_no = #{cNo}
 	</select>
@@ -275,6 +281,121 @@
 		update tb_reply
 		   set reply_status = 'N'
 		 where reply_no = #{replyNo}
+	</update>
+	
+	<select id="selectListCount" resultType="_int">
+		select count(*)
+		  from 
+			    (		  
+				 select cnsln_no
+					  , cnsln_title
+					  , cnsln_writer
+					  , cnsln_start_date
+					  , cnsln_end_date
+					  , cnsln_charge_no
+					  , cnsln_charge_list
+					  , cnsln_phone
+					  , cnsln_topic
+					  , cnsln_content
+					  , cnsln_real
+					  , cnsln_create_date
+					  , cnsln_count
+				   from tb_cnsln
+				   join tb_member m on (cnsln_writer = mem_no)
+                   join tb_job j on (m.job_code = j.job_code)
+                  where cnsln_status in ('Y', 'N')
+					 <if test="keyword != null and keyword neq ''">
+					    and cnsln_phone like '%' || #{keyword} || '%'
+					 </if>
+				 union
+				 select cnsln_no
+					  , cnsln_title
+					  , cnsln_writer
+					  , cnsln_start_date
+					  , cnsln_end_date
+					  , cnsln_charge_no
+					  , cnsln_charge_list
+					  , cnsln_phone
+					  , cnsln_topic
+					  , cnsln_content
+					  , cnsln_real
+					  , cnsln_create_date
+					  , cnsln_count
+				   from tb_cnsln
+				   join tb_member m on (cnsln_writer = mem_no)
+                   join tb_job j on (m.job_code = j.job_code)
+                  where cnsln_status in ('Y', 'N')
+					 <if test="keyword != null and keyword neq ''">
+					    and cnsln_title like '%' || #{keyword} || '%'
+					 </if>
+				)
+	</select>
+	
+	<select id="selectCnslnReList" resultMap="cnslnResult">
+		select *
+		  from (
+				select *
+				  from (
+						 select cnsln_no
+							  , cnsln_title
+							  , m.mem_name || ' ' || j.job_name as "cnsln_writer"
+							  , m.mem_name
+							  , j.job_name as "job_name"
+							  , cnsln_start_date
+							  , cnsln_end_date
+							  , cnsln_status
+							  , cnsln_charge_no
+							  , cnsln_charge_list
+							  , cnsln_phone
+							  , cnsln_topic
+							  , cnsln_content
+							  , cnsln_real
+							  , to_char(cnsln_create_date, 'YYYY-MM-DD') as "cnsln_create_date"
+							  , cnsln_count
+						   from tb_cnsln
+						  join tb_member m on (cnsln_writer = mem_no)
+                   		  join tb_job j on (m.job_code = j.job_code)
+						 where cnsln_status in ('Y', 'N')
+						 <if test="keyword != null and keyword neq ''">
+						    and cnsln_phone like '%' || #{keyword} || '%'
+						 </if>
+						 )
+				 union
+				 select *
+				   from (
+				   		 select cnsln_no
+							  , cnsln_title
+							  , m.mem_name || ' ' || j.job_name as "cnsln_writer"
+							  , m.mem_name
+							  , j.job_name as "job_name"
+							  , cnsln_start_date
+							  , cnsln_end_date
+							  , cnsln_status
+							  , cnsln_charge_no
+							  , cnsln_charge_list
+							  , cnsln_phone
+							  , cnsln_topic
+							  , cnsln_content
+							  , cnsln_real
+							  , to_char(cnsln_create_date, 'YYYY-MM-DD') as "cnsln_create_date"
+							  , cnsln_count
+						   from tb_cnsln
+						  join tb_member m on (cnsln_writer = mem_no)
+                   		  join tb_job j on (m.job_code = j.job_code)
+						 where cnsln_status in ('Y', 'N')
+						 <if test="keyword != null and keyword neq ''">
+						    and cnsln_title like '%' || #{keyword} || '%'
+						 </if>
+					)
+				)
+			 order
+			    by cnsln_no desc
+	</select>
+	
+	<update id="deleteReCnsln">
+		update tb_cnsln
+		   set cnsln_status = 'NN'
+		 where cnsln_no = #{cNo}
 	</update>
 	
   

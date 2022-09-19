@@ -10,13 +10,17 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.finalProject.eduWorks.cnsln.model.service.CnslnService;
 import com.finalProject.eduWorks.cnsln.model.vo.Cnsln;
+import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.model.vo.Reply;
+import com.finalProject.eduWorks.common.template.Pagination;
 import com.finalProject.eduWorks.member.model.vo.Member;
+import com.finalProject.eduWorks.promotion.model.vo.Promotion;
 import com.google.gson.Gson;
 
 @Controller
@@ -225,5 +229,99 @@ public class CnslnController {
 		
 		return result;
 	}
+	
+	// 상담 내역 리스트
+	@RequestMapping("list.tcn")
+	public ModelAndView selectCnslnList(@RequestParam(value="cpage", defaultValue="1") int currentPage, String keyword, String cNo, ModelAndView mv) {
+		int listCount = cService.selectListCount(keyword);
+		
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 4, 5);
+		ArrayList<Cnsln> list = cService.selectCnslnList(pi, keyword);
+
+		mv.addObject("pi", pi)
+		  .addObject("list", list)
+		  .setViewName("cnsln/counselingListView");
+		  
+		return mv;
+	}
+	
+	// 상담 내역 상세 조회
+	@RequestMapping("detail.tcn")
+	public ModelAndView selectCnslnRe(int cNo, ModelAndView mv) {
+		Cnsln c = cService.selectCnsln(cNo);
+		
+		mv.addObject("c", c).setViewName("cnsln/cnslnDetailView");
+		return mv;
+	}
+	
+	// 상담 내역 리스트 검색
+	@ResponseBody
+	@RequestMapping(value="search.tcn", produces="application/json; charset=UTF-8")
+	public String ajaxSelectCnslnList(@RequestParam(value="cpage", defaultValue="1") int currentPage, String keyword) {
+		int listCount = cService.selectListCount(keyword);
+		
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 4, 5);
+		
+		
+		ArrayList<Cnsln> list = cService.selectCnslnList(pi, keyword);
+		
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("pi", pi);
+		map.put("list", list);
+		
+		return new Gson().toJson(map);
+		
+	} 
+	
+	// 상담 내역 수정 페이지 이동
+	@RequestMapping("updateForm.tcn")
+	public ModelAndView updateFormReCnsln(int cNo, ModelAndView mv) {
+		Cnsln c = cService.selectCnsln(cNo);
+		mv.addObject("c", c).setViewName("cnsln/cnslnUpdateFormView");
+		return mv;
+	}
+	
+	// 상담 내역 수정
+	@RequestMapping("update.tcn")
+	public String updateReCnsln(Cnsln c, HttpSession session) {
+		int result = cService.updateCnsln(c);
+		
+		if(result > 0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "상담 내역 수정 완료");
+			session.setAttribute("alertMsg", "상담 내역 수정을 완료하였습니다.");
+			return "redirect:detail.tcn?cNo=" + c.getCnslnNo();
+		} else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "상담 내역 수정 실패");
+			session.setAttribute("alertMsg", "상담 내역 수정을 실패하였습니다.");
+			return "redirect:detail.tcn?cNo=" + c.getCnslnNo();
+		}
+	}
+	
+	// 상담 내역 삭제
+	@RequestMapping("delete.tcn")
+	public String deleteReCnsln(int cNo, HttpSession session) {
+		int result = cService.deleteReCnsln(cNo);
+		
+		if(result > 0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "상담 내역 삭제 완료");
+			session.setAttribute("alertMsg", "상담 내역 삭제를 완료하였습니다.");
+			return "redirect:list.tcn";
+		} else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "상담 내역 삭제 실패");
+			session.setAttribute("alertMsg", "상담 내역 삭제를 실패하였습니다.");
+			return "redirect:list.tcn";
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 }

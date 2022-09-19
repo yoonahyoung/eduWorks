@@ -1,13 +1,17 @@
 package com.finalProject.eduWorks.cnsln.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.finalProject.eduWorks.cnsln.model.vo.Cnsln;
+import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.model.vo.Reply;
 import com.finalProject.eduWorks.member.model.vo.Member;
+import com.finalProject.eduWorks.promotion.model.vo.Promotion;
 
 @Repository
 public class CnslnDao {
@@ -75,6 +79,26 @@ public class CnslnDao {
 	// 댓글 삭제
 	public int deleteReply(SqlSessionTemplate sqlSession, int replyNo) {
 		return sqlSession.update("cnslnMapper.deleteReply", replyNo);
+	}
+	
+	// 상담 내역 조회
+	// 게시글 리스트 개수 조회
+	public int selectListCount(SqlSessionTemplate sqlSession, String keyword) {
+		return sqlSession.selectOne("cnslnMapper.selectListCount", keyword);
+	}
+	
+	// 게시글 리스트 조회
+	public ArrayList<Cnsln> selectCnslnList(SqlSessionTemplate sqlSession, PageInfo pi, String keyword){
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage() - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return (ArrayList) sqlSession.selectList("cnslnMapper.selectCnslnReList", keyword, rowBounds);
+	}
+	
+	// 상담 내역 삭제
+	public int deleteReCnsln(SqlSessionTemplate sqlSession, int cNo) {
+		return sqlSession.update("cnslnMapper.deleteReCnsln", cNo);
 	}
 
 }
