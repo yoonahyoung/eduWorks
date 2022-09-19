@@ -41,15 +41,20 @@ public class MailController {
 	public ModelAndView sendMailList(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv, HttpSession session) {
 		
 		String memNo = ( (Member)session.getAttribute("loginUser") ).getMemNo();
+		String memEmail = ( (Member)session.getAttribute("loginUser") ).getMemEmail();
+		
+		Mail m = new Mail();
+		m.setMemNo(memNo);
+		m.setReceiverMem(memEmail);
 		
 		// 보낸 메일 개수 조회
-		int listCount = mService.sendListCount(memNo);
+		int listCount = mService.sendListCount(m);
 		
 		// 페이징
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
 		
 		// 보낸 메일 조회
-		ArrayList<Mail> list = mService.selectSendMailList(pi, memNo);
+		ArrayList<Mail> list = mService.selectSendMailList(pi, m);
 				
 		mv.addObject("count", listCount);
 		mv.addObject("list", list);
@@ -394,6 +399,10 @@ public class MailController {
 		
 	}
 	
+	/**
+	 * 9. 내게 쓴 메일함으로 이동
+	 * @return : 내게 쓴 메일함 페이지
+	 */
 	@RequestMapping("sendMailToMeList.ma")
 	public ModelAndView sendMailToMeList(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv, HttpSession session) {
 		
@@ -404,13 +413,13 @@ public class MailController {
 		m.setMemNo(memNo);
 		m.setReceiverMem(memEmail);
 		
-		// 보낸 메일 개수 조회
+		// 내게 쓴 메일 개수 조회
 		int listCount = mService.sendToMeListCount(m);
 		
 		// 페이징
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
 		
-		// 보낸 메일 조회
+		// 내게 쓴 메일 조회
 		ArrayList<Mail> list = mService.selectSendToMeMailList(pi, m);
 		
 		System.out.println(listCount);
@@ -420,6 +429,45 @@ public class MailController {
 		mv.addObject("list", list);
 		mv.addObject("pi", pi);
 		mv.setViewName("mail/sendToMeList");
+		
+		return mv;
+	}
+	
+	
+	/**
+	 * 10. 휴지통으로 이동
+	 * @return : 휴지통 페이지
+	 */
+	@RequestMapping("deleteMailList.ma")
+	public ModelAndView deleteMailList(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv, HttpSession session) {
+		
+		String memNo = ( (Member)session.getAttribute("loginUser") ).getMemNo();
+		String memEmail = ( (Member)session.getAttribute("loginUser") ).getMemEmail();
+		
+		Mail m = new Mail();
+		m.setMemNo(memNo);
+		m.setReceiverMem(memEmail);
+		
+		// 내게 쓴 메일 개수 조회
+		int listCount = mService.deleteListCount(m);
+		
+		// 페이징
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
+		
+		// 내게 쓴 메일 조회
+		ArrayList<Mail> list = mService.selectDeleteMailList(pi, m);
+		
+		// 안읽은 메일 개수 조회
+		int unreadList = mService.deleteUnReadCount(m);
+		
+		System.out.println(listCount);
+		System.out.println(list);
+				
+		mv.addObject("count", listCount);
+		mv.addObject("list", list);
+		mv.addObject("pi", pi);
+		mv.addObject("unread", unreadList);
+		mv.setViewName("mail/deleteMailList");
 		
 		return mv;
 	}

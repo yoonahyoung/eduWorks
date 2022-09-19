@@ -24,8 +24,8 @@ public class MailDao {
 	 * @param memNo : 로그인한 회원 번호
 	 * @return : 보낸 메일 개수
 	 */
-	public int sendListCount(SqlSessionTemplate sqlSession, String memNo) {
-		return sqlSession.selectOne("mailMapper.sendListCount", memNo);
+	public int sendListCount(SqlSessionTemplate sqlSession, Mail m) {
+		return sqlSession.selectOne("mailMapper.sendListCount", m);
 	}
 	
 	/**
@@ -34,13 +34,13 @@ public class MailDao {
 	 * @param memNo : 로그인한 회원 번호
 	 * @return : 보낸 메일 목록
 	 */
-	public ArrayList<Mail> selectSendMailList(SqlSessionTemplate sqlSession, PageInfo pi, String memNo){
+	public ArrayList<Mail> selectSendMailList(SqlSessionTemplate sqlSession, PageInfo pi, Mail m){
 		
 		int limit = pi.getBoardLimit(); // 조회해야되는 게시글 갯수
 		int offset = (pi.getCurrentPage() - 1) * limit;
 		RowBounds rowBounds = new RowBounds(offset, limit);
 
-		return (ArrayList)sqlSession.selectList("mailMapper.selectSendMailList", memNo, rowBounds);
+		return (ArrayList)sqlSession.selectList("mailMapper.selectSendMailList", m, rowBounds);
 	}
 	
 	/**
@@ -150,7 +150,7 @@ public class MailDao {
 	}
 	
 	/**
-	 * 7. 중요 메일 설정
+	 * 8. 중요 메일 설정
 	 * @param ms : 중요메일 표시한 메일의 정보 
 	 * @return : 중요 메일 설정 성공 여부가 담긴 int형 변수 (성공 : 1 | 실패 : 0)
 	 */
@@ -158,10 +158,20 @@ public class MailDao {
 		return sqlSession.update("mailMapper.updateImportant", ms);
 	}
 
+	/**
+	 * 9_1. 나에게 쓴 메일 개수 조회
+	 * @param m : 로그인한 회원 사번, 이메일
+	 * @return : 나에게 쓴 메일 개수 
+	 */
 	public int sendToMeListCount(SqlSessionTemplate sqlSession, Mail m) {
 		return sqlSession.selectOne("mailMapper.sendToMeListCount", m);
 	}
 	
+	/**
+	 * 9_2. 나에게 쓴 메일 목록
+	 * @param m : 로그인한 회원 사번, 이메일
+	 * @return : 나에게 쓴 메일 목록
+	 */
 	public ArrayList<Mail> selectSendToMeMailList(SqlSessionTemplate sqlSession, PageInfo pi, Mail m){
 		
 		int limit = pi.getBoardLimit(); // 조회해야되는 게시글 갯수
@@ -169,6 +179,38 @@ public class MailDao {
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		
 		return (ArrayList)sqlSession.selectList("mailMapper.selectSendToMeMailList", m, rowBounds);
+	}
+	
+	/**
+	 * 10_1. 휴지통 메일 개수 조회
+	 * @param m : 로그인한 회원 사번, 이메일
+	 * @return : 휴지통 메일 개수
+	 */
+	public int deleteListCount(SqlSessionTemplate sqlSession, Mail m) {
+		return sqlSession.selectOne("mailMapper.deleteListCount", m);
+	}
+	
+	/**
+	 * 10_2. 휴지통 메일 중 안읽은 메일 개수 조회
+	 * @param m : 로그인한 회원 사번, 이메일
+	 * @return : 휴지통 메일 중 안읽은 메일 개수
+	 */
+	public int deleteUnReadCount(SqlSessionTemplate sqlSession, Mail m) {
+		return sqlSession.selectOne("mailMapper.deleteUnReadCount", m);
+	}
+	
+	/**
+	 * 10_3. 휴지통 메일 목록 조회
+	 * @param m : 로그인한 회원 사번, 이메일
+	 * @return : 휴지통 메일 중 안읽은 메일 목록
+	 */
+	public ArrayList<Mail> selectDeleteMailList(SqlSessionTemplate sqlSession, PageInfo pi, Mail m){
+		
+		int limit = pi.getBoardLimit(); // 조회해야되는 게시글 갯수
+		int offset = (pi.getCurrentPage() - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return (ArrayList)sqlSession.selectList("mailMapper.selectDeleteMailList", m, rowBounds);
 	}
 	
 

@@ -21,8 +21,8 @@ public interface MailService {
 	// int insertTemporaryMail(Mail m); // 임시저장 보내기
 	
 	// 3. 보낸 메일 조회
-	int sendListCount(String memNo); // 보낸 메일 개수 조회
-	ArrayList<Mail> selectSendMailList(PageInfo pi, String memNo); // 메일 목록 조회
+	int sendListCount(Mail m); // 보낸 메일 개수 조회
+	ArrayList<Mail> selectSendMailList(PageInfo pi, Mail m); // 메일 목록 조회
 	
 	// 3_2. 보낸 메일글 상세조회
 	
@@ -44,7 +44,10 @@ public interface MailService {
 	int sendToMeListCount(Mail m);
 	ArrayList<Mail> selectSendToMeMailList(PageInfo pi, Mail m);
 	
-	
+	// 8. 휴지통 메일 조회
+	int deleteListCount(Mail m);
+	int deleteUnReadCount(Mail m);
+	ArrayList<Mail> selectDeleteMailList(PageInfo pi, Mail m);
 	
 	
 	

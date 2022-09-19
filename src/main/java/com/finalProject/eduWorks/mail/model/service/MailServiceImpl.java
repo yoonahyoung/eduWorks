@@ -30,8 +30,8 @@ public class MailServiceImpl implements MailService {
 	 * @return : 보낸 메일 개수
 	 */
 	@Override
-	public int sendListCount(String memNo) {
-		return mDao.sendListCount(sqlSession, memNo);
+	public int sendListCount(Mail m) {
+		return mDao.sendListCount(sqlSession, m);
 	}
 
 	/**
@@ -41,8 +41,8 @@ public class MailServiceImpl implements MailService {
 	 * @return : 보낸 메일 목록
 	 */
 	@Override
-	public ArrayList<Mail> selectSendMailList(PageInfo pi, String memNo) {
-		return mDao.selectSendMailList(sqlSession, pi, memNo);
+	public ArrayList<Mail> selectSendMailList(PageInfo pi, Mail m) {
+		return mDao.selectSendMailList(sqlSession, pi, m);
 	}
 	
 	/**
@@ -145,7 +145,7 @@ public class MailServiceImpl implements MailService {
 	}
 
 	/**
-	 * 7. 중요 메일 설정
+	 * 8. 중요 메일 설정
 	 * @param ms : 중요메일 표시한 메일의 정보 
 	 * @return : 중요 메일 설정 성공 여부가 담긴 int형 변수 (성공 : 1 | 실패 : 0)
 	 */
@@ -153,16 +153,57 @@ public class MailServiceImpl implements MailService {
 	public int updateImportant(MailStatus ms) {
 		return mDao.updateImportant(sqlSession, ms);
 	}
-
+	
+	/**
+	 * 9_1. 나에게 쓴 메일 개수 조회
+	 * @param m : 로그인한 회원 사번, 이메일
+	 * @return : 나에게 쓴 메일 개수 
+	 */
 	@Override
 	public int sendToMeListCount(Mail m) {
 		return mDao.sendToMeListCount(sqlSession, m);
 	}
-
+	
+	/**
+	 * 9_1. 나에게 쓴 메일 개수 조회
+	 * @param m : 로그인한 회원 사번, 이메일
+	 * @return : 나에게 쓴 메일 개수 
+	 */
 	@Override
 	public ArrayList<Mail> selectSendToMeMailList(PageInfo pi, Mail m) {
 		return mDao.selectSendToMeMailList(sqlSession, pi, m);
 	}
+	
+	/**
+	 * 10_1. 휴지통 메일 개수 조회
+	 * @param m : 로그인한 회원 사번, 이메일
+	 * @return : 휴지통 메일 개수
+	 */
+	@Override
+	public int deleteListCount(Mail m) {
+		return mDao.deleteListCount(sqlSession, m);
+	}
+	
+	/**
+	 * 10_2. 휴지통 메일 중 안읽은 메일 개수 조회
+	 * @param m : 로그인한 회원 사번, 이메일
+	 * @return : 휴지통 메일 중 안읽은 메일 개수
+	 */
+	@Override
+	public int deleteUnReadCount(Mail m) {
+		return mDao.deleteUnReadCount(sqlSession, m);
+	}
+	
+	/**
+	 * 10_3. 휴지통 메일 목록 조회
+	 * @param m : 로그인한 회원 사번, 이메일
+	 * @return : 휴지통 메일 중 안읽은 메일 목록
+	 */
+	@Override
+	public ArrayList<Mail> selectDeleteMailList(PageInfo pi, Mail m) {
+		return mDao.selectDeleteMailList(sqlSession, pi, m);
+	}
+
 
 
 
