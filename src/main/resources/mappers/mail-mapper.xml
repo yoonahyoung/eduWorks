@@ -326,5 +326,53 @@
   		  , #{atChangeName}
   		  )
 	</insert>
+	
+	<!-- 나에게 보낸 메일 개수 조회 -->
+	<select id="sendToMeListCount" resultType="_int">
+		select
+		    count(*)
+		from tb_mail
+		where mem_no = #{memNo}
+		  and receiver_mem = #{receiverMem}
+	</select>
+	
+	<select id="selectSendToMeMailList" resultMap="mailResult">
+		select
+		    mail_no
+		  , mem_no
+		  , m.tag_no
+          , (
+                select
+                    mem_name
+                from tb_member
+                where mem_email = send_mail) "send_name"
+          , send_mail
+		  , receiver_mem
+		  , cc_mem
+          , to_char(send_date, 'YYYY-MM-DD(DY) HH:MI:SS')
+		  , mail_title
+		  , mail_content
+		  , mail_type
+		  , mail_folder
+		  , mail_read
+		  , mail_delete
+		  , mail_spam
+		  , mail_important
+		  , (
+		        select
+		            count(*)
+		        from tb_attachment
+		        where at_category = 2
+		          and at_ref_bno = mail_no
+		  
+		     ) "at_count"
+		from tb_mail m
+		join tb_mail_status ms using (mail_no)
+		where mail_folder = 1
+          and mem_no = #{memNo}
+		  and receiver_mem = #{receiverMem}
+        order 
+           by mail_type, mail_no
+	</select>
 
 </mapper>

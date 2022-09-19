@@ -75,27 +75,6 @@ public class MailServiceImpl implements MailService {
 		return mDao.receiveUnReadCount(sqlSession, memEmail);
 	}
 	
-	@Override
-	public ArrayList<Member> selectPublicAddress() {
-		return mDao.selectPublicAddress(sqlSession);
-	}
-
-	@Override
-	public int selectIndivBasicNum(String memNo) {
-		return mDao.selectIndivBasicNum(sqlSession, memNo);
-	}
-
-	@Override
-	public ArrayList<Address> selectIndivAddress(Address a) {
-		return mDao.selectIndivAddress(sqlSession, a);
-	}
-
-	@Override
-	public ArrayList<AddressOut> selectIndivCategory(Address a) {
-		return mDao.selectIndivCategory(sqlSession, a);
-	}
-
-	
 	/**
 	 * 6_1. 메일 전송 (TB_MAIL)
 	 * @param m : 보낸 메일 정보
@@ -125,6 +104,45 @@ public class MailServiceImpl implements MailService {
 	public int insertAttachment(ArrayList<Attachment> atList) {
 		return mDao.insertAttachment(sqlSession, atList);
 	}
+	
+	/**
+	 * 6_4. 주소록에서 찾기 (전사주소록 연락처 목록)
+	 * @return : 전사 주소록 목록
+	 */
+	@Override
+	public ArrayList<Member> selectPublicAddress() {
+		return mDao.selectPublicAddress(sqlSession);
+	}
+
+	/**
+	 * 6_5. 주소록에서 찾기 (개인주소록-기본)
+	 * @param memNo : 로그인한 회원 사번
+	 * @return : 개인주소록 기본 그룹 번호
+	 */
+	@Override
+	public int selectIndivBasicNum(String memNo) {
+		return mDao.selectIndivBasicNum(sqlSession, memNo);
+	}
+
+	/**
+	 * 6_6. 주소록에서 찾기 (개인주소록 연락처 목록)
+	 * @param a : 로그인한 회원 사번, 개인주소록 그룹 번호
+	 * @return : 개인 주소록 연락처 목록
+	 */
+	@Override
+	public ArrayList<Address> selectIndivAddress(Address a) {
+		return mDao.selectIndivAddress(sqlSession, a);
+	}
+
+	/**
+	 * 6_7. 주소록에서 찾기 (개인주소록 연락처 그룹 목록)
+	 * @param a : 로그인한 회원 사번, 개인주소록 그룹 번호
+	 * @return : 개인 주소록 그룹 목록
+	 */
+	@Override
+	public ArrayList<AddressOut> selectIndivCategory(Address a) {
+		return mDao.selectIndivCategory(sqlSession, a);
+	}
 
 	/**
 	 * 7. 중요 메일 설정
@@ -134,6 +152,16 @@ public class MailServiceImpl implements MailService {
 	@Override
 	public int updateImportant(MailStatus ms) {
 		return mDao.updateImportant(sqlSession, ms);
+	}
+
+	@Override
+	public int sendToMeListCount(Mail m) {
+		return mDao.sendToMeListCount(sqlSession, m);
+	}
+
+	@Override
+	public ArrayList<Mail> selectSendToMeMailList(PageInfo pi, Mail m) {
+		return mDao.selectSendToMeMailList(sqlSession, pi, m);
 	}
 
 

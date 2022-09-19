@@ -158,5 +158,18 @@ public class MailDao {
 		return sqlSession.update("mailMapper.updateImportant", ms);
 	}
 
+	public int sendToMeListCount(SqlSessionTemplate sqlSession, Mail m) {
+		return sqlSession.selectOne("mailMapper.sendToMeListCount", m);
+	}
+	
+	public ArrayList<Mail> selectSendToMeMailList(SqlSessionTemplate sqlSession, PageInfo pi, Mail m){
+		
+		int limit = pi.getBoardLimit(); // 조회해야되는 게시글 갯수
+		int offset = (pi.getCurrentPage() - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return (ArrayList)sqlSession.selectList("mailMapper.selectSendToMeMailList", m, rowBounds);
+	}
+	
 
 }

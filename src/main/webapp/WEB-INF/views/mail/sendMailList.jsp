@@ -175,7 +175,7 @@
 
 			}
 			
-			// '메일 조회'시 실행하는 함수
+			// '메일 상세 조회'시 실행하는 함수
 			$(function(){
 				$(".mail-title").click(function(){
 					

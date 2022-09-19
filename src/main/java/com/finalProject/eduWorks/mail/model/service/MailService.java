@@ -40,7 +40,9 @@ public interface MailService {
 	ArrayList<Address> selectIndivAddress(Address a); // 해당 개인주소록에 등록된 연락처 목록 조회
 	ArrayList<AddressOut> selectIndivCategory(Address a); // 개인 주소록 카테고리 목록 조회
 	
-	
+	// 7. 나에게 보낸 메일 조회
+	int sendToMeListCount(Mail m);
+	ArrayList<Mail> selectSendToMeMailList(PageInfo pi, Mail m);
 	
 	
 	

@@ -20,10 +20,11 @@
 
 	<!-- CONTENT영역 여기 작성해 주세요!! -->
 	<div class="main-content">
-		<form method="post" action="insert.mail" enctype="multipart/form-data">
+		<form method="post" action="insertMailToMe.ma" enctype="multipart/form-data">
+		
 			<div class="second-title">
 				<div style="font-weight: bold;">나에게 메일 작성</div>
-				<button type="button" class="reply-btn">
+				<button type="submit" class="reply-btn">
 					<i class="fas fa-location-arrow"></i>&nbsp;&nbsp;전송
 				</button>
 				<button type="button" class="sub-btn" onclick="preView();">
@@ -44,30 +45,32 @@
 
 				<table>
 					<tr>
-						<th><span>제목</span> <span class="send-check"> <input
-								type="checkbox" name="mailTitle"><label for="mailTitle">&nbsp;&nbsp;중요!</label>
-						</span></th>
-						<td colspan="2"><input type="text" name="title"
-							class="mail-Metitle" id="title"></td>
+						<th>
+							<span>제목</span> 
+							<span class="send-check"> 
+							<input type="checkbox" name="mailType" id="mailType" value="1">
+							<label for="mailType">&nbsp;&nbsp;중요!</label>
+							</span>
+						</th>
+						<td colspan="2">
+							<input type="text" name="mailTitle" class="input-mail" id="title">
+						</td>
 					</tr>
 					<tr>
 						<th>첨부파일</th>
 						<td colspan="2">
 							<button id="btn-upload" type="button">파일 추가</button> 
-							<input type="file" name="upfile" class="input-mail" id="upfile"
-							onchange="addFile();" multiple>
+							<input type="file" name="upfile" class="input-mail" id="upfile" onchange="addFile();" multiple>
 						</td>
 					</tr>
-
 				</table>
-
 
 				<div class="dropBox file-list">
 					<span class="fileMsg">※ 첨부파일은 최대 5개까지 가능합니다.</span>
 				</div>
 
 				<div>
-					<textarea id="summernote" name="contents"></textarea>
+					<textarea id="summernote" name="mailContent"></textarea>
 				</div>
 
 			</div>

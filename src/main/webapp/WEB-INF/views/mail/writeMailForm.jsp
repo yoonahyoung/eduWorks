@@ -102,29 +102,34 @@
 					<tr>
 						<th>받는사람</th>
 						<td style="width: 75%;"><input type="text" name="receiverMem"
-							class="input-mail" id="receive"></td> 
-						<td><button type="button" class="address-btn" onclick="publicAdd();"
-								data-toggle="modal" data-target="#findAdd">주소록에서 찾기</button></td>
+							class="input-mail" id="receive"></td>
+						<td><button type="button" class="address-btn"
+								onclick="publicAdd();" data-toggle="modal"
+								data-target="#findAdd">주소록에서 찾기
+							</button>
+						</td>
 					</tr>
 					<tr>
 						<th>참조</th>
-						<td colspan="2"><input type="text" name="ccMem" id="cc"
-							class="input-mail" id="cc"></td>
+						<td colspan="2">
+							<input type="text" name="ccMem" id="cc" class="input-mail" id="cc">
+						</td>
 					</tr>
 					<tr>
-						<th><span>제목</span> <span class="send-check"> <input
-								type="checkbox" name="mailType" id="mailType" value="1"><label
-								for="mailType">&nbsp;&nbsp;중요!</label>
-						</span></th>
-						<td colspan="2"><input type="text" name="mailTitle"
-							class="input-mail" id="title"></td>
+						<th><span>제목</span> <span class="send-check"> 
+							<input type="checkbox" name="mailType" id="mailType" value="1">
+							<label for="mailType">&nbsp;&nbsp;중요!</label>
+							</span>
+						</th>
+						<td colspan="2">
+							<input type="text" name="mailTitle" class="input-mail" id="title">
+						</td>
 					</tr>
 					<tr>
 						<th>첨부파일</th>
 						<td colspan="2">
 							<button id="btn-upload" type="button">파일 추가</button> 
-							<input type="file" name="upfile" class="input-mail" id="upfile"
-							onchange="addFile();" multiple>
+							<input type="file" name="upfile" class="input-mail" id="upfile" onchange="addFile();" multiple>
 						</td>
 					</tr>
 
