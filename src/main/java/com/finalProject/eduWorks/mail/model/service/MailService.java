@@ -2,10 +2,13 @@ package com.finalProject.eduWorks.mail.model.service;
 
 import java.util.ArrayList;
 
+import com.finalProject.eduWorks.addressBook.model.vo.Address;
+import com.finalProject.eduWorks.addressBook.model.vo.AddressOut;
 import com.finalProject.eduWorks.common.model.vo.Attachment;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.mail.model.vo.Mail;
 import com.finalProject.eduWorks.mail.model.vo.MailStatus;
+import com.finalProject.eduWorks.member.model.vo.Member;
 
 public interface MailService {
 
@@ -30,6 +33,13 @@ public interface MailService {
 	
 	// 5. 중요메일 설정
 	int updateImportant(MailStatus ms);
+	
+	// 6. 메일 작성시 '주소록에서 찾기'
+	ArrayList<Member> selectPublicAddress(); // 전사 주소록
+	int selectIndivBasicNum(String memNo); // 개인 주소록 기본번호 찾기
+	ArrayList<Address> selectIndivAddress(Address a); // 해당 개인주소록에 등록된 연락처 목록 조회
+	ArrayList<AddressOut> selectIndivCategory(Address a); // 개인 주소록 카테고리 목록 조회
+	
 	
 	
 	

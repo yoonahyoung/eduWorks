@@ -131,7 +131,11 @@
 									<td class="mail-person" width="15%"><div class="person">${m.sendName }</div></td>
 								</c:otherwise>
 							</c:choose>
-							<td class="mail-title">${m.mailTitle }</td>
+							<td class="mail-title">
+								<c:if test="${m.mailType == 1}"><span style="color:red;">[중요!]</span></c:if>
+								${m.mailTitle }
+								<input type="hidden" name="mailNo" value="${m.mailNo }">
+							</td>
 							<td class="mail-sendtime">${m.sendDate }</td>
 						</tr>
 						<!-- 반복문 끝 -->

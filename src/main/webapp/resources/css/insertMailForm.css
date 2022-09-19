@@ -460,7 +460,7 @@ img{
 	text-align:left;
 	font-size: 16px;
 }
-.send-title>span, .file-name{
+.send-title>span, .file-name, .receive-person, .cc-person, .title{
 	margin-left:10px;
 }
 

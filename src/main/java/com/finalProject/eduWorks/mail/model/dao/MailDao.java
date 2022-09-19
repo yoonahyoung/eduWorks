@@ -1,16 +1,18 @@
 package com.finalProject.eduWorks.mail.model.dao;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.finalProject.eduWorks.addressBook.model.vo.Address;
+import com.finalProject.eduWorks.addressBook.model.vo.AddressOut;
 import com.finalProject.eduWorks.common.model.vo.Attachment;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.mail.model.vo.Mail;
 import com.finalProject.eduWorks.mail.model.vo.MailStatus;
+import com.finalProject.eduWorks.member.model.vo.Member;
 
 @Repository
 public class MailDao {
@@ -73,6 +75,7 @@ public class MailDao {
 		return sqlSession.selectOne("mailMapper.receiveUnReadCount", memEmail);
 	}
 	
+
 	/**
 	 * 6_1. 메일 전송 (TB_MAIL)
 	 * @param m : 보낸 메일 정보
@@ -110,6 +113,41 @@ public class MailDao {
 		}
 		return result;
 	}	
+	
+	/**
+	 * 6_4. 주소록에서 찾기 (전사주소록 연락처 목록)
+	 * @return : 전사 주소록 목록
+	 */
+	public ArrayList<Member> selectPublicAddress(SqlSessionTemplate sqlSession){
+		return (ArrayList)sqlSession.selectList("mailMapper.selectPublicAddress");
+	}
+	
+	/**
+	 * 6_5. 주소록에서 찾기 (개인주소록-기본)
+	 * @param memNo : 로그인한 회원 사번
+	 * @return : 개인주소록 기본 그룹 번호
+	 */
+	public int selectIndivBasicNum(SqlSessionTemplate sqlSession, String memNo) {
+		return sqlSession.selectOne("mailMapper.selectIndivBasicNum", memNo);
+	}
+	
+	/**
+	 * 6_6. 주소록에서 찾기 (개인주소록 연락처 목록)
+	 * @param a : 로그인한 회원 사번, 개인주소록 그룹 번호
+	 * @return : 개인 주소록 연락처 목록
+	 */
+	public ArrayList<Address> selectIndivAddress(SqlSessionTemplate sqlSession, Address a){
+		return (ArrayList)sqlSession.selectList("mailMapper.selectIndivAddress", a);
+	}
+	
+	/**
+	 * 6_7. 주소록에서 찾기 (개인주소록 연락처 그룹 목록)
+	 * @param a : 로그인한 회원 사번, 개인주소록 그룹 번호
+	 * @return : 개인 주소록 그룹 목록
+	 */
+	public ArrayList<AddressOut> selectIndivCategory(SqlSessionTemplate sqlSession, Address a){
+		return (ArrayList)sqlSession.selectList("mailMapper.selectIndivCategory", a);
+	}
 	
 	/**
 	 * 7. 중요 메일 설정

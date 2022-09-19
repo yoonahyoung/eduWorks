@@ -1,6 +1,8 @@
 package com.finalProject.eduWorks.mail.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.finalProject.eduWorks.addressBook.model.vo.Address;
+import com.finalProject.eduWorks.addressBook.model.vo.AddressOut;
 import com.finalProject.eduWorks.common.model.vo.Attachment;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.template.FileUpload;
@@ -95,7 +99,7 @@ public class MailController {
 	public String writeMailForm(Model model) {
 		return "mail/writeMailForm";
 	}
-	
+
 	/**
 	 * 4. 메일 작성(나에게) 페이지로 이동
 	 * @return : 메일 작성 페이지
@@ -115,7 +119,7 @@ public class MailController {
 	}
 	
 	/**
-	 * 6. 메일 전송
+	 * 6_1. 메일 전송
 	 * @param m : 전송할 메일 정보
 	 * @param upfile : 전송할 파일 정보
 	 * @return : 보낸메일함 페이지
@@ -225,6 +229,64 @@ public class MailController {
 		
 	}
 	
+	/**
+	 * 6_2. 주소록에서 찾기(전사 주소록)
+	 * @return : 전사 주소록 목록
+	 */
+	@ResponseBody
+	@RequestMapping(value="publicMailAddress.ad", produces="application/json; charset=UTF-8")
+	public String ajaxSelectPublicAddresss() {
+		ArrayList<Member> pAdd = mService.selectPublicAddress(); 
+		return new Gson().toJson(pAdd);
+	}
+
+	/**
+	 * 6_3. 주소록에서 찾기(개인 주소록-기본)
+	 * @param memNo : 로그인한 회원 사번
+	 * @return : 개인 주소록 및 그룹 목록
+	 */
+	@ResponseBody
+	@RequestMapping(value="indivMailAddress.ad", produces="application/json; charset=UTF-8")
+	public Map<String, Object> ajaxSelectIndivAddress(String memNo) {
+
+		String num =  String.valueOf(mService.selectIndivBasicNum(memNo));
+		
+		// 개인 주소록 기본 연락처 목록 조회
+		Address a = new Address();
+		a.setMemNo(memNo);
+		a.setAddNo(num);
+		
+		ArrayList<Address> iAdd = mService.selectIndivAddress(a);
+		ArrayList<AddressOut> category = mService.selectIndivCategory(a);
+		
+		Map<String, Object> result = new HashMap<>();
+		result.put("iAdd", iAdd);
+		result.put("c", category);
+		
+		return result;
+		
+	}
+	
+	/**
+	 * 6_4. 주소록에서 찾기(개인 주소록-그룹)
+	 * @param memNo : 로그인한 회원 사번
+	 * @return : 개인 주소록 및 그룹 목록
+	 */
+	@ResponseBody
+	@RequestMapping(value="indivMailAddressGroup.ad", produces="application/json; charset=UTF-8")
+	public Map<String, Object> ajaxSelectIndivAddress(Address a) {
+		
+		ArrayList<Address> iAdd = mService.selectIndivAddress(a);
+		ArrayList<AddressOut> category = mService.selectIndivCategory(a);
+		
+		Map<String, Object> result = new HashMap<>();
+		result.put("iAdd", iAdd);
+		result.put("c", category);
+		
+		return result;
+		
+	}
+		
 	/**
 	 * 7. 중요 메일 설정
 	 * @param ms : 중요메일 표시한 메일의 정보 
