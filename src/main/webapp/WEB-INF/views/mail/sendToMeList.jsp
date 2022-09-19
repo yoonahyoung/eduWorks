@@ -222,6 +222,9 @@
 
 	</div>
 	<!-- /.container-fluid -->
+	
+	<jsp:include page="../common/footer.jsp" />
+
 
 </body>
 </html>

@@ -79,13 +79,11 @@
 							<c:choose>
 								<c:when test="${m.mailStatus.mailImportant == 'N' }">
 									<!-- 찜하기 전 -->
-									<i class="icon far fa-star"
-										onclick="importantBtn(${m.mailNo}, '${m.mailStatus.mailImportant }');"></i>
+									<i class="icon far fa-star"></i>
 								</c:when>
 								<c:otherwise>
 									<!-- 찜하기 후 -->
-									<i class="icon fas fa-star" id="import"
-										onclick="importantBtn(${m.mailNo}, '${m.mailStatus.mailImportant }');"></i>
+									<i class="icon fas fa-star" id="import"></i>
 								</c:otherwise>
 							</c:choose>
 						</td>
@@ -146,31 +144,7 @@
 	              
 	           });
 	        }
-					
-			// '중요메일' 설정시 실행하는 함수
-			function importantBtn(mailNo, important){
 
-				$.ajax({
-					url : "updateImportant.ma",
-					data : {
-						mailNo : mailNo
-					  , sendMail : '${loginUser.memEmail}'
-					  , mailFolder : 1
-					  , mailImportant : important
-					},
-					success : function(result){
-						console.log(result);
-						if(result == 'success'){
-							location.reload();
-						}
-					},
-					error : function(){
-						console.log("좋아요 실패");
-					}
-				})
-
-			}
-			
 			// '메일 상세 조회'시 실행하는 함수
 			$(function(){
 				$(".mail-title").click(function(){
@@ -209,7 +183,7 @@
 								<c:otherwise>
 									<!-- 현재 페이지가 1이 아닌 경우 -->
 									<li class="page-item"><a class="page-link"
-										href="sendMailList.ma?page=${pi.currentPage - 1 }"
+										href="deleteMailList.ma?page=${pi.currentPage - 1 }"
 										aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 									</a></li>
 								</c:otherwise>
@@ -217,7 +191,7 @@
 
 							<c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage }">
 								<li class="page-item"><a class="page-link"
-									href="sendMailList.ma?page=${p }">${p }</a></li>
+									href="deleteMailList.ma?page=${p }">${p }</a></li>
 							</c:forEach>
 
 							<c:choose>
@@ -230,7 +204,7 @@
 								<c:otherwise>
 									<!-- 현재 페이지가 마지막이 아닌 경우 -->
 									<li class="page-item"><a class="page-link"
-										href="sendMailList.ma?page=${pi.currentPage + 1}"
+										href="deleteMailList.ma?page=${pi.currentPage + 1}"
 										aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 									</a></li>
 								</c:otherwise>
@@ -245,5 +219,8 @@
 
 	</div>
 	<!-- /.container-fluid -->
+	
+	<jsp:include page="../common/footer.jsp" />
+
 </body>
 </html>
