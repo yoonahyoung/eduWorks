@@ -52,7 +52,7 @@
             </div>
             
             <div class="main_width">
-                <table class="board-content table" align="center">
+                <table id="appList" class="board-content table" align="center">
                     <thead>
                         <tr class="table_thead_border">
                             <th width="5%">번호</th>
@@ -89,6 +89,15 @@
                 </table>
                 
                 <br><br>
+                
+                <script>
+			    	$(function(){
+			    		$("#appList>tbody>tr").click(function(){
+			    			location.href = 'appDetail.cl?no=' + $(this).children(".no").text();
+			    		})
+			    	})
+			    </script>
+                
                 
                 
                 
