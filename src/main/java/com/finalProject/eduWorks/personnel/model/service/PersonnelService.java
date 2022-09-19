@@ -8,8 +8,10 @@ import com.finalProject.eduWorks.mail.model.vo.MailStatus;
 import com.finalProject.eduWorks.member.model.vo.Department;
 import com.finalProject.eduWorks.member.model.vo.Job;
 import com.finalProject.eduWorks.member.model.vo.Member;
+import com.finalProject.eduWorks.personnel.model.vo.Adjust;
 import com.finalProject.eduWorks.personnel.model.vo.Attendance;
 import com.finalProject.eduWorks.personnel.model.vo.Ojt;
+import com.finalProject.eduWorks.personnel.model.vo.Restdate;
 import com.finalProject.eduWorks.personnel.model.vo.SearchAt;
 
 public interface PersonnelService {
@@ -41,6 +43,7 @@ public interface PersonnelService {
 	
 	//멤버정보 업데이트
 	int updateMember(Member m);
+	int updateMyInfo(Member m);
 	
 	//멤버추가하기
 	int addMember(Member m);
@@ -73,6 +76,36 @@ public interface PersonnelService {
 	int sendCancelOjtMail(ArrayList<String> list,HashMap m);
 	
 	//근태조회 상세검색
-	int AtListCount(SearchAt s);
+	ArrayList<Restdate> searchRestdate(SearchAt s);
+	int atListCount(SearchAt s);
 	ArrayList<Attendance> searchAtList(PageInfo pi,SearchAt s);
+	
+	//근태수정하기
+	int insertAtDate(Attendance at);
+	int updateAtData(Attendance at);
+	int deleteAtData(Attendance at);
+	
+	//조정신청내역페이지
+	int objectionManageCount();
+	ArrayList<Adjust> objectionManageList(PageInfo pi);
+	
+	//조정신청내역 체크박스처리
+	int searchAdjCount(SearchAt at);
+	ArrayList<Adjust> searchAdjList(PageInfo pi,SearchAt at);
+	
+	//조정신청처리하기
+	int approveAdj(Adjust ad);
+	int refuseAdj(Adjust ad);
+	
+	//연차개별지급관련 회원조회
+	ArrayList<Ojt> selectAllMem();
+	ArrayList<Ojt> searchSelectMem(SearchAt at);
+	
+	//연차지급및회수
+	int addHoliday(HashMap m);
+	int deleteHoliday(HashMap m);
+	
+	//내 근무내역관리
+	ArrayList<Attendance> searchMyAt(SearchAt at);
+	int atListCount2(SearchAt s);
 }

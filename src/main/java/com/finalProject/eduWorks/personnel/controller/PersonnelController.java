@@ -1,7 +1,11 @@
 package com.finalProject.eduWorks.personnel.controller;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
@@ -9,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,16 +23,24 @@ import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.template.FileUpload;
 import com.finalProject.eduWorks.common.template.Pagination;
 import com.finalProject.eduWorks.mail.model.vo.MailStatus;
+import com.finalProject.eduWorks.member.model.service.MemberService;
 import com.finalProject.eduWorks.member.model.vo.Department;
 import com.finalProject.eduWorks.member.model.vo.Job;
 import com.finalProject.eduWorks.member.model.vo.Member;
 import com.finalProject.eduWorks.personnel.model.service.PersonnelService;
+import com.finalProject.eduWorks.personnel.model.vo.Adjust;
 import com.finalProject.eduWorks.personnel.model.vo.Attendance;
 import com.finalProject.eduWorks.personnel.model.vo.Ojt;
+import com.finalProject.eduWorks.personnel.model.vo.PersonnelCount;
+import com.finalProject.eduWorks.personnel.model.vo.Restdate;
 import com.finalProject.eduWorks.personnel.model.vo.SearchAt;
+import com.google.gson.Gson;
 
 @Controller
 public class PersonnelController {
+	
+	@Autowired
+	private MemberService mService;
 	
 	@Autowired
 	private PersonnelService pService;
@@ -157,6 +170,20 @@ public class PersonnelController {
 		}else {
 			session.setAttribute("alertMsg", "정보수정에 실패했습니다.");
 			return "redirect:detail.te?no="+m.getMemNo();
+		}
+		
+	}
+	
+	@RequestMapping("personnelUpdate.em")
+	public String updateMember2(Member m,HttpSession session) {
+		int result = pService.updateMember(m);
+		System.out.println(result);
+		if(result>0) {
+			session.setAttribute("alertMsg", "정보수정에 성공했습니다.");
+			return "redirect:list.em";
+		}else {
+			session.setAttribute("alertMsg", "정보수정에 실패했습니다.");
+			return "redirect:detail.em?no="+m.getMemNo();
 		}
 		
 	}
@@ -400,21 +427,437 @@ public class PersonnelController {
 	@RequestMapping("search.at")
 	public String searchAttendance(SearchAt s,@RequestParam(value="p",defaultValue = "1")int currentPage,Model model) {
 		
-		//int listCount = 
-		//ArrayList<Attendance> list = 
+		ArrayList<Restdate> restList = pService.searchRestdate(s);
+		System.out.println(restList);
+		if(!restList.isEmpty()) {
+			s.setList(restList);
+		}
 		
+		int listCount = pService.atListCount(s);
+		
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 5, 10);
+		
+		ArrayList<Attendance> list = pService.searchAtList(pi, s);
+		
+		SearchAt count = new SearchAt();
+		count.setDeptCode(s.getDeptCode());
+		count.setJobCode(s.getJobCode());
+		count.setKeyword(s.getKeyword());
+		count.setStartDate(s.getStartDate());
+		count.setEndDate(s.getEndDate());
+		count.setList(s.getList());
+		
+		count.setCheck1(true);
+		count.setCheck2(false);
+		count.setCheck3(false);
+		int normal = pService.atListCount(count);
+		
+		count.setCheck1(false);
+		count.setCheck2(true);
+		count.setCheck3(false);
+		int leave = pService.atListCount(count);
+		
+		count.setCheck1(false);
+		count.setCheck2(false);
+		count.setCheck3(true);
+		int absent = pService.atListCount(count);
+		
+		ArrayList<Department> dlist = pService.selectDept();
+		ArrayList<Job> jlist = pService.selectJob();
+		model.addAttribute("list", list);
+		model.addAttribute("condition", s);
+		model.addAttribute("searchck", 1);
+		model.addAttribute("normal", normal);
+		model.addAttribute("leave", leave);
+		model.addAttribute("absent", absent);
+		model.addAttribute("jlist", jlist);
+		model.addAttribute("dlist", dlist);
+		model.addAttribute("pi", pi);
+		return "personnel/selectAttendance"; 
+	}
+	
+	@RequestMapping("changeData.At")
+	public String changeAtData(Attendance at, String testCheck, HttpSession session) {
+		System.out.println(at);
+		System.out.println(testCheck);
+		if(at.getAttStatus().equals("D") || at.getAttStatus().equals("E") || at.getAttStatus().equals("L") || at.getAttStatus().equals("F")) {
+			at.setAttHstatus("N");
+		}else if(at.getAttStatus().equals("H0")) {
+			at.setAttStatus("H");
+			at.setAttHstatus("H0");
+			at.setAttWorktime("0");
+		}else if(at.getAttStatus().equals("H1")) {
+			at.setAttStatus("H");
+			at.setAttHstatus("H1");
+		}else {
+			at.setAttStatus("H");
+			at.setAttHstatus("H2");
+		}
+		System.out.println(at);
+		int result;
+		if(testCheck.equals("무단결근")) {
+			if(!at.getAttStatus().equals("F")) {
+				// insertAtData
+				result = pService.insertAtDate(at);
+			}else {
+				// 무단결근에서 바꿀 근태상태를 다시정해주세요
+				result = 100;
+			}
+		}else {
+			if(at.getAttStatus().equals("F")) {
+				// deleteAtData
+				result = pService.deleteAtData(at);
+			}else {
+				// updateAtData
+				result = pService.updateAtData(at);
+			}
+		}
+		if(result>0 && result<99) {
+			session.setAttribute("alertMsg", "근태정보 수정성공");
+			return "redirect:select.at";
+		}else if(result==100) {
+			session.setAttribute("alertMsg", "무단결근에서 바꿀 근태상태를 다시정해주세요");
+			return "redirect:select.at";
+		}else {
+			session.setAttribute("alertMsg", "근태정보 수정실패");
+			return "redirect:select.at";
+		}
+		
+	}
+	
+	@RequestMapping("objectionManage.ad")
+	public String objectionManagePage(@RequestParam(value="p",defaultValue = "1")int currentPage, Model model) {
+		int listCount = pService.objectionManageCount();
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 5, 5);
+		ArrayList<Adjust> list = pService.objectionManageList(pi);
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		return "personnel/objectionManage";
+	}
+	
+	@RequestMapping("search.ad")
+	public String searchAdj(@RequestParam(value="p",defaultValue = "1")int currentPage,SearchAt at, Model model) {
+		int listCount = pService.searchAdjCount(at);
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 5, 5);
+		ArrayList<Adjust> list = pService.searchAdjList(pi,at);
+		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
+		model.addAttribute("at", at);
+		model.addAttribute("searchck", "1");
+		return "personnel/objectionManage";
+	}
+	
+	@RequestMapping("approve.ad")
+	public String approveAdj(Adjust ad,HttpSession session) {
+		int result = pService.approveAdj(ad);
+		if(result>0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "승인처리성공");
+			session.setAttribute("alertMsg", "승인 및 정보수정에 성공했습니다.");
+		}else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "승인처리실패");
+			session.setAttribute("alertMsg", "승인 및 정보수정에 실패했습니다.");
+		}
+		return "redirect:objectionManage.ad";
+	}
+	
+	@RequestMapping("refuse.ad")
+	public String refuseAdj(Adjust ad,HttpSession session) {
+		int result = pService.refuseAdj(ad);
+		if(result>0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "승인거절완료");
+			session.setAttribute("alertMsg", "승인거절처리에 성공했습니다.");
+		}else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "승인거절처리실패");
+			session.setAttribute("alertMsg", "승인거절처리에 실패했습니다.");
+		}
+		return "redirect:objectionManage.ad";
+	}
+	
+	@RequestMapping("addHoliday.ho")
+	public String HolidayAddPage(Model model) {
+		ArrayList<Department> dlist = pService.selectDept();
+		ArrayList<Job> jlist = pService.selectJob();
+		ArrayList<Ojt> list = pService.selectAllMem();
+		model.addAttribute("dlist", dlist);
+		model.addAttribute("jlist", jlist);
+		model.addAttribute("list", list);
+		return "personnel/addHoliday";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="searchSelectMem.ho",produces="application/json; charset=utf-8")
+	public String searchSelectMem(SearchAt at) {
+		ArrayList<Ojt> list = pService.searchSelectMem(at);
+		return new Gson().toJson(list);
+	}
+	
+	@RequestMapping("add.ho")
+	public String addHoliday(String[] memNos,String dateCount,HttpSession session) {
+		HashMap m = new HashMap();
+		m.put("memNos", memNos);
+		m.put("dateCount", dateCount);
+		int result = pService.addHoliday(m);
+		if(result>0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "연차전달성공");
+			session.setAttribute("alertMsg", "연차전달에 성공했습니다.");
+		}else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "연차전달실패");
+			session.setAttribute("alertMsg", "연차전달실패");
+		}
+		return "redirect:addHoliday.ho";
+	}
+	
+	@RequestMapping("delete.ho")
+	public String deleteHoliday(String[] memNos,String dateCount,HttpSession session) {
+		Double a = Double.parseDouble(dateCount)*-1;
+		String dateCo = ""+a; 
+		HashMap m = new HashMap();
+		m.put("memNos", memNos);
+		m.put("dateCount", dateCo);
+		int result = pService.deleteHoliday(m);
+		if(result>0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "연차회수성공");
+			session.setAttribute("alertMsg", "연차회수에 성공했습니다.");
+		}else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "연차회수실패");
+			session.setAttribute("alertMsg", "연차회수실패");
+		}
+		return "redirect:addHoliday.ho";
+	}
+	
+	@RequestMapping("info.me")
+	public String myInfo(HttpSession session,Model model) {
+		Member m = (Member) session.getAttribute("loginUser");
 		ArrayList<Department> dlist = pService.selectDept();
 		ArrayList<Job> jlist = pService.selectJob();
 		model.addAttribute("jlist", jlist);
 		model.addAttribute("dlist", dlist);
-		return "personnel/selectAttendance"; 
+		model.addAttribute("m", m);
+		return "personnel/myInfo";
 	}
 	
+	@RequestMapping("updateMyInfo.me")
+	public String updateMyInfo(Member m,HttpSession session) {
+		int result = pService.updateMyInfo(m);
+		if(result>0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "정보수정성공");
+			session.setAttribute("alertMsg", "내정보 수정에 성공했습니다.");
+			
+			Member loginUser = mService.loginMember(m);
+			switch(loginUser.getJobCode()){
+				case "J0": loginUser.setJobName("강사"); break;
+				case "J1": loginUser.setJobName("사원"); break;
+				case "J2": loginUser.setJobName("대리"); break;
+				case "J3": loginUser.setJobName("팀장"); break;
+				case "J4": loginUser.setJobName("대표"); break;
+			}
+			session.setAttribute("loginUser", loginUser);
+			
+		}else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "정보수정실패");
+			session.setAttribute("alertMsg", "내정보 수정 실패");
+		}
+		return "redirect:info.me";
+	}
 	
-	
-	@RequestMapping("test.at")
-	public String test() {
+	@RequestMapping("AttManage.me")
+	public String test(HttpSession session) {
+		 
 		return "personnel/commutingManagement";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "count.cl",produces="application/json; charset=utf-8")
+	public String countCal(String start,String end,HttpSession session) {
+		Member member = (Member) session.getAttribute("loginUser");
+		String memNo = member.getMemNo();
+		String memEnrollDate = member.getMemEnrollDate();
+		
+		LocalDate now = LocalDate.now();
+		String sysdate = now+"";
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date1 = null;
+        Date date2 = null;
+        Date date3 = null;
+        Date date4 = null;
+        String StartDate = null;
+        String endDate = null;
+        int result = 0;
+        
+        try {
+            date1 = format.parse(start);
+            date2 = format.parse(sysdate);
+            date3 = format.parse(end);
+            date4 = format.parse(memEnrollDate);
+            
+            long calDate = date1.getTime() - date2.getTime();
+            if(calDate>0) {
+            	result = 1;
+            }else {
+            	calDate = date1.getTime() - date4.getTime();
+            	if(calDate>0) {
+            		StartDate = start;
+            	}else {
+            		StartDate = memEnrollDate;
+            	}
+            }
+            calDate = date3.getTime() - date2.getTime();
+            if(calDate>0) {
+            	endDate = sysdate;
+            }else {
+            	endDate = end;
+            }
+        }catch (ParseException e) {
+            e.printStackTrace();
+        }
+        
+        if(result>0) {
+        	PersonnelCount pc = new PersonnelCount("0","0","0");
+        	return new Gson().toJson(pc);
+        }else {
+		    SearchAt s = new SearchAt();
+			s.setUserNo(memNo);
+			s.setStartDate(StartDate);
+			s.setEndDate(endDate);
+			ArrayList<Restdate> restList = pService.searchRestdate(s);
+			if(!restList.isEmpty()) {
+				s.setList(restList);
+			}
+			
+			s.setCheck1(true);
+			s.setCheck2(false);
+			s.setCheck3(false);
+			int normal = pService.atListCount2(s);
+			
+			s.setCheck1(false);
+			s.setCheck2(true);
+			s.setCheck3(false);
+			int leave = pService.atListCount2(s);
+			
+			s.setCheck1(false);
+			s.setCheck2(false);
+			s.setCheck3(true);
+			int absent = pService.atListCount2(s);
+			PersonnelCount pc = new PersonnelCount();
+			pc.setNormal(normal+"");
+			pc.setLeave(leave+"");
+			pc.setAbsent(absent+"");
+			return new Gson().toJson(pc);
+        }
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "test.cl",produces="application/json; charset=utf-8")
+	public String testCal(String start,String end,HttpSession session) {
+		Member member = (Member) session.getAttribute("loginUser");
+		String memNo = member.getMemNo();
+		String memEnrollDate = member.getMemEnrollDate();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date1 = null;
+        Date date2 = null;
+        String StartDate = null;
+        
+        try {
+            date1 = format.parse(start);
+            date2 = format.parse(memEnrollDate);
+            
+            long calDate = date1.getTime() - date2.getTime();
+            if(calDate>=0) {
+            	StartDate = start;
+            }else {
+            	StartDate = memEnrollDate;
+            }
+        }catch (ParseException e) {
+            e.printStackTrace();
+        }
+        
+        SearchAt s = new SearchAt();
+        s.setStartDate(StartDate);
+        s.setEndDate(end);
+        s.setUserNo(memNo);
+		ArrayList<Restdate> restList = pService.searchRestdate(s);
+		if(!restList.isEmpty()) {
+			s.setList(restList);
+		}
+		
+		ArrayList<Attendance> atlist = pService.searchMyAt(s);
+		
+		ArrayList list = new ArrayList();
+		
+		for(Attendance at : atlist) {
+			if(!at.getAttStatus().equals("F") && !at.getAttHstatus().equals("H0")) {
+				HashMap m = new HashMap();
+				m.put("start", at.getAttDate());
+				if(at.getAttStatus().equals("D")) {
+					m.put("title", at.getAttIn()+" 출근");
+					m.put("color", "green");
+				}else if(at.getAttStatus().equals("H")) {
+					if(at.getAttHstatus().equals("H1")) {
+						m.put("title", at.getAttIn()+" 오전연차");
+						m.put("color", "blue");
+					}else {
+						m.put("title", at.getAttIn()+" 출근");
+						m.put("color", "blue");
+					}
+				}else {
+					m.put("title", at.getAttIn()+" 무단지각/조퇴");
+					m.put("color", "orange");
+				}
+
+				HashMap m2 = new HashMap();
+				m2.put("start", at.getAttDate());
+				if(at.getAttStatus().equals("D")) {
+					m2.put("title", at.getAttOut()+" 퇴근");
+					m2.put("color", "green");
+				}else if(at.getAttStatus().equals("H")) {
+					if(at.getAttHstatus().equals("H1")) {
+						m2.put("title", at.getAttOut()+" 퇴근");
+						m2.put("color", "blue");
+					}else {
+						m2.put("title", at.getAttOut()+" 오후연차");
+						m2.put("color", "blue");
+					}
+				}else {
+					m2.put("title", at.getAttOut()+" 무단지각/조퇴");
+					m2.put("color", "orange");
+				}
+				
+				list.add(m);
+				list.add(m2);
+			}else if(at.getAttStatus().equals("F")) {
+				HashMap m = new HashMap();
+				m.put("start", at.getAttDate());
+				m.put("title", "무단결근");
+				m.put("color", "red");
+				list.add(m);
+			}else {
+				HashMap m = new HashMap();
+				m.put("start", at.getAttDate());
+				m.put("title", "종일연차");
+				m.put("color", "blue");
+				list.add(m);
+			}
+		}
+		
+		for(Restdate r : restList) {
+			HashMap m = new HashMap();
+			m.put("start", r.getReRestdate());
+			m.put("title", r.getReDatename());
+			m.put("color", "red");
+			list.add(m);
+		}
+		
+		return new Gson().toJson(list);
 	}
 	
 }

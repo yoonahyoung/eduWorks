@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.finalProject.eduWorks.cnsln.model.dao.CnslnDao;
 import com.finalProject.eduWorks.cnsln.model.vo.Cnsln;
+import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.model.vo.Reply;
 import com.finalProject.eduWorks.member.model.vo.Member;
 
@@ -83,6 +84,21 @@ public class CnslnServiceImpl implements CnslnService{
 	@Override
 	public int deleteReply(int replyNo) {
 		return cDao.deleteReply(sqlSession, replyNo);
+	}
+
+	@Override
+	public int selectListCount(String keyword) {
+		return cDao.selectListCount(sqlSession, keyword);
+	}
+
+	@Override
+	public ArrayList<Cnsln> selectCnslnList(PageInfo pi, String keyword) {
+		return cDao.selectCnslnList(sqlSession, pi, keyword);
+	}
+
+	@Override
+	public int deleteReCnsln(int cNo) {
+		return cDao.deleteReCnsln(sqlSession, cNo);
 	}
 	
 	

@@ -304,7 +304,7 @@
 	
 	                     <div class="su_btn_two_center" style="width: 80%;">
 	                         <button type="button" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">등록</button>
-	                         <button type="button" class="btn su_btn_two su_btn_border" onclick="location.href='list.cn';">취소</button>
+	                         <button type="button" class="btn su_btn_two su_btn_border" onclick="history.back();">취소</button>
 	                     </div>
 	
 	                     <!-- 필수사항 입력 안했을 때 모달창 -->

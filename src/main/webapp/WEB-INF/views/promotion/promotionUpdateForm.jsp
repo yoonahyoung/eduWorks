@@ -21,7 +21,7 @@
 	        <div class="su_content_header">
 	            <h2 class="su_sub_menu_name" style="display: inline; color: black;">홍보물 수정</h2>
 	            
-	            <button class="btn su_btn_border" type="button" style="display: inline; float:right;" onclick="location.href='list.pr';">목록으로</button>
+	            <button class="btn su_btn_border" type="button" style="display: inline; float:right;" onclick="location.href='history.back();'">뒤로가기</button>
 	            <hr class="hr_line_top">
 	
 	

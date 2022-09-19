@@ -66,7 +66,9 @@
 	
 	<resultMap type="com.finalProject.eduWorks.personnel.model.vo.Attendance" id="resultAtt">
 		<result column="att_no" property="attNo"/>
+		<result column="mem_name" property="memName"/>
 		<result column="mem_no" property="memNo"/>
+		<result column="mem_enroll_date" property="memEnrollDate"/>
 		<result column="att_date" property="attDate"/>
 		<result column="att_fixedin" property="attFixedin"/>
 		<result column="att_fixedout" property="attFixedout"/>
@@ -78,15 +80,32 @@
 		<result column="att_hstatus" property="attHstatus"/>
 	</resultMap>
 	
+	<resultMap type="com.finalProject.eduWorks.personnel.model.vo.Restdate" id="resultRestDate">
+		<result column="re_restdate" property="reRestdate"/>
+		<result column="re_datename" property="reDatename"/>
+	</resultMap>
+	
 	<resultMap type="com.finalProject.eduWorks.personnel.model.vo.Adjust" id="resultAdj">
 		<result column="adj_no" property="adjNo"/>
 		<result column="att_no" property="attNo"/>
+		<result column="mem_no" property="memNo"/>
+		<result column="adj_objdate" property="adjObjdate"/>
 		<result column="adj_in" property="adjIn"/>
 		<result column="adj_out" property="adjOut"/>
 		<result column="adj_reason" property="adjReason"/>
 		<result column="adj_date" property="adjDate"/>
 		<result column="adj_file" property="adjFile"/>
 		<result column="adj_status" property="adjStatus"/>
+		<result column="att_in" property="attIn"/>
+		<result column="att_out" property="attOut"/>
+		<result column="att_status" property="attStatus"/>
+		<result column="att_hstatus" property="attHstatus"/>
+		<result column="dept_name" property="deptName"/>
+		<result column="job_name" property="jobName"/>
+		<result column="mem_name" property="memName"/>
+		<result column="dept_code" property="deptCode"/>
+		<result column="job_code" property="jobCode"/>
+		<result column="adj_denycontent" property="adjDenycontent"/>
 	</resultMap>
 	
 	<select id="teacherListCount" resultType="_int">
@@ -250,7 +269,24 @@
 		       dept_code = #{deptCode},
 		       job_code = #{jobCode},
 		       mem_enroll_date = #{memEnrollDate},
-		       mem_resign_date = #{memResignDate},
+		       mem_phone = #{memPhone},
+		       mem_email = #{memEmail},
+		       mem_birth = #{memBirth},
+		       mem_postal_code = #{memPostalCode},
+		       mem_postal_ad = #{memPostalAd},
+		       mem_postal_detail = #{memPostalDetail},
+		       mem_postal_refer = #{memPostalRefer},
+		       mem_profile = #{memProfile}
+		       <if test="memResignDate != ''">
+		       	,mem_resign_date = #{memResignDate},
+		       	mem_resign_status = 'Y'
+		       </if>
+		 where mem_no = #{memNo}
+	</update>
+	
+	<update id="updateMyInfo">
+		update tb_member
+		   set mem_id = #{memId},
 		       mem_phone = #{memPhone},
 		       mem_email = #{memEmail},
 		       mem_birth = #{memBirth},
@@ -576,39 +612,518 @@
 		 where mem_no = #{memNo}
 	</update>
 	
-	
-	
-	<select id="AtListCount">
-		select count(*)
-		  from tb_attendance a
-		  join tb_member m on (a.mem_no = m.mem_no)
-		 where m.deptCode = #{deptCode}
-		   and m.joCode = #{jobCode}
-		   and to_date(a.att_date) between to_date(#{startDate}) and to_date(#{endDate})
-		   and m.mem_name like '%'||#{keyword}||'%'
-		   <choose>
-		 	<when test="check1==true and check2==false and check3==false">
-		 		
-		 	</when>
-		 	<when test="check1==false and check2==true and check3==false">
-		 		
-		 	</when>
-		 	<when test="check1==false and check2==false and check3==true">
-		 		
-		 	</when>
-		 	<when test="check1==true and check2==true and check3==false">
-		 		
-		 	</when>
-		 	<when test="check1==true and check2==false and check3==true">
-		 		
-		 	</when>
-		 	<when test="check1==false and check2==true and check3==true">
-		 		
-		 	</when>
-		 	<otherwise>
-		 		
-		 	</otherwise>
-		 </choose>
+	<select id="searchRestdate" resultMap="resultRestDate">
+		SELECT RE_RESTDATE
+		     , RE_DATENAME
+		  FROM TB_RESTDATE
+		 WHERE TO_DATE(RE_RESTDATE) BETWEEN TO_DATE(#{startDate}) AND TO_DATE(#{endDate})
 	</select>
+	
+	<select id="AtListCount" resultType="_int">
+	SELECT COUNT(*)
+	FROM(
+		SELECT *
+		FROM(
+			SELECT 
+			       A.ATT_NO 
+			     , C.MEM_NO
+			     , M.MEM_NAME
+			     , NVL(ATT_DATE, TO_CHAR(WORKING_DAY, 'YYYY-MM-DD')) att_date
+			     , ATT_FIXEDIN
+			     , ATT_FIXEDOUT
+			     , ATT_IN
+			     , ATT_OUT
+			     , ATT_WORKOFF
+			     , ATT_WORKTIME
+			     , NVL(ATT_STATUS, 'F') att_status
+			     , ATT_HSTATUS
+			FROM TB_ATTENDANCE A
+			right JOIN (
+			                SELECT WORKING_DAY, MEM_NO
+			                FROM (
+			                            SELECT TO_DATE(#{startDate}) + LEVEL - 1 working_day
+			                            FROM DUAL
+			                        CONNECT BY LEVEL &lt;= 1000
+			                    ), (SELECT * FROM TB_MEMBER)
+			            ) C ON (ATT_DATE = WORKING_DAY AND A.MEM_NO = C.MEM_NO)
+			JOIN TB_MEMBER M ON (C.MEM_NO=M.MEM_NO)
+			WHERE WORKING_DAY &lt;= TO_DATE(#{endDate})
+			<if test="deptCode != 'all'">
+				AND DEPT_CODE = #{deptCode}
+			</if>
+			<if test="jobCode != 'all'">
+				AND JOB_CODE = #{jobCode}
+			</if>
+			
+			AND MEM_NAME LIKE '%'||#{keyword}||'%'
+			ORDER BY 4 DESC, 2)
+		WHERE 
+			<choose>
+			 	<when test="check1==true and check2==false and check3==false">
+			 		(ATT_STATUS = 'D' OR ATT_STATUS = 'H')
+			 	</when>
+			 	<when test="check1==false and check2==true and check3==false">
+			 		(ATT_STATUS = 'L' OR ATT_STATUS = 'E')
+			 	</when>
+			 	<when test="check1==false and check2==false and check3==true">
+			 		(ATT_STATUS = 'F')
+			 	</when>
+			 	<when test="check1==true and check2==true and check3==false">
+			 		(ATT_STATUS = 'D' OR ATT_STATUS = 'H' OR ATT_STATUS = 'L' OR ATT_STATUS = 'E')
+			 	</when>
+			 	<when test="check1==true and check2==false and check3==true">
+			 		(ATT_STATUS = 'D' OR ATT_STATUS = 'H' OR ATT_STATUS = 'F')
+			 	</when>
+			 	<when test="check1==false and check2==true and check3==true">
+			 		(ATT_STATUS = 'L' OR ATT_STATUS = 'E' OR ATT_STATUS = 'F')
+			 	</when>
+			 	<otherwise>
+			 		1=1
+			 	</otherwise>
+			 </choose>
+			 <choose>
+			 	<when test="list == null">
+			 	
+			 	</when>
+			 	<otherwise>
+			 		<foreach collection="list" item="date">
+			 			AND ATT_DATE != #{date.reRestdate}
+			 		</foreach>
+			 	</otherwise>
+			 </choose>
+			 )
+	</select>
+	
+	<select id="AtListCount2" resultType="_int">
+	SELECT COUNT(*)
+	FROM(
+		SELECT *
+		FROM(
+			SELECT 
+			       A.ATT_NO 
+			     , C.MEM_NO
+			     , M.MEM_NAME
+			     , NVL(ATT_DATE, TO_CHAR(WORKING_DAY, 'YYYY-MM-DD')) att_date
+			     , ATT_FIXEDIN
+			     , ATT_FIXEDOUT
+			     , ATT_IN
+			     , ATT_OUT
+			     , ATT_WORKOFF
+			     , ATT_WORKTIME
+			     , NVL(ATT_STATUS, 'F') att_status
+			     , ATT_HSTATUS
+			FROM TB_ATTENDANCE A
+			right JOIN (
+			                SELECT WORKING_DAY, MEM_NO
+			                FROM (
+			                            SELECT TO_DATE(#{startDate}) + LEVEL - 1 working_day
+			                            FROM DUAL
+			                        CONNECT BY LEVEL &lt;= 1000
+			                    ), (SELECT * FROM TB_MEMBER)
+			            ) C ON (ATT_DATE = WORKING_DAY AND A.MEM_NO = C.MEM_NO)
+			JOIN TB_MEMBER M ON (C.MEM_NO=M.MEM_NO)
+			WHERE WORKING_DAY &lt;= TO_DATE(#{endDate})
+			ORDER BY 4 DESC, 2)
+		WHERE 
+			<choose>
+			 	<when test="check1==true and check2==false and check3==false">
+			 		(ATT_STATUS = 'D' OR ATT_STATUS = 'H')
+			 	</when>
+			 	<when test="check1==false and check2==true and check3==false">
+			 		(ATT_STATUS = 'L' OR ATT_STATUS = 'E')
+			 	</when>
+			 	<when test="check1==false and check2==false and check3==true">
+			 		(ATT_STATUS = 'F')
+			 	</when>
+			 	<otherwise>
+			 		1=1
+			 	</otherwise>
+			 </choose>
+			 AND MEM_NO = #{userNo}
+			 <choose>
+			 	<when test="list == null">
+			 	
+			 	</when>
+			 	<otherwise>
+			 		<foreach collection="list" item="date">
+			 			AND ATT_DATE != #{date.reRestdate}
+			 		</foreach>
+			 	</otherwise>
+			 </choose>
+			 )
+	</select>
+	
+	<select id="searchAtList" resultMap="resultAtt">
+		SELECT *
+		FROM(
+			SELECT 
+			       A.ATT_NO 
+			     , C.MEM_NO
+			     , M.MEM_NAME
+			     , M.MEM_ENROLL_DATE
+			     , NVL(ATT_DATE, TO_CHAR(WORKING_DAY, 'YYYY-MM-DD')) att_date
+			     , ATT_FIXEDIN
+			     , ATT_FIXEDOUT
+			     , ATT_IN
+			     , ATT_OUT
+			     , ATT_WORKOFF
+			     , ATT_WORKTIME
+			     , NVL(ATT_STATUS, 'F') att_status
+			     , ATT_HSTATUS
+			FROM TB_ATTENDANCE A
+			right JOIN (
+			                SELECT WORKING_DAY, MEM_NO
+			                FROM (
+			                            SELECT TO_DATE(#{startDate}) + LEVEL - 1 working_day
+			                            FROM DUAL
+			                        CONNECT BY LEVEL &lt;= 1000
+			                    ), (SELECT * FROM TB_MEMBER)
+			            ) C ON (ATT_DATE = WORKING_DAY AND A.MEM_NO = C.MEM_NO)
+			JOIN TB_MEMBER M ON (C.MEM_NO=M.MEM_NO)
+			WHERE WORKING_DAY &lt;= TO_DATE(#{endDate})
+			<if test="deptCode != 'all'">
+				AND DEPT_CODE = #{deptCode}
+			</if>
+			<if test="jobCode != 'all'">
+				AND JOB_CODE = #{jobCode}
+			</if>
+			
+			AND MEM_NAME LIKE '%'||#{keyword}||'%'
+			ORDER BY 4 DESC, 2)
+		WHERE 
+			<choose>
+			 	<when test="check1==true and check2==false and check3==false">
+			 		(ATT_STATUS = 'D' OR ATT_STATUS = 'H')
+			 	</when>
+			 	<when test="check1==false and check2==true and check3==false">
+			 		(ATT_STATUS = 'L' OR ATT_STATUS = 'E')
+			 	</when>
+			 	<when test="check1==false and check2==false and check3==true">
+			 		(ATT_STATUS = 'F')
+			 	</when>
+			 	<when test="check1==true and check2==true and check3==false">
+			 		(ATT_STATUS = 'D' OR ATT_STATUS = 'H' OR ATT_STATUS = 'L' OR ATT_STATUS = 'E')
+			 	</when>
+			 	<when test="check1==true and check2==false and check3==true">
+			 		(ATT_STATUS = 'D' OR ATT_STATUS = 'H' OR ATT_STATUS = 'F')
+			 	</when>
+			 	<when test="check1==false and check2==true and check3==true">
+			 		(ATT_STATUS = 'L' OR ATT_STATUS = 'E' OR ATT_STATUS = 'F')
+			 	</when>
+			 	<otherwise>
+			 		1=1
+			 	</otherwise>
+			 </choose>
+			 <choose>
+			 	<when test="list == null">
+			 	
+			 	</when>
+			 	<otherwise>
+			 		<foreach collection="list" item="date">
+			 			AND ATT_DATE != #{date.reRestdate}
+			 		</foreach>
+			 	</otherwise>
+			 </choose>
+	</select>
+	
+	<select id="searchMyAt" resultMap="resultAtt">
+		SELECT *
+		FROM(
+			SELECT 
+			       A.ATT_NO 
+			     , C.MEM_NO
+			     , M.MEM_NAME
+			     , M.MEM_ENROLL_DATE
+			     , NVL(ATT_DATE, TO_CHAR(WORKING_DAY, 'YYYY-MM-DD')) att_date
+			     , ATT_FIXEDIN
+			     , ATT_FIXEDOUT
+			     , ATT_IN
+			     , ATT_OUT
+			     , ATT_WORKOFF
+			     , ATT_WORKTIME
+			     , NVL(ATT_STATUS, 'F') att_status
+			     , ATT_HSTATUS
+			FROM TB_ATTENDANCE A
+			right JOIN (
+			                SELECT WORKING_DAY, MEM_NO
+			                FROM (
+			                            SELECT TO_DATE(#{startDate}) + LEVEL - 1 working_day
+			                            FROM DUAL
+			                        CONNECT BY LEVEL &lt;= 1000
+			                    ), (SELECT * FROM TB_MEMBER)
+			            ) C ON (ATT_DATE = WORKING_DAY AND A.MEM_NO = C.MEM_NO)
+			JOIN TB_MEMBER M ON (C.MEM_NO=M.MEM_NO)
+			WHERE WORKING_DAY &lt;= TO_DATE(SYSDATE)
+			ORDER BY 4 DESC, 2)
+	  WHERE MEM_NO = #{userNo}
+	  		<choose>
+			 	<when test="list == null">
+			 	
+			 	</when>
+			 	<otherwise>
+			 		<foreach collection="list" item="date">
+			 			AND ATT_DATE != #{date.reRestdate}
+			 		</foreach>
+			 	</otherwise>
+			 </choose>	
+	</select>
+	
+	<insert id="insertAtDate">
+		insert
+		  into tb_attendance
+		       (
+		         att_no
+		       , mem_no
+		       , att_date
+		       , att_in
+		       , att_out
+		       , att_workoff
+		       , att_worktime
+		       , att_status
+		       , att_hstatus
+		       )
+		values (
+		         seq_atteno.nextval
+		       , #{memNo}
+		       , #{attDate}
+		       , #{attIn}  
+		       , #{attOut}
+		       , 'Y'
+		       , #{attWorktime}
+		       , #{attStatus}  
+		       , #{attHstatus}  
+		       )
+	</insert>
+	
+	<update id="updateAtData">
+		update tb_attendance
+		   set att_in = #{attIn},
+		       att_out = #{attOut},
+		       <if test="attHstatus != 'H0'">
+		       		att_workoff = 'Y',
+		       </if>
+		       att_worktime = #{attWorktime},
+		       att_status = #{attStatus},
+		       att_hstatus = #{attHstatus}
+		 where att_no = #{attNo}
+	</update>
+	
+	<delete id="deleteAtData">
+		delete
+		  from tb_attendance
+		 where att_no = #{attNo}
+	</delete>
+	
+	<select id="objectionManageCount" resultType="_int">
+		SELECT COUNT(*)
+		  FROM(
+				SELECT ADJ_NO,
+					   AD.ATT_NO,
+					   AD.MEM_NO,
+					   ADJ_OBJDATE,
+					   ADJ_IN,
+					   ADJ_OUT,
+					   ADJ_REASON,
+					   TO_CHAR(ADJ_DATE,'YYYY-MM-DD') "ADJ_DATE",
+					   ADJ_FILE,
+					   ADJ_STATUS,
+					   ATT_IN,
+					   ATT_OUT,
+					   ATT_STATUS,
+					   ATT_HSTATUS,
+					   DEPT_NAME,
+					   JOB_NAME,
+					   MEM_NAME
+				  FROM TB_ADJUST AD
+				  LEFT JOIN TB_ATTENDANCE AT ON (AD.ATT_NO = AT.ATT_NO)
+				  LEFT JOIN TB_MEMBER M ON (AD.MEM_NO = M.MEM_NO)
+				  LEFT JOIN TB_DEPARTMENT D ON (M.DEPT_CODE = D.DEPT_CODE)
+				  LEFT JOIN TB_JOB J ON (M.JOB_CODE = J.JOB_CODE)
+				  WHERE ADJ_STATUS = 'W'
+				  ORDER BY ADJ_NO DESC
+				)
+	</select>
+	
+	<select id="objectionManageList" resultMap="resultAdj">
+				SELECT ADJ_NO,
+					   AD.ATT_NO,
+					   AD.MEM_NO,
+					   ADJ_OBJDATE,
+					   ADJ_IN,
+					   ADJ_OUT,
+					   ADJ_REASON,
+					   TO_CHAR(ADJ_DATE,'YYYY-MM-DD') "ADJ_DATE",
+					   ADJ_FILE,
+					   ADJ_STATUS,
+					   ATT_IN,
+					   ATT_OUT,
+					   ATT_STATUS,
+					   ATT_HSTATUS,
+					   DEPT_NAME,
+					   JOB_NAME,
+					   MEM_NAME,
+					   M.DEPT_CODE,
+					   M.JOB_CODE,
+					   ADJ_DENYCONTENT
+				  FROM TB_ADJUST AD
+				  LEFT JOIN TB_ATTENDANCE AT ON (AD.ATT_NO = AT.ATT_NO)
+				  LEFT JOIN TB_MEMBER M ON (AD.MEM_NO = M.MEM_NO)
+				  LEFT JOIN TB_DEPARTMENT D ON (M.DEPT_CODE = D.DEPT_CODE)
+				  LEFT JOIN TB_JOB J ON (M.JOB_CODE = J.JOB_CODE)
+				  WHERE ADJ_STATUS = 'W'
+				  ORDER BY ADJ_NO DESC
+	</select>
+	
+	<select id="searchAdjCount" resultType="_int">
+		SELECT COUNT(*)
+		  FROM(
+				SELECT ADJ_NO,
+					   AD.ATT_NO,
+					   AD.MEM_NO,
+					   ADJ_OBJDATE,
+					   ADJ_IN,
+					   ADJ_OUT,
+					   ADJ_REASON,
+					   TO_CHAR(ADJ_DATE,'YYYY-MM-DD') "ADJ_DATE",
+					   ADJ_FILE,
+					   ADJ_STATUS,
+					   ATT_IN,
+					   ATT_OUT,
+					   ATT_STATUS,
+					   ATT_HSTATUS,
+					   DEPT_NAME,
+					   JOB_NAME,
+					   MEM_NAME
+				  FROM TB_ADJUST AD
+				  LEFT JOIN TB_ATTENDANCE AT ON (AD.ATT_NO = AT.ATT_NO)
+				  LEFT JOIN TB_MEMBER M ON (AD.MEM_NO = M.MEM_NO)
+				  LEFT JOIN TB_DEPARTMENT D ON (M.DEPT_CODE = D.DEPT_CODE)
+				  LEFT JOIN TB_JOB J ON (M.JOB_CODE = J.JOB_CODE)
+				  WHERE 
+				  		<choose>
+					  		<when test="check1==true and check2==false">
+					  			ADJ_STATUS = 'W'
+					  		</when>
+					  		<when test="check1==false and check2==true">
+					  			ADJ_STATUS != 'W'
+					  		</when>
+					  		<otherwise>
+					  			1=1
+					  		</otherwise>
+				  		</choose>
+				  ORDER BY ADJ_NO DESC
+				)
+	</select>
+	
+	<select id="searchAdjList" resultMap="resultAdj">
+				SELECT ADJ_NO,
+					   AD.ATT_NO,
+					   AD.MEM_NO,
+					   ADJ_OBJDATE,
+					   ADJ_IN,
+					   ADJ_OUT,
+					   ADJ_REASON,
+					   TO_CHAR(ADJ_DATE,'YYYY-MM-DD') "ADJ_DATE",
+					   ADJ_FILE,
+					   ADJ_STATUS,
+					   ATT_IN,
+					   ATT_OUT,
+					   ATT_STATUS,
+					   ATT_HSTATUS,
+					   DEPT_NAME,
+					   JOB_NAME,
+					   MEM_NAME,
+					   M.DEPT_CODE,
+					   M.JOB_CODE,
+					   ADJ_DENYCONTENT
+				  FROM TB_ADJUST AD
+				  LEFT JOIN TB_ATTENDANCE AT ON (AD.ATT_NO = AT.ATT_NO)
+				  LEFT JOIN TB_MEMBER M ON (AD.MEM_NO = M.MEM_NO)
+				  LEFT JOIN TB_DEPARTMENT D ON (M.DEPT_CODE = D.DEPT_CODE)
+				  LEFT JOIN TB_JOB J ON (M.JOB_CODE = J.JOB_CODE)
+				  WHERE 
+				  		<choose>
+					  		<when test="check1==true and check2==false">
+					  			ADJ_STATUS = 'W'
+					  		</when>
+					  		<when test="check1==false and check2==true">
+					  			ADJ_STATUS != 'W'
+					  		</when>
+					  		<otherwise>
+					  			1=1
+					  		</otherwise>
+				  		</choose>
+				  ORDER BY ADJ_NO DESC
+	</select>
+	
+	<update id="approveAdj">
+		update tb_adjust
+		   set adj_status = 'A'
+		 where adj_no = #{adjNo}
+	</update>
+	
+	<update id="refuseAdj">
+		update tb_adjust
+		   set adj_status = 'D',
+		       adj_denycontent = #{adjDenycontent}
+		 where adj_no = #{adjNo}
+	</update>
+	
+	<select id="selectAllMem" resultMap="resultOjt">
+		select m.mem_no
+		     , m.mem_name
+		     , d.dept_name
+		     , j.job_name
+		  from tb_member m 
+		  join tb_department d on (d.dept_code = m.dept_code)
+		  join tb_job j on (j.job_code = m.job_code)
+		  order by m.mem_no
+	</select>
+	
+	<select id="searchSelectMem" resultMap="resultOjt">
+		select m.mem_no
+		     , m.mem_name
+		     , d.dept_name
+		     , j.job_name
+		  from tb_member m 
+		  join tb_department d on (d.dept_code = m.dept_code)
+		  join tb_job j on (j.job_code = m.job_code)
+		 where  m.mem_name like '%'||#{keyword}||'%'
+		      <if test="deptCode != 'all'">
+		       and m.dept_code = #{deptCode}
+		      </if>
+		      <if test="jobCode != 'all'">
+		       and m.job_code = #{deptCode}
+		      </if>
+		  order by m.mem_no
+	</select>
+	
+	<insert id="addHoliday">
+		<foreach collection="memNos" item="arr" open="INSERT ALL" separator=" " close="SELECT * FROM DUAL">
+			  into tb_holiday
+			     (mem_no
+			    , ho_num
+			     )
+			values
+				(
+			     #{arr}
+			   , #{dateCount}
+				)
+		</foreach>
+	</insert>
+	
+	<insert id="deleteHoliday">
+		<foreach collection="memNos" item="arr" open="INSERT ALL" separator=" " close="SELECT * FROM DUAL">
+			  into tb_holiday
+			     (mem_no
+			    , ho_num
+			     )
+			values
+				(
+			     #{arr}
+			   , #{dateCount}
+				)
+		</foreach>
+	</insert>
 	
 </mapper>

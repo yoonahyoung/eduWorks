@@ -1,6 +1,6 @@
 package com.finalProject.eduWorks.cnsln.model.vo;
 
-import java.sql.Date;
+import com.finalProject.eduWorks.member.model.vo.Member;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,8 +27,10 @@ public class Cnsln {
 	private String cnslnTopic;
 	private String cnslnContent;
 	private String cnslnReal;
-	private Date cnslnCreateDate;
-	private Date cnslnModifyDate;
+	private String cnslnCreateDate;
+	private String cnslnModifyDate;
 	private int cnslnCount;
+	
+	private Member Member;
 
 }

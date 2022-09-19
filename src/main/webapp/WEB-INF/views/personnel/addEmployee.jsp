@@ -48,7 +48,7 @@
                    
                     <div class="container-fluid su_contentArea" style="padding-left: 10px;">
                         <div class="su_content_header" style="margin-left: 10px;">
-                            <h3 class="su_sub_menu_name">강사 등록하기</h3>
+                            <h3 class="su_sub_menu_name">직원 등록하기</h3>
                             <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b;">
                             <br>
                             

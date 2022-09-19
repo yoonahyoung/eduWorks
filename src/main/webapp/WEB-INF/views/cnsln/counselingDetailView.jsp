@@ -24,7 +24,10 @@
 		            <div style="display: flex;">
 		                <div class="su_content_body" style="width: 80%;">
 		    				<input type="hidden" name="cnslnNo" value="${ c.cnslnNo }">
-		                    <table id="eventForm">
+		    				<input type="hidden" name="cnslnContent" value="${ c.cnslnContent }">
+		    				<input type="hidden" name="cnslnReal" value="${ c.cnslnReal }">
+		    				
+ 		                    <table id="eventForm">
 		                        <tr>
 		                            <td width="5%;"><span class="fas fa-star-of-life fontRed">&nbsp;</span></td>
 		                            <td><span>&nbsp;내담자명</span></td>
@@ -149,7 +152,7 @@
 		
 		                    <br><br>
 		
-		                    <div class="su_btn_two_center">
+		                    <div class="su_btn_two_center" style="width: 80%;">
 		                    	<c:if test="${ loginUser.memNo == c.cnslnWriter }">
 		                        	<button type="button" class="btn su_btn_two su_btn_border" id="updateBtn" data-toggle="modal" data-target="#noContent">수정</button>
 		                        	<button type="button" class="btn su_btn_two su_btn_border" id="deleteBtn" data-toggle="modal" data-target="#delete">삭제</button>
@@ -160,6 +163,7 @@
 		                        </c:if>
 		                        
 		                        <button type="button" class="btn su_btn_two su_btn_border" onclick="location.href='list.cn';">돌아가기</button>
+		                        <button type="button" class="btn su_btn_two su_btn_border" onclick="location.href='detail.tcn?cNo=${ c.cnslnNo }';">상담진행</button>
 		                    </div>
 		                    
 		                     <script>
