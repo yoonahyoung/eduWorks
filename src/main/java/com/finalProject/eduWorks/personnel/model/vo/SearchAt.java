@@ -1,5 +1,7 @@
 package com.finalProject.eduWorks.personnel.model.vo;
 
+import java.util.ArrayList;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,4 +22,6 @@ public class SearchAt {
 	private boolean check1;
 	private boolean check2;
 	private boolean check3;
+	private String userNo;
+	private ArrayList<Restdate> list;
 }

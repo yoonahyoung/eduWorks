@@ -14,10 +14,22 @@ import lombok.ToString;
 public class Adjust {
 	private String adjNo;
 	private String attNo;
+	private String memNo;
+	private String adjObjdate;
 	private String adjIn;
 	private String adjOut;
 	private String adjReason;
 	private String adjDate;
 	private String adjFile;
 	private String adjStatus;
+	private String attIn;
+	private String attOut;
+	private String attStatus;
+	private String attHstatus;
+	private String deptName;
+	private String jobName;
+	private String memName;
+	private String deptCode;
+	private String jobCode;
+	private String adjDenycontent;
 }

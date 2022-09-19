@@ -13,7 +13,10 @@ import com.finalProject.eduWorks.mail.model.vo.MailStatus;
 import com.finalProject.eduWorks.member.model.vo.Department;
 import com.finalProject.eduWorks.member.model.vo.Job;
 import com.finalProject.eduWorks.member.model.vo.Member;
+import com.finalProject.eduWorks.personnel.model.vo.Adjust;
+import com.finalProject.eduWorks.personnel.model.vo.Attendance;
 import com.finalProject.eduWorks.personnel.model.vo.Ojt;
+import com.finalProject.eduWorks.personnel.model.vo.Restdate;
 import com.finalProject.eduWorks.personnel.model.vo.SearchAt;
 
 @Repository
@@ -80,6 +83,10 @@ public class PersonnelDao {
 	
 	public int updateMember(SqlSessionTemplate sqlSession, Member m) {
 		return sqlSession.update("personnelMapper.updateMember", m);
+	}
+	
+	public int updateMyInfo(SqlSessionTemplate sqlSession,Member m) {
+		return sqlSession.update("personnelMapper.updateMyInfo", m);
 	}
 	
 	public int addMember(SqlSessionTemplate sqlSession, Member m) {
@@ -172,7 +179,84 @@ public class PersonnelDao {
 		return result;
 	}
 	
-	public int AtListCount(SqlSessionTemplate sqlSession,SearchAt s) {
+	public ArrayList<Restdate> searchRestdate(SqlSessionTemplate sqlSession, SearchAt s){
+		return (ArrayList)sqlSession.selectList("personnelMapper.searchRestdate", s);
+	}
+	
+	public int atListCount(SqlSessionTemplate sqlSession,SearchAt s) {
 		return sqlSession.selectOne("personnelMapper.AtListCount", s);
+	}
+	
+	public int atListCount2(SqlSessionTemplate sqlSession,SearchAt s) {
+		return sqlSession.selectOne("personnelMapper.AtListCount2", s);
+	}
+	
+	public ArrayList<Attendance> searchAtList(SqlSessionTemplate sqlSession,PageInfo pi,SearchAt s) {
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1)*limit;
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("personnelMapper.searchAtList", s, rowBounds);
+	}
+	
+	public int insertAtDate(SqlSessionTemplate sqlSession,Attendance at) {
+		return sqlSession.insert("personnelMapper.insertAtDate", at);
+	}
+
+	public int updateAtData(SqlSessionTemplate sqlSession,Attendance at) {
+		return sqlSession.update("personnelMapper.updateAtData", at);
+	}
+
+	public int deleteAtData(SqlSessionTemplate sqlSession,Attendance at) {
+		return sqlSession.delete("personnelMapper.deleteAtData", at);
+	}
+	
+	public int objectionManageCount(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("personnelMapper.objectionManageCount");
+	}
+
+	public ArrayList<Adjust> objectionManageList(SqlSessionTemplate sqlSession,PageInfo pi) {
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1)*limit;
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("personnelMapper.objectionManageList",null,rowBounds);
+	}
+	
+	public int approveAdj(SqlSessionTemplate sqlSession,Adjust ad) {
+		return sqlSession.update("personnelMapper.approveAdj", ad);
+	}
+
+	public int refuseAdj(SqlSessionTemplate sqlSession,Adjust ad) {
+		return sqlSession.update("personnelMapper.refuseAdj", ad);
+	}
+	
+	public int searchAdjCount(SqlSessionTemplate sqlSession,SearchAt at) {
+		return sqlSession.selectOne("personnelMapper.searchAdjCount");
+	}
+
+	public ArrayList<Adjust> searchAdjList(SqlSessionTemplate sqlSession,PageInfo pi, SearchAt at) {
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1)*limit;
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("personnelMapper.searchAdjList",at,rowBounds);
+	}
+	
+	public ArrayList<Ojt> selectAllMem(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("personnelMapper.selectAllMem");
+	}
+	
+	public ArrayList<Ojt> searchSelectMem(SqlSessionTemplate sqlSession,SearchAt at) {
+		return (ArrayList)sqlSession.selectList("personnelMapper.searchSelectMem",at);
+	}
+	
+	public int addHoliday(SqlSessionTemplate sqlSession,HashMap m) {
+		return sqlSession.insert("personnelMapper.addHoliday", m);
+	}
+
+	public int deleteHoliday(SqlSessionTemplate sqlSession,HashMap m) {
+		return sqlSession.insert("personnelMapper.deleteHoliday", m);
+	}
+	
+	public ArrayList<Attendance> searchMyAt(SqlSessionTemplate sqlSession,SearchAt at) {
+		return (ArrayList)sqlSession.selectList("personnelMapper.searchMyAt", at);
 	}
 }

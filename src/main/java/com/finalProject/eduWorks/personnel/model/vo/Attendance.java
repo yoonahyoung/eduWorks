@@ -13,7 +13,9 @@ import lombok.ToString;
 @ToString
 public class Attendance {
 	private String attNo;
+	private String memName;
 	private String memNo;
+	private String memEnrollDate;
 	private String attDate;
 	private String attFixedin;
 	private String attFixedout;
