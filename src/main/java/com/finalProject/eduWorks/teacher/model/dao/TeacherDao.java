@@ -1,6 +1,7 @@
 package com.finalProject.eduWorks.teacher.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -61,9 +62,51 @@ public class TeacherDao {
 		return sqlSession.delete("bookMapper.deleteBook", bookNo);
 	}
 	
+	public int searchBookListCount(SqlSessionTemplate sqlSession, String condition, String keyword) {
+		HashMap<String, String> map = new HashMap<>();
+		map.put("condition", condition);
+		map.put("keyword", keyword);
+		// selectOne은 변수를 한개밖에 못전하기 때문에 어딘가에 변수들을 담아서 한꺼번에 넘겨야함 , HashMap
+		return sqlSession.selectOne("bookMapper.searchBookListCount", map);
+	}
 	
+	public ArrayList<Book> bookSearchForm(SqlSessionTemplate sqlSession, PageInfo pi, String condition, String keyword){
+		
+		HashMap<String, String> map = new HashMap<>();
+		map.put("condition", condition);
+		map.put("keyword", keyword);
+		
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1) * limit;
+		
+		RowBounds rowBounds  = new RowBounds(offset, limit);
+		
+		return (ArrayList)sqlSession.selectList("bookMapper.bookSearchForm", map, rowBounds);
 	
+	}
 	
+	public int searchAppListCount(SqlSessionTemplate sqlSession, String condition, String keyword) {
+		HashMap<String, String> map = new HashMap<>();
+		map.put("condition", condition);
+		map.put("keyword", keyword);
+		// selectOne은 변수를 한개밖에 못전하기 때문에 어딘가에 변수들을 담아서 한꺼번에 넘겨야함 , HashMap
+		return sqlSession.selectOne("teacherMapper.searchAppListCount", map);
+	}
+	
+	public ArrayList<Teacher> appLectureSearchList(SqlSessionTemplate sqlSession, PageInfo pi, String condition, String keyword){
+		
+		HashMap<String, String> map = new HashMap<>();
+		map.put("condition", condition);
+		map.put("keyword", keyword);
+		
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1) * limit;
+		
+		RowBounds rowBounds  = new RowBounds(offset, limit);
+		
+		return (ArrayList)sqlSession.selectList("teacherMapper.appLectureSearchList", map, rowBounds);
+	
+	}
 	
 	
 	

@@ -33,23 +33,67 @@
             
             <div class="tableOption" style="display:flex; justify-content: space-between;">
                 <div class="selectOption">
-                    <select>
-                        <option value="">최근순</option>
-                        <option value="">오래된순</option>
-                        <option value="">이름순</option>
+                    <select id="select" name="select">
+                        <option value="new">최근순</option>
+                        <option value="old">오래된순</option>
+                        <option value="name">이름순</option>
                     </select>
                 </div>
                
                 <div class="filterHead">
-                    <div class="searchbar">
-                        <b>검색</b>　
-                        <input type="text" placeholder="텍스트 검색" style="height:25px;">
-                        <i class="fas fa-search fa-fw"></i>
-                    </div>
-                 <br>   
+	                <form action="adminSearchForm.cl">
+	                    <div class="searchbar">
+	                        <b>검색</b>　
+	                   
+	                        <select class="selectOption" name="condition">
+		                        <option value="classTitle">과정명</option>
+		                        <option value="memName">강사명</option>
+		                    </select>
+	                        <input type="text" name="keyword" value="${ keyword }" placeholder="텍스트 검색" style="height:25px;">
+	                        <button type="submit" style="border:none; background-color:white"><i class="fas fa-search fa-fw"></i></button>
+	                    </div>
+	                </form>
+                <br>   
                 </div>
                 
             </div>
+            
+            <c:if test="${ not empty condition }">
+				<script>
+					$(function(){
+						$("option[value=${condition}]").attr("selected", true);
+					})
+				</script>
+			</c:if>
+            
+            <script>
+				$(function(){
+					$("#select").change(function(){	
+						$.ajax({
+							url:"ajaxAdminList.cl",
+							data:{select:$("#select").val()},
+							success:function(result){
+								
+								console.log(result);
+								
+								let value = "";
+								for(let i=0; i<result.size; i++){
+									 value += "<td class='no'>" + result[i].classNo  + "</td>"
+								               + "<td>" + result[i].classApproval + "</td>"
+								               + "<td>" + result[i].classTitle  + "</td>"
+								               + "<td>" + result[i].memName  + "</td>"
+								               + "<td>" + result[i].classStartDate + "/" + result[i].classEndDate  + "</td>"
+								               + "<td>" + result[i].classSignupDate  + "</td>"
+											  
+											  $("#result").html(value);
+								}
+							},error:function(){
+								console.log("ajax통신 실패");
+							}
+						})
+					})
+				})
+			</script>
             
             <div class="main_width">
                 <table id="admLecture" class="board-content table" align="center">
@@ -73,9 +117,19 @@
 						
 						<c:otherwise>
 							<c:forEach var="l" items="${ list }">
-					            <tr>
+					            <tr id="result">
 					                <td class="no">${ l.classNo }</td>
-					                <td>${ l. classApproval }</td>
+					                <c:choose>
+						                <c:when test="${ t.classApproval eq 1 }">
+						               		<td>대기중</td>
+						                </c:when>
+						                <c:when test="${ t.classApproval eq 2 }">
+						             		<td>승인</td>
+						                </c:when>
+						                <c:otherwise>
+						                	<td>반려</td>
+						                </c:otherwise>
+					                </c:choose>
 					                <td>${ l.classTitle }</td>
 					                <td>${ l.memName }</td>
 					                <td>${ l.classStartDate } / ${ l.classEndDate }</td>
@@ -112,6 +166,13 @@
 						            </a>
 						        </li>
 						    </c:when>
+						    <c:when test="${ not empty condition }">
+						    	<li class="page-item">
+						            <a class="page-link" style="color:slategray" href="doneList.cl?cpage=${ pi.currentPage-1 }&condition=${condition}&keyword=${keyword}" aria-label="Previous">
+						            <span aria-hidden="true">&laquo;</span>
+						            </a>
+						        </li>
+						    </c:when>
 						    <c:otherwise>
 						    	<li class="page-item">
 						            <a class="page-link" style="color:slategray" href="doneList.cl?cpage=${ pi.currentPage-1 }" aria-label="Previous">
@@ -121,13 +182,38 @@
 						    </c:otherwise>
 						</c:choose>
 					        
+					        
+					        
 				        <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-				        	<li class="page-item"><a class="page-link" style="color:slategray" href="doneList.cl?cpage=${ p }">${ p }</a></li>
-				        </c:forEach>
+					        <c:choose>
+							     <c:when test="${ not empty condition }">
+							        	<li class="page-item"><a class="page-link" style="color:slategray" href="adminSearchForm.cl?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
+							    </c:when>
+							    <c:otherwise>
+							        	<li class="page-item"><a class="page-link" style="color:slategray" href="doneList.cl?cpage=${ p }">${ p }</a></li>
+							        
+							    </c:otherwise>
+							</c:choose> 
+					    </c:forEach>    
+					        
 					        
 					    <c:choose>
 			        		<c:when test="${ pi.currentPage eq pi.maxPage }">
 					        	<li class="page-item disabled">
+						            <a class="page-link disabled" style="color:lightgray" aria-label="Next">
+						            <span aria-hidden="true">&raquo;</span>
+						            </a>
+						        </li>
+						    </c:when>
+						     <c:when test="${ not empty condition }">
+						    	<li class="page-item">
+						            <a class="page-link" style="color:slategray" href="doneList.cl?cpage=${ pi.currentPage+1 }&condition=${condition}&keyword=${keyword}" aria-label="Next">
+						            <span aria-hidden="true">&raquo;</span>
+						            </a>
+						        </li>
+						    </c:when>
+						    <c:when test="${ not empty condition && pi.currentPage eq pi.maxPage }">
+						    	<li class="page-item">
 						            <a class="page-link disabled" style="color:lightgray" aria-label="Next">
 						            <span aria-hidden="true">&raquo;</span>
 						            </a>

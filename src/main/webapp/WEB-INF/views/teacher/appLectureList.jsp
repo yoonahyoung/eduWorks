@@ -34,15 +34,29 @@
 			    </script>
 			   
 			    <div class="filterHead">
-			        <div class="searchbar">
-			            <b>검색</b>　
-			            <input type="text" placeholder="텍스트 검색" style="height:25px;">
-			            <i class="fas fa-search fa-fw"></i>
-			        </div>
+			        <form action="appSearchForm.cl">
+	                    <div class="searchbar">
+	                        <b>검색</b>　
+	                   
+	                        <select class="selectOption" name="condition">
+		                        <option value="classTitle">과정명</option>
+		                        <option value="memName">강사명</option>
+		                    </select>
+	                        <input type="text" name="keyword" value="${ keyword }" placeholder="텍스트 검색" style="height:25px;">
+	                        <button type="submit" style="border:none; background-color:white"><i class="fas fa-search fa-fw"></i></button>
+	                    </div>
+	                </form>
 			     <br>   
 			    </div>
-			    
 			</div>
+			
+			 <c:if test="${ not empty condition }">
+				<script>
+					$(function(){
+						$("option[value=${condition}]").attr("selected", true);
+					})
+				</script>
+			</c:if>
 			
 			<div class="main_width" style="width: 100%;">
 			    <table class="board-content table" align="center">
@@ -69,7 +83,17 @@
 							<c:forEach var="t" items="${ list }">
 					            <tr>
 					                <td class="no">${ t.classNo }</td>
-					                <td>${ t. classApproval }</td>
+					                <c:choose>
+						                <c:when test="${ t.classApproval eq 1 }">
+						               		<td>대기중</td>
+						                </c:when>
+						                <c:when test="${ t.classApproval eq 2 }">
+						             		<td>승인</td>
+						                </c:when>
+						                <c:otherwise>
+						                	<td>반려</td>
+						                </c:otherwise>
+					                </c:choose>
 					                <td>${ t.classTitle }</td>
 					                <td>${ t.memName }</td>
 					                <td>${ t.classStartDate } / ${ t.classEndDate }</td>
@@ -88,13 +112,19 @@
 			</div>
 			
 			<div style="margin:30px 0 30px 0">
-			    <nav aria-label="Page navigation example">
-			        <ul class="pagination justify-content-center">
-			        	
-			        	<c:choose>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                    <c:choose>
 			        		<c:when test="${ pi.currentPage eq 1 }">
 					        	<li class="page-item disabled">
 						            <a class="page-link" style="color:lightgray" href="#" aria-label="Previous">
+						            <span aria-hidden="true">&laquo;</span>
+						            </a>
+						        </li>
+						    </c:when>
+						    <c:when test="${ not empty condition }">
+						    	<li class="page-item">
+						            <a class="page-link" style="color:slategray" href="appAllList.cl?cpage=${ pi.currentPage-1 }&condition=${condition}&keyword=${keyword}" aria-label="Previous">
 						            <span aria-hidden="true">&laquo;</span>
 						            </a>
 						        </li>
@@ -108,14 +138,32 @@
 						    </c:otherwise>
 						</c:choose>
 					        
+					        
+					        
 				        <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-				        	<li class="page-item"><a class="page-link" style="color:slategray" href="appAllList.cl?cpage=${ p }">${ p }</a></li>
-				        </c:forEach>
+					        <c:choose>
+							     <c:when test="${ not empty condition }">
+							        	<li class="page-item"><a class="page-link" style="color:slategray" href="appSearchForm.cl?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
+							    </c:when>
+							    <c:otherwise>
+							        	<li class="page-item"><a class="page-link" style="color:slategray" href="appAllList.cl?cpage=${ p }">${ p }</a></li>
+							        
+							    </c:otherwise>
+							</c:choose> 
+					    </c:forEach>    
+					        
 					        
 					    <c:choose>
 			        		<c:when test="${ pi.currentPage eq pi.maxPage }">
 					        	<li class="page-item disabled">
 						            <a class="page-link disabled" style="color:lightgray" aria-label="Next">
+						            <span aria-hidden="true">&raquo;</span>
+						            </a>
+						        </li>
+						    </c:when>
+						     <c:when test="${ not empty condition }">
+						    	<li class="page-item">
+						            <a class="page-link" style="color:slategray" href="appAllList.cl?cpage=${ pi.currentPage+1 }&condition=${condition}&keyword=${keyword}" aria-label="Next">
 						            <span aria-hidden="true">&raquo;</span>
 						            </a>
 						        </li>
@@ -127,14 +175,10 @@
 						            </a>
 						        </li>
 						    </c:otherwise>
-						</c:choose>    
-					        
-					        
-					       
-			        
-			        </ul>
-			    </nav>
-			</div>
+						</c:choose> 
+                    </ul>
+                </nav>
+            </div>
                 
 		</div>
 

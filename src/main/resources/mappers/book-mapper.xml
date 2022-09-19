@@ -72,7 +72,43 @@
 		 where book_no = #{bookNo}
 	</delete>
 	
-	
+	<select id="searchBookListCount" resultType="_int">
+  		select
+		       count(*)
+		  from tb_book b
+  		  join tb_member m on(b.mem_no = m.mem_no)
+  		 where 
+  		 <if test="condition == 'classTitle'">
+  		    bk_title
+  		 </if>
+  		 <if test="condition == 'memName'">
+  		    mem_name
+  		 </if>
+  		 	like '%' || #{keyword} || '%'
+  	</select>
+  	
+  	<select id="bookSearchForm" resultMap="bookResult">
+  		select
+		      book_no
+		     , b.mem_no
+		     , bk_title
+		     , bk_content
+		     , mem_name
+		  from tb_book b 
+		  join tb_member m on (b.mem_no = m.mem_no)
+		  where
+		 <choose>
+		 	<when test="condition == 'classTitle'">
+           	    bk_title 
+         	</when>  
+	         <when test="condition == 'memName'">
+	            mem_name
+	         </when>  
+         </choose>
+               like '%' || #{keyword} || '%'
+		 order
+		    by book_no desc
+  	</select>
 	
 	
 	

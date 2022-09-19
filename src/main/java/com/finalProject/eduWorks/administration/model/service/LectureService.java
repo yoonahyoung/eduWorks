@@ -24,4 +24,12 @@ public interface LectureService {
 	Teacher adminAppLectureDetailSelect(int classNo);
 	
 	int appLectureStatus(Teacher t);
+	
+	int searchAdminListCount(String condition, String keyword);
+	ArrayList<Teacher> adminSearchForm(PageInfo pi, String condition, String keyword);	
+	
+	int searchAdminAppListCount(String condition, String keyword);
+	ArrayList<Teacher> adminAppSearchForm(PageInfo pi, String condition, String keyword);	
+	
+	ArrayList<Teacher> ajaxAdminList(String select);
 }

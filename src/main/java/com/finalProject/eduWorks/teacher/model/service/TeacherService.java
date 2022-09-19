@@ -23,4 +23,11 @@ public interface TeacherService {
 	int bookUpdate(Book b);
 	
 	int deleteBook(int bookNo);
+	
+	int searchBookListCount(String condition, String keyword);
+	ArrayList<Book> bookSearchForm(PageInfo pi, String condition, String keyword);
+
+	int searchAppListCount(String condition, String keyword);
+	ArrayList<Teacher> appLectureSearchList(PageInfo pi, String condition, String keyword);
 }
+
