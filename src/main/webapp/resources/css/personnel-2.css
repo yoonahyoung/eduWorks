@@ -29,6 +29,10 @@
      padding-left: 10px;
    }
    
+   .collapse-header{
+   	color: white;
+   }
+   
    .su_sub_menu_item [data-toggle="collapse"]::after {
      width: 1rem;
      text-align: center;

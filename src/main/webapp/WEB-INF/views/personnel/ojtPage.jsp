@@ -93,7 +93,7 @@
           
         }
         
-        a>span{
+        #pagebar a>span{
         	text-decoration: none;
         	color:black;
         }
@@ -405,7 +405,7 @@
                             	
                             	</c:when>
                             	<c:otherwise>
-                            		<div style="margin-top: 10px; width: 1000px; height: 40px;" align="center">
+                            		<div style="margin-top: 10px; width: 1000px; height: 40px;" align="center" id="pagebar">
 			                            <c:if test="${ pi.currentPage ne 1 }">
 				                            <c:choose>
 				                            	<c:when test="${ empty searchck }">

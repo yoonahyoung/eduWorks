@@ -72,8 +72,8 @@
                             <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b;">
 
                             <div  style="margin-left: 10px; padding: 30px;  width: 1000px; height: 250px;" align="center">
-                                <h3>2022-08-20(토)</h3> <br>
-                                <h3>08:59:59</h3> <br>
+                                <h3 class="date1"></h3> <br>
+                                <h3 class="clock"></h3> <br>
                                 <span>
                                     <button type="button" class="btn su_btn_border">출근하기</button>
                                 </span>
@@ -83,6 +83,30 @@
                                 </span>
                             </div>
                             <br>
+                            
+                            <script>
+                            	$(function(){
+                            		const clock = $(".clock");
+                            		const date = $('.date1');
+                            		
+    	                            function dateClock(){
+    	                              let d2 = new Date();
+    	                              d2.setHours(d2.getHours() + 9)
+    	                              let d3 = d2.toISOString();
+    	                              //console.log(d3) //2022-09-18T20:48:07.964Z
+    	                              let date1 = d3.slice(0,10);
+    	                              let time = d3.slice(11,19);
+    	                              let week = new Array('일', '월', '화', '수', '목', '금', '토');
+    	                              let day = week[d2.getDay()]
+    	                              clock.text(time)
+    	                              date.text(date1+'('+day+")")
+    	                            }
+    	                            
+    	                            dateClock();
+    	                            setInterval(dateClock, 1000);
+                            	})
+                            	
+                            </script>
 
                             <div style="float: left;">
                                 <h2 class="su_sub_menu_name">근무내역관리</h2>
@@ -100,9 +124,9 @@
                                         <th style="width: 33%;">결근</th>
                                     </tr>
                                     <tr>
-                                        <th>3</th>
-                                        <th>2</th>
-                                        <th>1</th>
+                                        <th id="d"></th>
+                                        <th id="l"></th>
+                                        <th id="f"></th>
                                     </tr>
                                 </table>
                                 <div class="detailInfo positionab" id="div1" style="display: none;">
@@ -162,16 +186,15 @@
                             $('#div1').css('display','none')
                             $('#date1').val('')
                         })
-
-                        document.addEventListener('DOMContentLoaded', function() {
+						</script>
+						
+                        <script>
+                        
+                   		
+                         document.addEventListener('DOMContentLoaded', function() {
                             var calendarEl = document.getElementById('calendar');
                             var calendar = new FullCalendar.Calendar(calendarEl, {
-                                googleCalendarApiKey:'AIzaSyDmZOm2L_dmlilRRiPofCxoijwfXMwAObY',
-                                eventSources:[{
-                                    googleCalendarId:'ko.south_korea#holiday@group.v.calendar.google.com',
-                                    className:'대한민국의휴일',
-                                    color:'red'
-                                }],
+                               
                                 initialView: 'dayGridMonth',
                                 
                                 locale: 'ko',
@@ -194,12 +217,9 @@
                                     }
                                 },
 	
-                                
-
                                 navLinks: true,
                                 navLinkDayClick: function(date,jsEvent){
                     				
-                                	
                                 	var date = new Date(date)
                                     date.setHours(date.getHours() + 9)
                                     clickDate = date.toISOString().replace('T', ' ').substring(0, 10)
@@ -213,23 +233,56 @@
                                     }else{
                                     	alert('유효한날짜를 선택하세요.')
                                     }
-                                   
-                
-                                    
-                    
-                                }, 
-                                events : [
-                                    {
-                                        title: '출근 08:55',
-                                        start: '2022-09-01',
-                                        color: 'green'
-                                        
-                                    },
-                                    {
-                                        title: '퇴근 18:00',
-                                        start: '2022-09-01'
-                                    }
-                                ]
+                               }, 
+                               eventSources: [{
+                           		events: function(info, successCallback, failureCallback) {
+                           			
+                           			let h1 = new Date(info.startStr).toISOString().slice(0,10);
+                           			let h2 = new Date(info.endStr).toISOString().slice(0,10);
+                           			let h3 = new Date(info.startStr)
+                           			let h4 = new Date(h3.setMonth(h3.getMonth()+1))
+                           			let month = new Date(h4).getMonth()+1
+                           			let year = new Date(h4).getFullYear();
+                           			let date = new Date(year,month,0).getDate()
+                           			let startdate = ''
+                           			let enddate = ''
+                           			if(month<10){
+                           				startdate=year+'-0'+month+'-01'
+                           				enddate=year+'-0'+month+'-'+date
+                           			}else{
+                           				startdate=year+'-'+month+'-01'
+                           				enddate=year+'-'+month+'-'+date
+                           			}
+                           			$.ajax({
+                           				url: 'count.cl',
+                           				type: 'POST',
+                           				dataType: 'json',
+                           				data: {
+                           					start : startdate,
+                           					end : enddate
+                           				},
+                           				success: function(data) {
+                           					console.log(data)
+                           					$('#d').text(data.normal)
+                           					$('#l').text(data.leave)
+                           					$('#f').text(data.absent)
+                           				}
+                           			});
+                           			
+                           			$.ajax({
+                           				url: 'test.cl',
+                           				type: 'POST',
+                           				dataType: 'json',
+                           				data: {
+                           					start : h1,
+                           					end : h2
+                           				},
+                           				success: function(data) {
+                           					successCallback(data);
+                           				}
+                           			});
+                           		}
+                           	}]
                             });
                             calendar.render();
                             
@@ -272,7 +325,9 @@
                                 alert(month)
                             });
                         });
-                            </script>
+                     
+                        
+                      </script>
                         
 
                         <!-- 게시글 영역 -->

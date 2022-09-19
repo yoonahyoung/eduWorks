@@ -64,7 +64,7 @@
                             	<button type="reset" id=fileReset></button>
                             </form>
                             
-                            <form action="personnelUpdate.me" method="post">
+                            <form action="personnelUpdate.em" method="post">
                             <div style="height: 200px; width: 1000px; " align="center">
                             	<c:choose>
                             		<c:when test="${ empty m.memProfile }">
