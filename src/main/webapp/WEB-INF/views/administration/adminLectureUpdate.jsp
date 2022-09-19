@@ -48,7 +48,7 @@
 		              <tr>
 		                   <th>강사명</th>
 		                   <td>
-		                   		 <select id="memNo" name="memNo" selected="${ t.memName }">
+		                   		 <select id="memNo" name="memNo">
 			                   		<c:forEach var="l" items="${ list }">
 				                        <option  value="${ l.memNo }" >${ l.memName }</option>
 			                        </c:forEach>
