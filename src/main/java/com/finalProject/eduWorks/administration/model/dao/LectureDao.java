@@ -57,10 +57,13 @@ public class LectureDao {
 		return sqlSession.delete("teacherMapper.adminLectureDelete", classNo);
 	}
 	
+	public Teacher adminAppLectureDetailSelect(SqlSessionTemplate sqlSession, int classNo) {
+		return sqlSession.selectOne("teacherMapper.adminAppLectureDetailSelect", classNo);
+	}
 	
-	
-	
-	
+	public int appLectureStatus(SqlSessionTemplate sqlSession, Teacher t) {
+		return sqlSession.update("teacherMapper.appLectureStatus", t);
+	}
 	
 	
 	

@@ -59,7 +59,7 @@ public class LectureController {
 			switch(list.get(i).getClassApproval()){
 			case "1": list.get(i).setClassApproval("대기중"); break;
 			case "2": list.get(i).setClassApproval("승인"); break;
-			case "3": list.get(i).setClassApproval("보류"); break;
+			case "3": list.get(i).setClassApproval("반려"); break;
 			}
 		}
 		
@@ -84,7 +84,7 @@ public class LectureController {
 			session.setAttribute("alertIcon", "error");
 			session.setAttribute("alertTitle", "조회 실페");
 			session.setAttribute("alertMsg", "페이지 조회를 실패하였습니다.");
-			mv.setViewName("administration/adminAppLectureList");
+			mv.setViewName("administration/adminLectureList");
 		}
 		return mv;
 	}
@@ -119,26 +119,59 @@ public class LectureController {
 	}
 	
 	// (행정) 승인된 강의 삭제
-		@RequestMapping("doneDelete.cl")
-		public String adminLectureDelete(int no, HttpSession session) {
+	@RequestMapping("doneDelete.cl")
+	public String adminLectureDelete(int no, HttpSession session) {
+		
+		int result = lService.adminLectureDelete(no);
+		
+		if(result > 0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "삭제 성공");
+			session.setAttribute("alertMsg", "강의 삭제를 성공하였습니다.");
+			return "redirect:doneList.cl";
+		}else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "삭제 실페");
+			session.setAttribute("alertMsg", "강의 삭제를 실패하였습니다.");
+			return "redirect:doneDetail.cl?no=" + no;
+		}
+	}
+	
+	// (행정) 대기중, 반려된 강의 상세패이지
+	@RequestMapping("appDetail.cl")
+	public ModelAndView adminAppLectureDetailSelect(int no, ModelAndView mv, HttpSession session) {
 			
-			int result = lService.adminLectureDelete(no);
-			
-			if(result > 0) {
-				session.setAttribute("alertIcon", "success");
-				session.setAttribute("alertTitle", "삭제 성공");
-				session.setAttribute("alertMsg", "교재 삭제를 성공하였습니다.");
-				return "redirect:doneDetail.cl";
+			Teacher t = lService.adminAppLectureDetailSelect(no);
+			if(t != null) {
+				mv.addObject("t", t).setViewName("administration/adminAppLectureDetail");
+				
 			}else {
 				session.setAttribute("alertIcon", "error");
-				session.setAttribute("alertTitle", "삭제 실페");
-				session.setAttribute("alertMsg", "교재 삭제를 실패하였습니다.");
-				return "redirect:doneDetail.cl?no=" + no;
+				session.setAttribute("alertTitle", "조회 실페");
+				session.setAttribute("alertMsg", "페이지 조회를 실패하였습니다.");
+				mv.setViewName("administration/adminAppLectureList");
 			}
+			return mv;
 		}
 	
-	
-	
+	// (행정) 대기중, 반려된 강의 상세페이지에서 강의 상태 변경
+	@RequestMapping("appStatus.cl")
+	public String appLectureStatus(Teacher t, HttpSession session) {
+		
+		int result = lService.appLectureStatus(t);
+		
+		if(result > 0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "변경 성공");
+			session.setAttribute("alertMsg", "강의 상태 변경을 성공하였습니다.");
+			return "redirect:appList.cl";
+		}else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "변경 실페");
+			session.setAttribute("alertMsg", "강의 상태 변경을 실패하였습니다.");
+			return "redirect:/";
+		}
+	}
 	
 	
 	
