@@ -115,7 +115,9 @@
                          
 					</td>
 					<td class="mail-person" width="15%"><div class="person">${loginUser.memName }</div></td>
-					<td class="mail-title">${m.mailTitle }
+					<td class="mail-title">
+						<c:if test="${m.mailType == 1}"><span style="color:red;">[중요!]</span></c:if>
+						${m.mailTitle }
 						<input type="hidden" name="mailNo" value="${m.mailNo }">
 					</td>
 					<td class="mail-sendtime">${m.sendDate }</td>

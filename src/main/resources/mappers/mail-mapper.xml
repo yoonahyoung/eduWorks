@@ -109,6 +109,8 @@
 		join tb_mail_status ms using (mail_no)
 		where mem_no = #{memNo}
 		  and mail_folder = 1
+		order 
+            by mail_type, mail_no
 	</select>
 	
 	<!-- 받은 메일 개수 조회 -->
@@ -165,6 +167,8 @@
 		join tb_mail_status ms using (mail_no)
 		where mail_folder in (2,3)
 		  and receive_mail = #{memEmail}
+		order 
+    		by mail_type, mail_no
 	</select>
 	
 	<!-- 공용 주소록에 들어간 사원 목록 조회(주소록에서 찾기) -->
