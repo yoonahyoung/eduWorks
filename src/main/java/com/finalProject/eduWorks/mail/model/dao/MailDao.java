@@ -213,5 +213,50 @@ public class MailDao {
 		return (ArrayList)sqlSession.selectList("mailMapper.selectDeleteMailList", m, rowBounds);
 	}
 	
+	/**
+	 * 11_1. 읽은 메일함 개수 조회
+	 * @param m : 로그인한 회원 이메일
+	 * @return : 읽은 메일함 개수
+	 */
+	public int readListCount(SqlSessionTemplate sqlSession, Mail m) {
+		return sqlSession.selectOne("mailMapper.readListCount", m);
+	}
+	
+	/**
+	 * 11_2. 읽은 메일함 목록 조회
+	 * @param m : 로그인한 회원 이메일
+	 * @return : 읽은 메일함 목록
+	 */
+	public ArrayList<Mail> selectReadMailList(SqlSessionTemplate sqlSession, PageInfo pi, Mail m){
+		
+		int limit = pi.getBoardLimit(); // 조회해야되는 게시글 갯수
+		int offset = (pi.getCurrentPage() - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return (ArrayList)sqlSession.selectList("mailMapper.selectReadMailList", m, rowBounds);
+	}
+	
+	/**
+	 * 12_1. 안읽은 메일함 개수 조회
+	 * @param m : 로그인한 회원 이메일
+	 * @return : 안읽은 메일함 개수
+	 */
+	public int unReadListCount(SqlSessionTemplate sqlSession, Mail m) {
+		return sqlSession.selectOne("mailMapper.unReadListCount", m);
+	}
+	
+	/**
+	 * 12_1. 안읽은 메일함 목록 조회
+	 * @param m : 로그인한 회원 이메일
+	 * @return : 안읽은 메일함 목록
+	 */
+	public ArrayList<Mail> selectUnReadMailList(SqlSessionTemplate sqlSession, PageInfo pi, Mail m){
+		
+		int limit = pi.getBoardLimit(); // 조회해야되는 게시글 갯수
+		int offset = (pi.getCurrentPage() - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return (ArrayList)sqlSession.selectList("mailMapper.selectUnReadMailList", m, rowBounds);
+	}
 
 }

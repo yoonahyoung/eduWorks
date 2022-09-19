@@ -392,7 +392,7 @@ public class MailController {
 	@ResponseBody
 	@RequestMapping("updateImportant.ma")
 	public String ajaxUpdateImportant(MailStatus ms) {
-		System.out.println(ms);
+
 		int result = mService.updateImportant(ms);
 		
 		return result > 0 ? "success" : "fail";
@@ -468,6 +468,74 @@ public class MailController {
 		mv.addObject("pi", pi);
 		mv.addObject("unread", unreadList);
 		mv.setViewName("mail/deleteMailList");
+		
+		return mv;
+	}
+	
+	/**
+	 * 11. 읽은 메일함 페이지 이동
+	 * @return : 읽은 메일함 페이지
+	 */
+	@RequestMapping("readMailList.ma")
+	public ModelAndView readMailList(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv, HttpSession session) {
+		
+		String memNo = ( (Member)session.getAttribute("loginUser") ).getMemNo();
+		String memEmail = ( (Member)session.getAttribute("loginUser") ).getMemEmail();
+		
+		Mail m = new Mail();
+		m.setMemNo(memNo);
+		m.setReceiverMem(memEmail);
+		
+		// 내게 쓴 메일 개수 조회
+		int listCount = mService.readListCount(m);
+		
+		// 페이징
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
+		
+		// 내게 쓴 메일 조회
+		ArrayList<Mail> list = mService.selectReadMailList(pi, m);
+
+		System.out.println(listCount);
+		System.out.println(list);
+				
+		mv.addObject("count", listCount);
+		mv.addObject("list", list);
+		mv.addObject("pi", pi);
+		mv.setViewName("mail/readMailList");
+		
+		return mv;
+	}
+	
+	/**
+	 * 12. 안읽은 메일함 페이지 이동
+	 * @return : 안읽은 메일함 페이지
+	 */
+	@RequestMapping("unReadMailList.ma")
+	public ModelAndView unReadMailList(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv, HttpSession session) {
+		
+		String memNo = ( (Member)session.getAttribute("loginUser") ).getMemNo();
+		String memEmail = ( (Member)session.getAttribute("loginUser") ).getMemEmail();
+		
+		Mail m = new Mail();
+		m.setMemNo(memNo);
+		m.setReceiverMem(memEmail);
+		
+		// 내게 쓴 메일 개수 조회
+		int listCount = mService.unReadListCount(m);
+		
+		// 페이징
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
+		
+		// 내게 쓴 메일 조회
+		ArrayList<Mail> list = mService.selectUnReadMailList(pi, m);
+
+		System.out.println(listCount);
+		System.out.println(list);
+				
+		mv.addObject("count", listCount);
+		mv.addObject("list", list);
+		mv.addObject("pi", pi);
+		mv.setViewName("mail/unReadMailList");
 		
 		return mv;
 	}

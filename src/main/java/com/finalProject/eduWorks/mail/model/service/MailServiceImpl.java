@@ -203,6 +203,46 @@ public class MailServiceImpl implements MailService {
 	public ArrayList<Mail> selectDeleteMailList(PageInfo pi, Mail m) {
 		return mDao.selectDeleteMailList(sqlSession, pi, m);
 	}
+	
+	/**
+	 * 11_1. 읽은 메일함 개수 조회
+	 * @param m : 로그인한 회원 이메일
+	 * @return : 읽은 메일함 개수
+	 */
+	@Override
+	public int readListCount(Mail m) {
+		return mDao.readListCount(sqlSession, m);
+	}
+	
+	/**
+	 * 11_2. 읽은 메일함 목록 조회
+	 * @param m : 로그인한 회원 이메일
+	 * @return : 읽은 메일함 목록
+	 */
+	@Override
+	public ArrayList<Mail> selectReadMailList(PageInfo pi, Mail m) {
+		return mDao.selectReadMailList(sqlSession, pi, m);
+	}
+	
+	/**
+	 * 12_1. 안읽은 메일함 개수 조회
+	 * @param m : 로그인한 회원 이메일
+	 * @return : 안읽은 메일함 개수
+	 */
+	@Override
+	public int unReadListCount(Mail m) {
+		return mDao.unReadListCount(sqlSession, m);
+	}
+	
+	/**
+	 * 12_1. 안읽은 메일함 목록 조회
+	 * @param m : 로그인한 회원 이메일
+	 * @return : 안읽은 메일함 목록
+	 */
+	@Override
+	public ArrayList<Mail> selectUnReadMailList(PageInfo pi, Mail m) {
+		return mDao.selectUnReadMailList(sqlSession, pi, m);
+	}
 
 
 
