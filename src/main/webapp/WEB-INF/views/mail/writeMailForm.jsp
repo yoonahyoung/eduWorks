@@ -102,8 +102,8 @@
 					<tr>
 						<th>받는사람</th>
 						<td style="width: 75%;"><input type="text" name="receiverMem"
-							class="input-mail" id="receive"></td>
-						<td><button type="button" class="address-btn"
+							class="input-mail" id="receive"></td> 
+						<td><button type="button" class="address-btn" onclick="publicAdd();"
 								data-toggle="modal" data-target="#findAdd">주소록에서 찾기</button></td>
 					</tr>
 					<tr>
@@ -306,7 +306,7 @@
 						<b>미리보기</b>
 					</h4>
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<!-- 해당 버튼 클릭시 모달과 연결해제 -->
+					
 				</div>
 
 				<!-- Modal body -->
@@ -360,28 +360,268 @@
 			</div>
 		</div>
 	</div>
-	
+
+
+	<!-- =================== 주소록에서 찾기 모달 ======================= -->
+
+	<div class="modal" id="findAdd">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<div class="modal-content" style="height: 800px">
+
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">
+						<b>주소록에서 찾기</b>
+					</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<!-- 해당 버튼 클릭시 모달과 연결해제 -->
+				</div>
+
+				<!-- Modal body -->
+
+					<div class="modal-body" align="center">
+
+						<input type="hidden" name="memNo" value="${loginUser.memNo }">
+
+						<div class="address-tag">
+
+							<span onclick="publicAdd();">공용 주소록</span> 
+							<span onclick="indivAdd();">개인 주소록</span>
+
+						</div>
+						<div class="add-choice">
+							<div class="add-title">
+								
+							</div>
+							<div class="add-person">
+								<div>
+									<input type="text" name="" placeholder="이름, 이메일, 회사 입력해서 찾기">
+								</div>
+
+								<div id="table-container">
+									<table id="add-table" class="addArea">
+
+										<thead>
+											<tr>
+												<th class="checkbox">
+												<input type="checkbox" name="addNo" onclick="allCheck(this);">
+												</th>
+												<th><span>이름</span></th>
+												<th><span>부서</span></th>
+												<th><span>직위</span></th>
+												<th><span>이메일</span></th>
+											</tr>
+										</thead>
+
+										<tbody>
+
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+
+						<div>
+							<button type="button" class="addBtn" onclick="addMail();" data-dismiss="modal"
+								style="background-color: slategray; color: white; border: none;">추가</button>
+							<button type="button" data-dismiss="modal" class="addBtn">취소</button>
+						</div>
+
+					</div>
+
+			</div>
+		</div>
+	</div>
+		
 	<script>
-		
-		// 메일 '미리보기'클릭시 실행하는 함수
-		$("#preview").click(function(){
+	
+		  // '전체클릭'버튼 클릭시 실행하는 함수
+		  function allCheck(allCheck){
+			 
+			 let checkboxes = document.getElementsByName("addNo");
+			  
+	         checkboxes.forEach((checkbox)=>{
+	      	   
+	            checkbox.checked = allCheck.checked; // 전체 클릭 클릭시 => 항목 전체 선택 실행
+	  	            
+	         });
+	      }
+		  
 			
-			let file = $('#upfile')[0].files.length;
+		 // 주소록에서 이메일 추가시 실행하는 함수
+		function addMail(){
+			 
+			checkCnt = "";
 
-			$(".receive-person").html( $("#receive").val() );
-			$(".cc-person").html( $("#cc").val() );
-			$(".title").html( $("#title").val() );
-			$("#preview-form").html( $("#summernote").val() );
-			if(file > 0){
-				// 첨부파일이 있는 경우
-				$(".file-name").html("<i class='icon fas fa-paperclip'></i>일반 첨부파일 " + file + "개");
-			} else {
-				// 첨부파일이 없는 경우
-				$(".file-name").html("첨부파일이 없습니다.");
-			}
-
-		})
+			$("input[name='addNo']:checked").each(function(){
+				checkCnt += ( $(this).parent().siblings(".email").text() ) + ",";
+			});
+			
+			checkCnt = checkCnt.substring(0,checkCnt.lastIndexOf(",")); // 맨 뒤 콤마 삭제 "2,3,4"
+			
+			$("#receive").val(checkCnt);
+			
+		}
 		
+		$(document).on("change", "input[name=addNo]", function(){
+			addMail();
+			console.log( $("#receive").val() );
+			
+		})
+			
+		// '주소록 찾기' 클릭시 실행하는 함수(전사 주소록)
+		function publicAdd() {
+			$.ajax({
+				url : "publicMailAddress.ad",
+				success : function(address) {
+
+					let value = "";
+					for (let i = 0; i < address.length; i++) {
+						value += "<tr>" 
+									+ "<td class='checkbox'>"
+									// + "<input type='checkbox' name='addNo' onchange=" + "addMail" + "('" + address[i].memEmail + "');" + ">"
+									+ "<input type='checkbox' name='addNo' >"
+									+ "</td>" 
+									+ "<td>" + address[i].memName + "</td>" 
+									+ "<td>" + address[i].deptCode + "</td>" 
+									+ "<td>" + address[i].jobCode + "</td>" 
+									+ "<td class='email'>" + address[i].memEmail + "</td>" 
+							  + "</tr>";
+					}
+
+					let category = "<p>전사 주소록</p>";
+
+					$(".add-title").html(category);
+					$(".addArea tbody").html(value);
+
+				},
+				error : function() {
+					console.log("주소록 찾기 실패");
+				}
+			})
+		}
+
+		// '주소록 찾기' 클릭시 실행하는 함수(개인 기본 주소록)
+		function indivAdd() {
+			$.ajax({
+				url : "indivMailAddress.ad",
+				data : {
+					memNo : ${loginUser.memNo}
+				},
+				success : function(address){
+					
+					let value = "";
+					if(address.iAdd.length == 0){
+						value += "<tr>"
+									+ "<td>" + "</td>" 
+									+ "<td>" + "</td>"
+									+ "<td>" + "</td>"
+									+ "<td>" + "</td>" 
+									+ "<td style='width:100%;'>" +"</td>"
+							  + "</tr>";
+					} else {
+						
+						for (let i = 0; i < address.iAdd.length; i++) {
+							value += "<tr>" + "<td class='checkbox'>"
+										+ "<input type='checkbox' name='addNo'>" + "</td>" 
+										+ "<td>" + address.iAdd[i].addName + "</td>" 
+										+ "<td>" + address.iAdd[i].addDept + "</td>" 
+										+ "<td>" + address.iAdd[i].addJob + "</td>" 
+										+ "<td style='width:100%;'>" + address.iAdd[i].addEmail + "</td>" 
+								  + "</tr>";
+						}
+					}
+					
+					let category = "";
+					for(let i = 0; i < address.c.length; i++){
+						category += "<p onclick='indivCategory(" + address.c[i].addNo + ");'>" 
+										+ address.c[i].addName
+								 + "</p>";
+					}
+					
+					$(".add-title").html(category);
+					$(".addArea tbody").html(value);
+				},
+				error : function(){
+					console.log("개인 주소록 찾기 실패");
+				}
+			})
+
+		}
+
+		// '주소록 찾기' 클릭시 실행하는 함수(개인 카테고리 주소록)
+		function indivCategory(num){
+			
+		 	$.ajax({
+		 		url : "indivMailAddressGroup.ad",
+		 		data : {
+		 			memNo : ${loginUser.memNo},
+		 			addNo : num
+		 		},
+		 		success : function(address){
+		 			
+					let value = "";
+					
+					if(address.iAdd.length == 0){
+						value += "<tr>"
+									+ "<td>" +"</td>" 
+									+ "<td>" + "</td>"
+									+ "<td>" +"</td>"
+									+ "<td>" + "</td>" 
+									+ "<td style='width:100%;'>" +"</td>"
+							  + "</tr>";
+					} else {
+						
+						for (let i = 0; i < address.iAdd.length; i++) {
+							value += "<tr>" + "<td class='checkbox'>"
+										+ "<input type='checkbox' name='addCheck'>" + "</td>" 
+										+ "<td>" + address.iAdd[i].addName + "</td>" 
+										+ "<td>" + address.iAdd[i].addDept + "</td>" 
+										+ "<td>" + address.iAdd[i].addJob + "</td>" 
+										+ "<td style='width:100%;'>" + address.iAdd[i].addEmail + "</td>" 
+								  + "</tr>";
+						}
+					}
+	
+					let category = "";
+					for(let i = 0; i < address.c.length; i++){
+						category += "<p onclick='indivCategory(" + address.c[i].addNo + ");'>" 
+										+ address.c[i].addName
+								 + "</p>";
+					}
+					
+					$(".add-title").html(category);
+					$(".addArea tbody").html(value);
+
+		 		},
+		 		error : function(){
+		 			console.log("개인 주소록 그룹 찾기 실패");
+		 		}
+		 	})
+			
+		}
+
+		// 메일 '미리보기'클릭시 실행하는 함수
+		$("#preview").click(
+				function() {
+
+					let file = $('#upfile')[0].files.length;
+
+					$(".receive-person").html($("#receive").val());
+					$(".cc-person").html($("#cc").val());
+					$(".title").html($("#title").val());
+					$("#preview-form").html($("#summernote").val());
+					if (file > 0) {
+						// 첨부파일이 있는 경우
+						$(".file-name").html(
+								"<i class='icon fas fa-paperclip'></i>일반 첨부파일 "
+										+ file + "개");
+					} else {
+						// 첨부파일이 없는 경우
+						$(".file-name").html("첨부파일이 없습니다.");
+					}
+
+				})
 	</script>
 	
 	<jsp:include page="../common/footer.jsp" />

@@ -6,11 +6,14 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.finalProject.eduWorks.addressBook.model.vo.Address;
+import com.finalProject.eduWorks.addressBook.model.vo.AddressOut;
 import com.finalProject.eduWorks.common.model.vo.Attachment;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.mail.model.dao.MailDao;
 import com.finalProject.eduWorks.mail.model.vo.Mail;
 import com.finalProject.eduWorks.mail.model.vo.MailStatus;
+import com.finalProject.eduWorks.member.model.vo.Member;
 
 @Service
 public class MailServiceImpl implements MailService {
@@ -72,6 +75,27 @@ public class MailServiceImpl implements MailService {
 		return mDao.receiveUnReadCount(sqlSession, memEmail);
 	}
 	
+	@Override
+	public ArrayList<Member> selectPublicAddress() {
+		return mDao.selectPublicAddress(sqlSession);
+	}
+
+	@Override
+	public int selectIndivBasicNum(String memNo) {
+		return mDao.selectIndivBasicNum(sqlSession, memNo);
+	}
+
+	@Override
+	public ArrayList<Address> selectIndivAddress(Address a) {
+		return mDao.selectIndivAddress(sqlSession, a);
+	}
+
+	@Override
+	public ArrayList<AddressOut> selectIndivCategory(Address a) {
+		return mDao.selectIndivCategory(sqlSession, a);
+	}
+
+	
 	/**
 	 * 6_1. 메일 전송 (TB_MAIL)
 	 * @param m : 보낸 메일 정보
@@ -111,5 +135,7 @@ public class MailServiceImpl implements MailService {
 	public int updateImportant(MailStatus ms) {
 		return mDao.updateImportant(sqlSession, ms);
 	}
+
+
 
 }
