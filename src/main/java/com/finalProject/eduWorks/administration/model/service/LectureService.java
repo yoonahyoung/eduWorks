@@ -20,4 +20,8 @@ public interface LectureService {
 	int adminLectureUpdate(Teacher t);
 	
 	int adminLectureDelete(int classNo);
+	
+	Teacher adminAppLectureDetailSelect(int classNo);
+	
+	int appLectureStatus(Teacher t);
 }

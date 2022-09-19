@@ -187,9 +187,34 @@
 		 where class_no = #{classNo}
 	</delete>
 	
+	<select id="adminAppLectureDetailSelect" resultMap="teacherResult">
+		select
+			   class_no
+		     , class_title
+		     , class_content
+		     , class_objective
+		     , class_subject
+		     , class_student
+		     , class_start_date
+		     , class_end_date
+		     , c.mem_no
+		     , class_approval
+		     , class_fee
+		     , class_signup_date
+		     , mem_name
+		  from tb_class c
+		  join tb_member m on(c.mem_no = m.mem_no)
+		 where class_no = #{classNo}    
+	</select>
 	
-	
-	
+	<update id="appLectureStatus">
+		update
+		       tb_class
+		   set class_approval = #{classApproval}
+		     , class_status = 'Y'
+		 where class_no = #{classNo}  
+	</update>
+		
 	
 	
 	
