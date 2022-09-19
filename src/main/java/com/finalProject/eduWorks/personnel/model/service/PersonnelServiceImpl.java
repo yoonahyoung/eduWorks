@@ -258,6 +258,11 @@ public class PersonnelServiceImpl implements PersonnelService {
 		return pDao.searchMyAt(sqlSession, at);
 	}
 
+	@Override
+	public Attendance searchDetailAt(SearchAt s) {
+		return pDao.searchDetailAt(sqlSession, s);
+	}
+
 	
 
 

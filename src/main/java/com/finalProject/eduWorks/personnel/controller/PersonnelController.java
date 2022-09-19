@@ -860,4 +860,21 @@ public class PersonnelController {
 		return new Gson().toJson(list);
 	}
 	
+	@ResponseBody
+	@RequestMapping(value = "searchDetailAt.me",produces="application/json; charset=utf-8")
+	public String searchDetailAt(String day,HttpSession session) {
+		String memNo = ((Member)session.getAttribute("loginUser")).getMemNo();
+		SearchAt s = new SearchAt();
+		s.setUserNo(memNo);
+		s.setStartDate(day);
+		s.setEndDate(day);
+		ArrayList<Restdate> restList = pService.searchRestdate(s);
+		if(!restList.isEmpty()) {
+			s.setList(restList);
+		}
+		Attendance at = pService.searchDetailAt(s);
+		at.setRestList(restList);
+		return new Gson().toJson(at);
+	}
+	
 }

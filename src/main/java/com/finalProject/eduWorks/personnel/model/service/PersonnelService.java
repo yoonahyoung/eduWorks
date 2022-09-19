@@ -108,4 +108,5 @@ public interface PersonnelService {
 	//내 근무내역관리
 	ArrayList<Attendance> searchMyAt(SearchAt at);
 	int atListCount2(SearchAt s);
+	Attendance searchDetailAt(SearchAt s);
 }

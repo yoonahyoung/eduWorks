@@ -259,4 +259,8 @@ public class PersonnelDao {
 	public ArrayList<Attendance> searchMyAt(SqlSessionTemplate sqlSession,SearchAt at) {
 		return (ArrayList)sqlSession.selectList("personnelMapper.searchMyAt", at);
 	}
+	
+	public Attendance searchDetailAt(SqlSessionTemplate sqlSession,SearchAt s) {
+		return sqlSession.selectOne("personnelMapper.searchDetailAt", s);
+	}
 }

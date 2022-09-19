@@ -753,6 +753,43 @@
 			 )
 	</select>
 	
+	<select id="searchDetailAt" resultMap="resultAtt">
+		SELECT *
+		FROM(
+			SELECT 
+			       A.ATT_NO 
+			     , C.MEM_NO
+			     , M.MEM_NAME
+			     , M.MEM_ENROLL_DATE
+			     , NVL(ATT_DATE, TO_CHAR(WORKING_DAY, 'YYYY-MM-DD')) att_date
+			     , ATT_FIXEDIN
+			     , ATT_FIXEDOUT
+			     , ATT_IN
+			     , ATT_OUT
+			     , ATT_WORKOFF
+			     , ATT_WORKTIME
+			     , NVL(ATT_STATUS, 'F') att_status
+			     , ATT_HSTATUS
+			FROM TB_ATTENDANCE A
+			right JOIN (
+			                SELECT WORKING_DAY, MEM_NO
+			                FROM (
+			                            SELECT TO_DATE(#{startDate}) + LEVEL - 1 working_day
+			                            FROM DUAL
+			                        CONNECT BY LEVEL &lt;= 1000
+			                    ), (SELECT * FROM TB_MEMBER)
+			            ) C ON (ATT_DATE = WORKING_DAY AND A.MEM_NO = C.MEM_NO)
+			JOIN TB_MEMBER M ON (C.MEM_NO=M.MEM_NO)
+			WHERE WORKING_DAY &lt;= TO_DATE(#{endDate})
+			<if test="list != null">
+			 		<foreach collection="list" item="date">
+			 			AND WORKING_DAY != #{date.reRestdate}
+			 		</foreach>
+			 </if>
+			ORDER BY 4 DESC, 2)
+		WHERE MEM_NO = #{userNo}
+	</select>
+	
 	<select id="searchAtList" resultMap="resultAtt">
 		SELECT *
 		FROM(
@@ -843,20 +880,22 @@
 			     , ATT_WORKTIME
 			     , NVL(ATT_STATUS, 'F') att_status
 			     , ATT_HSTATUS
+			     , DY
 			FROM TB_ATTENDANCE A
 			right JOIN (
-			                SELECT WORKING_DAY, MEM_NO
+			                SELECT WORKING_DAY, MEM_NO, DY
 			                FROM (
-			                            SELECT TO_DATE(#{startDate}) + LEVEL - 1 working_day
+			                            SELECT TO_DATE(#{startDate}) + LEVEL - 1 working_day,
+			                             TO_CHAR(TRUNC(TO_DATE(#{startDate}), 'MM') + LEVEL - 1, 'DY') "DY"
 			                            FROM DUAL
 			                        CONNECT BY LEVEL &lt;= 1000
 			                    ), (SELECT * FROM TB_MEMBER)
 			            ) C ON (ATT_DATE = WORKING_DAY AND A.MEM_NO = C.MEM_NO)
 			JOIN TB_MEMBER M ON (C.MEM_NO=M.MEM_NO)
-			WHERE WORKING_DAY &lt;= TO_DATE(SYSDATE)
+			WHERE WORKING_DAY &lt;= TO_DATE(SYSDATE) 
 			ORDER BY 4 DESC, 2)
 	  WHERE MEM_NO = #{userNo}
-	  		<choose>
+	  	<choose>
 			 	<when test="list == null">
 			 	
 			 	</when>
@@ -865,7 +904,7 @@
 			 			AND ATT_DATE != #{date.reRestdate}
 			 		</foreach>
 			 	</otherwise>
-			 </choose>	
+			 </choose>		
 	</select>
 	
 	<insert id="insertAtDate">

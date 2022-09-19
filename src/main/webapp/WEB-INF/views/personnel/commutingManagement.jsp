@@ -29,7 +29,7 @@
         .detailInfo{
             background-color: whitesmoke;
             width: 500px;
-            height: 600px;
+            height: 700px;
             left: 25%;
             z-index: 10;
            
@@ -145,8 +145,12 @@
                                                 <td style="padding-bottom: 20px;">&nbsp;<input type="text" style="width:100%;" id="date1"></td>
                                             </tr>
                                             <tr>
-                                                <th>신청날짜 근태현황</th>
-                                                <td style="padding-bottom: 20px;">&nbsp;<input type="text" style="width:100%;"></td>
+                                                <th>변경요청 출근시간</th>
+                                                <td style="padding-bottom: 20px;">&nbsp;<input id="in" type="time" style="width:100%;"></td>
+                                            </tr>
+                                            <tr>
+                                                <th>변경요청 퇴근시간</th>
+                                                <td style="padding-bottom: 20px;">&nbsp;<input id="out" type="time" style="width:100%;"></td>
                                             </tr>
                                             <tr>
                                                 <th>조정내용/사유</th>
@@ -178,13 +182,38 @@
                         <script>
 
                         function test1(date){
-                            $('#div1').css('display','')
-                            $('#date1').val(date)
+                        	console.log(date)
+                        	$.ajax({
+                           				url: 'searchDetailAt.me',
+                           				type: 'POST',
+                           				dataType: 'json',
+                           				data: {
+                           					day : date
+                           				},
+                           				success: function(list) {
+                           					console.log(list)
+                           					if(list.attDate<list.memEnrollDate){
+                           						alert('입사전 날짜입니다.')
+                           					}else{
+                           						$('#div1').css('display','')
+                                				$('#date1').val(list.attDate)
+                                				$('#in').val(list.attIn)
+                                				$('#out').val(list.attOut)
+                           					}
+                           					
+                           				},error: function(){
+                           					alert('휴일 또는 공휴일입니다.')
+                           				}
+                           			});	
+                        	
+           					
                         }
 
                         $('.close').click(function(){
                             $('#div1').css('display','none')
                             $('#date1').val('')
+                            $('#in').val('')
+                            $('#out').val('')
                         })
 						</script>
 						
@@ -217,23 +246,8 @@
                                     }
                                 },
 	
-                                navLinks: true,
-                                navLinkDayClick: function(date,jsEvent){
-                    				
-                                	var date = new Date(date)
-                                    date.setHours(date.getHours() + 9)
-                                    clickDate = date.toISOString().replace('T', ' ').substring(0, 10)
-                                    let date2 = new Date()
-                                	date2.setHours(date.getHours() + 9)
-                                    currentDate = date2.toISOString().replace('T', ' ').substring(0, 10)
-                                	console.log(clickDate)
-                                	console.log(currentDate)
-                                    if(clickDate<=currentDate){
-                                    	test1(clickDate);
-                                    }else{
-                                    	alert('유효한날짜를 선택하세요.')
-                                    }
-                               }, 
+                                navLinks: false,
+                               	
                                eventSources: [{
                            		events: function(info, successCallback, failureCallback) {
                            			

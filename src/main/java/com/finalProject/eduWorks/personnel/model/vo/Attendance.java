@@ -1,5 +1,7 @@
 package com.finalProject.eduWorks.personnel.model.vo;
 
+import java.util.ArrayList;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,4 +27,5 @@ public class Attendance {
 	private String attWorktime;
 	private String attStatus;
 	private String attHstatus;
+	private ArrayList<Restdate> restList;
 }
