@@ -48,5 +48,13 @@
 	-->
 	<!-- xml방식 끝 -->
 	
+	<interceptors>
+		<interceptor>
+			<mapping path="/myPage.me"/>
+			<mapping path="/enrollForm.bo" />
+			<beans:bean class="com.finalProject.eduWorks.common.interceptor.LoginInterceptor" id="loginInterceptor" />
+		</interceptor>
+	</interceptors>
+	
 	
 </beans:beans>
