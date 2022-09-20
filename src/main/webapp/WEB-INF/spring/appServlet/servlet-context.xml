@@ -25,7 +25,19 @@
 	
 	<context:component-scan base-package="com.finalProject.eduWorks" />
 	
-	<!-- xml방식 끝 -->
+	<!-- websocket handler -->
+	<beans:bean id="replyEchoHandler" class="com.finalProject.eduWorks.common.handler.ReplyEchoHandler" />
+	
+	<!--  
+	<websocket:handlers>
+		<websocket:mapping handler="replyEchoHandler" path="/replyEcho" />
+		<websocket:handshake-interceptors>
+			<beans:bean
+				class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor" />
+		</websocket:handshake-interceptors>
+		<websocket:sockjs/>
+	</websocket:handlers>
+	-->
 	
 	<interceptors>
 		<interceptor>
