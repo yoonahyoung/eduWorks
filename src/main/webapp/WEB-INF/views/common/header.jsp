@@ -419,30 +419,8 @@
 	                                <h4 class="dropdown-header" style="font-size:medium">
 	                                    알람내역
 	                                </h4>
-	                                <a class="dropdown-item d-flex align-items-center" href="#">
-	                                    <div class="mr-3">
-	                                        <div class="icon-circle" style="border:1px solid">
-	                                            <i class="fa fa-comments fa-regular"></i>
-	                                        </div>
-	                                    </div>
-	                                    <div>
-	                                        <div class="small text-gray-500">2022-09-02</div>
-	                                        <!-- 미확인 된 알람일 경우 class에 font-weight-bold -->
-	                                        <span class="font-weight-bold">[진짜 재밌네요..]에 댓글이 달렸습니다.</span>
-	                                    </div>
-	                                </a>
-	                                <a class="dropdown-item d-flex align-items-center" href="#" style="background-color:rgb(243, 243, 243);">
-	                                    <div class="mr-3">
-	                                        <div class="icon-circle" style="border:1px solid">
-	                                            <i class="fa fa-comments fa-regular"></i>
-	                                        </div>
-	                                    </div>
-	                                    <div>
-	                                        <div class="small text-gray-500">2022-08-12</div>
-	                                        <!-- 확인된 알람일 경우 -->
-	                                        <span class="font-weight-bold">[결재 확인할 때 혹시..]에 댓글이 달렸습니다.</span>
-	                                    </div>
-	                                </a>
+	                                <div id="">
+	                                
 	                                <a class="dropdown-item d-flex align-items-center" href="#" style="background-color:rgb(243, 243, 243);">
 	                                    <div class="mr-3">
 	                                        <div class="icon-circle" style="border:1px solid yellow;">
@@ -454,7 +432,8 @@
 	                                        <span class="font-weight-bold" id="msg">[어쩌라고 미친 ㅋㅋ장난하세요?] 글에 대한 신고 규제가 완료되었습니다.</span>
 	                                    </div>
 	                                </a>
-	                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+	                                </div>
+	                                <a class="dropdown-item text-center small text-gray-500" href="#" id="all-alerts">Show All Alerts</a>
 	                            </div>
 	                        </li>
 	
@@ -554,7 +533,7 @@
 			var socket = null;
 		    $(document).ready(function (){
 		    	//selectAlarmList();
-			    connectWs();
+			    //connectWs();
 		    });
 		   
 		    function connectWs(){
@@ -568,7 +547,7 @@
 			     
 			    ws.onmessage = function(event){
 				   console.log("onmessage"+event.data);
-				     $("#socket-alert").html(event.data);
+				    $("#socket-alert").html(event.data);
 				    $("#socket-alert").css("display", "block");
 					
 				    setTimeout(function(){ $("#socket-alert").css("display", "none"); }, 3000);
@@ -576,7 +555,7 @@
 					
 			    ws.onclose = function(event) {
 				    console.log("Info : connection closed.");
-				    setTimeout( function() { connectWs(); }, 1000); // retry connection 즉, 연결 재시도 하라는 뜻
+				    //setTimeout( function() { connectWs(); }, 1000); // retry connection 즉, 연결 재시도 하라는 뜻
 			    }; 
 				
 			    ws.onerror = function(err) {console.log("Error : err")};
@@ -588,6 +567,33 @@
 					url:"select.al",
 					data:{mno:${loginUser.memNo}},
 					success(list){
+						let value = "";
+						let count = 0;
+						console.log(list);
+						if(!list){
+							for(let i=0; i<list.length; i++){
+								if(list[i].alCategory == 1 && list[i].alReadDate == null){ // 댓글 미확인 된 알람일 경우 class에 font-weight-bold
+									value += '<a class="dropdown-item d-flex align-items-center" href="#">'
+			                        		+ '<div class="mr-3">'
+	                                    		+ '<div class="icon-circle" style="border:1px solid">'
+	                                        		+ '<i class="fa fa-comments fa-regular"></i>'
+                                    			+ '</div>'
+                                			+ '</div>'
+                                			+ '<div>'
+                                    			+ '<div class="small text-gray-500">2022-09-02</div>'
+                                    			+ '<span class="font-weight-bold">' + list[i].alContent + ' (' + list[i].alCount + ')</span>'
+                                			+ '</div>'
+                            			+ '</a>';
+								}
+								$("#alert-area").html(value);
+							}
+							
+						}else{
+							// 알람 내역 없을 시 all-alerts 버튼 비활성화
+							$("#alert-area").removeAttr("href");
+						}
+						
+						
 						
 					},error(){
 						
