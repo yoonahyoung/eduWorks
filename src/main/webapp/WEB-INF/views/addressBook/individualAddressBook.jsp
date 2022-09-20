@@ -31,14 +31,14 @@
 
 			<div class="insider">
 				<h4>주소록 목록</h4>
-				<a onclick="postFormSubmit('individualAddress.ad')"><h6>개인 주소록</h6></a>
+				<a onclick="postFormSubmit('individualAddress.ad')" class="basic-title"><h6>개인 주소록</h6></a>
 
 				<!--반복문 시작 -->
 				<c:choose>
 					<c:when test="${not empty category}">
 						<c:forEach var="c" items="${category}">
 							<c:if test="${c.addName != '개인주소록' and c.memNo == loginUser.memNo}">
-								<div class="address-title">
+								<div class="address-title" id="addTitle${c.addNo }">
 								
 									<!-- =========== 해당 주소록 그룹으로 이동 ============== -->
 									<a onclick="postSubmit('indivAddressBook.ad', '${c.addNo}')"
@@ -56,7 +56,7 @@
 										
 										<!--========== 수정, 삭제 버튼 ==========-->
 										<a class="dropdown-item d-flex align-items-center"
-											onclick="updateAddBook(/*해당 주소록 번호*/);"> <span
+											onclick="updateAddBook('${c.addNo}');"> <span
 											class="font-weight-bold">수정하기</span>
 											
 										</a> <a class="dropdown-item d-flex align-items-center"
@@ -75,13 +75,12 @@
 								</form>
 
 								<!--========== 주소록 그룹명 수정 처리하는 함수 ==========-->
-								<div class="insider updateAddBook">
+								<div class="insider updateAddBook" id="update${c.addNo }">
 									<div class="updateAddress">
-										<span> <input type="text" name="" value="거래처">
-										</span>
+										<span><input type="text" id="groupName${c.addNo }" name="addName" value="${c.addName }"></span>
 										<div class="update-addBtn">
-											<a href=""><i class="fas fa-check"></i></a> <span
-												onclick="dismissUpdateAdd();"><i class="fas fa-times"></i></span>
+											<span onclick="updateAddGroup('${c.addNo}')"><i class="fas fa-check"></i></span> 
+											<span onclick="dismissUpdateAdd('${c.addNo}');"><i class="fas fa-times"></i></span>
 										</div>
 									</div>
 								</div>
@@ -98,13 +97,13 @@
 						</span>
 
 						<div class="update-addBtn">
-							<a id="insertAddIndiv"><i class="fas fa-check"></i></a> <a
-								onclick="dismissInsertAdd();"><i class="fas fa-times"></i></a>
+							<a id="insertAddIndiv" onclick="insertAddIndiv();"><i class="fas fa-check"></i></a> 
+							<a onclick="dismissInsertAdd();"><i class="fas fa-times"></i></a>
 						</div>
 					</div>
 				</div>
 
-				<div id="plus-tag" onclick="insertAddBook();">+ 주소록 추가</div>
+				<div id="plus-tag" onclick="return insertAddBook();">+ 주소록 추가</div>
 			</div>
 
 			<script>
@@ -115,11 +114,38 @@
 					$("#post").attr("action", url).submit();
 				}
 
-				// 개인 주소록 수정 처리하는 함수
-				function updateAddBook() {
+				// 개인 주소록 수정 클릭시 실행하는 함수
+				function updateAddBook(addNo) {
 					// 해당 주소록 번호만 들어간 요소 hide, show 이벤트 부여
-					$(".address-title").hide();
-					$(".updateAddBook").show();
+					$("#addTitle"+addNo).hide();
+					$("#update"+addNo).show();
+					
+				}
+				
+				// 개인 주소록 수정 처리하는 함수
+				function updateAddGroup(addNo){
+					
+					let name = $("#groupName" + addNo).val();
+					console.log($("#groupName" + addNo).val());
+					
+					
+					$.ajax({
+						url : "updateIndivAddGroup.ma",
+						data : {
+							memNo : '${loginUser.memNo}',
+							addNo : addNo,
+							addName : name
+						},
+						success : function(result){
+							if(result == 'success'){
+								location.reload();
+							}
+						},
+						error : function(){
+							console.log("주소록 그룹명 수정 실패");
+						}
+					})
+					
 				}
 
 				// 개인 주소록 삭제 처리하는 함수
@@ -152,9 +178,9 @@
 				}
 
 				// 주소록 그룹명 수정 '취소'시 처리하는 함수
-				function dismissUpdateAdd() {
-					$(".updateAddBook").hide();
-					$(".address-title").show();
+				function dismissUpdateAdd(addNo) {
+					$("#update"+addNo).hide();
+					$("#addTitle"+addNo).show();
 				}
 
 				// 주소록 추가 클릭시 처리하는 함수
@@ -162,42 +188,45 @@
 
 					// 추가하는 구문 보이도록 처리
 					$(".insertAddBook").show();
+					
+				}
+				
+				// 주소록 그룹 '추가'시 실행하는 ajax함수
+				function insertAddIndiv(){
 
-					// 주소록 그룹 '추가'시 실행하는 ajax함수
-					$("#insertAddIndiv").click(function() {
+					if ($("#addName").val().trim() != 0) {
 
-						if ($("#addName").val().trim() != 0) {
-
-							$.ajax({
-								url : "insertAddIndiv.ad",
-								data : {
-									memNo : '${loginUser.memNo }',
-									addName : $("#addName").val()
-								},
-								success : function(result) {
-
-									if (result == "success") {
-										location.reload(); // 서버 새로고침
-									}
-								},
-								error : function() {
-									alert("주소록을 추가하는데 실패했습니다. 다시 시도해주세요.");
+						$.ajax({
+							url : "insertAddIndiv.ad",
+							data : {
+								memNo : '${loginUser.memNo }',
+								addName : $("#addName").val()
+							},
+							success : function(result) {
+								console.log($("#addName").val());
+								if (result == "success") {
+									location.reload(); // 서버 새로고침
 								}
+							},
+							error : function() {
+								alert("주소록을 추가하는데 실패했습니다. 다시 시도해주세요.");
+							}
 
-							})
-						} else {
-							alert("주소록명을 입력해주세요.");
-						}
+						})
+					} else {
+						alert("주소록명을 입력해주세요.");
+						return false;
+					}
 
-					})
 				}
 
 				// 주소록 추가 '취소'시 처리하는 함수
 				function dismissInsertAdd() {
 					$(".insertAddBook").hide();
-					
+					$("#addName").val("");
 				}
-			</script>
+				
+		</script>
 
 		</nav>
 		<!-- 게시판 영역 -->

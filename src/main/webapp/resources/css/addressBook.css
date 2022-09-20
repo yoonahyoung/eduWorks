@@ -147,6 +147,11 @@ a:hover{
 
 .address-title{
     display:flex;
+    cursor: pointer;
+}
+
+.basic-title{
+	cursor: pointer;
 }
 
 .address-title input[type=text]{

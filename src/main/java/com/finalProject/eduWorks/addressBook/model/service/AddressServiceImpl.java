@@ -194,4 +194,14 @@ public class AddressServiceImpl implements AddressService {
 		return aDao.searchPublicAdd(sqlSession, pi, keyword, range);
 	}
 	
+	/**
+	 * 9. 개인 연락처 그룹명 수정
+	 * @param ad : 수정하고자하는 그룹명, 로그인한 회원 사번, 수정하고자하는 그룹 번호
+	 * @return : 그룹명 수정 성공여부
+	 */
+	@Override
+	public int updateIndivAddGroup(AddressOut ad) {
+		return aDao.updateIndivAddGroup(sqlSession, ad);
+	}
+	
 }
