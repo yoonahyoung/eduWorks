@@ -37,22 +37,36 @@
 				</script>
 			
 			<div class="filterHead">
-			    <div class="searchbar">
-			        <b>검색</b>　
-			        <input type="text" placeholder="텍스트 검색" style="height:25px;">
-			            <a href="" style="color:slategray"><i class="fas fa-search fa-fw"></i></a>
-			        </div>
-			     <br>   
+			     <form action="bookSearchForm.bk">
+	                    <div class="searchbar">
+	                        <b>검색</b>　
+	                   
+	                        <select class="selectOption" name="condition">
+		                        <option value="classTitle">교재명</option>
+		                        <option value="memName">강사명</option>
+		                    </select>
+	                        <input type="text" name="keyword" value="${ keyword }" placeholder="텍스트 검색" style="height:25px;">
+	                        <button type="submit" style="border:none; background-color:white"><i class="fas fa-search fa-fw"></i></button>
+	                    </div>
+	                </form>
 			    </div>
-			    
 			</div>
+			
+			 <c:if test="${ not empty condition }">
+				<script>
+					$(function(){
+						$("option[value=${condition}]").attr("selected", true);
+					})
+				</script>
+			</c:if>
+			
 		
 			<div class="main_width" style="width: 100%;">
 			    <table id="book" class="board-content table" align="center">
 			        <thead>
 			            <tr class="table_thead_border" style="background-color:white">
 			                <th width="5%">번호</th>
-			                <th width="30%">신청 교재명</th>
+			                <th width="30%">교재명</th>
 			                <th width="14%">강사명</th>
 			            </tr>
 			        </thead>
@@ -92,13 +106,19 @@
 			</div>
 		
 			<div style="margin:30px 0 30px 0">
-			    <nav aria-label="Page navigation example">
-			        <ul class="pagination justify-content-center">
-			        	
-			        	<c:choose>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                    <c:choose>
 			        		<c:when test="${ pi.currentPage eq 1 }">
 					        	<li class="page-item disabled">
 						            <a class="page-link" style="color:lightgray" href="#" aria-label="Previous">
+						            <span aria-hidden="true">&laquo;</span>
+						            </a>
+						        </li>
+						    </c:when>
+						    <c:when test="${ not empty condition }">
+						    	<li class="page-item">
+						            <a class="page-link" style="color:slategray" href="bookList.bk?cpage=${ pi.currentPage-1 }&condition=${condition}&keyword=${keyword}" aria-label="Previous">
 						            <span aria-hidden="true">&laquo;</span>
 						            </a>
 						        </li>
@@ -112,14 +132,32 @@
 						    </c:otherwise>
 						</c:choose>
 					        
+					        
+					        
 				        <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-				        	<li class="page-item"><a class="page-link" style="color:slategray" href="bookList.bk?cpage=${ p }">${ p }</a></li>
-				        </c:forEach>
+					        <c:choose>
+							     <c:when test="${ not empty condition }">
+							        	<li class="page-item"><a class="page-link" style="color:slategray" href="bookSearchForm.bk?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
+							    </c:when>
+							    <c:otherwise>
+							        	<li class="page-item"><a class="page-link" style="color:slategray" href="bookList.bk?cpage=${ p }">${ p }</a></li>
+							        
+							    </c:otherwise>
+							</c:choose> 
+					    </c:forEach>    
+					        
 					        
 					    <c:choose>
 			        		<c:when test="${ pi.currentPage eq pi.maxPage }">
 					        	<li class="page-item disabled">
 						            <a class="page-link disabled" style="color:lightgray" aria-label="Next">
+						            <span aria-hidden="true">&raquo;</span>
+						            </a>
+						        </li>
+						    </c:when>
+						     <c:when test="${ not empty condition }">
+						    	<li class="page-item">
+						            <a class="page-link" style="color:slategray" href="bookList.bk?cpage=${ pi.currentPage+1 }&condition=${condition}&keyword=${keyword}" aria-label="Next">
 						            <span aria-hidden="true">&raquo;</span>
 						            </a>
 						        </li>
@@ -131,17 +169,13 @@
 						            </a>
 						        </li>
 						    </c:otherwise>
-						</c:choose>    
-					        
-					        
-					       
-			        
-			        </ul>
-			    </nav>
-			</div>
+						</c:choose> 
+                    </ul>
+                </nav>
+            </div>
 		                
-		</div>
 		
+		</div>
 
 	
 	

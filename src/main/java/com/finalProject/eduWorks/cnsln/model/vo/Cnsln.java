@@ -1,5 +1,6 @@
 package com.finalProject.eduWorks.cnsln.model.vo;
 
+import com.finalProject.eduWorks.administration.model.vo.Student;
 import com.finalProject.eduWorks.member.model.vo.Member;
 
 import lombok.AllArgsConstructor;
@@ -30,7 +31,10 @@ public class Cnsln {
 	private String cnslnCreateDate;
 	private String cnslnModifyDate;
 	private int cnslnCount;
+	private int studentNo;
+	private String cnslnEc;
 	
 	private Member Member;
+	private Student Student;
 
 }

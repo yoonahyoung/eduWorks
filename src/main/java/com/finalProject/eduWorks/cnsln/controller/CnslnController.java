@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.finalProject.eduWorks.administration.model.vo.Student;
 import com.finalProject.eduWorks.cnsln.model.service.CnslnService;
 import com.finalProject.eduWorks.cnsln.model.vo.Cnsln;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.model.vo.Reply;
 import com.finalProject.eduWorks.common.template.Pagination;
 import com.finalProject.eduWorks.member.model.vo.Member;
-import com.finalProject.eduWorks.promotion.model.vo.Promotion;
 import com.google.gson.Gson;
 
 @Controller
@@ -65,19 +65,29 @@ public class CnslnController {
 		
 		String keyword = "";
 		ArrayList<Member> mList = cService.selectMemberList(keyword) ;
+		String key = "";
+		ArrayList<Student> sList = cService.selectStudentList(key);
 		
-		mv.addObject("day", day).addObject("mList", mList);
+		mv.addObject("day", day).addObject("mList", mList).addObject("sList", sList);
 		mv.setViewName("cnsln/counselingEnrollForm");
 		return mv;
 	}
 	
 	// 상담 일정 등록
 	@RequestMapping("insert.cn")
-	public String insertCnsln(Cnsln c, HttpSession session) {
-		
+	public String insertCnsln(Cnsln c, Student s, HttpSession session) {
+		int result2 = 1;
+		 if(s.getStudentNo() == 0) {
+			 result2 = cService.insertStudent(s);
+			 String key = "";
+			 int listCount = cService.selectStudentList(key).size();
+			 c.setStudentNo(listCount);
+		 }
+		 
+		 //System.out.println(c);
 		 int result = cService.insertCnsln(c);
 		  
-		 if(result > 0) { 
+		 if(result * result2 > 0) { 
 			 session.setAttribute("alertIcon", "success");
 			 session.setAttribute("alertTitle", "상담 일정 등록 완료");
 			 session.setAttribute("alertMsg", "상담 일정 등록을 완료하였습니다."); 
@@ -113,10 +123,14 @@ public class CnslnController {
 	public ModelAndView selectCnsln(int cNo, ModelAndView mv) {
 		String keyword = "";
 		ArrayList<Member> mList = cService.selectMemberList(keyword) ;
+		String key = "";
+		ArrayList<Student> sList = cService.selectStudentList(key);
 		
 		int result = cService.increaseCount(cNo);
 		Cnsln c = cService.selectCnsln(cNo);
-		System.out.println(c);
+		//System.out.println(c);
+		int sNo = c.getStudentNo();
+		Student s = cService.selectStudent(sNo);
 		String no = c.getCnslnChargeNo();
 		String list = c.getCnslnChargeList();
 		String[] nArr = {};
@@ -131,7 +145,8 @@ public class CnslnController {
 			lArr = list.split(",");
 		}
 		if(result > 0) {
-			mv.addObject("c", c).addObject("n", nArr).addObject("l", lArr).addObject("mList", mList);
+			mv.addObject("c", c).addObject("n", nArr).addObject("l", lArr)
+			  .addObject("mList", mList).addObject("s", s).addObject("sList", sList);
 		}
 		mv.setViewName("cnsln/counselingDetailView");
 		return mv;
@@ -140,10 +155,11 @@ public class CnslnController {
 	
 	// 상담 일정 수정
 	@RequestMapping("update.cn")
-	public String updateCnsln(Cnsln c, HttpSession session) {
-		int result = cService.updateCnsln(c);
+	public String updateCnsln(Cnsln c, Student s, HttpSession session) {
+		int result1 = cService.updateCnsln(c);
+		int result2 = cService.updateStudent(s);
 		
-		if(result > 0) {
+		if(result1 * result2 > 0) {
 			session.setAttribute("alertIcon", "success");
 			session.setAttribute("alertTitle", "상담 일정 수정 완료");
 			session.setAttribute("alertMsg", "상담 일정 수정을 완료하였습니다.");
@@ -317,9 +333,22 @@ public class CnslnController {
 		}
 	}
 	
+	// 학생 검색
+	@ResponseBody
+	@RequestMapping(value="stsearch.cn", produces="application/json; charset=UTF-8")
+	public String searchStudent(String key) {
+		ArrayList<Student> list = cService.selectStudentList(key);
+		
+		return new Gson().toJson(list);
+	}
 	
-	
-	
+	// 학생 조회
+	@ResponseBody
+	@RequestMapping(value="stst.cn", produces="application/json; charset=UTF-8")
+	public String selectStudent(int sNo) {
+		Student s = cService.selectStudent(sNo);
+		return new Gson().toJson(s);
+	}
 	
 	
 	

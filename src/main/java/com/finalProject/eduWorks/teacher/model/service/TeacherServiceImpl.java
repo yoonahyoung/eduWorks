@@ -66,5 +66,26 @@ public class TeacherServiceImpl implements TeacherService{
 		return tDao.deleteBook(sqlSession, bookNo);
 	}
 
+	@Override
+	public int searchBookListCount(String condition, String keyword) {
+		return tDao.searchBookListCount(sqlSession, condition, keyword);
+	}
+
+	@Override
+	public ArrayList<Book> bookSearchForm(PageInfo pi, String condition, String keyword) {
+		return tDao.bookSearchForm(sqlSession, pi, condition, keyword);
+	}
+
+	@Override
+	public int searchAppListCount(String condition, String keyword) {
+		return tDao.searchAppListCount(sqlSession, condition, keyword);
+	}
+
+	@Override
+	public ArrayList<Teacher> appLectureSearchList(PageInfo pi, String condition, String keyword) {
+		return tDao.appLectureSearchList(sqlSession, pi, condition, keyword);
+	}
+
+	
 
 }

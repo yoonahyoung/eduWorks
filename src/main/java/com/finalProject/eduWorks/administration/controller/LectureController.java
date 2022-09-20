@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.finalProject.eduWorks.administration.model.service.LectureService;
@@ -15,6 +16,7 @@ import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.template.Pagination;
 import com.finalProject.eduWorks.member.model.vo.Member;
 import com.finalProject.eduWorks.teacher.model.vo.Teacher;
+import com.google.gson.Gson;
 
 @Controller
 public class LectureController {
@@ -173,12 +175,61 @@ public class LectureController {
 		}
 	}
 	
+	// (행정) 승인된 강의 검색 기능
+	@RequestMapping("adminSearchForm.cl")
+	public ModelAndView adminSearchForm(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv, String condition, String keyword, HttpSession session) {
+		
+		int listCount = lService.searchAdminListCount(condition, keyword);
+		
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 5);
+		
+		ArrayList<Teacher> list = lService.adminSearchForm(pi, condition, keyword);
+		
+		mv.addObject("pi", pi)
+		  .addObject("list", list)
+		  .addObject("condition", condition)
+		  .addObject("keyword", keyword)
+		  .setViewName("administration/adminLectureList");
+		
+		return mv;
+	}
+	
+	
+	// (행정) 승인된 강의 검색 기능
+		@RequestMapping("adminAppSearchForm.cl")
+		public ModelAndView adminAppSearchForm(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv, String condition, String keyword, HttpSession session) {
+			
+			int listCount = lService.searchAdminAppListCount(condition, keyword);
+			
+			PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 5);
+			
+			ArrayList<Teacher> list = lService.adminAppSearchForm(pi, condition, keyword);
+			
+			mv.addObject("pi", pi)
+			  .addObject("list", list)
+			  .addObject("condition", condition)
+			  .addObject("keyword", keyword)
+			  .setViewName("administration/adminAppLectureList");
+			
+			return mv;
+		}
 	
 	
 	
 	
 	
 	
+		@ResponseBody 
+		@RequestMapping(value="ajaxAdminList.cl", produces="application/json; charset=utf-8")
+		public String ajaxAdminList(String select, HttpSession session) {
+			
+			//ArrayList<User> list = uService.selectList();
+			ArrayList<Teacher> list = lService.ajaxAdminList(select);
+			
+			
+			return new Gson().toJson(list); // "[{}, {}, {}]"
+			
+		}
 	
 	
 	

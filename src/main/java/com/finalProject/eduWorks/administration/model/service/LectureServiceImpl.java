@@ -70,7 +70,31 @@ public class LectureServiceImpl implements LectureService{
 		return lDao.appLectureStatus(sqlSession, t);
 	}
 
+	@Override
+	public int searchAdminListCount(String condition, String keyword) {
+		return lDao.searchAdminListCount(sqlSession, condition, keyword);
+	}
 
+	@Override
+	public ArrayList<Teacher> adminSearchForm(PageInfo pi, String condition, String keyword) {
+		return lDao.adminSearchForm(sqlSession, pi, condition, keyword);
+	}
+
+
+	@Override
+	public int searchAdminAppListCount(String condition, String keyword) {
+		return lDao.searchAdminAppListCount(sqlSession, condition, keyword);
+	}
+
+	@Override
+	public ArrayList<Teacher> adminAppSearchForm(PageInfo pi, String condition, String keyword) {
+		return lDao.adminAppSearchForm(sqlSession, pi, condition, keyword);
+	}
+
+	@Override
+	public ArrayList<Teacher> ajaxAdminList(String select) {
+		return lDao.ajaxAdminList(sqlSession, select);
+	}
 
 	
 

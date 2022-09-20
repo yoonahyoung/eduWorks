@@ -1,6 +1,7 @@
 package com.finalProject.eduWorks.administration.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -66,9 +67,58 @@ public class LectureDao {
 	}
 	
 	
+	public int searchAdminListCount(SqlSessionTemplate sqlSession, String condition, String keyword) {
+		HashMap<String, String> map = new HashMap<>();
+		map.put("condition", condition);
+		map.put("keyword", keyword);
+		// selectOne은 변수를 한개밖에 못전하기 때문에 어딘가에 변수들을 담아서 한꺼번에 넘겨야함 , HashMap
+		return sqlSession.selectOne("teacherMapper.searchAdminListCount", map);
+	}
 	
+	public ArrayList<Teacher> adminSearchForm(SqlSessionTemplate sqlSession, PageInfo pi, String condition, String keyword){
+		
+		HashMap<String, String> map = new HashMap<>();
+		map.put("condition", condition);
+		map.put("keyword", keyword);
+		
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1) * limit;
+		
+		RowBounds rowBounds  = new RowBounds(offset, limit);
+		
+		return (ArrayList)sqlSession.selectList("teacherMapper.adminSearchForm", map, rowBounds);
+	}
 	
+	public int searchAdminAppListCount(SqlSessionTemplate sqlSession, String condition, String keyword) {
+		HashMap<String, String> map = new HashMap<>();
+		map.put("condition", condition);
+		map.put("keyword", keyword);
+		// selectOne은 변수를 한개밖에 못전하기 때문에 어딘가에 변수들을 담아서 한꺼번에 넘겨야함 , HashMap
+		return sqlSession.selectOne("teacherMapper.searchAdminAppListCount", map);
+	}
 	
+	public ArrayList<Teacher> adminAppSearchForm(SqlSessionTemplate sqlSession, PageInfo pi, String condition, String keyword){
+		
+		HashMap<String, String> map = new HashMap<>();
+		map.put("condition", condition);
+		map.put("keyword", keyword);
+		
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1) * limit;
+		
+		RowBounds rowBounds  = new RowBounds(offset, limit);
+		
+		return (ArrayList)sqlSession.selectList("teacherMapper.adminAppSearchForm", map, rowBounds);
+	
+	}
+		
+		
+		
+		
+		
+	public ArrayList<Teacher> ajaxAdminList(SqlSessionTemplate sqlSession, String select){
+		return (ArrayList)sqlSession.selectList("teacherMapper.ajaxAdminList", select);
+	}
 	
 	
 	

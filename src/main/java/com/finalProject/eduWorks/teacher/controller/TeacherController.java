@@ -31,14 +31,16 @@ public class TeacherController {
 		
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 5);
 		ArrayList<Teacher> list = tService.appAllListSelect(pi);
-		
+		/*
 		for(int i=0; i<list.size(); i++) {
 			switch(list.get(i).getClassApproval()){
 			case "1": list.get(i).setClassApproval("대기중"); break;
 			case "2": list.get(i).setClassApproval("승인"); break;
-			case "3": list.get(i).setClassApproval("보류"); break;
+			case "3": list.get(i).setClassApproval("반려"); break;
 			}
 		}
+		*/
+		System.out.println(pi.getMaxPage());
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
 		  .setViewName("teacher/appLectureList");
@@ -168,9 +170,43 @@ public class TeacherController {
 		}
 	}
 	
+	// (강사) 교재 리스트 검색 기능
+	@RequestMapping("bookSearchForm.bk")
+	public ModelAndView bookSearchForm(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv, String condition, String keyword, HttpSession session) {
+		
+		int listCount = tService.searchBookListCount(condition, keyword);
+		
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 5);
+		
+		ArrayList<Book> list = tService.bookSearchForm(pi, condition, keyword);
+		
+		mv.addObject("pi", pi)
+		  .addObject("list", list)
+		  .addObject("condition", condition)
+		  .addObject("keyword", keyword)
+		  .setViewName("teacher/bookList");
+		
+		return mv;
+	}
 	
-	
-	
+	// (강사) 등록한 강의 리스트 검색 기능
+	@RequestMapping("appSearchForm.cl")
+	public ModelAndView appLectureSearchList(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv, String condition, String keyword, HttpSession session) {
+		
+		int listCount = tService.searchAppListCount(condition, keyword);
+		
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 5);
+		
+		ArrayList<Teacher> list = tService.appLectureSearchList(pi, condition, keyword);
+		
+		mv.addObject("pi", pi)
+		  .addObject("list", list)
+		  .addObject("condition", condition)
+		  .addObject("keyword", keyword)
+		  .setViewName("teacher/appLectureList");
+		System.out.println(pi.getMaxPage());
+		return mv;
+	}
 	
 	
 	

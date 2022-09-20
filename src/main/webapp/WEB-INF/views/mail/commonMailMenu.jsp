@@ -91,7 +91,7 @@
 
 			<div class="insider">
 				<h4>빠른 검색</h4>
-				<a href="importantMailForm.ma"><h6>중요메일함</h6></a> 
+				<a href="importantMailList.ma"><h6>중요메일함</h6></a> 
 				<a href="readMailList.ma"><h6>읽은메일함</h6></a>
 				<a href="unReadMailList.ma"><h6>안읽은메일함</h6></a> 
 				<a href="spamMailList.ma"><h6>스팸메일함</h6></a>

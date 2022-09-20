@@ -24,7 +24,6 @@
 		select
 		       count(*)
 		  from tb_class
-		 where class_status = 'Y'
 	</select>
 
 	<select id="appAllListSelect" resultMap="teacherResult">
@@ -214,8 +213,184 @@
 		     , class_status = 'Y'
 		 where class_no = #{classNo}  
 	</update>
-		
 	
+	<select id="searchAdminListCount" resultType="_int">
+  		select
+  		       count(*)
+  		  from tb_class c
+  		  join tb_member m on(c.mem_no = m.mem_no)
+  		 where class_status = 'Y'
+  		   and class_approval = 2
+  		 <if test="condition == 'classTitle'">
+  		   and class_title
+  		 </if>
+  		 <if test="condition == 'memName'">
+  		   and mem_name
+  		 </if>
+  		 	like '%' || #{keyword} || '%'
+  	</select>
+  	
+  	<select id="adminSearchForm" resultMap="teacherResult">
+  		select
+		       class_no
+		     , class_title
+		     , class_content
+		     , class_objective
+		     , class_subject
+		     , class_student
+		     , class_start_date
+		     , class_end_date
+		     , c.mem_no
+		     , class_approval
+		     , class_fee
+		     , class_signup_date
+		     , mem_name
+		  from tb_class c
+		  join tb_member m on(c.mem_no = m.mem_no)
+		 where class_status = 'Y'
+		   and class_approval = 2
+		 <choose>
+		 	<when test="condition == 'classTitle'">
+           	   and class_title 
+         	</when>  
+	         <when test="condition == 'memName'">
+	           and mem_name
+	         </when>  
+         </choose>
+               like '%' || #{keyword} || '%'
+		 order
+		    by class_no desc
+  	</select>
+  	
+  	<select id="searchAdminAppListCount" resultType="_int">
+  		select
+  		       count(*)
+  		  from tb_class c
+  		  join tb_member m on(c.mem_no = m.mem_no)
+  		 where class_status = 'N'
+  		   and class_approval = 1 or class_approval = 3
+  		 <if test="condition == 'classTitle'">
+  		   and class_title
+  		 </if>
+  		 <if test="condition == 'memName'">
+  		   and mem_name
+  		 </if>
+  		 	like '%' || #{keyword} || '%'
+  	</select>
+  	
+  	<select id="adminAppSearchForm" resultMap="teacherResult">
+  		select
+		       class_no
+		     , class_title
+		     , class_content
+		     , class_objective
+		     , class_subject
+		     , class_student
+		     , class_start_date
+		     , class_end_date
+		     , c.mem_no
+		     , class_approval
+		     , class_fee
+		     , class_signup_date
+		     , mem_name
+		  from tb_class c
+		  join tb_member m on(c.mem_no = m.mem_no)
+		 where class_status = 'N'
+		   and class_approval = 1 or class_approval = 3
+		 <choose>
+		 	<when test="condition == 'classTitle'">
+           	   and class_title 
+         	</when>  
+	         <when test="condition == 'memName'">
+	           and mem_name
+	         </when>  
+         </choose>
+               like '%' || #{keyword} || '%'
+		 order
+		    by class_no desc
+  	</select>
+	
+	
+		
+	<select id="ajaxAdminList" resultMap="teacherResult">
+		select
+		       class_no
+		     , class_title
+		     , class_content
+		     , class_objective
+		     , class_subject
+		     , class_student
+		     , class_start_date
+		     , class_end_date
+		     , c.mem_no
+		     , class_approval
+		     , class_fee
+		     , class_signup_date
+		     , mem_name
+		  from tb_class c
+		  join tb_member m on(c.mem_no = m.mem_no)
+		 where class_status = 'Y'
+		   and class_approval = 2
+		 <choose>
+			 <when test="#{select eq 'new'}"> 
+		         order
+		            by class_signup_date desc
+		     </when>
+             <when test="#{select eq 'old'}"> 
+		         order
+		            by class_signup_date desc
+		    </when>        
+            <otherwise>
+		         order
+		            by mem_name 
+            </otherwise>
+         </choose>
+	</select>
+	
+	<select id="searchAppListCount" resultType="_int">
+  		select
+  		       count(*)
+		  from tb_class
+		 where 
+  		 <if test="condition == 'classTitle'">
+  		   class_title
+  		 </if>
+  		 <if test="condition == 'memName'">
+  		   mem_name
+  		 </if>
+  		 	like '%' || #{keyword} || '%'
+  	</select>
+  	
+  	<select id="appLectureSearchList" resultMap="teacherResult">
+  		select
+		      class_no
+		     , class_title
+		     , class_content
+		     , class_objective
+		     , class_subject
+		     , class_student
+		     , class_start_date
+		     , class_end_date
+		     , c.mem_no
+		     , class_approval
+		     , class_fee
+		     , class_signup_date
+		     , mem_name
+		  from tb_class c
+		  join tb_member m on(c.mem_no = m.mem_no)
+         where
+		 <choose>
+		 	<when test="condition == 'classTitle'">
+           	   class_title 
+         	</when>  
+	         <when test="condition == 'memName'">
+	           mem_name
+	         </when>  
+         </choose>
+               like '%' || #{keyword} || '%'
+		 order
+		    by class_no desc
+  	</select>
 	
 	
 	

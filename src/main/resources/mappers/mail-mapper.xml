@@ -77,7 +77,11 @@
 		select
 		    count(*)
 		from tb_mail
+        join tb_mail_status using (mail_no)
 		where mem_no = #{memNo}
+          and mail_folder = 1
+		  and receiver_mem != #{receiverMem}
+		  and mail_delete = 'N'
 	</select>
 
 	<!-- 보낸 메일함 조회 -->
@@ -108,28 +112,36 @@
 		from tb_mail m
 		join tb_mail_status ms using (mail_no)
 		where mem_no = #{memNo}
+		  and receiver_mem != #{receiverMem}
 		  and mail_folder = 1
+		  and mail_delete = 'N'
 		order 
             by mail_type, mail_no
 	</select>
 	
 	<!-- 받은 메일 개수 조회 -->
 	<select id="receiveListCount" resultType="_int">
-		select
+        select
 		    count(*)
-		from tb_mail_status
-		where receive_mail = #{memEmail}
-		  and mail_folder = 2
+		from tb_mail
+        join tb_mail_status using (mail_no)
+		where mem_no != #{memNo}
+          and mail_folder in (2,3)
+		  and receiver_mem = #{receiverMem}
+		  and mail_delete = 'N'
 	</select>
 	
 	<!-- 받은 메일 중 안읽은 메일 개수 조회 -->
 	<select id="receiveUnReadCount" resultType="_int">
-		select
+        select
 		    count(*)
-		from tb_mail_status
-		where receive_mail = #{memEmail}
-		  and mail_folder = 2
+		from tb_mail
+        join tb_mail_status using (mail_no)
+		where mem_no != #{memNo}
+          and mail_folder in (2,3)
+		  and receiver_mem = #{receiverMem}
 		  and mail_read = 'N'
+		  and mail_delete = 'N'
 	</select>
 	
 	<!-- 받은 메일 목록 조회 -->
@@ -165,8 +177,10 @@
 		     ) "at_count"
 		from tb_mail m
 		join tb_mail_status ms using (mail_no)
-		where mail_folder in (2,3)
-		  and receive_mail = #{memEmail}
+		where mem_no != #{memNo}
+		  and receiver_mem = #{receiverMem}
+		  and mail_folder in (2,3)
+		  and mail_delete = 'N'
 		order 
     		by mail_type, mail_no
 	</select>
@@ -326,5 +340,359 @@
   		  , #{atChangeName}
   		  )
 	</insert>
+	
+	<!-- 나에게 보낸 메일 개수 조회 -->
+	<select id="sendToMeListCount" resultType="_int">
+        select
+		    count(*)
+		from tb_mail
+        join tb_mail_status using (mail_no)
+		where mem_no = #{memNo}
+		  and receiver_mem = #{receiverMem}
+		  and mail_delete = 'N'
+          and mail_folder = 1
+	</select>
+	
+	<!-- 나에게 보낸 메일 중 안읽은 메일 개수 조회 -->
+	<select id="sendMeUnReadCount" resultType="_int">
+	    select
+		    count(*)
+		from tb_mail
+        join tb_mail_status using (mail_no)
+		where mem_no = #{memNo}
+          and mail_folder = 1
+		  and receiver_mem = #{receiverMem}
+		  and mail_read = 'N'
+		  and mail_delete = 'N'
+	</select>
+	
+	<!-- 나에게 보낸 메일 목록 조회 -->
+	<select id="selectSendToMeMailList" resultMap="mailResult">
+		select
+		    mail_no
+		  , mem_no
+		  , m.tag_no
+          , (
+                select
+                    mem_name
+                from tb_member
+                where mem_email = send_mail) "send_name"
+          , send_mail
+		  , receiver_mem
+		  , cc_mem
+          , to_char(send_date, 'YYYY-MM-DD(DY) HH:MI:SS') "send_date"
+		  , mail_title
+		  , mail_content
+		  , mail_type
+		  , mail_folder
+		  , mail_read
+		  , mail_delete
+		  , mail_spam
+		  , mail_important
+		  , (
+		        select
+		            count(*)
+		        from tb_attachment
+		        where at_category = 2
+		          and at_ref_bno = mail_no
+		  
+		     ) "at_count"
+		from tb_mail m
+		join tb_mail_status ms using (mail_no)
+		where mail_folder = 1
+          and mem_no = #{memNo}
+		  and receiver_mem = #{receiverMem}
+		  and mail_delete = 'N'
+        order 
+           by mail_type, mail_no
+	</select>
+	
+	<!-- 휴지통 메일 개수 조회 -->
+	<select id="deleteListCount" resultType="_int">
+		select
+		    count(*)
+		from tb_mail_status
+		join tb_mail using (mail_no)
+		where mail_delete = 'Y'
+		  and ( mem_no = #{memNo}
+		  and receiver_mem = #{receiverMem} )
+	</select>
+	
+	<!-- 휴지통 메일 목록 조회 -->
+	<select id="selectDeleteMailList" resultMap="mailResult">
+		select
+		    mail_no
+		  , mem_no
+		  , m.tag_no
+          , (
+                select
+                    mem_name
+                from tb_member
+                where mem_email = send_mail) "send_name"
+          , send_mail
+		  , receiver_mem
+		  , cc_mem
+          , to_char(send_date, 'YYYY-MM-DD(DY) HH:MI:SS') "send_date"
+		  , mail_title
+		  , mail_content
+		  , mail_type
+		  , mail_folder
+		  , mail_read
+		  , mail_delete
+		  , mail_spam
+		  , mail_important
+		  , (
+		        select
+		            count(*)
+		        from tb_attachment
+		        where at_category = 2
+		          and at_ref_bno = mail_no
+		  
+		     ) "at_count"
+		from tb_mail m
+		join tb_mail_status ms using (mail_no)
+		where mem_no = #{memNo}
+		  and receiver_mem = #{receiverMem}
+          and mail_delete = 'Y'
+          order 
+            by mail_type, mail_no
+	</select>
+	
+	<!-- 휴지통 메일 중 안읽은 메일 개수 조회 -->
+	<select id="deleteUnReadCount" resultType="_int">
+		select
+		    count(*)
+		from tb_mail_status
+		join tb_mail using (mail_no)
+		where mail_read = 'N'
+		  and mail_delete = 'Y'
+		  and ( mem_no = #{memNo}
+		  and receiver_mem = #{receiverMem} )
+	</select>
+	
+	<!-- 읽은 메일 개수 조회 -->
+	<select id="readListCount" resultType="_int">
+		select
+		    count(*)
+		from tb_mail_status
+		where receive_mail = #{receiverMem}
+		  and mail_read = 'Y'
+		  and mail_delete = 'N'
+		  and mail_folder in (2,3)
+	</select>
+	
+	<!-- 읽은 메일 목록 조회 -->
+	<select id="selectReadMailList" resultMap="mailResult">
+		select
+		    mail_no
+		  , mem_no
+		  , m.tag_no
+          , (
+                select
+                    mem_name
+                from tb_member
+                where mem_email = send_mail) "send_name"
+          , send_mail
+		  , receive_mail
+		  , cc_mem
+          , to_char(send_date, 'YYYY-MM-DD(DY) HH:MI:SS') "send_date"
+		  , mail_title
+		  , mail_content
+		  , mail_type
+		  , mail_folder
+		  , mail_read
+		  , mail_delete
+		  , mail_spam
+		  , mail_important
+		  , (
+		        select
+		            count(*)
+		        from tb_attachment
+		        where at_category = 2
+		          and at_ref_bno = mail_no
+		  
+		     ) "at_count"
+		from tb_mail m
+		join tb_mail_status ms using (mail_no)
+		where mail_folder in (2,3)
+		  and receive_mail = #{receiverMem}
+          and mail_delete = 'N'
+          and mail_read = 'Y'
+          order 
+            by mail_type, mail_no
+	</select>
+	
+	<!-- 안읽은 메일 개수 조회 -->
+	<select id="unReadListCount" resultType="_int">
+		select
+		    count(*)
+		from tb_mail_status
+		where receive_mail = #{receiverMem}
+		  and mail_read = 'N'
+		  and mail_delete = 'N'
+		  and mail_folder in (2,3)
+	</select>
+	
+	<!-- 안읽은 메일 목록 조회 -->
+	<select id="selectUnReadMailList" resultMap="mailResult">
+		select
+		    mail_no
+		  , mem_no
+		  , m.tag_no
+          , (
+                select
+                    mem_name
+                from tb_member
+                where mem_email = send_mail) "send_name"
+          , send_mail
+		  , receive_mail
+		  , cc_mem
+          , to_char(send_date, 'YYYY-MM-DD(DY) HH:MI:SS') "send_date"
+		  , mail_title
+		  , mail_content
+		  , mail_type
+		  , mail_folder
+		  , mail_read
+		  , mail_delete
+		  , mail_spam
+		  , mail_important
+		  , (
+		        select
+		            count(*)
+		        from tb_attachment
+		        where at_category = 2
+		          and at_ref_bno = mail_no
+		  
+		     ) "at_count"
+		from tb_mail m
+		join tb_mail_status ms using (mail_no)
+		where mail_folder in (2,3)
+		  and receive_mail = #{receiverMem}
+          and mail_delete = 'N'
+          and mail_read = 'N'
+          order 
+            by mail_type, mail_no
+	</select>
+	
+	<!-- 중요 메일 개수 조회 -->
+	<select id="importantListCount" resultType="_int">
+		select
+		    count(*)
+		from tb_mail_status
+		where receive_mail = #{receiverMem}
+		  and mail_important = 'Y'
+		  and mail_folder in (2,3)
+	</select>
+	
+	<!-- 중요 메일 중 안읽은 개수 조회 -->
+	<select id="importantUnReadCount" resultType="_int">
+		select
+		    count(*)
+		from tb_mail_status
+		where receive_mail = #{receiverMem}
+		  and mail_important = 'Y'
+		  and mail_read = 'N'
+		  and mail_folder in (2,3)
+	</select>
+	
+	<!-- 중요 메일 목록 조회 -->
+	<select id="selectImportantMailList" resultMap="mailResult">
+						select
+			    mail_no
+			  , mem_no
+			  , m.tag_no
+	          , (
+	                select
+	                    mem_name
+	                from tb_member
+	                where mem_email = send_mail) "send_name"
+	          , send_mail
+			  , receive_mail
+			  , cc_mem
+	          , to_char(send_date, 'YYYY-MM-DD(DY) HH:MI:SS') "send_date"
+			  , mail_title
+			  , mail_content
+			  , mail_type
+			  , mail_folder
+			  , mail_read
+			  , mail_delete
+			  , mail_spam
+			  , mail_important
+			  , (
+			        select
+			            count(*)
+			        from tb_attachment
+			        where at_category = 2
+			          and at_ref_bno = mail_no
+			  
+			     ) "at_count"
+			from tb_mail m
+			join tb_mail_status ms using (mail_no)
+			where mail_delete = 'N'
+	          and mail_important = 'Y'
+              and ( receive_mail = #{receiverMem}
+               or mem_no = #{memNo} )
+	          order 
+	            by mail_type, mail_no
+	</select>
+	
+	<!-- 스팸 메일 개수 조회 -->
+	<select id="spamMailListCount" resultType="_int">
+		select
+		    count(*)
+		from tb_mail_status
+		where receive_mail = #{receiverMem}
+		  and mail_spam = 'Y'
+	</select>
+	
+	<!-- 스팸 메일 중 안읽은 메일 개수 조회 -->
+	<select id="spanUnReadCount" resultType="_int">
+		select
+		    count(*)
+		from tb_mail_status
+		where receive_mail = #{receiverMem}
+		  and mail_spam = 'Y'
+          and mail_read = 'N'
+	</select>
+	
+	<!-- 스팸 메일 목록 조회 -->
+	<select id="selectSpamMailList" resultMap="mailResult">
+			select
+			    mail_no
+			  , mem_no
+			  , m.tag_no
+	          , (
+	                select
+	                    mem_name
+	                from tb_member
+	                where mem_email = send_mail) "send_name"
+	          , send_mail
+			  , receive_mail
+			  , cc_mem
+	          , to_char(send_date, 'YYYY-MM-DD(DY) HH:MI:SS') "send_date"
+			  , mail_title
+			  , mail_content
+			  , mail_type
+			  , mail_folder
+			  , mail_read
+			  , mail_delete
+			  , mail_spam
+			  , mail_important
+			  , (
+			        select
+			            count(*)
+			        from tb_attachment
+			        where at_category = 2
+			          and at_ref_bno = mail_no
+			  
+			     ) "at_count"
+			from tb_mail m
+			join tb_mail_status ms using (mail_no)
+			where mail_spam = 'Y'
+              and receive_mail = #{receiverMem}
+	          order 
+	            by mail_type, mail_no
+	</select>
+	
 
 </mapper>
