@@ -53,6 +53,8 @@
 <link href="https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/static/woff2/SUIT.css" rel="stylesheet">
 <!-- alert -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<!-- sockJs -->
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 <style>
     .container-fluid .menu-sidebar{
         width:15%;
@@ -355,7 +357,7 @@
 	
 	                <!-- Topbar -->
 	                <nav class="navbar navbar-expand navbar-light bg-white topbar static-top" style="border-bottom: 2px solid rgba(0, 0, 0, .1);">
-	
+					
 	                    <!-- Sidebar Toggle (Topbar) -->
 	                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
 	                        <i class="fa fa-bars"></i>
@@ -374,7 +376,8 @@
 	                            </div>
 	                        </div>
 	                    </form>
-	
+	                    <!-- socketAlert -->
+						<div id="socket-alert" class="alert alert-primary fade show" role="alert" style="display:none; width:30%; float:left;" ></div>
 	                    <!-- Topbar Navbar -->
 	                    <ul class="navbar-nav ml-auto">
 	
@@ -403,7 +406,7 @@
 	                        </li>
 	
 	                        <!-- Nav Item - Alerts 알람 메뉴바 -->
-	                        <li class="nav-item dropdown no-arrow mx-1">
+	                        <li class="nav-item dropdown no-arrow mx-1" id="btnSend">
 	                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
 	                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 	                                <i class="fas fa-bell fa-fw"></i>
@@ -448,7 +451,7 @@
 	                                    </div>
 	                                    <div>
 	                                        <div class="small text-gray-500">2022-05-03</div>
-	                                        <span class="font-weight-bold">[어쩌라고 미친 ㅋㅋ장난하세요?] 글에 대한 신고 규제가 완료되었습니다.</span>
+	                                        <span class="font-weight-bold" id="msg">[어쩌라고 미친 ㅋㅋ장난하세요?] 글에 대한 신고 규제가 완료되었습니다.</span>
 	                                    </div>
 	                                </a>
 	                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
@@ -544,42 +547,56 @@
 				            </div>
 				        </div>
 				    </div>
+				    
         <script>
+       	
 			// websocket
-			/* var socket = null;
-
-		   $(document).ready(function (){
-			   connectWs();
-		   });
+			var socket = null;
+		    $(document).ready(function (){
+		    	//selectAlarmList();
+			    connectWs();
+		    });
 		   
-		   function connectWs(){
-			    var ws = new WebSocket("ws://localhost:8585/eduWorks/replyEcho");
-				
-				sock = new SockJS( "<c:url value="/echo"/>" );
-				sock.onopen = function() {
-			           console.log('info: sock connection opened.');
-			     };
-				ws.onopen = function()	{
-					console.log("Info : connection opend.");
+		    function connectWs(){
+			   
+			    //var ws = new WebSocket("ws://localhost:8585/eduWorks/replyEcho");
+			    ws = new SockJS("/eduWorks/replyEcho");
+			    socket = ws;
+			    ws.onopen = function() {
+			        console.log('open');
+			    }; 
+			     
+			    ws.onmessage = function(event){
+				   console.log("onmessage"+event.data);
+				     $("#socket-alert").html(event.data);
+				    $("#socket-alert").css("display", "block");
 					
+				    setTimeout(function(){ $("#socket-alert").css("display", "none"); }, 3000);
+			    };
 					
-					ws.onmessage = function(event){
-					console.log(event.data+"\n");
-					};
-				};
+			    ws.onclose = function(event) {
+				    console.log("Info : connection closed.");
+				    setTimeout( function() { connectWs(); }, 1000); // retry connection 즉, 연결 재시도 하라는 뜻
+			    }; 
 				
-				ws.onclose = function(event) {
-					console.log("Info : connection closed.");
-					//setTimeout( function() { connection(); }, 1000); // retry connection 즉, 연결 재시도 하라는 뜻
-				};
-				ws.onerror = function(err) {console.log("Error : err")};
-		   }
-					/* $("#~~btn").on("click", function(evt){
-						evt.preventDefault();
-						if(socket.readyStatus != 1) return;
-							let msg = $("$~~").val();
-							ws.send(msg);
-					}) */ 
+			    ws.onerror = function(err) {console.log("Error : err")};
+		    }
+		   
+		   
+		    function selectAlarmList(){
+				$.ajax({
+					url:"select.al",
+					data:{mno:${loginUser.memNo}},
+					success(list){
+						
+					},error(){
+						
+					}
+				})
+			}
 		</script>
+		
+		
+		
 </body>
 </html>
