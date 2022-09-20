@@ -18,6 +18,9 @@ public class SearchAt {
 	private String jobCode;
 	private String startDate;
 	private String endDate;
+	private String startTime;
+	private String endTime;
+	private String reason;
 	private String keyword;
 	private boolean check1;
 	private boolean check2;

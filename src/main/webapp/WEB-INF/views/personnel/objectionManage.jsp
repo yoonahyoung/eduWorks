@@ -396,10 +396,10 @@
                             <h3 class="su_sub_menu_name">조정신청 상세내역</h3>
                             <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b;">
                             <br>
-                            <table class="tb1" style="width: 60%;">
+                            <table class="tb1" style="width: 75%;">
                                 <tr>
                                     <th style="background-color: #e6e9ec; width: 200px;">&nbsp;변경신청날짜</th>
-                                    <td>&nbsp;<input id="adjObjdate" type="text" style="width: 85%;border:none" name="sendTitle" value="" readonly></td>
+                                    <td>&nbsp;<input id="adjObjdate" type="text" style="width: 85%; border:none" name="sendTitle" value="" readonly></td>
                                 </tr>
                                 <tr>
                                     <th style="background-color: #e6e9ec; width: 200px;">&nbsp;신청날짜 근태현황</th>

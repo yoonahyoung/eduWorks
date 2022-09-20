@@ -109,4 +109,17 @@ public interface PersonnelService {
 	ArrayList<Attendance> searchMyAt(SearchAt at);
 	int atListCount2(SearchAt s);
 	Attendance searchDetailAt(SearchAt s);
+	Adjust checkedAdj(SearchAt s);
+	int adhFormInsert(SearchAt s);
+	
+	//출퇴근찍기
+	int checkedCountIn(SearchAt s);
+	Attendance checkedIn(SearchAt at);
+	int updateAttIn(Attendance at);
+	int insertAttIn(Attendance at);
+	int updateOut(Attendance at);
+	
+	//개인 조정신청내역
+	int adjustMeCount(String memNo);
+	ArrayList<Adjust> adjustMe(PageInfo pi, String memNo);
 }

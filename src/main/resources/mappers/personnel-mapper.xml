@@ -1165,4 +1165,156 @@
 		</foreach>
 	</insert>
 	
+	<insert id="adhFormInsert">
+		insert
+		  into tb_adjust
+		     ( adj_no
+		     , mem_no
+		     , adj_objdate
+		     , adj_in
+		     , adj_out
+		     , adj_reason
+		     <if test="keyword != null">
+		     , adj_file
+		     </if>
+		     <if test="deptCode != null">
+		     , att_no
+		     </if>  
+		     )
+		values
+		     ( seq_adjno.nextval
+		     , #{userNo}
+		     , #{startDate}
+		     , #{startTime}
+		     , #{endTime}
+		     , #{reason}
+		     <if test="keyword != null">
+		     , #{keyword}
+		     </if>
+		     <if test="deptCode != null">
+		     , #{deptCode}
+		     </if>  
+		     ) 
+	</insert>
+	
+	<select id="checkedAdj" resultMap="resultAdj">
+				SELECT ADJ_NO,
+					   ATT_NO,
+					   MEM_NO,
+					   ADJ_OBJDATE,
+					   ADJ_IN,
+					   ADJ_OUT,
+					   ADJ_REASON,
+					   TO_CHAR(ADJ_DATE,'YYYY-MM-DD') "ADJ_DATE",
+					   ADJ_FILE,
+					   ADJ_STATUS,
+					   ADJ_DENYCONTENT
+				  FROM TB_ADJUST 
+				 WHERE MEM_NO = #{userNo}
+				   AND ADJ_OBJDATE = #{startDate}
+				   AND ADJ_STATUS = 'W'
+	</select>
+	
+	<select id="checkedCountIn" resultType="_int">
+		select count(*)
+		  from tb_attendance
+		 where mem_no = #{userNo}
+		   and att_date = #{startDate} 
+	</select>
+		
+	<select id="checkedIn" resultMap="resultAtt">
+		select att_no,
+		       mem_no,
+		       att_date,
+		       att_fixedin,
+		       att_fixedout,
+		       att_in,
+		       att_out,
+		       att_workoff,
+		       att_worktime,
+		       att_status,
+		       att_hstatus
+		  from tb_attendance
+		 where mem_no = #{userNo}
+		   and att_date = #{startDate} 
+	</select>
+	
+	<insert id="insertAttIn">
+		insert
+		  into tb_attendance
+		       ( att_no
+		       , mem_no
+		       , att_date
+		       , att_in
+		       , att_workoff
+		       , att_status
+		    	)
+		 values ( seq_atteno.nextval
+		        , #{memNo}
+		        , #{attDate}
+		        , #{attIn}
+		        , 'N'
+		        , #{attStatus}
+		 		)
+	</insert>
+	
+	<update id="updateAttIn">
+		update tb_attendance
+		   set att_in = #{attIn},
+		       att_workoff = 'N',
+		       att_status = #{attStatus}
+		  where att_no = #{attNo}
+	</update>
+	
+	<update id="updateOut">
+		update tb_attendance
+		   set att_out = #{attOut},
+		       att_workoff = 'Y',
+		       att_worktime = #{attWorktime}
+		       <if test='attStatus.equals("E")'>
+		       ,att_status = 'E'
+		       </if>
+		  where att_no = #{attNo}
+	</update>
+	
+	<select id="adjustMeCount" resultType="_int">
+				SELECT COUNT(*)
+				  FROM TB_ADJUST AD
+				  LEFT JOIN TB_ATTENDANCE AT ON (AD.ATT_NO = AT.ATT_NO)
+				  LEFT JOIN TB_MEMBER M ON (AD.MEM_NO = M.MEM_NO)
+				  LEFT JOIN TB_DEPARTMENT D ON (M.DEPT_CODE = D.DEPT_CODE)
+				  LEFT JOIN TB_JOB J ON (M.JOB_CODE = J.JOB_CODE)
+				  WHERE AD.MEM_NO = #{memNo}
+				  ORDER BY ADJ_NO DESC
+	</select>
+	
+	<select id="adjustMe" resultMap="resultAdj">
+				SELECT ADJ_NO,
+					   AD.ATT_NO,
+					   AD.MEM_NO,
+					   ADJ_OBJDATE,
+					   ADJ_IN,
+					   ADJ_OUT,
+					   ADJ_REASON,
+					   TO_CHAR(ADJ_DATE,'YYYY-MM-DD') "ADJ_DATE",
+					   ADJ_FILE,
+					   ADJ_STATUS,
+					   ATT_IN,
+					   ATT_OUT,
+					   ATT_STATUS,
+					   ATT_HSTATUS,
+					   DEPT_NAME,
+					   JOB_NAME,
+					   MEM_NAME,
+					   M.DEPT_CODE,
+					   M.JOB_CODE,
+					   ADJ_DENYCONTENT
+				  FROM TB_ADJUST AD
+				  LEFT JOIN TB_ATTENDANCE AT ON (AD.ATT_NO = AT.ATT_NO)
+				  LEFT JOIN TB_MEMBER M ON (AD.MEM_NO = M.MEM_NO)
+				  LEFT JOIN TB_DEPARTMENT D ON (M.DEPT_CODE = D.DEPT_CODE)
+				  LEFT JOIN TB_JOB J ON (M.JOB_CODE = J.JOB_CODE)
+				  WHERE AD.MEM_NO = #{memNo}
+				  ORDER BY ADJ_NO DESC
+	</select>
 </mapper>

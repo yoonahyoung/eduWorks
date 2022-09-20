@@ -817,23 +817,33 @@ public class PersonnelController {
 				HashMap m2 = new HashMap();
 				m2.put("start", at.getAttDate());
 				if(at.getAttStatus().equals("D")) {
-					m2.put("title", at.getAttOut()+" 퇴근");
-					m2.put("color", "green");
+					if(at.getAttOut()!=null) {
+						m2.put("title", at.getAttOut()+" 퇴근");
+						m2.put("color", "green");
+						list.add(m2);
+					}
 				}else if(at.getAttStatus().equals("H")) {
 					if(at.getAttHstatus().equals("H1")) {
-						m2.put("title", at.getAttOut()+" 퇴근");
-						m2.put("color", "blue");
+						if(at.getAttOut()!=null) {
+							m2.put("title", at.getAttOut()+" 퇴근");
+							m2.put("color", "blue");
+							list.add(m2);
+						}
 					}else {
 						m2.put("title", at.getAttOut()+" 오후연차");
 						m2.put("color", "blue");
+						list.add(m2);
 					}
 				}else {
-					m2.put("title", at.getAttOut()+" 무단지각/조퇴");
-					m2.put("color", "orange");
+					if(at.getAttOut()!=null) {
+						m2.put("title", at.getAttOut()+" 무단지각/조퇴");
+						m2.put("color", "orange");
+						list.add(m2);
+					}
 				}
 				
 				list.add(m);
-				list.add(m2);
+				
 			}else if(at.getAttStatus().equals("F")) {
 				HashMap m = new HashMap();
 				m.put("start", at.getAttDate());
@@ -850,11 +860,13 @@ public class PersonnelController {
 		}
 		
 		for(Restdate r : restList) {
+			if(!r.getReDatename().equals("토") && !r.getReDatename().equals("일")) {
 			HashMap m = new HashMap();
 			m.put("start", r.getReRestdate());
 			m.put("title", r.getReDatename());
 			m.put("color", "red");
 			list.add(m);
+			}
 		}
 		
 		return new Gson().toJson(list);
@@ -877,4 +889,158 @@ public class PersonnelController {
 		return new Gson().toJson(at);
 	}
 	
+	@RequestMapping("adjForm.in")
+	public String adhFormInsert(MultipartFile upfile,SearchAt s,HttpSession session) {
+		String memNo = ((Member)session.getAttribute("loginUser")).getMemNo();
+		s.setUserNo(memNo);
+		System.out.println(s);
+		Adjust ad = pService.checkedAdj(s);
+		System.out.println(ad);
+		if(ad!=null) {
+			session.setAttribute("alertIcon", "info");
+			session.setAttribute("alertTitle", "조정처리 진행중");
+			session.setAttribute("alertMsg", "조정처리 진행중입니다.");
+			return "redirect:AttManage.me";
+		}else {
+			if(!upfile.getOriginalFilename().equals("")) {
+				String filePath = FileUpload.saveFile(upfile, session, "resources/uploadFiles/personnelFiles/");
+				s.setKeyword(filePath);
+			}
+			
+			int result = pService.adhFormInsert(s);
+			if(result>0) {
+				session.setAttribute("alertIcon", "success");
+				session.setAttribute("alertTitle", "조정신청성공");
+				session.setAttribute("alertMsg", "조정신청에 성공했습니다.");
+			}else {
+				session.setAttribute("alertIcon", "error");
+				session.setAttribute("alertTitle", "조정신청실패");
+				session.setAttribute("alertMsg", "조정신청실패");
+			}
+			return "redirect:AttManage.me";
+		}
+		
+		
+	}
+	//if(at != null) {
+	//new File(savePath + at.getChangeName()).delete();
+	//String savePath = session.getServletContext().getRealPath("/resources/board_upfiles/");
+	
+	@ResponseBody
+	@RequestMapping(value = "submitIn.me")
+	public String submitIn(String inDate,String inTime,HttpSession session) throws ParseException {
+		String memNo = ((Member)session.getAttribute("loginUser")).getMemNo();
+		SearchAt s = new SearchAt();
+		s.setUserNo(memNo);
+		s.setStartTime(inTime);
+		s.setStartDate(inDate);
+		int count = pService.checkedCountIn(s);
+		Attendance at = null;
+	    if(count>0) {
+	    	 at = pService.checkedIn(s);	
+	    }
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+		String a = inDate+" "+inTime;
+		String b = inDate+" 09:00";
+		if(count>0) {
+			b = inDate+" "+at.getAttFixedin();
+		}
+		Date in = format.parse(a);
+		Date fixedIn = format.parse(b);
+		long resultTime = in.getTime() - fixedIn.getTime();
+		
+		Attendance at2 = new Attendance();
+		at2.setMemNo(memNo);
+		at2.setAttDate(inDate);
+		at2.setAttIn(inTime);
+		if(resultTime<=0) {
+			at2.setAttStatus("D");
+		}else {
+			at2.setAttStatus("L");
+		}
+		
+		int result=0;
+		if(count>0) {
+			if(at.getAttIn().equals("")) {
+				//출근시간비교후 update
+				at2.setAttNo(at.getAttNo());
+				result = pService.updateAttIn(at2);
+			}else {
+				//이미출근처리완료
+				result=100;
+			}
+		}else {
+			//출근시간비교후 insert
+			result = pService.insertAttIn(at2);
+		}
+		
+		if(result>0&&result<99) {
+			return "success";
+		}else if(result==100) {
+			return "errors";
+		}else {
+			return "fail";
+		}
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "submitOut.me")
+	public String submitOut(String outDate,String outTime,HttpSession session) throws ParseException{
+		String memNo = ((Member)session.getAttribute("loginUser")).getMemNo();
+		SearchAt s = new SearchAt();
+		s.setUserNo(memNo);
+		s.setStartDate(outDate);
+		s.setEndTime(outTime);
+		s.setEndDate(outDate);
+		int count = pService.checkedCountIn(s);
+		if(count==0) {
+			//출근전입니다
+			System.out.println("출근전");
+			return "none";
+		}else {
+			Attendance at = pService.checkedIn(s);
+			if(at.getAttOut()==null) {
+				
+				at.setAttOut(outTime);
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+				String a = outDate+" "+outTime;
+				String b = outDate+" "+at.getAttFixedout();
+				Date out = format.parse(a);
+				Date fixedOut = format.parse(b);
+				long resultTime = out.getTime() - fixedOut.getTime();
+				String c = outDate+" "+at.getAttIn();
+				Date in = format.parse(c);
+				long resultWork = out.getTime() - in.getTime();
+				double workTime1 = resultWork/1000.0/60/60;
+				float w1 = (float) ((Math.round(workTime1*10))/10.0);
+				String workTime = w1+"";
+				at.setAttWorktime(workTime);
+				if(resultTime<0) {
+					at.setAttStatus("E");
+				}
+				int result = pService.updateOut(at);
+				if(result>0) {
+					//퇴근처리성공
+					return "success";
+				}else {
+					//퇴근처리실패
+					return "fail";
+				}
+			}else {
+				//이미퇴근처리함
+				return "zzz";
+			}
+		}
+	}
+	
+	@RequestMapping("adjust.me")
+	public String adjustMe(Model model,HttpSession session,@RequestParam(value="p",defaultValue = "1")int currentPage) {
+		String memNo = ((Member)session.getAttribute("loginUser")).getMemNo();
+		int listCount = pService.adjustMeCount(memNo);
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 3, 10);
+		ArrayList<Adjust> list = pService.adjustMe(pi, memNo);
+		model.addAttribute("list", list);
+		return "personnel/myAdjust";
+	}
 }

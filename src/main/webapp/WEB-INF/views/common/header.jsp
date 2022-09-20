@@ -251,7 +251,7 @@
 	            </script>
 	
 	            <li class="nav-item">
-	                <a class="nav-link collapsed" href="list.ca">
+	                <a class="nav-link collapsed" onclick="postFormSubmit('list.ca');">
 	                    <i class="fa-solid fa-calendar-check"></i>
 	                    <span>캘린더</span>
 	                </a>

@@ -263,6 +263,51 @@ public class PersonnelServiceImpl implements PersonnelService {
 		return pDao.searchDetailAt(sqlSession, s);
 	}
 
+	@Override
+	public int adhFormInsert(SearchAt s) {
+		return pDao.adhFormInsert(sqlSession, s);
+	}
+
+	@Override
+	public Adjust checkedAdj(SearchAt s) {
+		return pDao.checkedAdj(sqlSession, s);
+	}
+
+	@Override
+	public Attendance checkedIn(SearchAt at) {
+		return pDao.checkedIn(sqlSession, at);
+	}
+
+	@Override
+	public int updateAttIn(Attendance at) {
+		return pDao.updateAttIn(sqlSession, at);
+	}
+
+	@Override
+	public int insertAttIn(Attendance at) {
+		return pDao.insertAttIn(sqlSession, at);
+	}
+
+	@Override
+	public int checkedCountIn(SearchAt s) {
+		return pDao.checkedCountIn(sqlSession, s);
+	}
+
+	@Override
+	public int updateOut(Attendance at) {
+		return pDao.updateOut(sqlSession, at);
+	}
+	
+	@Override
+	public int adjustMeCount(String memNo) {
+		return pDao.adjustMeCount(sqlSession, memNo);
+	}
+
+	@Override
+	public ArrayList<Adjust> adjustMe(PageInfo pi,String memNo) {
+		return pDao.adjustMe(sqlSession, memNo);
+	}
+
 	
 
 
