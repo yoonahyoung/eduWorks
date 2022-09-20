@@ -16,8 +16,11 @@
 		<result column="cnsln_real" property="cnslnReal" />
 		<result column="cnsln_create_date" property="cnslnCreateDate" />
 		<result column="cnsln_count" property="cnslnCount" />
-		<result column="cnsln_status" property="cnslnStatus" />		
+		<result column="cnsln_status" property="cnslnStatus" />	
+		<result column="student_no" property="studentNo" />
+		<result column="cnsln_ec" property="cnslnEc" />	
 		<collection property="member" resultMap="memberResult" />
+		<collection property="Student" resultMap="studentResult" />
 	</resultMap>
 	
 	<resultMap id="memberResult" type="Member">
@@ -40,6 +43,17 @@
 		<result column="reply_date" property="replyDate" />
 		<result column="reply_status" property="replyStatus" />
 	</resultMap>
+	
+	<resultMap id="studentResult" type="Student">
+		<result column="student_no" property="studentNo" />
+		<result column="student_name" property="studentName" />
+		<result column="student_phone" property="studentPhone" />
+		<result column="student_email" property="studentEmail" />
+		<result column="student_birth" property="studentBirth" />
+		<result column="student_gender" property="studentGender" />
+		<result column="student_en_date" property="studentEnDate" />
+		<result column="class_title" property="classTitle" />
+	</resultMap>	
 	
 	<select id="selectCnslnList" resultMap="cnslnResult">
 		select cnsln_no
@@ -108,6 +122,8 @@
 		  , cnsln_phone
 		  , cnsln_topic
 		  , cnsln_real
+		  , student_no
+		  , cnsln_ec
 		  )
 		  values
 		  (
@@ -121,6 +137,32 @@
 		  , #{cnslnPhone}
 		  , #{cnslnTopic}
 		  , #{cnslnReal}
+		  , #{studentNo}
+		  , #{cnslnEc}
+		  )
+	</insert>
+	
+	<insert id="insertStudent">
+		insert
+		  into tb_student
+		  (
+		   student_no
+		 , student_name
+		 , student_phone
+		 , student_email
+		 , student_birth
+		 , student_gender
+		 , student_en_date
+		  )
+		  values
+		  (
+		    seq_stno.nextval
+		  , #{studentName}
+		  , #{studentPhone}
+		  , #{studentEmail}
+		  , #{studentBirth}
+		  , #{studentGender}
+		  , sysdate
 		  )
 	</insert>
 	
@@ -176,6 +218,8 @@
 			 , cnsln_real
 			 , cnsln_create_date
 			 , cnsln_count
+			 , student_no
+		  	 , cnsln_ec
 		  from tb_cnsln
 		  join tb_member m on (cnsln_writer = m.mem_no)
 		  join tb_job j on (j.job_code = m.job_code)
@@ -203,6 +247,8 @@
 			 , cnsln_content = #{cnslnContent}
 			 , cnsln_real = #{cnslnReal}
 			 , cnsln_modify_date = sysdate
+			 , student_no = #{studentNo}
+			 , cnsln_ec = #{cnslnEc}
 		 where cnsln_no = #{cnslnNo}
 	</update>
 	
@@ -398,5 +444,42 @@
 		 where cnsln_no = #{cNo}
 	</update>
 	
+	<select id="selectStudentList" resultMap="studentResult">
+		select
+			   student_no
+			 , student_name
+			 , student_phone
+			 , student_email
+			 , student_birth
+			 , student_gender
+			 , student_en_date
+		  from tb_student
+		 where student_name like '%' || #{key} || '%'
+		 order
+		   by student_no desc
+	</select>
+	
+	<select id="selectStudent" resultMap="studentResult">
+		select
+			   student_no
+			 , student_name
+			 , student_phone
+			 , student_email
+			 , student_birth
+			 , student_gender
+			 , student_en_date
+		  from tb_student
+		 where student_no = #{sNo}
+	</select>
+	
+	<update id="updateStudent">
+		update tb_student
+		   set student_name = #{studentName}
+		   	 , student_gender = #{studentGender}
+		   	 , student_phone = #{studentPhone}
+		   	 , student_birth = #{studentBirth}
+		   	 , student_email = #{studentEmail}
+		 where student_no = #{studentNo} 
+	</update>
   
 </mapper>

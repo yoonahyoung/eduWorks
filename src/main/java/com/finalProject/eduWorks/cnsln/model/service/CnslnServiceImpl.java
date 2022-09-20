@@ -6,6 +6,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.finalProject.eduWorks.administration.model.vo.Student;
 import com.finalProject.eduWorks.cnsln.model.dao.CnslnDao;
 import com.finalProject.eduWorks.cnsln.model.vo.Cnsln;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
@@ -99,6 +100,26 @@ public class CnslnServiceImpl implements CnslnService{
 	@Override
 	public int deleteReCnsln(int cNo) {
 		return cDao.deleteReCnsln(sqlSession, cNo);
+	}
+
+	@Override
+	public ArrayList<Student> selectStudentList(String key) {
+		return cDao.selectStudentList(sqlSession, key);
+	}
+
+	@Override
+	public Student selectStudent(int sNo) {
+		return cDao.selectStudent(sqlSession, sNo);
+	}
+
+	@Override
+	public int insertStudent(Student s) {
+		return cDao.insertStudent(sqlSession, s);
+	}
+
+	@Override
+	public int updateStudent(Student s) {
+		return cDao.updateStudent(sqlSession, s);
 	}
 	
 	

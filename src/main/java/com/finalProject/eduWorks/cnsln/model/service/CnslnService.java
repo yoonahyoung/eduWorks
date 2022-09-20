@@ -2,6 +2,7 @@ package com.finalProject.eduWorks.cnsln.model.service;
 
 import java.util.ArrayList;
 
+import com.finalProject.eduWorks.administration.model.vo.Student;
 import com.finalProject.eduWorks.cnsln.model.vo.Cnsln;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.model.vo.Reply;
@@ -14,6 +15,7 @@ public interface CnslnService {
 	
 	// 상담 일정 등록
 	ArrayList<Member> selectMemberList(String keyword);
+	ArrayList<Student> selectStudentList(String key);
 	int insertCnsln(Cnsln c);
 	Member selectMember(String memNo);
 	
@@ -46,5 +48,14 @@ public interface CnslnService {
 	
 	// 상담 내역 삭제
 	int deleteReCnsln(int cNo);
+	
+	// 학생 조회
+	Student selectStudent(int sNo);
+	
+	// 학생 등록
+	int insertStudent(Student s);
+	
+	// 학생 수정
+	int updateStudent(Student s);
 
 }

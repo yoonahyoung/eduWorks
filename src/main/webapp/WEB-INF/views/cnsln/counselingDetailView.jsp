@@ -32,7 +32,7 @@
 		                            <td width="5%;"><span class="fas fa-star-of-life fontRed">&nbsp;</span></td>
 		                            <td><span>&nbsp;내담자명</span></td>
 		                            <td style="width: 80%;">
-		                            &ensp; &ensp;<input type="text" name="cnslnTitle" placeholder="내담자명 입력" style="width:300px;" value="${ c.cnslnTitle }" required>
+		                            &ensp; &ensp;<input type="text" name="cnslnTitle" id="cnslnTitle" placeholder="내담자명 입력"  onclick="searchStudentDiv();" style="width:300px;" value="${ c.cnslnTitle }" required>
 		                            </td>
 		                        </tr>
 		
@@ -67,6 +67,10 @@
 								<input type="hidden" id="cnslnChargeNo" name="cnslnChargeNo" value="${ c.cnslnChargeNo }">
 								<input type="hidden" id="cnslnChargeList" name="cnslnChargeList" value="${ c.cnslnChargeList }">
 								<input type="hidden" name="cnslnWriter" value="${ loginUser.memNo }">
+								<input type="hidden" name="studentPhone" value="${ s.studentPhone }" >
+								<input type="hidden" name="studentNo" value="${ c.studentNo }">
+								<input type="hidden" name="studentName" value="${ s.studentName }">
+								<input type="hidden" name="cnslnEc" value="${ c.cnslnEc }">
 								
 		                        <tr>
 		                            <td width="5%;"><span class="fas fa-star-of-life fontRed">&nbsp;</span></td>
@@ -75,6 +79,37 @@
 		                             &ensp;&ensp;&ensp;<input type="text" name="cnslnPhone" id="cnslnPhone" value="${ c.cnslnPhone }" style="width: 640px;" placeholder="학생의 전화번호를 입력해주세요"></span>
 		                             </td>
 		                        </tr>
+		                        
+		                        <tr>
+	                             <td width="5%;"><span class="fas fa-star-of-life fontRed">&nbsp;</span></td>
+	                             <td><span>&nbsp;이메일</span></td>
+	                             <td width="670px;">
+	                             &ensp;&ensp;&ensp;<input type="text" name="studentEmail" id="studentEmail" value="${ s.studentEmail }" style="width: 640px;" placeholder="학생의 이메일을 입력해주세요" required>
+	                             </td>
+	                         </tr>
+	                         
+	                         <tr>
+	                             <td width="5%;"><span class="fas fa-star-of-life fontRed">&nbsp;</span></td>
+	                             <td><span>&nbsp;생년월일</span></td>
+	                             <td width="670px;">
+	                             &ensp;&ensp;&ensp;<input type="text" name="studentBirth" id="studentBirth" value="${ s.studentBirth }" style="width: 640px;" placeholder="학생의 생년월일 6자를 입력해주세요" required>
+	                             </td>
+	                         </tr>
+	                         
+	                         <tr>
+	                             <td width="5%;"><span class="fas fa-star-of-life fontRed">&nbsp;</span></td>
+	                             <td><span>&nbsp;성별</span></td>
+	                             <td width="670px;">
+	                             	<c:if test="${ s.studentGender eq 'M' }">
+	                             		&ensp;&ensp;&ensp;<input type="radio" name="studentGender" id="genderM" value="M" checked> &ensp;&ensp;남자 &ensp;&ensp;&ensp;<input type="radio" name="studentGender" id="genderF" value="F"> &ensp;&ensp;여자
+	                             	</c:if>
+	                             	<c:if test="${ s.studentGender eq 'F' }">
+	                             		&ensp;&ensp;&ensp;<input type="radio" name="studentGender" id="genderM" value="M"> &ensp;&ensp;남자 &ensp;&ensp;&ensp;<input type="radio" name="studentGender" id="genderF" value="F" checked> &ensp;&ensp;여자
+	                             	</c:if>
+	                             </td>
+	                         </tr>
+	                         
+	                         
 		
 		                        <tr>
 		                            <td style="padding-top: 13px; vertical-align: top;"><span class="fas fa-star-of-life fontRed">&nbsp;</span></td>
@@ -148,6 +183,42 @@
 	                                 </div>
 	                             </div>
 	                         </div>    
+	                     </div>
+	                     
+	                     <!-- 학생 검색 창 -->
+	                     <div class="su_ph_div dis_no" id='showStudent' style="left: 1168px; height: 360px;">
+	                     	<aside class="ph_aside">
+	                             <div class="su_ph_header" style="position: static">
+	                                 <div class="su_ph_title">
+	                                     <h5 class="mt-1 mb-2" id="moveCal" style="color: black;">학생 명단<span class="fas fa-xmark" id="xBtn2" style="cursor: pointer;"></span></h5>
+	                                 </div>
+	                             </div>
+	                         </aside>
+	                         <div style="text-align: center;">
+	                             <input type="text" id="studentKeyword" name="suPhKeyword" placeholder="이름 검색">
+	                             <button type="button" class="su_btn_border btn-sm" onclick="searchStudent();">검색</button>
+	                         </div>
+	                         
+	                         <hr class="hr_line">
+	                         
+	                         
+	                     	<div>
+	                     		<table class="su_Tb" id="studentArea">
+	                                         
+                              	<c:forEach var="s" items="${ sList }">
+                                	<tr style="width: 100%;" class="ph_padding">
+                                    	<td width="90%;">
+		                                     <div class="su_ph_line" onclick="chooseStudent(${ s.studentNo });">
+	                                             <span style="font-size: 20px;">-&nbsp;</span>
+	                                             <span class="fas fa-user"></span>
+	                                             <span id="sName${s.studentNo }">&nbsp; ${ s.studentName }</span>
+	                                         </div>
+                                   		</td>
+                                	</tr>
+	                           </c:forEach>
+                                  
+                              </table>
+	                     	</div>
 	                     </div>    
 		
 		                    <br><br>
@@ -230,6 +301,7 @@
 		                         		$("#chargeArea").html(val);
 		                         		
 		                         	}
+		                         	
 		                         	
 		                    	})
 	                         	
@@ -402,6 +474,78 @@
                                 }
                                 
                             });
+	                        
+	                     // 학생 리스트 영역 출력
+	                        function searchStudentDiv(){
+	                        	$("#showStudent").removeClass("dis_no");
+                                $("#showStudent").addClass("dis_bl");
+	                        }
+	                        
+	                        $("#xBtn2").click(function(){
+	                        	$("#showStudent").removeClass("dis_bl");
+                                $("#showStudent").addClass("dis_no");
+                            })
+	                        
+	                        // 학생 리스트 검색
+	                        function searchStudent(){
+	                        	var value = "";
+	                        	var key = $("#studentKeyword").val();
+	                        	$.ajax({
+	                        		url :"stsearch.cn",
+	                        		data:{ key: key},
+	                        		success: function(list){
+	                        			console.log(list);
+	                        			for(let i = 0; i < list.length; i++){
+		                        			value += '<tr style="width: 100%;" class="ph_padding">'
+	                                    				+ '<td width="90%;">'
+			                                     			+ '<div class="su_ph_line" onclick="chooseStudent(' + list[i].studentNo + ');">'
+		                                             		+ '<span style="font-size: 20px;">-&nbsp;</span>'
+		                                             		+ '<span class="fas fa-user"></span>'
+		                                             		+ '<span id="sName' + list[i].studentNo + '">&nbsp;' + list[i].studentName + '</span>'
+		                                         		+ '</div></td></tr>';
+	                        				
+	                        			}
+                                	
+                                	$("#studentArea").html(value);
+	                        		}, error: function(){
+	                        			console.log("ajax 학생 검색 실패");
+	                        		}
+	                        	});
+	                        }
+	                        
+	                        
+	                        // 학생 선택
+	                        function chooseStudent(sNo){
+	                        	var length = ${ sList.size() };
+	                        	$.ajax({
+	                        		url: "stst.cn",
+	                        		data: {sNo: sNo},
+	                        		success: function(s){
+	                        			$("#cnslnTitle").val(s.studentName);
+	                        			$("input[name=studentPhone]").val(s.studentPhone);
+	                        			
+	                        			var phone = s.studentPhone;
+	                        			var p = phone.split('-');
+	                        			var ph = p[0] + p[1] + p[2];
+	                        			
+	                        			$("input[name=cnslnPhone]").val(ph);
+	                        			$("input[name=cnslnEc]").val("C");
+	                        			$("input[name=studentName]").val(s.studentName);
+	                        			$("input[name=studentPhone]").val(ph);
+	                        			$("input[name=studentEmail]").val(s.studentEmail);
+	                        			$("input[name=studentBirth]").val(s.studentBirth);
+	                        			if(s.studentGender == 'M'){
+	                        				$("#genderM").attr("checked", true);
+	                        			} else{
+	                        				$("#genderF").attr("checked", true);
+	                        			}
+	                        			$("input[name=studentNo]").val(s.studentNo)
+	                        			
+	                        		}, error: function(){
+	                        			console.log("ajax 학생 조회 실패");
+	                        		}
+	                        	});
+	                        }
 	                    	</script>
 		
 		                    

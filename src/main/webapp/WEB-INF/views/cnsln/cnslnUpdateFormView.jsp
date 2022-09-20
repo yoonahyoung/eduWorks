@@ -35,6 +35,9 @@
 	            	<input type="hidden" name="cnslnChargeNo" value="${ c.cnslnChargeNo }">
 	            	<input type="hidden" name="cnslnChargeList" value="${ c.cnslnChargeList }">
 	            	<input type="hidden" name="cnslnPhone" value="${ c.cnslnPhone }">
+	            	<input type="hidden" name="studentNo" value="${ c.studentNo }">
+	            	<input type="hidden" name="cnslnEc" value="${ c.cnslnEc }">
+	            	
 
 	                <div class="su_content_body">
 	

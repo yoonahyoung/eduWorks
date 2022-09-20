@@ -1,17 +1,16 @@
 package com.finalProject.eduWorks.cnsln.model.dao;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.finalProject.eduWorks.administration.model.vo.Student;
 import com.finalProject.eduWorks.cnsln.model.vo.Cnsln;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.model.vo.Reply;
 import com.finalProject.eduWorks.member.model.vo.Member;
-import com.finalProject.eduWorks.promotion.model.vo.Promotion;
 
 @Repository
 public class CnslnDao {
@@ -99,6 +98,26 @@ public class CnslnDao {
 	// 상담 내역 삭제
 	public int deleteReCnsln(SqlSessionTemplate sqlSession, int cNo) {
 		return sqlSession.update("cnslnMapper.deleteReCnsln", cNo);
+	}
+	
+	// 학생 리스트 조회
+	public ArrayList<Student> selectStudentList(SqlSessionTemplate sqlSession, String key){
+		return (ArrayList) sqlSession.selectList("cnslnMapper.selectStudentList", key);
+	}
+	
+	// 학생 조회
+	public Student selectStudent(SqlSessionTemplate sqlSession, int sNo) {
+		return sqlSession.selectOne("cnslnMapper.selectStudent", sNo);
+	}
+	
+	// 학생 등록
+	public int insertStudent(SqlSessionTemplate sqlSession, Student s) {
+		return sqlSession.insert("cnslnMapper.insertStudent", s);
+	}
+	
+	// 학생 수정
+	public int updateStudent(SqlSessionTemplate sqlSession, Student s) {
+		return sqlSession.update("cnslnMapper.updateStudent", s);
 	}
 
 }
