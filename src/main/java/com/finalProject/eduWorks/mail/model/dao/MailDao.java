@@ -199,7 +199,16 @@ public class MailDao {
 	}
 	
 	/**
-	 * 9_2. 나에게 쓴 메일 목록
+	 * 9_2. 나에게 쓴 메일 중 안읽은 메일 개수 조회
+	 * @param m : 로그인한 회원 사번, 이메일
+	 * @return : 나에게 쓴 메일 중 안읽은 메일 개수
+	 */
+	public int sendMeUnReadCount(SqlSessionTemplate sqlSession, Mail m) {
+		return sqlSession.selectOne("mailMapper.sendMeUnReadCount", m);
+	}
+	
+	/**
+	 * 9_3. 나에게 쓴 메일 목록
 	 * @param m : 로그인한 회원 사번, 이메일
 	 * @return : 나에게 쓴 메일 목록
 	 */
@@ -289,5 +298,39 @@ public class MailDao {
 		
 		return (ArrayList)sqlSession.selectList("mailMapper.selectUnReadMailList", m, rowBounds);
 	}
+	
+	/**
+	 * 13_1. 스팸 메일함 개수 조회
+	 * @param m : 로그인한 회원 이메일 
+	 * @return : 스팸 메일함 개수
+	 */
+	public int spamMailListCount(SqlSessionTemplate sqlSession, Mail m) {
+		return sqlSession.selectOne("mailMapper.spamMailListCount", m);
+	}
+	
+	/**
+	 * 13_2. 스팸 메일함 중 안읽은 메일 개수 조회
+	 * @param m : 로그인한 회원 이메일 
+	 * @return : 스팸 메일함 중 안읽은 메일 개수
+	 */
+	public int spamUnReadCount(SqlSessionTemplate sqlSession, Mail m) {
+		return sqlSession.selectOne("mailMapper.spamUnReadCount", m);
+	}
+	
+	/**
+	 * 13_3. 스팸 메일함 목록 조회
+	 * @param m : 로그인한 회원 이메일
+	 * @return : 스팸 메일함 목록
+	 */
+	public ArrayList<Mail> selectSpamMailList(SqlSessionTemplate sqlSession, PageInfo pi, Mail m){
+		
+		int limit = pi.getBoardLimit(); // 조회해야되는 게시글 갯수
+		int offset = (pi.getCurrentPage() - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return (ArrayList)sqlSession.selectList("mailMapper.selectSpamMailList", m, rowBounds);
+	}
+	
+	
 
 }

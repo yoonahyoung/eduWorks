@@ -195,9 +195,19 @@ public class MailServiceImpl implements MailService {
 	}
 	
 	/**
-	 * 9_1. 나에게 쓴 메일 개수 조회
+	 * 9_2. 나에게 쓴 메일 중 안읽은 메일 개수 조회
 	 * @param m : 로그인한 회원 사번, 이메일
-	 * @return : 나에게 쓴 메일 개수 
+	 * @return : 나에게 쓴 메일 중 안읽은 메일 개수
+	 */
+	@Override
+	public int sendMeUnReadCount(Mail m) {
+		return mDao.sendMeUnReadCount(sqlSession, m);
+	}
+	
+	/**
+	 * 9_3. 나에게 쓴 메일 목록 조회
+	 * @param m : 로그인한 회원 사번, 이메일
+	 * @return : 나에게 쓴 메일 목록 
 	 */
 	@Override
 	public ArrayList<Mail> selectSendToMeMailList(PageInfo pi, Mail m) {
@@ -273,6 +283,37 @@ public class MailServiceImpl implements MailService {
 	public ArrayList<Mail> selectUnReadMailList(PageInfo pi, Mail m) {
 		return mDao.selectUnReadMailList(sqlSession, pi, m);
 	}
+	
+	/**
+	 * 13_1. 스팸 메일함 개수 조회
+	 * @param m : 로그인한 회원 이메일 
+	 * @return : 스팸 메일함 개수
+	 */
+	@Override
+	public int spamMailListCount(Mail m) {
+		return mDao.spamMailListCount(sqlSession, m);
+	}
+	
+	/**
+	 * 13_2. 스팸 메일함 중 안읽은 메일 개수 조회
+	 * @param m : 로그인한 회원 이메일 
+	 * @return : 스팸 메일함 중 안읽은 메일 개수
+	 */
+	@Override
+	public int spamUnReadCount(Mail m) {
+		return mDao.spamUnReadCount(sqlSession, m);
+	}
+	
+	/**
+	 * 13_3. 스팸 메일함 목록 조회
+	 * @param m : 로그인한 회원 이메일
+	 * @return : 스팸 메일함 목록
+	 */
+	@Override
+	public ArrayList<Mail> selectSpamMailList(PageInfo pi, Mail m) {
+		return mDao.selectSpamMailList(sqlSession, pi, m);
+	}
+
 
 
 

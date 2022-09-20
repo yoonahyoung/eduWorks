@@ -147,9 +147,6 @@ public class MailController {
 		// 안읽은 메일 조회
 		int unread = mService.importantUnReadCount(m);
 
-		System.out.println(listCount);
-		System.out.println(list);
-				
 		mv.addObject("count", listCount);
 		mv.addObject("list", list);
 		mv.addObject("pi", pi);
@@ -458,9 +455,9 @@ public class MailController {
 		// 내게 쓴 메일 조회
 		ArrayList<Mail> list = mService.selectSendToMeMailList(pi, m);
 		
-		System.out.println(listCount);
-		System.out.println(list);
-				
+		// 안읽은 메일 조회
+		int unread = mService.sendMeUnReadCount(m);
+
 		mv.addObject("count", listCount);
 		mv.addObject("list", list);
 		mv.addObject("pi", pi);
@@ -484,21 +481,18 @@ public class MailController {
 		m.setMemNo(memNo);
 		m.setReceiverMem(memEmail);
 		
-		// 내게 쓴 메일 개수 조회
+		// 휴지통 개수 조회
 		int listCount = mService.deleteListCount(m);
 		
 		// 페이징
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
 		
-		// 내게 쓴 메일 조회
+		// 휴지통 조회
 		ArrayList<Mail> list = mService.selectDeleteMailList(pi, m);
 		
 		// 안읽은 메일 개수 조회
 		int unreadList = mService.deleteUnReadCount(m);
-		
-		System.out.println(listCount);
-		System.out.println(list);
-				
+
 		mv.addObject("count", listCount);
 		mv.addObject("list", list);
 		mv.addObject("pi", pi);
@@ -522,17 +516,14 @@ public class MailController {
 		m.setMemNo(memNo);
 		m.setReceiverMem(memEmail);
 		
-		// 내게 쓴 메일 개수 조회
+		// 읽은 개수 조회
 		int listCount = mService.readListCount(m);
 		
 		// 페이징
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
 		
-		// 내게 쓴 메일 조회
+		// 읽은 메일 조회
 		ArrayList<Mail> list = mService.selectReadMailList(pi, m);
-
-		System.out.println(listCount);
-		System.out.println(list);
 				
 		mv.addObject("count", listCount);
 		mv.addObject("list", list);
@@ -556,13 +547,13 @@ public class MailController {
 		m.setMemNo(memNo);
 		m.setReceiverMem(memEmail);
 		
-		// 내게 쓴 메일 개수 조회
+		// 안읽은 개수 조회
 		int listCount = mService.unReadListCount(m);
 		
 		// 페이징
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
 		
-		// 내게 쓴 메일 조회
+		// 안읽은 메일 조회
 		ArrayList<Mail> list = mService.selectUnReadMailList(pi, m);
 
 		System.out.println(listCount);
@@ -572,6 +563,41 @@ public class MailController {
 		mv.addObject("list", list);
 		mv.addObject("pi", pi);
 		mv.setViewName("mail/unReadMailList");
+		
+		return mv;
+	}
+	
+	/**
+	 * 13. 스팸 메일함 페이지 이동
+	 * @return : 스팸 메일함 페이지
+	 */
+	@RequestMapping("spamMailList.ma")
+	public ModelAndView spamMailList(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv, HttpSession session) {
+		
+		String memNo = ( (Member)session.getAttribute("loginUser") ).getMemNo();
+		String memEmail = ( (Member)session.getAttribute("loginUser") ).getMemEmail();
+		
+		Mail m = new Mail();
+		m.setMemNo(memNo);
+		m.setReceiverMem(memEmail);
+		
+		// 스펨 메일 개수 조회
+		int listCount = mService.spamMailListCount(m);
+		
+		// 페이징
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
+		
+		// 스팸 메일 조회
+		ArrayList<Mail> list = mService.selectSpamMailList(pi, m);
+		
+		// 안읽은 메일 개수 조회
+		int unreadList = mService.deleteUnReadCount(m);
+
+		mv.addObject("count", listCount);
+		mv.addObject("list", list);
+		mv.addObject("pi", pi);
+		mv.addObject("unread", unreadList);
+		mv.setViewName("mail/spamMailList");
 		
 		return mv;
 	}

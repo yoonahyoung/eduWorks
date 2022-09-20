@@ -42,6 +42,7 @@ public interface MailService {
 	
 	// 7. 나에게 보낸 메일 조회
 	int sendToMeListCount(Mail m);
+	int sendMeUnReadCount(Mail m);
 	ArrayList<Mail> selectSendToMeMailList(PageInfo pi, Mail m);
 	
 	// 8. 휴지통 메일 조회
@@ -62,5 +63,9 @@ public interface MailService {
 	int importantUnReadCount(Mail m);
 	ArrayList<Mail> selectImportantMailList(PageInfo pi, Mail m);
 	
+	// 12. 스팸 메일 조회
+	int spamMailListCount(Mail m);
+	int spamUnReadCount(Mail m);
+	ArrayList<Mail> selectSpamMailList(PageInfo pi, Mail m);
 
 }

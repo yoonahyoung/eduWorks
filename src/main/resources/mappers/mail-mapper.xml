@@ -353,6 +353,19 @@
           and mail_folder = 1
 	</select>
 	
+	<!-- 나에게 보낸 메일 중 안읽은 메일 개수 조회 -->
+	<select id="sendMeUnReadCount" resultType="_int">
+	    select
+		    count(*)
+		from tb_mail
+        join tb_mail_status using (mail_no)
+		where mem_no = #{memNo}
+          and mail_folder = 1
+		  and receiver_mem = #{receiverMem}
+		  and mail_read = 'N'
+		  and mail_delete = 'N'
+	</select>
+	
 	<!-- 나에게 보낸 메일 목록 조회 -->
 	<select id="selectSendToMeMailList" resultMap="mailResult">
 		select
@@ -622,5 +635,64 @@
 	          order 
 	            by mail_type, mail_no
 	</select>
+	
+	<!-- 스팸 메일 개수 조회 -->
+	<select id="spamMailListCount" resultType="_int">
+		select
+		    count(*)
+		from tb_mail_status
+		where receive_mail = #{receiverMem}
+		  and mail_spam = 'Y'
+	</select>
+	
+	<!-- 스팸 메일 중 안읽은 메일 개수 조회 -->
+	<select id="spanUnReadCount" resultType="_int">
+		select
+		    count(*)
+		from tb_mail_status
+		where receive_mail = #{receiverMem}
+		  and mail_spam = 'Y'
+          and mail_read = 'N'
+	</select>
+	
+	<!-- 스팸 메일 목록 조회 -->
+	<select id="selectSpamMailList" resultMap="mailResult">
+			select
+			    mail_no
+			  , mem_no
+			  , m.tag_no
+	          , (
+	                select
+	                    mem_name
+	                from tb_member
+	                where mem_email = send_mail) "send_name"
+	          , send_mail
+			  , receive_mail
+			  , cc_mem
+	          , to_char(send_date, 'YYYY-MM-DD(DY) HH:MI:SS') "send_date"
+			  , mail_title
+			  , mail_content
+			  , mail_type
+			  , mail_folder
+			  , mail_read
+			  , mail_delete
+			  , mail_spam
+			  , mail_important
+			  , (
+			        select
+			            count(*)
+			        from tb_attachment
+			        where at_category = 2
+			          and at_ref_bno = mail_no
+			  
+			     ) "at_count"
+			from tb_mail m
+			join tb_mail_status ms using (mail_no)
+			where mail_spam = 'Y'
+              and receive_mail = #{receiverMem}
+	          order 
+	            by mail_type, mail_no
+	</select>
+	
 
 </mapper>
