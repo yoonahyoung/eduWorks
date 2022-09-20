@@ -407,33 +407,24 @@
 	
 	                        <!-- Nav Item - Alerts 알람 메뉴바 -->
 	                        <li class="nav-item dropdown no-arrow mx-1" id="btnSend">
-	                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+	                            <a class="nav-link dropdown-toggle xBtn" href="#" id="alertsDropdown" role="button"
 	                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 	                                <i class="fas fa-bell fa-fw"></i>
 	                                <!-- Counter - Alerts -->
-	                                <span class="badge badge-danger badge-counter">3+</span>
+	                                <span class="badge badge-danger badge-counter" id="alarm-count"></span>
 	                            </a>
 	                            <!-- Dropdown - Alerts -->
-	                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+	                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in xDiv"
 	                                aria-labelledby="alertsDropdown">
 	                                <h4 class="dropdown-header" style="font-size:medium">
 	                                    알람내역
 	                                </h4>
-	                                <div id="">
-	                                
-	                                <a class="dropdown-item d-flex align-items-center" href="#" style="background-color:rgb(243, 243, 243);">
-	                                    <div class="mr-3">
-	                                        <div class="icon-circle" style="border:1px solid yellow;">
-	                                            <span class="material-symbols-outlined" style="color:rgb(250, 71, 71); font-size: 24px;">E911_Emergency</span>
-	                                        </div>
-	                                    </div>
-	                                    <div>
-	                                        <div class="small text-gray-500">2022-05-03</div>
-	                                        <span class="font-weight-bold" id="msg">[어쩌라고 미친 ㅋㅋ장난하세요?] 글에 대한 신고 규제가 완료되었습니다.</span>
-	                                    </div>
-	                                </a>
+	                                <div id="alert-area"  style="max-height:400px; overflow:auto;">
+	                                <!-- 알람 뿌려지는 영역 -->
+		                            
+		                            	
 	                                </div>
-	                                <a class="dropdown-item text-center small text-gray-500" href="#" id="all-alerts">Show All Alerts</a>
+	                                
 	                            </div>
 	                        </li>
 	
@@ -532,11 +523,12 @@
 			// websocket
 			var socket = null;
 		    $(document).ready(function (){
-		    	//selectAlarmList();
-			    //connectWs();
+		    	selectAlarmList();
+			    connectWs();
 		    });
-		   
-		    function connectWs(){
+		    
+		    
+		   	function connectWs(){
 			   
 			    //var ws = new WebSocket("ws://localhost:8585/eduWorks/replyEcho");
 			    ws = new SockJS("/eduWorks/replyEcho");
@@ -549,7 +541,8 @@
 				   console.log("onmessage"+event.data);
 				    $("#socket-alert").html(event.data);
 				    $("#socket-alert").css("display", "block");
-					
+				    
+				    selectAlarmList(); // 알람 리스트 조회
 				    setTimeout(function(){ $("#socket-alert").css("display", "none"); }, 3000);
 			    };
 					
@@ -570,36 +563,96 @@
 						let value = "";
 						let count = 0;
 						console.log(list);
-						if(!list){
+						
+						if(list.length != 0){ // 리스트가 있을 시
+							// href용 변수
+							let hrefB = 0;
+						
 							for(let i=0; i<list.length; i++){
-								if(list[i].alCategory == 1 && list[i].alReadDate == null){ // 댓글 미확인 된 알람일 경우 class에 font-weight-bold
-									value += '<a class="dropdown-item d-flex align-items-center" href="#">'
-			                        		+ '<div class="mr-3">'
-	                                    		+ '<div class="icon-circle" style="border:1px solid">'
-	                                        		+ '<i class="fa fa-comments fa-regular"></i>'
-                                    			+ '</div>'
-                                			+ '</div>'
-                                			+ '<div>'
-                                    			+ '<div class="small text-gray-500">2022-09-02</div>'
-                                    			+ '<span class="font-weight-bold">' + list[i].alContent + ' (' + list[i].alCount + ')</span>'
-                                			+ '</div>'
-                            			+ '</a>';
+								// 게시판 카테고리별 href지정
+								switch(list[i].boardCategory){ 
+								case 1: hrefB = 'detail.no?no=' + list[i].alBoardNo; break;
+								case 2: hrefB = 'detail.de?no=' + list[i].alBoardNo; break;
+								case 3: hrefB = 'detail.bl?no=' + list[i].alBoardNo; break;
 								}
-								$("#alert-area").html(value);
+								
+								// 1. 블라인드 처리되거나 삭제된 게시글일 경우
+								if(list[i].boardStatus != 'Y'){
+									if(list[i].alReadDate != null){ // 1-1) 미확인 알람
+										value += '<a class="dropdown-item d-flex align-items-center" onclick="readAlarm(1);" style="padding-right:0">';
+										count+=1;
+									}else{ // 1-2) 확인 알람
+										value += '<a class="dropdown-item d-flex align-items-center" onclick="alert(존재하지 않는 게시글입니다!);" style="padding-right:0; background-color:rgb(243, 243, 243);">';
+									}
+								}else // 2. 확인된 알람
+								if(list[i].alReadDate != null){
+									value += '<a class="dropdown-item d-flex align-items-center" href="' + hrefB + '" style="padding-right:0; background-color:rgb(243, 243, 243);">';
+								}else{ // 3. 미확인된 알람
+									value += '<a class="dropdown-item d-flex align-items-center" onclick="readAlarm(&quot;' + hrefB + '&quot;, &quot;' + list[i].alNo + '&quot;);" style="padding-right:0;">';
+									count+=1;
+									}
+			                    // 공통 요소
+								value += '<div class="mr-3">'
+	                                   		+ '<div class="icon-circle" style="border:1px solid">'
+	                                       		+ '<i class="fa fa-comments fa-regular"></i>'
+	                                  			+ '</div>'
+	                              			+ '</div>'
+	                              			+ '<div>'
+	                                  			+ '<div class="small text-gray-500">' + list[i].alDate + '</div>'
+	                                  			+ '<span class="font-weight-bold">' + list[i].alContent + ' (' + list[i].alCount + ')</span>'
+	                              			+ '</div>'
+	                               		+ '<span onclick="return false;"><button type="button" class="btn" onclick="deleteAlarm(&quot;' + list[i].alNo + '&quot;);"><span class="fas fa-x" style="font-size: 12px;"></span></button></span>'
+	                          			+ '</a>';
 							}
 							
-						}else{
-							// 알람 내역 없을 시 all-alerts 버튼 비활성화
-							$("#alert-area").removeAttr("href");
+							$("#alert-area").html(value);
+							$("#alarm-count").html(count);
+							if(count == 0){
+								$("#alarm-count").css("display", "none");
+							}
+							
+						}else{ // 리스트가 없을 시
+							value += '<div style="height:100px;"><h5 style="line-height: 100px;text-align: center;color: black;font-weight: 500;">알람 내역이 없습니다</h5></div>';
+							$("#alert-area").html(value);
 						}
 						
 						
-						
 					},error(){
-						
+						console.log("ajax통신 실패");
 					}
 				})
 			}
+		    
+		    // 알람 읽음 처리
+		    function readAlarm(hrefB, alNo){
+		    	console.log(hrefB);
+		    	console.log(alNo);
+		    	
+		    	$.ajax({
+		    		url:"read.al",
+		    		data:{alNo:alNo},
+		    		success(result){
+		    			// 해당 글 상세 화면으로 이동
+		    			location.href = hrefB;
+		    		},error(){
+		    			console.log("ajax통신 실패");
+		    		}
+		    	})
+		    } 
+		    
+		    // 알람 지워지기
+		    function deleteAlarm(alNo){
+		    	console.log(alNo);
+		    	$.ajax({
+		    		url:"delete.al",
+		    		data:{alNo:alNo},
+		    		success(result){
+		    			selectAlarmList();
+		    		},error(){
+		    			console.log("ajax통신 실패");
+		    		}
+		    	})
+		    }
 		</script>
 		
 		
