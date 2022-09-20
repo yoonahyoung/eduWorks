@@ -195,6 +195,7 @@
 				// 주소록 추가 '취소'시 처리하는 함수
 				function dismissInsertAdd() {
 					$(".insertAddBook").hide();
+					
 				}
 			</script>
 

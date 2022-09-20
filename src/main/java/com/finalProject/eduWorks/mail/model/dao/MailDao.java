@@ -1,6 +1,7 @@
 package com.finalProject.eduWorks.mail.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -329,6 +330,37 @@ public class MailDao {
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		
 		return (ArrayList)sqlSession.selectList("mailMapper.selectSpamMailList", m, rowBounds);
+	}
+	
+	/**
+	 * 14_1. 메일 삭제 처리 
+	 * @param ms : 로그인한 회원 사번, 이메일, 메일 구분(보낸/받은/참조), 메일 번호
+	 * @return : 삭제 성공 여부가 담긴 int형 변수 (성공 : 1 | 실패 : 0)
+	 */
+	public int deleteMail(SqlSessionTemplate sqlSession, ArrayList<MailStatus> list) {
+
+		int result = 0;		
+		for(MailStatus ms : list) {
+			
+			if(ms.getReceiveMail() == null) { // 보낸 메일함
+				result += sqlSession.update("mailMapper.deleteSendMail", ms);	
+			} else if (ms.getSendMail() == null){ // 받은 메일함
+				result += sqlSession.update("mailMapper.deleteReceiveMail", ms);	
+			} else { // 내게쓴 메일함
+				result += sqlSession.update("mailMapper.deleteSendToMeMail", ms);
+			}
+			
+		}
+		return result;
+	}
+	
+	/**
+	 * 14_2. 메일함 비우기 (메일 전체 삭제)
+	 * @param ms : 로그인한 회원 이메일 
+	 * @return : 삭제 성공 여부가 담긴 int형 변수 (성공 : 1 | 실패 : 0)
+	 */
+	public int deleteAllMail(SqlSessionTemplate sqlSession, MailStatus ms) {
+		return sqlSession.delete("mailMapper.deleteAllMail", ms);
 	}
 	
 	

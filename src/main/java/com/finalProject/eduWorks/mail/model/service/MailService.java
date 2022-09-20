@@ -67,5 +67,12 @@ public interface MailService {
 	int spamMailListCount(Mail m);
 	int spamUnReadCount(Mail m);
 	ArrayList<Mail> selectSpamMailList(PageInfo pi, Mail m);
+	
+	// 13. 메일 삭제
+	int deleteSendMail(ArrayList<MailStatus> list);
+	int deleteReceiveMail(ArrayList<MailStatus> list);
+	int deleteSendToMeMail(ArrayList<MailStatus> list);
+	int deleteAllMail(MailStatus ms);
+
 
 }

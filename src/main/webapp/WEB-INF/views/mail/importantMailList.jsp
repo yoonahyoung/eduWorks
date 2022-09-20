@@ -36,7 +36,7 @@
 					<button type="button" class="sub-btn">
 						<i class="fas fa-arrow-right"></i>&nbsp;&nbsp;전달
 					</button>
-					<button type="button" class="sub-btn">
+					<button type="button" class="sub-btn" onclick="chooseDelete();">
 						<i class="fas fa-trash-alt"></i>&nbsp;&nbsp;삭제
 					</button>
 					<button class="nav-link dropdown-toggle sub-btn tag-btn" href="#"
@@ -77,7 +77,7 @@
 				<!-- 반복문 사용 시작 -->
 				<c:forEach var="m" items="${list}">
 				<tr>
-					<td><input type="checkbox" class="mail-select"></td>
+					<td><input type="checkbox" class="mail-select" name="mailNo" value="${m.mailNo }"></td>
 					<td>
 						<!-- 찜하기 후 -->
 						<i class="icon fas fa-star" id="import"
@@ -154,7 +154,39 @@
 				})
 	
 			}
-		
+			
+			// 메일 '삭제'시 실행하는 함수
+			function chooseDelete(){
+
+				let checkArr = [];
+				
+				$("input[name=mailNo]").each(function(){
+					if( $(this).prop("checked") ){
+						checkArr.push( $(this).val() );
+					}
+				});
+				
+				const mailNo = checkArr.toString();
+				console.log(mailNo);
+				
+				$.ajax({
+					url : "deleteMail.ma",
+					data : {
+						receiveMail : '${loginUser.memEmail}',
+						mailNo : mailNo
+					},
+					success : function(result){
+						console.log(result);
+						if(result == 'success'){
+							//location.reload();				
+						}		
+					},
+					error : function(){
+						console.log("메일 삭제 실패");
+					}
+				})
+				
+			}
 		</script>
 
 		<!-- 페이지 바 -->
