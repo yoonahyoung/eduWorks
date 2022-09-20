@@ -318,7 +318,7 @@
 													+ '<div>' 
 														+'<img src="' + root + '/resources/profile_images/defaultProfile.png" alt="">'
 													+ '</div>'
-													+ '<div id="reUpdateArea' + rList[i].replyNo + '">'
+													+ '<div id="reUpdateArea' + rList[i].replyNo + '" class="' + rList[i].replyWriter + '">'
 														+ '<div class="su_reply_writer">'
 															+ '<span class="font-weight-bold">' + rList[i].replyBlind + '</span>'
 															+ '<span style="margin-right:10px"> | ' + rList[i].replyDate + '</span>';
@@ -477,8 +477,10 @@
                  			alert("닉네임을 먼저 입력하세요");
                  		}else{
 	                 		let replyDepth = 0;
+	                 		let replyWriter = 0;
 	                 		if(replyParentNo != 0){ // 댓글 깊이
 	                 			replyDepth = 1;
+	                 			replyWriter = $("#reUpdateArea"+replyParentNo).attr("class");
 	                 		}
 							 $.ajax({
 								url: "insertRe.bl",
@@ -492,8 +494,27 @@
 									replyBlind:$("#blindId").val()
 								},
 								success(result){
-									selectReplyList();
 									$("#replyContent").val("");
+									selectReplyList();
+									
+									// 소켓
+									if(${b.boardWriter != loginUser.memNo}){
+										if(socket){
+											let data = {
+												"cmd" : "reply",
+							                    "boardNo" : "${ b.boardNo }",
+							                    "boardTitle" : "${b.boardTitle}",
+							                 	"boardWriter" : "${b.boardWriter}",
+							                 	"replyWriter" : $("#reUpdateArea"+replyParentNo).attr("class"),
+							                 	"currentUser" : "${loginUser.memNo}",
+							                 	"alarmContent" : ""
+											};
+											
+											let jsonData = JSON.stringify(data);
+											console.log(jsonData);
+								            socket.send(jsonData);
+										}
+									}
 								},
 								error(){
 									console.log("댓글 등록 실패");

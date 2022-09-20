@@ -168,8 +168,6 @@
 		           		$.ajax({ // 추천 수 조회
 		           			url:"likeCount.bl",
 		           			success(map){
-		           				console.log(map.like);
-		           				console.log(map.list);
 		           				// 메인 게시판에 갯수 뿌려주기
 		           				for(let i=0; i<map.like.length; i++){
 		           					
@@ -197,8 +195,6 @@
 	       										break;
 	       									}else
 	       									if(map.like[i].boardNo == map.list[j].boardNo){
-	       										console.log(map.like[i].boardNo);
-	       										console.log(map.list[j].boardNo);
 		       									value += '<tr>'
 			           				                      + '<td><a href="detail.bl?no=' + map.list[j].boardNo + '">' + map.list[j].boardTitle + '</a></td>'
 			           				                      + '<td align="right">' + (map.list[j].boardEnDate).substr(5) + '</td>'
@@ -230,8 +226,6 @@
 		           				// 핫 게시판에 리스트 뿌려주기
 		           				let value="";
 		           				let count = 0;
-		           				console.log(map.reply);
-		           				console.log(map.list);
 		           				for(let i=0; i<map.list.length; i++){ // 상위 다섯개 게시판만 불러오도록
 		           					if(count == 5){
 		           						break;
@@ -247,8 +241,6 @@
 	    		           						break;
 	    		           					}else
 	       									if(map.reply[i].reBoardNo == map.list[j].boardNo){
-	       										console.log(map.reply[i].reBoardNo);
-	       										console.log(map.list[j].boardNo);
 		       									value += '<tr>'
 			           				                      + '<td><a href="detail.bl?no=' + map.list[j].boardNo + '">' + map.list[j].boardTitle + '</a></td>'
 			           				                      + '<td align="right">' + (map.list[j].boardEnDate).substr(5) + '</td>'
