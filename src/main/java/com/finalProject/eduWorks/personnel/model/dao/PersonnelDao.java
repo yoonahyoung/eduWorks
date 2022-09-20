@@ -263,4 +263,40 @@ public class PersonnelDao {
 	public Attendance searchDetailAt(SqlSessionTemplate sqlSession,SearchAt s) {
 		return sqlSession.selectOne("personnelMapper.searchDetailAt", s);
 	}
+	
+	public int adhFormInsert(SqlSessionTemplate sqlSession,SearchAt s) {
+		return sqlSession.insert("personnelMapper.adhFormInsert", s);
+	}
+	
+	public Adjust checkedAdj(SqlSessionTemplate sqlSession,SearchAt s) {
+		return sqlSession.selectOne("personnelMapper.checkedAdj", s);
+	}
+	
+	public Attendance checkedIn(SqlSessionTemplate sqlSession,SearchAt s) {
+		return sqlSession.selectOne("personnelMapper.checkedIn", s);
+	}
+
+	public int updateAttIn(SqlSessionTemplate sqlSession,Attendance at) {
+		return sqlSession.update("personnelMapper.updateAttIn", at);
+	}
+
+	public int insertAttIn(SqlSessionTemplate sqlSession,Attendance at) {
+		return sqlSession.insert("personnelMapper.insertAttIn", at);
+	}
+	
+	public int checkedCountIn(SqlSessionTemplate sqlSession,SearchAt s) {
+		return sqlSession.selectOne("personnelMapper.checkedCountIn", s);
+	}
+	
+	public int updateOut(SqlSessionTemplate sqlSession,Attendance at) {
+		return sqlSession.update("personnelMapper.updateOut", at);
+	}
+	
+	public int adjustMeCount(SqlSessionTemplate sqlSession,String memNo) {
+		return sqlSession.selectOne("personnelMapper.adjustMeCount", memNo);
+	}
+	
+	public ArrayList<Adjust> adjustMe(SqlSessionTemplate sqlSession,String memNo){
+		return (ArrayList)sqlSession.selectList("personnelMapper.adjustMe", memNo);
+	}
 }
