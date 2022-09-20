@@ -310,11 +310,16 @@
 		                        	<button type="button" class="btn su_btn_two su_btn_border" id="deleteBtn" data-toggle="modal" data-target="#delete" disabled>삭제</button>
 		                        </c:if>
 		                        
-		                        <button type="button" class="btn su_btn_two su_btn_border" onclick="location.href='list.ca';">돌아가기</button>
+		                        <button type="button" class="btn su_btn_two su_btn_border" onclick="postFormSubmit('list.ca');">돌아가기</button>
 		                    </div>
 		       
 		       <!-- ================================================================================================ -->
-		                    
+		                    <form id="postForm" action="" method="post">
+	            	
+				            	<input type="hidden" name="memNo" value="${loginUser.memNo }">
+				            
+				            </form>
+				            
 		                    <script>
 		                    	$(document).ready(function(){
 		                    		
@@ -451,6 +456,10 @@
 		                         	}
 		                         	
 		                    	})
+		                    	
+		                    	function postFormSubmit(url){
+				            		$("#postForm").attr("action", url).submit();
+				            	}
 	                         	
 	                            // 선택한 참석자 추가
 	                            function chooseAtnd(mNo){
@@ -489,6 +498,7 @@
 	                            	});
 	                                
 	                            }
+		                    	
 		                        
 		                        // 참석자 번호 리스트 삭제 클릭 이벤트
 		                        function back(no){

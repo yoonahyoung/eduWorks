@@ -34,12 +34,19 @@ public class ScheduleController {
 	
 	// 캘린더 화면 조회
 	@RequestMapping("list.ca")
-	public ModelAndView calendar(ModelAndView mv) {
+	public ModelAndView calendar(String memNo, ModelAndView mv) {
 		// 멤버 리스트
 		String keyword = "";
 		ArrayList<Member> aList = sService.selectMemberList(keyword) ;
+		// 마이 캘린더 리스트
+		ArrayList<Mycal> clist = sService.selectMycalList(memNo);
+		String str = "";
+		for(int i = 0; i < clist.size(); i++) {
+			str += clist.get(i).getMycalNo() + ",";
+		}
+		var calArr = str.substring(0, str.lastIndexOf(","));
 		
-		mv.addObject("aList", aList)
+		mv.addObject("aList", aList).addObject("calArr", calArr)
 		  .setViewName("schedule/calendarView");
 		
 		return mv;
@@ -298,5 +305,11 @@ public class ScheduleController {
 		return new Gson().toJson(list);
 	}
 	
-	
+	// 내 캘린더 번호 리스트
+	@ResponseBody
+	@RequestMapping(value="mcnolist.ca", produces="application/json; charset=UTF-8")
+	public String ajaxselectMycalNo(String memNo) {
+		ArrayList<Mycal> list = sService.selectMycalList(memNo);
+		return new Gson().toJson(list);
+	}
 }

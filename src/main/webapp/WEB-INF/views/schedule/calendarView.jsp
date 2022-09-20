@@ -46,7 +46,7 @@
 	                            <span>&nbsp;내 캘린더</span>
 	                        </div>
 	
-	                        <span style="display:none" id="calArr"></span>
+	                        <span style="display:none" id="calArr">${ calArr }</span>
 	                    
 	
 	                        <div id="myCalendar" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -115,6 +115,7 @@
 	                <!-- 내 캘린더 관련 script -->
 	                <script>
 	                	$(function(){
+	                		
 	                		calList();
 	                		selectMycalList();
 	                		
@@ -163,6 +164,7 @@
 		                           //console.log(str);
 		                           str = str.substring(0, str.lastIndexOf(","));
 		                           $("#calArr").text(str);
+		                           //console.log($("#calArr").text());
 	                			}, error: function(){
 	                				console.log("ajax 내 캘린더 조회 실패");
 	                			}
@@ -199,11 +201,14 @@
 	                			async: false,
 	                			data: { memNo: ${ loginUser.memNo } },
 	                			success: function(list){
+	                				console.log(list[0].mycalNo);
 	                				for(let i = 0; i < list.length; i++){
 	                					result += list[i].mycalNo + ',';
 	                				}
 	                				result = result.substring(0, result.lastIndexOf(","));
 	                				$("#calArr").text(result);
+	                				
+	                				return result;
 	                			}, error: function(){
 	                				console.log("ajax 내 캘린더 번호 조회 실패");
 	                			}
@@ -372,267 +377,6 @@
 	                </div>
 	            </div>
 	
-	                <!-- 서브메뉴 관심 캘린더 -->
-	                <!-- <ul class="accordion" id="accordionSidebar" >
-	                    <li class="su_sub_menu_item">
-	
-	                        변경 버튼 클릭 전
-	                        <span class="fas fa-pen pen_icon dis_bl" id="pen2"></span>
-	
-	                        변경버튼 클릭 후
-	                        <div class="dis_no" id="nopen2">
-	                            <span class="fas fa-xmark pen_icon" id="x1"></span>
-	                            <span class="fas fa-check pen_icon" id="check1">&nbsp;</span>
-	                        </div>
-	
-	                        <div class="collapsed su_sub_menu_list" style="width:70%;" data-toggle="collapse" data-target="#attCalendar" aria-expanded="true" aria-controls="collapseTwo">
-	                            <span>&nbsp;관심 캘린더</span>
-	                        </div>
-	
-	                        <div id="attCalendar" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-	                            <table>
-	                                <tr style="width: 100%;">
-	                                    <td width="20%;"></td>
-	                                    <td><input type="checkbox"></td>
-	                                    <td width="90%;"> &nbsp;이승엽 대표</td>
-	                                    기본은 색상 편집 눌렀을 때 x
-	                                    <td class="su_attCalBasic">
-	                                        <a type="button">
-	                                            <div class="calColor" style="border: 1px solid red; background: red;"></div>
-	                                        </a>
-	                                    </td>
-	
-	                                    <td class="su_attCalX dis_no"><a type="button">x</a></td>
-	                                </tr>
-	                                <tr>
-	                                    <td></td>
-	                                    <td><input type="checkbox"></td>
-	                                    <td> &nbsp;강보람 부장</td>
-	                                    기본은 색상 편집 눌렀을 때 x
-	                                    <td class="su_attCalBasic">
-	                                        <a type="button">
-	                                            <div class="calColor" style="border: 1px solid red; background: red;"></div>
-	                                        </a>
-	                                    </td>
-	
-	                                    <td class="su_attCalX dis_no"><a type="button">x</a></td>
-	                                </tr>
-	                                <tr>
-	                                    <td></td>
-	                                    <td><input type="checkbox"></td>
-	                                    <td> &nbsp;박대리 대리</td>
-	                                    기본은 색상 편집 눌렀을 때 x
-	                                    <td class="su_attCalBasic">
-	                                        <a type="button">
-	                                            <div class="calColor" style="border: 1px solid red; background: red;"></div>
-	                                        </a>
-	                                    </td>
-	
-	                                    <td class="su_attCalX dis_no"><a type="button">x</a></td>
-	                                </tr>
-	                            </table>
-	                            
-	                            <a type="button" class="addCal" id="addAttCal">+ 관심 캘린더 추가</a>
-	                        </div>
-	                    </li>
-	                </ul>
-	
-	                관심 캘린더 추가 창
-	                <div class="su_ph_div draggable dis_no" id="attCalList">
-	                    <div class="su_ph_header">
-	                        <h5 class="mt-1 mb-2" style="text-align: center; color: black;" id="moveCal">관심 캘린더 추가<span class="fas fa-xmark" id="xBtn" style="cursor: pointer;"></span></h5>
-	                        <div style="text-align: center;">
-	                            <input type="text" name="suPhKeyword" placeholder="이름/부서/직위/직책">
-	                            <button type="button" class="su_btn_border btn-sm">검색</button>
-	                        </div>
-	                    </div>
-	                    
-	                    <hr class="hr_line">
-	
-	                    <div class="su_ph_body">
-	                        <div class="div_left_line" style="margin-top: -1rem;">
-	                            <div class="su_ph_line" id="ceo">
-	                                <span style="font-size: 20px;">&nbsp;</span>
-	                                <span class="fas fa-user"></span>
-	                                <span>&nbsp; 이승엽 대표</span>
-	                            </div>
-	
-	                            강사진 주소록
-	                            <div class="su_ph_line">
-	                                <div class="collapsed ph_padding" data-toggle="collapse" data-target="#teacherList" aria-expanded="true" aria-controls="collapseTwo">
-	                                    <span style="font-size: 20px;">-&nbsp;</span>
-	                                    <span style="font-size: 20px;">+&nbsp;</span>
-	                                    <span>&nbsp; 강사진</span>
-	                                </div>
-	
-	                                <div id="teacherList" class="collapse div_left_line" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-	                                    <table>
-	                                        <tr style="width: 100%;" class="ph_padding">
-	                                            <td width="90%;">
-	                                                <div class="su_ph_line">
-	                                                    <span style="font-size: 20px;">-&nbsp;</span>
-	                                                    <span class="fas fa-user"></span>
-	                                                    <span>&nbsp; 강보람 강사님</span>
-	                                                </div>
-	                                            </td>
-	                                        </tr>
-	                                        <tr>
-	                                            <td>
-	                                                <div class="su_ph_line" class="ph_padding">
-	                                                    <span style="font-size: 20px;">-&nbsp;</span>
-	                                                    <span class="fas fa-user"></span>
-	                                                    <span>&nbsp; 나강사 강사님</span>
-	                                                </div>
-	                                            </td>
-	                                        </tr>
-	                                        <tr>
-	                                            <td>
-	                                                <div class="su_ph_line" class="ph_padding">
-	                                                    <span style="font-size: 20px;">-&nbsp;</span>
-	                                                    <span class="fas fa-user"></span>
-	                                                    <span>&nbsp; 도강사 강사님</span>
-	                                                </div>
-	                                            </td>
-	                                        </tr>
-	                                    </table>
-	                                </div>
-	                            </div>
-	
-	                            운영부 주소록
-	                            <div class="su_ph_line">
-	                                <div class="collapsed ph_padding" data-toggle="collapse" data-target="#opList" aria-expanded="true" aria-controls="collapseTwo">
-	                                    <span style="font-size: 20px;">-&nbsp;</span>
-	                                    <span style="font-size: 20px;">+&nbsp;</span>
-	                                    <span>&nbsp; 운영부</span>
-	                                </div>
-	
-	                                <div id="opList" class="collapse div_left_line" aria-expanded="true" data-parent="#accordionSidebar">
-	                                    <div class="collapsed ph_padding" data-toggle="collapse" data-target="#promoList" aria-expanded="true" aria-controls="collapseTwo">
-	                                        <span style="font-size: 20px;">-&nbsp;</span>
-	                                        <span style="font-size: 20px;">+&nbsp;</span>
-	                                        <span>&nbsp; 홍보팀</span>
-	                                    </div>
-	
-	                                    홍봉팀 리스트
-	                                <div id="promoList" class="collapse div_left_line" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-	                                    <table>
-	                                        <tr style="width: 100%;" class="ph_padding">
-	                                            <td width="90%;">
-	                                                <div class="su_ph_line">
-	                                                    <span style="font-size: 20px;">-&nbsp;</span>
-	                                                    <span class="fas fa-user"></span>
-	                                                    <span>&nbsp; 강부장 부장</span>
-	                                                </div>
-	                                            </td>
-	                                        </tr>
-	                                        <tr>
-	                                            <td>
-	                                                <div class="su_ph_line" class="ph_padding">
-	                                                    <span style="font-size: 20px;">-&nbsp;</span>
-	                                                    <span class="fas fa-user"></span>
-	                                                    <span>&nbsp; 나대리 대리</span>
-	                                                </div>
-	                                            </td>
-	                                        </tr>
-	                                        <tr>
-	                                            <td>
-	                                                <div class="su_ph_line" class="ph_padding">
-	                                                    <span style="font-size: 20px;">-&nbsp;</span>
-	                                                    <span class="fas fa-user"></span>
-	                                                    <span>&nbsp; 도사원 사원</span>
-	                                                </div>
-	                                            </td>
-	                                        </tr>
-	                                    </table>
-	                                </div>
-	
-	                                    <div class="collapsed ph_padding" data-toggle="collapse" data-target="#adminiList" aria-expanded="true" aria-controls="collapseTwo">
-	                                        <span style="font-size: 20px;">-&nbsp;</span>
-	                                        <span style="font-size: 20px;">+&nbsp;</span>
-	                                        <span>&nbsp; 행정팀</span>
-	                                    </div>
-	
-	                                    행정팀 리스트
-	                                <div id="adminiList" class="collapse div_left_line" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-	                                    <table>
-	                                        <tr style="width: 100%;" class="ph_padding">
-	                                            <td width="90%;">
-	                                                <div class="su_ph_line">
-	                                                    <span style="font-size: 20px;">-&nbsp;</span>
-	                                                    <span class="fas fa-user"></span>
-	                                                    <span>&nbsp; 강부장 부장</span>
-	                                                </div>
-	                                            </td>
-	                                        </tr>
-	                                        <tr>
-	                                            <td>
-	                                                <div class="su_ph_line" class="ph_padding">
-	                                                    <span style="font-size: 20px;">-&nbsp;</span>
-	                                                    <span class="fas fa-user"></span>
-	                                                    <span>&nbsp; 나대리 대리</span>
-	                                                </div>
-	                                            </td>
-	                                        </tr>
-	                                        <tr>
-	                                            <td>
-	                                                <div class="su_ph_line" class="ph_padding">
-	                                                    <span style="font-size: 20px;">-&nbsp;</span>
-	                                                    <span class="fas fa-user"></span>
-	                                                    <span>&nbsp; 도사원 사원</span>
-	                                                </div>
-	                                            </td>
-	                                        </tr>
-	                                    </table>
-	                                </div>
-	                            </div>
-	
-	                                </div>
-	
-	                                
-	                            인사팀 주소록
-	                            <div class="su_ph_line">
-	                                <div class="collapsed ph_padding" data-toggle="collapse" data-target="#hrList" aria-expanded="true" aria-controls="collapseTwo">
-	                                    <span style="font-size: 20px;">-&nbsp;</span>
-	                                    <span style="font-size: 20px;">+&nbsp;</span>
-	                                    <span>&nbsp; 인사팀</span>
-	                                </div>
-	
-	                                <div id="hrList" class="collapse div_left_line" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-	                                    <table>
-	                                        <tr style="width: 100%;" class="ph_padding">
-	                                            <td width="90%;">
-	                                                <div class="su_ph_line">
-	                                                    <span style="font-size: 20px;">-&nbsp;</span>
-	                                                    <span class="fas fa-user"></span>
-	                                                    <span>&nbsp; 강부장 부장</span>
-	                                                </div>
-	                                            </td>
-	                                        </tr>
-	                                        <tr>
-	                                            <td>
-	                                                <div class="su_ph_line" class="ph_padding">
-	                                                    <span style="font-size: 20px;">-&nbsp;</span>
-	                                                    <span class="fas fa-user"></span>
-	                                                    <span>&nbsp; 나대리 대리</span>
-	                                                </div>
-	                                            </td>
-	                                        </tr>
-	                                        <tr>
-	                                            <td>
-	                                                <div class="su_ph_line" class="ph_padding">
-	                                                    <span style="font-size: 20px;">-&nbsp;</span>
-	                                                    <span class="fas fa-user"></span>
-	                                                    <span>&nbsp; 도사원 사원</span>
-	                                                </div>
-	                                            </td>
-	                                        </tr>
-	                                    </table>
-	                                </div>
-	                            </div>
-	
-	                        </div>
-	                    </div>
-	                </div> -->
 	
 	                <script>
 	                    $(document).ready(function(){
@@ -711,7 +455,6 @@
 			            			$("#cmpy").text('N');
 			            		}
 			            		
-			            		$("#calendar").reload();
 		            		});
 	                     	
 		            		$("#atndBox").change(function(){
@@ -736,21 +479,21 @@
 	                    <table>
 	                        <tr style="width: 100%;">
 	                            <td width="30%;"></td>
-	                            <td><input type="checkbox" id="cmpyBox" checked></td>
+	                            <td><input type="checkbox" id="cmpyBox"></td>
 	                            <td> &nbsp;전사 일정</td>
 	                            <td width="10%"></td>
 	                        </tr>
 	                        <tr>
 	                            <td></td>
-	                            <td><input type="checkbox" id="atndBox" checked></td>
+	                            <td><input type="checkbox" id="atndBox"></td>
 	                            <td> &nbsp;참석자 일정</td>
 	                            <td></td>
 	                        </tr>
 	                    </table>
 	                </div>
 	                
-	                <span style="display:none;" id="cmpy">Y</span>
-	                <span style="display:none;" id="atnd">Y</span>
+	                <span style="display:none;" id="cmpy">N</span>
+	                <span style="display:none;" id="atnd">N</span>
 	                
 	                <!-- 캘린더 관리 페이지로 이동 -->
 	                <br>
@@ -813,7 +556,7 @@
 	    timeFormat:'H(:mm)',
 	    events: function(info, successCallback, failureCallback){
 	    	console.log($("#calArr").text());
-	    	
+	    	var calStr = $("#calArr").text();
 	    	$.ajax({
 	    		type: 'post',
 	    		cache: false,
@@ -829,16 +572,44 @@
               	success: function(param){
               		var event = [];
               		
+              		//console.log(calStr);
               		$.each(param, function(index, data){
               			// map에서 값 불러와서 조건넣어서 이벤트 푸쉬하기...
-	              		event.push({
-	              			id: data.id,
-	              			title: data.title,
-	              			start: data.start,
-	              			end: data.end,
-	              			color: hexToRgb(data.color)
-	              			//backgroundColor: 'rgba(94, 126, 155, 0.6)'
-	              		});
+              			if(calStr.includes(data.mycal)){
+              				event.push({
+    	              			id: data.id,
+    	              			title: data.title,
+    	              			start: data.start,
+    	              			end: data.end,
+    	              			color: hexToRgb(data.color)
+    	              			//backgroundColor: 'rgba(94, 126, 155, 0.6)'
+    	              		});
+              			 }
+              			else if( ($("#atnd").text() == 'Y')){
+              				if(data.atnd != ""){
+              					event.push({
+        	              			id: data.id,
+        	              			title: data.title,
+        	              			start: data.start,
+        	              			end: data.end,
+        	              			color: hexToRgb(data.color)
+        	              			//backgroundColor: 'rgba(94, 126, 155, 0.6)'
+        	              		});
+              				}
+              			} else if($("#cmpy").text() == 'Y'){
+              				if(data.cmpy == 'Y'){
+              					event.push({
+        	              			id: data.id,
+        	              			title: data.title,
+        	              			start: data.start,
+        	              			end: data.end,
+        	              			color: hexToRgb(data.color)
+        	              			//backgroundColor: 'rgba(94, 126, 155, 0.6)'
+        	              		});
+              				}
+              			}
+              			 
+	              		
               	    });
               		
               		console.log(event);
@@ -852,9 +623,15 @@
 	    	
 	    	
 	    });
+	    
+	    
+	    
+	    $(document).on("change", "input[type=checkbox]", function(){
+	    	calendar.refetchEvents();
+	    })
 	
 	    calendar.render();
-	    calendar.refetchEvents();
+	    
 	    });
 	</script>
 	
