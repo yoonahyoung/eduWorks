@@ -71,20 +71,27 @@ public class MailController {
 	@RequestMapping("receiveMailList.ma")
 	public ModelAndView receiveMailList(@RequestParam(value="page", defaultValue="1") int currentPage, ModelAndView mv, HttpSession session) {
 		
+		// 로그인한 회원 번호
+		String memNo = ( (Member)session.getAttribute("loginUser") ).getMemNo();
 		// 로그인한 회원 이메일
 		String memEmail = ( (Member)session.getAttribute("loginUser") ).getMemEmail();
 		
+		
+		Mail m = new Mail();
+		m.setMemNo(memNo);
+		m.setReceiverMem(memEmail);
+		
 		// 받은 메일 개수 조회
-		int listCount = mService.receiveListCount(memEmail);
+		int listCount = mService.receiveListCount(m);
 
 		// 페이징
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
 		
 		// 받은 메일 조회
-		ArrayList<Mail> list = mService.selectReceiveMailList(pi, memEmail);
+		ArrayList<Mail> list = mService.selectReceiveMailList(pi, m);
 		
 		// 안읽은 메일 개수 조회
-		int unreadList = mService.receiveUnReadCount(memEmail);
+		int unreadList = mService.receiveUnReadCount(m);
 		
 		mv.addObject("count", listCount);
 		mv.addObject("unread", unreadList);

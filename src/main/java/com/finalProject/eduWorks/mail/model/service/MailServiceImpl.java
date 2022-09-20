@@ -51,8 +51,8 @@ public class MailServiceImpl implements MailService {
 	 * @return : 받은 메일 개수
 	 */
 	@Override
-	public int receiveListCount(String memEmail) {
-		return mDao.receiveListCount(sqlSession, memEmail);
+	public int receiveListCount(Mail m) {
+		return mDao.receiveListCount(sqlSession, m);
 	}
 	
 	/**
@@ -61,8 +61,8 @@ public class MailServiceImpl implements MailService {
 	 * @return : 받은 메일 목록
 	 */
 	@Override
-	public ArrayList<Mail> selectReceiveMailList(PageInfo pi, String memEmail) {
-		return mDao.selectReceiveMailList(sqlSession, pi, memEmail);
+	public ArrayList<Mail> selectReceiveMailList(PageInfo pi, Mail m) {
+		return mDao.selectReceiveMailList(sqlSession, pi, m);
 	}
 	
 	/**
@@ -71,8 +71,8 @@ public class MailServiceImpl implements MailService {
 	 * @return : 받은 메일 중 안읽은 메일 개수
 	 */
 	@Override
-	public int receiveUnReadCount(String memEmail) {
-		return mDao.receiveUnReadCount(sqlSession, memEmail);
+	public int receiveUnReadCount(Mail ml) {
+		return mDao.receiveUnReadCount(sqlSession, ml);
 	}
 	
 	/**

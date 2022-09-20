@@ -48,8 +48,8 @@ public class MailDao {
 	 * @param memEmail : 로그인한 회원 이메일
 	 * @return : 받은 메일 개수
 	 */
-	public int receiveListCount(SqlSessionTemplate sqlSession, String memEmail) {
-		return sqlSession.selectOne("mailMapper.receiveListCount", memEmail);
+	public int receiveListCount(SqlSessionTemplate sqlSession, Mail m) {
+		return sqlSession.selectOne("mailMapper.receiveListCount", m);
 	}
 	
 	/**
@@ -57,13 +57,13 @@ public class MailDao {
 	 * @param memEmail : 로그인한 회원 이메일
 	 * @return : 받은 메일 목록
 	 */
-	public ArrayList<Mail> selectReceiveMailList(SqlSessionTemplate sqlSession, PageInfo pi, String memEmail){
+	public ArrayList<Mail> selectReceiveMailList(SqlSessionTemplate sqlSession, PageInfo pi, Mail m){
 		
 		int limit = pi.getBoardLimit(); // 조회해야되는 게시글 갯수
 		int offset = (pi.getCurrentPage() - 1) * limit;
 		RowBounds rowBounds = new RowBounds(offset, limit);
 
-		return (ArrayList)sqlSession.selectList("mailMapper.selectReceiveMailList", memEmail, rowBounds);
+		return (ArrayList)sqlSession.selectList("mailMapper.selectReceiveMailList", m, rowBounds);
 	}
 	
 	/**
@@ -71,8 +71,8 @@ public class MailDao {
 	 * @param memEmail : 로그인한 회원 이메일
 	 * @return : 받은 메일 중 안읽은 메일 개수
 	 */
-	public int receiveUnReadCount(SqlSessionTemplate sqlSession, String memEmail) {
-		return sqlSession.selectOne("mailMapper.receiveUnReadCount", memEmail);
+	public int receiveUnReadCount(SqlSessionTemplate sqlSession, Mail m) {
+		return sqlSession.selectOne("mailMapper.receiveUnReadCount", m);
 	}
 	
 	/**

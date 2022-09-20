@@ -27,9 +27,9 @@ public interface MailService {
 	// 3_2. 보낸 메일글 상세조회
 	
 	// 4. 받은 메일 조회
-	int receiveListCount(String memEmail); // 받은 메일 개수 조회
-	int receiveUnReadCount(String memEmail); // 받은 메일 중 안읽은 메일 개수 조회
-	ArrayList<Mail> selectReceiveMailList(PageInfo pi, String memEmail); // 받은 메일 목록
+	int receiveListCount(Mail m); // 받은 메일 개수 조회
+	int receiveUnReadCount(Mail m); // 받은 메일 중 안읽은 메일 개수 조회
+	ArrayList<Mail> selectReceiveMailList(PageInfo pi, Mail m); // 받은 메일 목록
 	
 	// 5. 중요메일 설정
 	int updateImportant(MailStatus ms);
