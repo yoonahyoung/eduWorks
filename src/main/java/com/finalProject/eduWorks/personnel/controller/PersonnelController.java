@@ -758,7 +758,7 @@ public class PersonnelController {
 	
 	@ResponseBody
 	@RequestMapping(value = "test.cl",produces="application/json; charset=utf-8")
-	public String testCal(String start,String end,HttpSession session) {
+	public String testCal(String start,String end,HttpSession session) throws ParseException {
 		Member member = (Member) session.getAttribute("loginUser");
 		String memNo = member.getMemNo();
 		String memEnrollDate = member.getMemEnrollDate();
@@ -845,11 +845,19 @@ public class PersonnelController {
 				list.add(m);
 				
 			}else if(at.getAttStatus().equals("F")) {
-				HashMap m = new HashMap();
-				m.put("start", at.getAttDate());
-				m.put("title", "무단결근");
-				m.put("color", "red");
-				list.add(m);
+				
+				Date current = new Date();
+				String now1 = format.format(current);
+				String atdate1 = at.getAttDate();
+				Date now = format.parse(now1);
+				Date atdate = format.parse(atdate1);
+				if(now.getTime()-atdate.getTime()>0) {
+					HashMap m = new HashMap();
+					m.put("start", at.getAttDate());
+					m.put("title", "무단결근");
+					m.put("color", "red");
+					list.add(m);
+				}
 			}else {
 				HashMap m = new HashMap();
 				m.put("start", at.getAttDate());
