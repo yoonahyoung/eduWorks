@@ -335,5 +335,14 @@
 			</otherwise>
 		</choose>
 	</select>
+	
+	<!-- 주소록 그룹명 수정 -->
+	<update id="updateIndivAddGroup">
+		update 
+			tb_add_out
+				set add_name = #{addName}
+			where mem_no = #{memNo}
+			  and add_no = #{addNo}
+	</update>
 
 </mapper>

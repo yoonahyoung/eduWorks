@@ -96,9 +96,9 @@ public class AddressController {
 	@ResponseBody
 	@RequestMapping("insertAddIndiv.ad")
 	public String ajaxInsertAddIndiv(AddressOut ado) {
-		
+		System.out.println(ado);
 		int result = aService.ajaxInsertAddIndiv(ado);
-		
+		System.out.println(result);
 		return result > 0 ? "success" : "fail";
 		
 	}
@@ -285,6 +285,21 @@ public class AddressController {
 		mv.setViewName("addressBook/publicAddressBook");
 		
 		return mv;
+		
+	}
+	
+	/**
+	 * 9. 개인 연락처 그룹명 수정
+	 * @param ad : 수정하고자하는 그룹명, 로그인한 회원 사번, 수정하고자하는 그룹 번호
+	 * @return : 그룹명 수정 성공여부
+	 */
+	@ResponseBody
+	@RequestMapping("updateIndivAddGroup.ma")
+	public String updateIndivAddGroup(AddressOut ad) {
+		
+		int result = aService.updateIndivAddGroup(ad);
+		
+		return result > 0 ? "success" : "fail";
 		
 	}
 	

@@ -276,7 +276,7 @@
 	            </li>
 	
 	            <li class="nav-item">
-	                <a class="nav-link collapsed" href="#">
+	                <a class="nav-link collapsed" href="reservation.re">
 	                    <i class="fa-solid fa-building-circle-check"></i>
 	                    <span>시설예약</span>
 	                </a>

@@ -29,7 +29,7 @@ import lombok.ToString;
 @ToString
 public class Mail {
 	
-	private int mailNo;
+	private String mailNo;
 	private String memNo;
 	private int tagNo;
 	private String memTemporary;
@@ -43,6 +43,7 @@ public class Mail {
 	// --------- 추가 ----------
 	private MailStatus mailStatus;
 	private Attachment attachment;
+	private String sendMail;
 	private String sendName;
 
 }

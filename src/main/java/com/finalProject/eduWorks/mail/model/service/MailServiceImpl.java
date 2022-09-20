@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.finalProject.eduWorks.addressBook.model.vo.Address;
 import com.finalProject.eduWorks.addressBook.model.vo.AddressOut;
@@ -313,6 +314,40 @@ public class MailServiceImpl implements MailService {
 	public ArrayList<Mail> selectSpamMailList(PageInfo pi, Mail m) {
 		return mDao.selectSpamMailList(sqlSession, pi, m);
 	}
+
+	/**
+	 * 14_1. 메일 삭제 처리 (보낸 메일)
+	 */
+	@Override
+	public int deleteSendMail(ArrayList<MailStatus> list) {
+		return mDao.deleteMail(sqlSession, list);
+	}
+	
+	/**
+	 * 14_2. 메일 삭제 처리 (받은 메일)
+	 */
+	@Override
+	public int deleteReceiveMail(ArrayList<MailStatus> list) {
+		return mDao.deleteMail(sqlSession, list);
+	}
+
+	/**
+	 * 14_3. 메일 삭제 처리 (내게쓴 메일)
+	 */
+	@Override
+	public int deleteSendToMeMail(ArrayList<MailStatus> list) {
+		return mDao.deleteMail(sqlSession, list);
+	}
+	
+	/**
+	 * 14_4. 메일함 비우기 (메일 전체 삭제)
+	 */
+	@Override
+	public int deleteAllMail(MailStatus ms) {
+		return mDao.deleteAllMail(sqlSession, ms);
+	}
+	
+	
 
 
 

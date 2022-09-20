@@ -107,20 +107,36 @@
 
 			// '태그 삭제'클릭시 실행하는 함수
 			function deleteTags() {
-				confirm("태그를 삭제하시겠습니까?");
+				let answer = confirm("태그를 삭제하시겠습니까?");
 
-				// if(ok){
-				//     태그 삭제;
-				// }
+				
 			}
 
 			// '비우기' 클릭시 실행하는 함수
 			function emptyMail() {
-				confirm("휴지통을 비우시면 지워진 메일(중요메일 포함)들은 복구할 수 없습니다.\n\n휴지통을 비우시겠습니까?");
-
-				// if(true){
-				//     휴지통 비우기
-				// }
+				let answer = confirm("휴지통을 비우시면 지워진 메일(중요메일 포함)들은 복구할 수 없습니다.\n\n휴지통을 비우시겠습니까?");
+				
+				if(answer == true){
+					$.ajax({
+						url: "deleteAllMail.ma",
+						data : {
+							memNo : '${loginUser.memNo}',
+							sendMail : '${loginUser.memEmail}',
+							receiveMail : '${loginUser.memEmail}'
+						},
+						success : function(result){
+							console.log(result);
+							if(result == 'success'){
+								alert("메일함 비우기가 완료되었습니다.");
+								location.reload();
+							}
+						},
+						error : function(){
+							console.log("메일 전체 삭제 실패");
+						}
+					})
+				}
+				
 			}
 		</script>
 </body>

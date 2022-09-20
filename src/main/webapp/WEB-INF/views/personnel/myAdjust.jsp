@@ -139,7 +139,7 @@
                             <div  style="margin-left: 10px; padding-top: 30px;  width: 1000px; height: 500px; " >
                                 <div style="width: 40%; height: 100%; float: left;">
                                     <div style="width: 100%; height: 90%;" align="center">
-                                        <table style="border-collapse: separate; border-spacing: 0 10px;">
+                                        <table id="tab1" style="border-collapse: separate; border-spacing: 0 10px;">
                                         	<thead>
                                             <tr  style="background-color: #e6e9ec;">
                                                 <th style="width: 200px;">조정신청날짜</th>
@@ -154,14 +154,67 @@
                                             		<tbody>
                                             			<c:forEach var="list" items="${ list }">
                                             				<tr>
-                                            					<th>${ list.adjObjdate }</th>
-                                            					<th>${ list.adjStatus }</th>
+                                            					<th>${ list.adjDate }</th>
+                                            					<th>
+                                            						<c:choose>
+                                            							<c:when test="${ list.adjStatus eq 'W' }">처리대기</c:when>
+                                            							<c:when test="${ list.adjStatus eq 'A' }">승인</c:when>
+                                            							<c:when test="${ list.adjStatus eq 'D' }">거절</c:when>
+                                            						</c:choose>
+                                            					</th>
+                                            					<th id="sel0" style="display: none;">${ list.attStatus }</th>
+                                            					<th id="sel1" style="display: none;">${ list.attHstatus }</th>
+                                            					<th id="sel2" style="display: none;">${ list.adjObjdate }</th>
+                                            					<th id="sel3" style="display: none;">${ list.adjReason }</th>
+                                            					<th id="sel4" style="display: none;">${ list.adjStatus }</th>
+                                            					<th id="sel5" style="display: none;">${ list.adjFile }</th>
                                             				</tr>
                                             			</c:forEach>
                                             		</tbody>
                                             	</c:otherwise>
                                             </c:choose>
                                         </table>
+                                        
+                                        <script>
+                                        	$('#tab1>tbody>tr').on('click',function(){
+                                        		
+                                        		$('#tab2').css('display','')
+                                        		$('.alls').val('')
+                                        		
+                                        		$('#date1').val($(this).children('#sel2').text())
+                                        		$('#content1').val($(this).children('#sel3').text())
+                                        		if($(this).children('#sel0').text()=='D'){
+                                        			$('#status').val('정상')
+                                        		}else if($(this).children('#sel0').text()=='E' || $(this).children('#sel0').text()=='L'){
+                                        			$('#status').val('무단지각/무단결석')
+                                        		}else if($(this).children('#sel0').text()=='H' || $(this).children('#sel1').text()=='H0'){
+                                        			$('#status').val('종일연차')
+                                        		}else if($(this).children('#sel0').text()=='H' || $(this).children('#sel1').text()=='H1'){
+                                        			$('#status').val('오전연차')
+                                        		}else if($(this).children('#sel0').text()=='H' || $(this).children('#sel1').text()=='H2'){
+                                        			$('#status').val('오후연차')
+                                        		}else{
+                                        			$('#status').val('무단결근')
+                                        		}
+                                        		if($(this).children('#sel4').text()=='D'){
+                                        			$('#reason').val($(this).children('#sel3').text())
+                                        			$('#reasontr').css('display','')
+                                        		}else{
+                                        			$('#reasontr').css('display','none')
+                                        		}
+                                        		if($(this).children('#sel4').text()=='W' && $(this).children('#sel5').text()!=''){
+                                        			$('#adjFile').attr('href',$(this).children('#sel5').text())
+                                        			$('#readf').css('display','')
+                                        			$('#inputf').css('display','')
+                                        		}else{
+                                        			$('#inputf').css('display','none')
+                                        		}
+                                        		if($(this).children('#sel4').text()=='W'){
+                                        			$('#rebtn').css('display','')
+                                        		}
+                                        	})
+                                        </script>
+                                        
                                     </div>
                                     <div style="width: 100%; height: 10%;" align="center">
                                         <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
@@ -182,27 +235,34 @@
                                     </div>
                                 </div>
                                 <div style="width: 60%; height: 100%; float: left; padding-left: 10%;">
-                                    <table id="tab1">
+                                    <table id="tab2" style="display: none;">
                                         <tr>
-                                            <th colspan="2"><h3>조정신청 세부내역</h3></th>
+                                            <th colspan="2"><h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;조정신청 세부내역</h3></th>
                                         </tr>
                                         <tr>
                                             <th>변경신청날짜</th>
-                                            <td><input type="text"></td>
+                                            <td><input id="date1" class="all" type="text"></td>
                                         </tr>
                                         <tr>
                                             <th>신청날짜 근태현황</th>
-                                            <td><input type="text"></td>
+                                            <td><input id="status" class="alls"  type="text"></td>
                                         </tr>
                                         <tr>
-                                            <th>조정 내용/사유</th>
-                                            <td><textarea name="" id="" cols="30" rows="10" style="resize: none;"></textarea></td>
+                                            <th>조정내용/사유</th>
+                                            <td><textarea name="" class="alls"  id="content1" cols="30" rows="10" style="resize: none;"></textarea></td>
                                         </tr>
-                                        <tr>
-                                            <th>파일첨부</th>
-                                            <td><input type="file"></td>
+                                        <tr id="reasontr" style="display: none;">
+                                        	<th>거절사유</th>
+                                            <td><textarea name="" class="alls"  id="reason" cols="30" rows="10" style="resize: none;"></textarea></td>
+                                       	<tr id="inputf" style="display: none;">
+                                        	<th>파일첨부</th>
+                                        	<td><input id="infile" type="file" class="alls" ></td>
                                         </tr>
-                                        <tr>
+                                        <tr id="readf" style="display:none;">	
+                                        	<th>첨부파일</th>
+                                        	<td><a id="adjFile" href="" download>첨부파일</a></td>
+                                        </tr>
+                                        <tr id="rebtn" style="display: none;">
                                             <th colspan="2">
                                                 <br>
                                                 <button type="button" class="btn su_btn_border">수정하기</button>

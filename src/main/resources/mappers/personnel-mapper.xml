@@ -892,7 +892,8 @@
 			                    ), (SELECT * FROM TB_MEMBER)
 			            ) C ON (ATT_DATE = WORKING_DAY AND A.MEM_NO = C.MEM_NO)
 			JOIN TB_MEMBER M ON (C.MEM_NO=M.MEM_NO)
-			WHERE WORKING_DAY &lt;= TO_DATE(SYSDATE) 
+			WHERE WORKING_DAY &lt;= TO_DATE(#{endDate}) <!-- sysdate -->
+			 
 			ORDER BY 4 DESC, 2)
 	  WHERE MEM_NO = #{userNo}
 	  	<choose>

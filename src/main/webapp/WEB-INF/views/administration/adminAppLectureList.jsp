@@ -41,15 +41,30 @@
                 </div>
                
                 <div class="filterHead">
-                    <div class="searchbar">
-                        <b>검색</b>　
-                        <input type="text" placeholder="텍스트 검색" style="height:25px;">
-                        <i class="fas fa-search fa-fw"></i>
-                    </div>
+                   <form action="adminAppSearchForm.cl">
+	                    <div class="searchbar">
+	                        <b>검색</b>　
+	                   
+	                        <select class="selectOption" name="condition">
+		                        <option value="classTitle">과정명</option>
+		                        <option value="memName">강사명</option>
+		                    </select>
+	                        <input type="text" name="keyword" value="${ keyword }" placeholder="텍스트 검색" style="height:25px;">
+	                        <button type="submit" style="border:none; background-color:white"><i class="fas fa-search fa-fw"></i></button>
+	                    </div>
+	                </form>
                  <br>   
                 </div>
                 
             </div>
+            
+            <c:if test="${ not empty condition }">
+				<script>
+					$(function(){
+						$("option[value=${condition}]").attr("selected", true);
+					})
+				</script>
+			</c:if>
             
             <div class="main_width">
                 <table id="appList" class="board-content table" align="center">
@@ -114,18 +129,36 @@
 						            </a>
 						        </li>
 						    </c:when>
+						    <c:when test="${ not empty condition }">
+						    	<li class="page-item">
+						            <a class="page-link" style="color:slategray" href="doneList.cl?cpage=${ pi.currentPage-1 }&condition=${condition}&keyword=${keyword}" aria-label="Previous">
+						            <span aria-hidden="true">&laquo;</span>
+						            </a>
+						        </li>
+						    </c:when>
 						    <c:otherwise>
 						    	<li class="page-item">
-						            <a class="page-link" style="color:slategray" href="appList.cl?cpage=${ pi.currentPage-1 }" aria-label="Previous">
+						            <a class="page-link" style="color:slategray" href="doneList.cl?cpage=${ pi.currentPage-1 }" aria-label="Previous">
 						            <span aria-hidden="true">&laquo;</span>
 						            </a>
 						        </li>
 						    </c:otherwise>
 						</c:choose>
 					        
+					        
+					        
 				        <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-				        	<li class="page-item"><a class="page-link" style="color:slategray" href="appList.cl?cpage=${ p }">${ p }</a></li>
-				        </c:forEach>
+					        <c:choose>
+							     <c:when test="${ not empty condition }">
+							        	<li class="page-item"><a class="page-link" style="color:slategray" href="adminAppSearchForm.cl?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
+							    </c:when>
+							    <c:otherwise>
+							        	<li class="page-item"><a class="page-link" style="color:slategray" href="doneList.cl?cpage=${ p }">${ p }</a></li>
+							        
+							    </c:otherwise>
+							</c:choose> 
+					    </c:forEach>    
+					        
 					        
 					    <c:choose>
 			        		<c:when test="${ pi.currentPage eq pi.maxPage }">
@@ -135,9 +168,16 @@
 						            </a>
 						        </li>
 						    </c:when>
+						     <c:when test="${ not empty condition }">
+						    	<li class="page-item">
+						            <a class="page-link" style="color:slategray" href="doneList.cl?cpage=${ pi.currentPage+1 }&condition=${condition}&keyword=${keyword}" aria-label="Next">
+						            <span aria-hidden="true">&raquo;</span>
+						            </a>
+						        </li>
+						    </c:when>
 						    <c:otherwise>
 						    	<li class="page-item">
-						            <a class="page-link" style="color:slategray" href="appList.cl?cpage=${ pi.currentPage+1 }" aria-label="Next">
+						            <a class="page-link" style="color:slategray" href="doneList.cl?cpage=${ pi.currentPage+1 }" aria-label="Next">
 						            <span aria-hidden="true">&raquo;</span>
 						            </a>
 						        </li>

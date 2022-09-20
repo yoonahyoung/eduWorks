@@ -27,7 +27,7 @@ import lombok.ToString;
 @ToString
 public class MailStatus {
 	
-	private int mailNo;
+	private String mailNo;
 	private int tagNo;
 	private String sendMail;
 	private String receiveMail;

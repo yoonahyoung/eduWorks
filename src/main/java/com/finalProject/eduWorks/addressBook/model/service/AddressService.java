@@ -28,8 +28,8 @@ public interface AddressService {
 	ArrayList<AddressOut> selectAddCategory(Address a);
 
 	// 3. 개인 주소록 그룹 추가
-	int ajaxInsertAddIndiv(AddressOut ado); // 
-	
+	int ajaxInsertAddIndiv(AddressOut ado);
+
 	// 4. 개인 주소록 연락처 추가
 	int insertAddIndivNum(Address a);
 
@@ -68,4 +68,6 @@ public interface AddressService {
 	// 검색 목록 조회
 	ArrayList<Member> searchPublicAdd(PageInfo pi, String keyword, String range);
 	
+	// 9. 개인 주소록 그룹명 수정
+	int updateIndivAddGroup(AddressOut ad);
 }

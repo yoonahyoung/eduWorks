@@ -80,7 +80,7 @@ public class MailController {
 		Mail m = new Mail();
 		m.setMemNo(memNo);
 		m.setReceiverMem(memEmail);
-		
+
 		// 받은 메일 개수 조회
 		int listCount = mService.receiveListCount(m);
 
@@ -89,10 +89,10 @@ public class MailController {
 		
 		// 받은 메일 조회
 		ArrayList<Mail> list = mService.selectReceiveMailList(pi, m);
-		
+
 		// 안읽은 메일 개수 조회
 		int unreadList = mService.receiveUnReadCount(m);
-		
+		System.out.println(unreadList);
 		mv.addObject("count", listCount);
 		mv.addObject("unread", unreadList);
 		mv.addObject("list", list);
@@ -133,11 +133,12 @@ public class MailController {
 		
 		Mail m = new Mail();
 		m.setMemNo(memNo);
+		m.setSendMail(memEmail);
 		m.setReceiverMem(memEmail);
 		
 		// 내게 쓴 메일 개수 조회
 		int listCount = mService.importantListCount(m);
-		
+
 		// 페이징
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
 		
@@ -479,14 +480,15 @@ public class MailController {
 		
 		Mail m = new Mail();
 		m.setMemNo(memNo);
+		m.setSendMail(memEmail);
 		m.setReceiverMem(memEmail);
 		
 		// 휴지통 개수 조회
 		int listCount = mService.deleteListCount(m);
-		
+
 		// 페이징
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
-		
+
 		// 휴지통 조회
 		ArrayList<Mail> list = mService.selectDeleteMailList(pi, m);
 		
@@ -601,6 +603,87 @@ public class MailController {
 		
 		return mv;
 	}
+	
+	/**
+	 * 14_1. 메일 삭제 처리 
+	 * @param ms : 로그인한 회원 사번, 이메일, 메일 구분(보낸/받은/참조), 메일 번호
+	 * @return : 삭제 성공여부 (성공 : success | 실패 : fail)
+	 */
+	@ResponseBody
+	@RequestMapping("deleteMail.ma")
+	public String ajaxDeleteMail(MailStatus ms) {
+
+		// 삭제하는 메일 목록을 담을 ArrayList
+		ArrayList<MailStatus> list = new ArrayList<>();	
+		System.out.println(ms);
+		System.out.println(list);
+		// 결과값
+		int result = 0;
+		
+		String[] mailNo = ms.getMailNo().split(",");
+		for(String m : mailNo) {
+			
+			// =========== 보낸 메일 ===========
+			if(ms.getReceiveMail() == null) {
+				
+				MailStatus ms2 = new MailStatus();
+				
+				ms2.setSendMail(ms.getSendMail());
+				ms2.setMailNo(m);
+
+				list.add(ms2);
+				
+				result = mService.deleteSendMail(list);
+				
+			// =========== 받은/참조 메일 ===========
+			} else if (ms.getSendMail() == null){
+				
+				MailStatus ms3 = new MailStatus();
+				
+				ms3.setReceiveMail(ms.getReceiveMail());
+				ms3.setMailNo(m);
+				ms3.setMailFolder(ms.getMailFolder());
+				
+				list.add(ms3);
+
+				result = mService.deleteReceiveMail(list);
+			
+			// ============= 나에게 쓴 메일 =============
+			} else {
+				
+				MailStatus ms4 = new MailStatus();
+				
+				ms4.setSendMail(ms.getSendMail());
+				ms4.setReceiveMail(ms.getReceiveMail());
+				ms4.setMailNo(m);
+				ms4.setMailFolder(ms.getMailFolder());
+				
+				list.add(ms4);
+
+				result = mService.deleteSendToMeMail(list);
+			}
+			
+		}
+
+		return result > 0 ? "success" : "fail";
+		
+	}
+	
+	/**
+	 * 14_2. 메일 전체 삭제(메일함 비우기)
+	 * @param ms : 로그인한 회원 이메일
+	 * @return : 메일함 비우기 성공여부
+	 */
+	@ResponseBody
+	@RequestMapping("deleteAllMail.ma")
+	public String deleteAllMail(MailStatus ms) {
+		
+		int result = mService.deleteAllMail(ms);
+		return result > 0 ? "success" : "fail";
+		
+	}
+	
+	
 	
 
 	

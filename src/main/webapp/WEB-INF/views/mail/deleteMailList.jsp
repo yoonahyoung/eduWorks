@@ -105,9 +105,16 @@
 								<i class="icon fas fa-paperclip"></i>
 							</c:if>
 						</td>
-						<td class="mail-person" width="15%">
-							<div class="person">${loginUser.memName }</div>
-						</td>
+							<c:choose>
+								<c:when test="${empty m.sendName}">
+									<!-- 사내직원이 보내지 않은 경우 -->
+									<td class="mail-person" width="15%"><div class="person">${m.sendMail }</div></td>
+								</c:when>
+								<c:otherwise>
+									<!-- 사내직원이 보낸 경우 -->
+									<td class="mail-person" width="15%"><div class="person">${m.sendName }</div></td>
+								</c:otherwise>
+							</c:choose>
 						<td class="mail-title">
 							<c:if test="${m.mailType == 1}">
 								<span style="color: red;">[중요!]</span>
@@ -172,28 +179,34 @@
 					<!-- 연락처 목록 있는 경우 -->
 					<nav aria-label="Page navigation example">
 						<ul class="pagination justify-content-center">
-
+						
 							<c:choose>
 								<c:when test="${pi.currentPage eq 1 }">
 									<!-- 현재 페이지가 1인 경우 -->
-									<li class="page-item"><a class="page-link disabled"
-										aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
-									</a></li>
+									<li class="page-item">
+										<a class="page-link disabled" aria-label="Previous"> 
+											<span aria-hidden="true">&laquo;</span>
+										</a>
+									</li>
 								</c:when>
 								<c:otherwise>
 									<!-- 현재 페이지가 1이 아닌 경우 -->
-									<li class="page-item"><a class="page-link"
-										href="deleteMailList.ma?page=${pi.currentPage - 1 }"
-										aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
-									</a></li>
+									<li class="page-item">
+										<a class="page-link"
+											href="deleteMailList.ma?page=${pi.currentPage - 1 }"
+											aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+										</a>
+									</li>
 								</c:otherwise>
 							</c:choose>
-
+							
 							<c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage }">
-								<li class="page-item"><a class="page-link"
-									href="deleteMailList.ma?page=${p }">${p }</a></li>
+								<li class="page-item">
+									<a class="page-link"
+									   href="deleteMailList.ma?page=${p }">${p }</a>
+								</li>
 							</c:forEach>
-
+							
 							<c:choose>
 								<c:when test="${pi.currentPage eq pi.maxPage }">
 									<!-- 현재 페이지가 마지막인 경우 -->
@@ -209,15 +222,14 @@
 									</a></li>
 								</c:otherwise>
 							</c:choose>
-
+							
 						</ul>
 					</nav>
 				</c:otherwise>
 			</c:choose>
 		</div>
 	</div>
-
-	</div>
+	
 	<!-- /.container-fluid -->
 	
 	<jsp:include page="../common/footer.jsp" />
