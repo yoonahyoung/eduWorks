@@ -17,13 +17,36 @@ public class AlarmController {
 	@Autowired
 	private AlarmService aService;
 	
+	/**
+	 * 댓글 리스트 조회
+	 * @param mno	로그인 유저 번호
+	 * @return	댓글 리스트
+	 */
 	@ResponseBody
-	@RequestMapping("select.al")
-	public String selectAlarmList(int no) {
+	@RequestMapping(value="select.al", produces="application/json; charset=utf-8")
+	public String selectAlarmList(int mno) {
 		
-		ArrayList<Alarm> list = aService.slectAlarmList(no);
-		
+		ArrayList<Alarm> list = aService.slectAlarmList(mno);
 		return new Gson().toJson(list);
 	}
-
+	
+	/**
+	 * 알람 삭제
+	 * @param alNo	알람 번호 (여러개 이어진 문자열)
+	 * @return 성공 여부
+	 */
+	@ResponseBody
+	@RequestMapping(value="delete.al", produces="application/json;")
+	public String deleteAlarm(String alNo){
+		int result = aService.deleteAlarm(alNo);
+		return new Gson().toJson(result);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="read.al", produces="application/json;")
+	public String readAlarm(String alNo) {
+		int result = aService.readAlarm(alNo);
+		return new Gson().toJson(result);
+	}
+	
 }

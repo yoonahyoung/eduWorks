@@ -31,11 +31,13 @@ public class ReplyEchoHandler extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception{
 		
-		//System.out.println("커넥션 연결 " + session);
+		System.out.println("커넥션 연결 " + session);
 		sessions.add(session);
 		String senderId = getId(session);
 		
 		userSessions.put(senderId , session);
+		
+		System.out.println(userSessions);
 		
 	}
 	
@@ -43,13 +45,14 @@ public class ReplyEchoHandler extends TextWebSocketHandler {
 	@Override
 	public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception{
 		
-		//System.out.println("메시지 받음 " + session + " : " + message);
+		/*
+		System.out.println("메시지 받음 " + session + " : " + message);
 		String senderId = getId(session);
 		 
 		String msg = message.getPayload(); // jsp에서 넘어온 msg
 		// JSON -> Java 객체 
 		AlarmData alarmData = objectMapper.readValue(msg, AlarmData.class);
-		//System.out.println(alarmData);
+		System.out.println(alarmData);
 		
 		
 		if(alarmData != null) {
@@ -57,29 +60,54 @@ public class ReplyEchoHandler extends TextWebSocketHandler {
 			
 			// 댓글 알람
 			// protocol : reply, 글번호, 글 제목, 게시글 작성자, 댓글 단사람, 원댓단사람 
-			//System.out.println("성공?");
-			// 원댓글만 작성 됐을 시 작성자한테만 알람, 대댓글 달리면 댓글 단 사람한테도 알람
+			System.out.println("성공?");
+			System.out.println(alarmData.getBoardWriter());
 			WebSocketSession boardWriterSession = userSessions.get(alarmData.getBoardWriter());
+			System.out.println(boardWriterSession);
+			// 원댓글만 작성 됐을 시 작성자한테만 알람, 대댓글 달리면 댓글 단 사람한테도 알람
 			TextMessage tmpMsg = new TextMessage("[" + alarmData.getBoardTitle() + "] 게시글에 댓글이 달렸습니다!");
 			alarmData.setAlarmContent("[" + alarmData.getBoardTitle() + "] 게시글에 댓글이 달렸습니다!");
 			// DB에 저장한다.
+			
             int result = aService.insertAlarm(alarmData);
+            int rresult = 1; // 대댓글용
+            
+			if(!alarmData.getReplyParentNo().equals("")) {
+				System.out.println("대댓글 if문");
+				System.out.println("두번째");
+				// 대댓글 달렸을 시 여기서 진심 절대 안넘어감 ㅡㅡ
+				//System.out.println(String.valueOf(aService.selectRWriter(alarmData.getReplyParentNo())));
+				String rWriter = String.valueOf(aService.selectRWriter(alarmData.getReplyParentNo()));
+				System.out.println(rWriter);
+				tmpMsg = new TextMessage("[" + alarmData.getBoardTitle() + "] 게시글에 대댓글이 달렸습니다!");
+				alarmData.setAlarmContent("[" + alarmData.getBoardTitle() + "] 게시글에 대댓글이 달렸습니다!");
+				alarmData.setBoardWriter(rWriter);
+				
+				System.out.println("db저장 전");
+				// DB에 저장한다.
+	            rresult = aService.insertAlarm(alarmData);
+	            System.out.println("db저장 후");
+			}
+			
+			
            
-            if(result > 0) { 
-            	//System.out.println("메세지 전송 및 DB 저장 성공");
+            if(result > 0 && rresult > 0) { 
+            	System.out.println("메세지 전송 및 DB 저장 성공");
             	boardWriterSession.sendMessage(tmpMsg);
             }else {
-                //System.out.println("메세지 전송 실패!!! & DB 저장 실패!!");
+                System.out.println("메세지 전송 실패!!! & DB 저장 실패!!");
             }
 		}
+		*/
 		
 	}
 	
+
 	// 커넥션이 닫혔을 때
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception{
 		
-		//System.out.println("커넥션 닫힘 " + session + ", " + status);
+		System.out.println("커넥션 닫힘 " + session + ", " + status);
 	}
 	
 	// 로그인 유저 번호 알아내기
@@ -94,5 +122,10 @@ public class ReplyEchoHandler extends TextWebSocketHandler {
 			return loginUser.getMemNo();
 		}
 	}
+	
+	public Map<String, WebSocketSession> getUserSessions(){
+		return userSessions;
+	}
+
 
 }

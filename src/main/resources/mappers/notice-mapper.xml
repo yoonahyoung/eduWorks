@@ -162,6 +162,7 @@
   		  , reply_writer
   		  , reply_job
   		  , reply_date
+  		  , reply_wno
   		  )
   		  values
   		  (
@@ -174,6 +175,7 @@
   		  , #{replyWriter}
   		  , #{replyJob}
   		  , sysdate
+  		  , #{replyWno}
   		  )
   		  
   	</insert>

@@ -50,16 +50,22 @@ public class ReportDao {
 	}
 	
 	// 신고 처리 여부 변경
-	public int reportStatus(SqlSessionTemplate sqlSession, int rptBoardNo, int rptRefCat) {
-		HashMap<String, Integer> map = new HashMap<>();
-		map.put("rptBoardNo", rptBoardNo);
-		map.put("rptRefCat", rptRefCat);
-		return sqlSession.update("blindMapper.reportStatus", map);
+	public int reportStatus(SqlSessionTemplate sqlSession, String rptNoStr) {
+		return sqlSession.update("blindMapper.reportStatus", rptNoStr);
 		
 	}
 	// 댓글 블라인드 해제
 	public int clearReBlind(SqlSessionTemplate sqlSession, int replyNo) {
 		return sqlSession.update("blindMapper.clearReBlind", replyNo);
+	}
+
+	// (신고알람용) 신고자 목록 구하기
+	public ArrayList<Report> selectTargets(SqlSessionTemplate sqlSession, String rptNoStr, int rptRefCat) {
+		if(rptRefCat == 1) {// 게시글 신고
+			return (ArrayList)sqlSession.selectList("blindMapper.selectTargetsB", rptNoStr);
+		}else { // 댓글 신고
+			return (ArrayList)sqlSession.selectList("blindMapper.selectTargetsR", rptNoStr);
+		}
 	}
 
 	

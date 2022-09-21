@@ -20,7 +20,7 @@
 	
 	    <div class="su_contentArea">
 	        <div class="su_content_header">
-	            <h2 class="su_sub_menu_name">부서 게시판</h2>
+	            <h2 class="su_sub_menu_name">부서 게시판 | ${ deptName }</h2>
 	
 	            <div class="su_btn_two_area">
 	                <div class="su_left_area"><!-- 자리 채우기용 div --></div>
@@ -330,11 +330,49 @@
 								replyParent:replyParentNo,
 								replyContent:$("#replyContent").val(),
 								replyWriter:"${loginUser.memName}",
-								replyJob:"${loginUser.jobCode}"
+								replyJob:"${loginUser.jobName}",
+								replyWno:${loginUser.memNo}
 							},
 							success(result){
 								selectReplyList();
 								$("#replyContent").val("");
+								/*
+								// 소켓
+								// 1. 원댓글 달 시
+								if(${b.boardWriter != loginUser.memNo}){
+									if(socket){
+										let data = {
+											"cmd" : "reply",
+						                    "boardNo" : "${ b.boardNo }",
+						                    "boardTitle" : "${b.boardTitle}",
+						                 	"boardWriter" : "${b.boardWriter}",
+						                 	"replyParentNo" : "",
+						                 	"currentUser" : "${loginUser.memNo}",
+						                 	"alarmContent" : ""
+										};
+										
+										let jsonData = JSON.stringify(data);
+										console.log(jsonData);
+							            socket.send(jsonData);
+									}
+								}else if(replyDepth == 1){ // 2. 대댓글 달 시
+									if(socket){
+										let data = {
+											"cmd" : "reply",
+						                    "boardNo" : "${ b.boardNo }",
+						                    "boardTitle" : "${b.boardTitle}",
+						                 	"boardWriter" : "${b.boardWriter}",
+						                 	"replyParentNo" : replyParentNo,
+						                 	"currentUser" : "${loginUser.memNo}",
+						                 	"alarmContent" : ""
+										};
+										
+										let jsonData = JSON.stringify(data);
+										console.log(jsonData);
+							            socket.send(jsonData);
+									}
+								}
+								*/
 							},
 							error(){
 								console.log("댓글 등록 실패");

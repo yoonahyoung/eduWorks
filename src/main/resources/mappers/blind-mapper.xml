@@ -205,6 +205,7 @@
   		  , reply_job
   		  , reply_blind
   		  , reply_date
+  		  , reply_wno
   		  )
   		  values
   		  (
@@ -218,6 +219,7 @@
   		  , #{replyJob}
   		  , #{replyBlind}
   		  , sysdate
+  		  , #{replyWno}
   		  )
   		  
   	</insert>
@@ -327,10 +329,11 @@
 		select
 			   count(*)
 		  from (select
-				       decode(rpt_ref_cat, 1, '게시글', 2, '댓글') as "rpt_ref_cat"
+				       rpt_ref_cat
 				     , rpt_board_no
-				     , count(*) as "rpt_count"
+				     , count(*) as rpt_count
 				     , rpt_status
+				     , LISTAGG(rpt_no, ',') WITHIN GROUP(ORDER BY rpt_status desc) as rpt_no
 				  from tb_report r
 				 group by rpt_ref_cat, rpt_board_no, rpt_status
 				 order by 3 desc
@@ -340,10 +343,11 @@
 	<!-- 신고 게시글 리스트 조회 -->
 	<select id="selectReportList" resultMap="reportResult">
 		select
-		       decode(rpt_ref_cat, 1, '게시글', 2, '댓글') as "rpt_ref_cat"
+		       rpt_ref_cat
 		     , rpt_board_no
-		     , count(*) as "rpt_count"
+		     , count(*) as rpt_count
 		     , rpt_status
+		     , LISTAGG(rpt_no, ',') WITHIN GROUP(ORDER BY rpt_status desc) as rpt_no
 		  from tb_report r
 		 group by rpt_ref_cat, rpt_board_no, rpt_status
 		 order by 3 desc
@@ -376,8 +380,7 @@
   		update tb_report
   		   set rpt_status = 'Y'
   		     , rpt_st_date = sysdate
-  		 where rpt_ref_cat = #{rptRefCat}
-  		   and rpt_board_no = #{rptBoardNo}
+  		 where rpt_no in (${rptNoStr})
   	</update>
   	
   	<!-- 댓글 블라인드 처리 -->
@@ -386,4 +389,31 @@
   		   set reply_status = 'B'
   		 where reply_no = #{replyNo}
   	</update>
+  	
+  	<!-- 신고알람용 신고자 목록 구하기(게시글) -->
+  	<select id="selectTargetsB" resultMap="reportResult">
+  		select distinct
+		       rpt_no
+		     , rpt_board_no
+		     , rpt_mem_no
+		     , rpt_ref_cat
+		     , board_title
+  		  from tb_report r
+  		  join tb_board b on(r.rpt_board_no = b.board_no)
+  		 where rpt_no in (${rptNoStr})
+		   and rpt_status = 'N'
+  	</select>
+  	
+  	<!-- 신고알람용 신고자 목록 구하기(댓글) -->
+  	<select id="selectTargetsR" resultMap="reportResult">
+  		select distinct
+		       rpt_board_no
+		     , rpt_mem_no
+		     , rpt_ref_cat
+		     , reply_content as "board_title"
+		  from tb_report r
+		  join tb_reply p on(r.rpt_board_no = p.reply_no)
+		 where rpt_no in (${rptNoStr})
+		   and rpt_status = 'N'
+  	</select>
 </mapper>

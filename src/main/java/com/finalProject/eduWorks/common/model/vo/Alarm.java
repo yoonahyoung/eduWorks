@@ -1,7 +1,5 @@
 package com.finalProject.eduWorks.common.model.vo;
 
-import java.sql.Date;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,11 +12,14 @@ import lombok.ToString;
 public class Alarm {
 	
 	private String alNo;
-	private String targetMno;
-	private String category;
+	private String alTargetMno;
+	private String alCategory;
 	private String alBoardNo;
 	private String alContent;
-	private Date alDate;
-	private Date alReadDate;
-
+	private String alDate;
+	private String alReadDate;
+	private int alCount;
+	private int listNo;
+	private int boardCategory;
+	private String boardStatus;
 }

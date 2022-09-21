@@ -48,6 +48,7 @@
                                 <th width="5%">신고수</th>
                                 <th width="5%">처리 여부</th>
                                 <th width="5%">상태 변경</th>
+                                <th width="1%"></th>
                             </tr>
                         </thead>
                         <tbody class="board-tbody">
@@ -60,15 +61,17 @@
 	                        	<c:otherwise>
 	                        		<c:forEach var="r" items="${list}" varStatus="status">
 				                        <tr>
-				                            <td class="no no${ status.count }">${ r.rptBoardNo }</td>
-				                            <td id="rptRefCat">${ r.rptRefCat }</td>
+	                        			
+				                            <td class="no">${ r.rptBoardNo }</td>
+				                            <td class="rptRefCat">${ r.rptRefCat }</td>
 				                            <td>${ r.rptCount }</td>
 				                            <td>${ r.rptStatus }</td>
 				                            <td onclick="event.stopPropagation()">
 				                            	<c:if test="${ r.rptStatus eq 'N' }">
-				                            		<button type="button" class="n-btn su_btn_border btn-sm reportStatus" onclick="goStatus(${status.count});">Y 처리</button>
+				                            		<button type="button" class="n-btn su_btn_border btn-sm reportStatus" onclick='goStatus("${r.rptNo}", "${ r.rptRefCat }", "${ r.rptBoardNo }");'>Y 처리</button>
 				                            	</c:if>
 				                            </td>
+				                            <td class="no${ status.count }"><div id="rptNoStr" style="display:none;">${ r.rptNo }</div></td>
 				                        </tr>
 				                    </c:forEach>
 			                    </c:otherwise>
@@ -79,28 +82,26 @@
 			           	$(function(){ // 상세화면
 			           		let rptBoardNo = "";
 			           		let rptRefCat = "";
+			           		let rptNoStr = "";
 			           		$("#reportList>tbody>tr").click(function(){
 			           			rptBoardNo = $(this).children(".no").text();
-			           			rptRefCat = $(this).children("#rptRefCat").text();
-			           			
+			           			rptRefCat = $(this).children(".rptRefCat").text();
+			           			console.log(rptRefCat);
+			           			rptNoStr = $(this).find("div").html();
+			           			console.log(rptNoStr);
 		           				// 선택된 tr의 자식요소 중에서 no라는 클래스를 가진 자식의 text값
-		           				location.href = "reportDetail.bl?no=" + rptBoardNo + "&rptRefCat=" + rptRefCat; 
+		           				location.href = "reportDetail.bl?no=" + rptBoardNo + "&rptRefCat=" + rptRefCat + "&rptNoStr=" + rptNoStr; 
 			           		})
 			          	})
 			          	
-			          	function goStatus(bNo){ // 블라인드 처리가 필요 없다고 느낄시 처리 완료 버튼
-			           		let rptBoardNo = $(".no"+bNo).text();
-			           		let rptRefCat = $(".no"+bNo).siblings("#rptRefCat").text();
+			          	function goStatus(rptNo, rptRefCat, rptBoardNo){ // 블라인드 처리가 필요 없다고 느낄시 처리 완료 버튼
 			           		
-			           		if(rptRefCat == '게시글'){ 
-			           			rptRefCat = 1;
-			           		}else{
-			           			rptRefCat = 2;
-			           		}
+			           		console.log(rptNo + "댓글/게시글여부:" + rptRefCat + "참조번호" + rptBoardNo);
 			           		
 		           			$.ajax({
 	                   			url:"reportStatus.ad",
 	                   			data:{
+	                   				rptNoStr:rptNo+"",
 	                   				rptBoardNo:rptBoardNo,
 	                   				rptRefCat:rptRefCat
 	                   			},

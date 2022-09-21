@@ -199,7 +199,6 @@
 	                        <a class="collapse-item" href="list.no">전사 공지</a>
 	                        <a class="collapse-item" href="list.de">부서 게시판</a>
 	                        <a class="collapse-item" href="list.bl">익명 게시판</a>
-	                        <a class="collapse-item" href="list.do">자료실</a>
 	                    </div>
 	                </div>
 	            </li>

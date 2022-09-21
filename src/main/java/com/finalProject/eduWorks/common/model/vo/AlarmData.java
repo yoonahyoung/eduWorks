@@ -14,7 +14,7 @@ public class AlarmData {
 	private String boardNo;
 	private String boardTitle;
 	private String boardWriter;
-	private String replyWriter;
+	private String replyParentNo;
 	private String currentUser;
 	private String alarmContent;
 }

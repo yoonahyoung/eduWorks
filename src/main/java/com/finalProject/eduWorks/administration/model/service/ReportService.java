@@ -21,9 +21,12 @@ public interface ReportService {
 	int clearBoBlind(int boardNo);
 	
 	// 신고 처리 여부 변경
-	int reportStatus(int no, int rptRefCat);
+	int reportStatus(String rptNoStr);
 	
 	// 댓글 블라인드 처리
 	int goReBlind(int replyNo);
+	
+	// (신고알람용) 신고자 리스트
+	ArrayList<Report> selectTargets(String rptNoStr, int rptRefCat);
 	
 }

@@ -140,6 +140,7 @@
 		     , reply_job
 		     , to_char(reply_date, 'YY-MM-DD HH24:MI') as "reply_date"
 		     , reply_status
+		     , reply_wno
 		  from tb_reply
 		 where reply_type = 4
 		   and re_board_no = #{boardNo}
@@ -162,6 +163,7 @@
   		  , reply_writer
   		  , reply_job
   		  , reply_date
+  		  , reply_wno
   		  )
   		  values
   		  (
@@ -174,6 +176,7 @@
   		  , #{replyWriter}
   		  , #{replyJob}
   		  , sysdate
+  		  , #{replyWno}
   		  )
   		  
   	</insert>

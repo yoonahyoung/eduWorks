@@ -172,7 +172,7 @@
 	                     -->
 	                </div>
 	                <div>
-	                    <a href="#" onclick="window.open('address','window_name','width=430,height=500,location=no,status=no,scrollbars=yes');" style="color:black; margin-top:0px">
+	                    <a href="#" onclick="window.open('noticeMailForm.no','window_name','width=990,height=700,location=writeMailForm.ma,status=no,scrollbars=yes');" style="color:black; margin-top:0px">
 	                        <i class="material-symbols-outlined" style="color:#5e7e9b; font-size: 20px; vertical-align:middle; margin:0 8px 5px 20px;">mail</i>
 	                        <span>메일발송</span>
 	                    </a>
@@ -222,15 +222,12 @@
 									// 원댓글 or 대댓글 조건문
 									if(rList[i].replyParent == 0 && rList[i].replyStatus == 'Y'){ // 원댓글
 										value += '<div class="su_reply_Barea selNo' + rList[i].replyNo + '">';
-										console.log("원댓글");
 									}else if(rList[i].replyStatus == 'Y'){ // 대댓글
 										value += '<div class="su_reply_Barea su_rreply_Barea selNo' + rList[i].replyNo + '">';
-										console.log("대댓글");
 									}else if(rList[i].replyStatus == 'N'){ // 대댓글이면서 삭제됐을 경우
 										value += '<div>';
 									}
-									console.log(i);
-									console.log(rList[i]);
+									
 									if(rList[i].replyStatus == 'Y'){
 										value += '<div class="su_reply">'
 													+ '<div>' 
@@ -263,7 +260,6 @@
 											   + '</div>';
 										replyCount += 1;
 									}else if(i < (rList.length - 1)){
-										console.log("삭제된 꼬리 있는 원댓글");
 										if((rList[i].replyParent == 0) && (rList[i+1].replyParent != 0) && (rList[i+1].replyStatus == 'Y')){ // 대댓글 있는 원댓글이면서 삭제됐을 경우
 											value += '<div class="su_reply">'
 			                							+'<div style="height:48px; line-height:48px">삭제된 댓글입니다.</div>'
@@ -330,11 +326,49 @@
 								replyParent:replyParentNo,
 								replyContent:$("#replyContent").val(),
 								replyWriter:"${loginUser.memName}",
-								replyJob:"${loginUser.jobCode}"
+								replyJob:"${loginUser.jobName}",
+								replyWno:${loginUser.memNo}
 							},
 							success(result){
 								selectReplyList();
 								$("#replyContent").val("");
+								/*
+								// 소켓
+								// 1. 원댓글 달 시
+								if(${b.boardWriter != loginUser.memNo}){
+									if(socket){
+										let data = {
+											"cmd" : "reply",
+						                    "boardNo" : "${ b.boardNo }",
+						                    "boardTitle" : "${b.boardTitle}",
+						                 	"boardWriter" : "${b.boardWriter}",
+						                 	"replyParentNo" : "",
+						                 	"currentUser" : "${loginUser.memNo}",
+						                 	"alarmContent" : ""
+										};
+										
+										let jsonData = JSON.stringify(data);
+										console.log(jsonData);
+							            socket.send(jsonData);
+									}
+								}else if(replyDepth == 1){ // 2. 대댓글 달 시
+									if(socket){
+										let data = {
+											"cmd" : "reply",
+						                    "boardNo" : "${ b.boardNo }",
+						                    "boardTitle" : "${b.boardTitle}",
+						                 	"boardWriter" : "${b.boardWriter}",
+						                 	"replyParentNo" : replyParentNo,
+						                 	"currentUser" : "${loginUser.memNo}",
+						                 	"alarmContent" : ""
+										};
+										
+										let jsonData = JSON.stringify(data);
+										console.log(jsonData);
+							            socket.send(jsonData);
+									}
+								}
+								*/
 							},
 							error(){
 								console.log("댓글 등록 실패");

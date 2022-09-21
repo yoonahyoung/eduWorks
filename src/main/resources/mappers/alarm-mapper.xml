@@ -2,6 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="alarmMapper">
 
+	<resultMap id="alarmResult" type="Alarm">
+		<result column="al_no" property="alNo" />
+		<result column="al_target_mno" property="alTargetMno" />
+		<result column="al_category" property="alCategory" />
+		<result column="al_board_no" property="alBoardNo" />
+		<result column="board_category" property="boardCategory" />
+		<result column="board_status" property="boardStatus" />
+		<result column="al_content" property="alContent" />
+		<result column="al_date" property="alDate" />
+		<result column="al_read_date" property="alReadDate" />
+		<result column="count" property="alCount" />
+		<result column="list_no" property="listNo" />
+	</resultMap>
+
+	<!-- 알람 insert -->
 	<insert id="insertAlarm">
 		insert 
 		  into tb_alarm
@@ -22,5 +37,57 @@
 		  )
 	</insert>
 
-
+	<!-- 알람 리스트 조회 -->
+	<select id="selectAlarm" resultMap="alarmResult">
+		select 
+			   al_no
+			 , al_target_mno
+			 , al_category
+			 , al_board_no
+			 , board_category
+			 , board_status
+			 , al_content
+			 , al_date
+			 , al_read_date
+			 , count
+			 , dense_rank() over (order by al_no) as "list_no"
+		 from(
+			select LISTAGG(al_no, ',') WITHIN GROUP(ORDER BY al_no desc) as al_no
+			     , al_target_mno
+			     , al_category
+			     , al_board_no
+			     , board_category
+			     , board_status
+			     , al_content
+			     , to_char(al_date, 'YY/MM/DD') as al_date
+			     , al_read_date
+			     , count(*) as count
+			  from tb_alarm a
+			  left join tb_board b on (a.al_board_no = b.board_no)
+			 where al_target_mno = #{mno}
+			 group by al_target_mno, al_category, al_board_no, board_category, board_status, al_content, to_char(al_date, 'YY/MM/DD'), al_read_date
+			 )
+		 order by 8 desc, 1 desc
+	</select>
+	
+	<!-- 알람 삭제 -->
+	<delete id="deleteAlarm">
+		delete 
+		  from tb_alarm
+		 where al_no in (${alNo})
+	</delete>
+	
+	<!-- 알람 읽음 처리 -->
+	<update id="readAlarm">
+		update tb_alarm
+		  set al_read_date = sysdate
+		where al_no in (${alNo})
+	</update>
+	
+	<!-- 원댓글 단 유저 번호 알아내기 -->
+	<select id="selectRWriter" resultType="_int">
+		select reply_wno
+		  from tb_reply r
+		 where reply_no = #{replyParentNo}
+	</select>
 </mapper>

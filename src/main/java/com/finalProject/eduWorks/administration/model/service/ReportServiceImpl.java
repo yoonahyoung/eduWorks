@@ -53,14 +53,20 @@ public class ReportServiceImpl implements ReportService{
 	
 	// 신고 처리 여부 변경
 	@Override
-	public int reportStatus(int no, int rptRefCat) {
-		return rDao.reportStatus(sqlSession, no, rptRefCat);
+	public int reportStatus(String rptNoStr) {
+		return rDao.reportStatus(sqlSession, rptNoStr);
 	}
 
 	// 댓글 블라인드 처리
 	@Override
 	public int goReBlind(int replyNo) {
 		return rDao.goReBlind(sqlSession, replyNo);
+	}
+
+	// (신고알람용) 신고자 목록 구하기
+	@Override
+	public ArrayList<Report> selectTargets(String rptNoStr, int rptRefCat) {
+		return rDao.selectTargets(sqlSession, rptNoStr, rptRefCat);
 	}
 
 	

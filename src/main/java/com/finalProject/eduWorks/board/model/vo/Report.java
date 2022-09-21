@@ -12,8 +12,8 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Report {
-	private int rptNo;
-	private String rptRefCat;
+	private String rptNo;
+	private int rptRefCat;
 	private int rptBoardNo;
 	private String boardTitle;
 	private String rptMemNo;

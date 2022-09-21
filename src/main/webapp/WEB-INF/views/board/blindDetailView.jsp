@@ -228,7 +228,7 @@
                             <!--Body-->
                             <div class="modal-body text-center modal_alert_child">
                                 <div>
-                                    <h5 class="mt-1 mb-2 repTitle">댓글 신고</h5><br>
+                                    <h5 class="mt-1 mb-2 repTitle">신고</h5><br>
                                     <div id="radioDiv">
 	                                    <input type="radio" id="report-1" name="rpt_reason_no" value="1"> <label for="report-1">성적 불쾌감을 주는 내용</label><br>
 	                                    <input type="radio" id="report-2" name="rpt_reason_no" value="2"> <label for="report-2">욕설/비방의 내용</label><br>
@@ -338,13 +338,14 @@
 														+ '</div>'
 													+ '</div>'
 												+ '</div>';
+										
 										// 댓글 작성자만 수정, 삭제 버튼 보이게끔
 										if(rList[i].replyWriter == user){
 											 value += '<div class="su_reply_btn">'
 														+ '<button type="button" class="btn btn-sm su_btn_border" style="border:0px" onclick="updateReBtn(' + rList[i].replyNo + ');">수정</button>|'
 														+ '<button type="button" class="btn btn-sm su_btn_border" style="border:0px" onclick="deleteReBtn(' + rList[i].replyNo + ');">삭제</button>'
 												   + '</div>';
-										}else{ // 본인이 작성 하지 않은 글에는 신고버튼보여짐
+										}else{ // 본인이 작성 하지 않은 댓글에는 신고버튼보여짐
 											 if(isReport == 1){ // 신고 관리로 들어왔다면 신고 버튼 비활성화
 												value += '<div class="su_reply_btn reReport">'
 															+ '<a class="nav-link" style="color:grey; padding-top:0; padding-bottom:0; cursor:default;">'
@@ -354,7 +355,7 @@
 			                                        	+ '</div>';
 											 }else {
 												value += '<div class="su_reply_btn reReport">'
-															+ '<a onclick="insertReport(' + rList[i].replyNo + ');" class="nav-link" style="color:black; padding-top:0; padding-bottom:0;" data-toggle="modal" data-target="#reportModal">'
+															+ '<a onclick="insertReport(' + rList[i].replyNo + ', &quot;댓글&quot;);" class="nav-link" style="color:black; padding-top:0; padding-bottom:0;" data-toggle="modal" data-target="#reportModal">'
 			                                        			+ '<span class="material-symbols-outlined" style="color:rgb(250, 71, 71); font-size: 23px; vertical-align:top;">E911_Emergency</span>'
 			                                        			+ '<span>신고</span>'
 		                                            		+ '</a>'
@@ -477,10 +478,8 @@
                  			alert("닉네임을 먼저 입력하세요");
                  		}else{
 	                 		let replyDepth = 0;
-	                 		let replyWriter = 0;
 	                 		if(replyParentNo != 0){ // 댓글 깊이
 	                 			replyDepth = 1;
-	                 			replyWriter = $("#reUpdateArea"+replyParentNo).attr("class");
 	                 		}
 							 $.ajax({
 								url: "insertRe.bl",
@@ -490,31 +489,55 @@
 									replyParent:replyParentNo,
 									replyContent:$("#replyContent").val(),
 									replyWriter:"${loginUser.memName}",
-									replyJob:"${loginUser.jobCode}",
-									replyBlind:$("#blindId").val()
+									replyJob:"${loginUser.jobName}",
+									replyBlind:$("#blindId").val(),
+									replyWno:${loginUser.memNo}
 								},
 								success(result){
 									$("#replyContent").val("");
 									selectReplyList();
 									
 									// 소켓
-									if(${b.boardWriter != loginUser.memNo}){
-										if(socket){
-											let data = {
-												"cmd" : "reply",
-							                    "boardNo" : "${ b.boardNo }",
-							                    "boardTitle" : "${b.boardTitle}",
-							                 	"boardWriter" : "${b.boardWriter}",
-							                 	"replyWriter" : $("#reUpdateArea"+replyParentNo).attr("class"),
-							                 	"currentUser" : "${loginUser.memNo}",
-							                 	"alarmContent" : ""
-											};
-											
-											let jsonData = JSON.stringify(data);
-											console.log(jsonData);
-								            socket.send(jsonData);
+									/*
+									if(${b.boardWriter} != ${loginUser.memNo}){
+										if(replyDepth == 0){ // 1. 원댓글 달 시
+											console.log("replyDepth는 0");
+											if(socket){
+												console.log("제일안쪽 if문")
+												let data = {
+													"cmd" : "reply",
+								                    "boardNo" : "${ b.boardNo }",
+								                    "boardTitle" : "${b.boardTitle}",
+								                 	"boardWriter" : "${b.boardWriter}",
+								                 	"replyParentNo" : "",
+								                 	"currentUser" : "${loginUser.memNo}",
+								                 	"alarmContent" : ""
+												};
+												
+												let jsonData = JSON.stringify(data);
+												console.log(jsonData);
+									            socket.send(jsonData);
+											}
+										}else if(replyDepth == 1){ // 2. 대댓글 달 시
+											if(socket){
+												let data = {
+													"cmd" : "reply",
+								                    "boardNo" : "${ b.boardNo }",
+								                    "boardTitle" : "${b.boardTitle}",
+								                 	"boardWriter" : "${b.boardWriter}",
+								                 	"replyParentNo" : replyParentNo+"",
+								                 	"currentUser" : "${loginUser.memNo}",
+								                 	"alarmContent" : ""
+												};
+												console.log(data);
+												let jsonData = JSON.stringify(data);
+												console.log(jsonData);
+									            socket.send(jsonData);
+											}
 										}
+										
 									}
+									*/
 								},
 								error(){
 									console.log("댓글 등록 실패");
@@ -706,52 +729,57 @@
                     
                     
                     // 신고 insert
-                    function insertReport(rptBoardNo){
-                    	if(${loginUser.memNo} == ${b.boardWriter}){
-                    		$("#reportModal").hide();
-                    		$("#modalContent").html("본인이 작성한 글은 신고가 불가능합니다!");
-                			$("#moContent").modal("show");
-                    	}else{
-                    		$("#reportModal").on("click", "#realReport", function(){
-                    			let rptRefCat = 0;
-                    			if(rptBoardNo == 0){ // 게시글 신고일 시
-                    				rptBoardNo = ${b.boardNo};
-                    				rptRefCat = 1;
-                    			}else{ // 댓글 신고일 시
-                    				rptRefCat = 2;
-                    			}
-                        		let rptRsn = $("input[name^='rpt_reason_no']:checked").val();
-    	                    	if(!rptRsn){
-    	                    		// 사유 미 체크시
-    	                    		$("#modalContent").html("사유를 선택해주세요!");
-    	                			$("#moContent").modal("show");
-    	                    	}else{
-    	                    		$.ajax({
-    	                    			url:"insertReport.bl",
-    	                    			data:{
-    	                    				rptRefCat:rptRefCat,
-    	                    				rptBoardNo:rptBoardNo,
-    	                    				rptMemNo:${loginUser.memNo},
-    	                    				rptReasonNo:rptRsn
-    	                    			},
-    	                    			success(result){
-    	                    				if(result > 0){
-    	                    					$("#modalContent").html("신고 완료");
-    	        	                			$("#moContent").modal("show");
-    	        	                			$("#reportModal").modal("hide");
-    	                    				}else{
-    	                    					$("#modalContent").html("신고에 실패하였습니다");
-    	        	                			$("#moContent").modal("show");
-    	        	                			$("#reportModal").modal("hide");
-    	                    				}
-    	                    			},
-    	                    			error(){
-    	                    				console.log("ajax통신 실패");
-    	                    			}
-    	                    		})
-    	                    	}
-                        	})
-                    	}
+                    function insertReport(rptBoardNo, isReply){
+                    	// rptBoardNo = 게시글 신고 누르면 0/ 댓글 신고 누르면 댓글번호
+                    	// 댓글은 내가 쓴게 아니면 신고가 보여짐, 작성 글은 내가 쓴 글이면 신고가 불가능
+                    	// => 댓글에서 신고 버튼을 눌렀다면 신고 불가능 모달 뜨면 안됨
+                    	
+                    	let rptRefCat = 0;
+                    	if(rptBoardNo == 0){ // 게시글 신고일 시
+                    		rptBoardNo = ${b.boardNo};
+                    		rptRefCat = 1;
+                    		if(${loginUser.memNo} == ${b.boardWriter}){
+	                    		$("#modalContent").html("본인이 작성한 글은 신고가 불가능합니다!");
+	                			$("#moContent").modal("show");
+	                    	}
+                		}else{ // 댓글 신고일 시
+                			rptRefCat = 2;
+                		}
+                    	
+                    	// 모달 창 안에 신고버튼 눌렀을시 작동하는 ajax
+                    	$("#reportModal").on("click", "#realReport", function(){
+                       		let rptRsn = $("input[name^='rpt_reason_no']:checked").val();
+   	                    	if(!rptRsn){
+   	                    		// 사유 미 체크시
+   	                    		$("#modalContent").html("사유를 선택해주세요!");
+   	                			$("#moContent").modal("show");
+   	                    	}else{
+   	                    		$.ajax({
+   	                    			url:"insertReport.bl",
+   	                    			data:{
+   	                    				rptRefCat:rptRefCat,
+   	                    				rptBoardNo:rptBoardNo,
+   	                    				rptMemNo:${loginUser.memNo},
+   	                    				rptReasonNo:rptRsn
+   	                    			},
+   	                    			success(result){
+   	                    				if(result > 0){
+   	                    					$("#modalContent").html("신고 완료");
+   	        	                			$("#moContent").modal("show");
+   	        	                			$("#reportModal").modal("hide");
+   	                    				}else{
+   	                    					$("#modalContent").html("신고에 실패하였습니다");
+   	        	                			$("#moContent").modal("show");
+   	        	                			$("#reportModal").modal("hide");
+   	                    				}
+   	                    			},
+   	                    			error(){
+   	                    				console.log("ajax통신 실패");
+   	                    			}
+   	                    		})
+    	                    }
+                        })
+                    	
                     }
                     
                     // 게시글 블라인드 
@@ -760,8 +788,9 @@
                    		$.ajax({
                    			url:"goBlind.ad",
                    			data:{
-                   				no:${b.boardNo},
-                   				category:category
+                   				rptBoardNo:${b.boardNo},
+                   				category:category,
+                   				rptNoStr:"${rptNoStr}"
                    			},
                    			success(result){
                    				if(result > 0){
@@ -783,7 +812,10 @@
                  		
                    		$.ajax({
                    			url:"goReBlind.ad",
-                   			data:{replyNo:replyNo},
+                   			data:{
+                   				replyNo:replyNo,
+                   				rptNoStr:"${rptNoStr}"
+                   			},
                    			success(result){
                    				value = "";
                    				
@@ -795,7 +827,6 @@
 	            						+'</div></div>';
    	                			$(".selNo"+replyNo).html(value);
                    				selectReplyList();
-                   				
                    				
                    			},
                    			error(){

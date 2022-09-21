@@ -1,7 +1,9 @@
 package com.finalProject.eduWorks.board.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -12,15 +14,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
 import com.finalProject.eduWorks.board.model.service.BlindServiceImpl;
 import com.finalProject.eduWorks.board.model.vo.Board;
 import com.finalProject.eduWorks.board.model.vo.Like;
 import com.finalProject.eduWorks.board.model.vo.Report;
+import com.finalProject.eduWorks.common.handler.ReplyEchoHandler;
+import com.finalProject.eduWorks.common.model.service.AlarmService;
+import com.finalProject.eduWorks.common.model.vo.AlarmData;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.model.vo.Reply;
 import com.finalProject.eduWorks.common.template.Pagination;
-import com.finalProject.eduWorks.member.model.vo.Member;
 import com.google.gson.Gson;
 
 @Controller
@@ -28,6 +34,12 @@ public class BlindController {
 	
 	@Autowired
 	private BlindServiceImpl bService;
+	
+	@Autowired
+	private AlarmService aService;
+	
+	@Autowired
+	private ReplyEchoHandler replyEcho;
 
 	/**
 	 * 익명 게시판 리스트 조회
@@ -194,23 +206,52 @@ public class BlindController {
 	 * @param session
 	 * @param model
 	 * @return 성공여부
+	 * @throws IOException 
 	 */
 	@ResponseBody
 	@RequestMapping("insertRe.bl")
-	public String ajaxInsertReply(Reply r, HttpSession session, Model model) {
-		Member loginUser = (Member)session.getAttribute("loginUser");
-		
-		r.setReplyWriter(loginUser.getMemName());
-		r.setReplyJob(loginUser.getJobName());
+	public String ajaxInsertReply(Reply r, HttpSession session, Model model) throws IOException {
+		// 참조게시글번호, 댓글깊이(0/1), 참조댓글번호(0/숫자), 댓글작성자사번
 		
 		int result = bService.insertReply(r);
 		
-		if(result > 0) {
-			Board b = bService.selectBlind(r.getReBoardNo());
-			model.addAttribute("b", b);
-		}else {
-			session.setAttribute("alertMsg", "댓글 작성 실패!");
+		// websocket을 이용해서 알람 전송 (즉, target한테 sendMessage())
+		Map<String, WebSocketSession> userSessions = replyEcho.getUserSessions();
+		
+		// 알람테이블에 insert
+		// 원댓글일경우 즉, 댓글깊이가 0일경우 => 1행 insert
+		// 대댓글일경우 즉, 댓글깊이가 1일경우 => 2행 insert
+		Board b = bService.selectBlind(r.getReBoardNo()); // 게시글번호, 게시글작성자사번, 게시글제목
+		
+		AlarmData alarm = new AlarmData();
+		alarm.setCmd("1");
+		alarm.setBoardNo(b.getBoardNo()+"");
+		alarm.setBoardWriter(b.getBoardWriter()+"");
+		
+		String alarmContent = "[" + b.getBoardTitle() + "] 게시글에 " + ( r.getReplyDepth() == 0 ? "댓글이 달렸습니다." : "대댓글이 달렸습니다." ) ;
+		alarm.setAlarmContent(alarmContent);
+		
+		aService.insertAlarm(alarm);
+		
+		WebSocketSession targetClient = userSessions.get(b.getBoardWriter()+""); // 타겟 : 게시글작성자 
+		System.out.println("게시글작성자 : " + targetClient);
+		if(targetClient != null) {
+			targetClient.sendMessage(new TextMessage(alarmContent));
 		}
+		
+		if(r.getReplyDepth() == 1) {
+			System.out.println("대댓글작성");
+			String rWriter = String.valueOf(aService.selectRWriter(r.getReplyParent()+""));
+			alarm.setBoardWriter(rWriter);
+			aService.insertAlarm(alarm);
+			
+			targetClient = userSessions.get(rWriter); // 타겟 : 원댓글작성자
+			System.out.println("원댓글작성자 : " + targetClient);
+			if(targetClient != null) {
+				targetClient.sendMessage(new TextMessage(alarmContent));
+			}
+		}
+		
 		
 		return result > 0 ? "success" : "fail";
 	}
