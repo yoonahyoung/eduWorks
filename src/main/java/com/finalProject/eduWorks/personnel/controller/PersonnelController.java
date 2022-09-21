@@ -748,6 +748,14 @@ public class PersonnelController {
 			s.setCheck2(false);
 			s.setCheck3(true);
 			int absent = pService.atListCount2(s);
+			if(date3.getTime()>date2.getTime() && date2.getTime()>date1.getTime()) {
+				s.setStartDate(sysdate);
+				s.setEndDate(sysdate);
+				int checkF = pService.atListCount2(s);
+				System.out.println(checkF);
+				absent = absent-checkF;
+			}
+			
 			PersonnelCount pc = new PersonnelCount();
 			pc.setNormal(normal+"");
 			pc.setLeave(leave+"");
@@ -928,11 +936,47 @@ public class PersonnelController {
 			return "redirect:AttManage.me";
 		}
 		
-		
 	}
 	//if(at != null) {
 	//new File(savePath + at.getChangeName()).delete();
 	//String savePath = session.getServletContext().getRealPath("/resources/board_upfiles/");
+	
+	@RequestMapping("modifyAdj.me")
+	public String adjModify(MultipartFile upfile,SearchAt s,HttpSession session) {
+			
+		if(!upfile.getOriginalFilename().equals("")) {
+				String filePath = FileUpload.saveFile(upfile, session, "resources/uploadFiles/personnelFiles/");
+				s.setKeyword(filePath);
+			}
+			
+			int result = pService.adjModify(s);
+			if(result>0) {
+				session.setAttribute("alertIcon", "success");
+				session.setAttribute("alertTitle", "수정성공");
+				session.setAttribute("alertMsg", "수정에 성공했습니다.");
+			}else {
+				session.setAttribute("alertIcon", "error");
+				session.setAttribute("alertTitle", "수정실패");
+				session.setAttribute("alertMsg", "수정실패");
+			}
+			return "redirect:adjust.me";
+	}
+	
+	@RequestMapping("deleteAdj.me")
+	public String adjDelete(MultipartFile upfile,SearchAt s,HttpSession session) {
+			
+		int result = pService.adjDelete(s);
+			if(result>0) {
+				session.setAttribute("alertIcon", "success");
+				session.setAttribute("alertTitle", "삭제성공");
+				session.setAttribute("alertMsg", "삭제에 성공했습니다.");
+			}else {
+				session.setAttribute("alertIcon", "error");
+				session.setAttribute("alertTitle", "삭제실패");
+				session.setAttribute("alertMsg", "삭제실패");
+			}
+			return "redirect:adjust.me";
+	}
 	
 	@ResponseBody
 	@RequestMapping(value = "submitIn.me")
@@ -1050,5 +1094,15 @@ public class PersonnelController {
 		ArrayList<Adjust> list = pService.adjustMe(pi, memNo);
 		model.addAttribute("list", list);
 		return "personnel/myAdjust";
+	}
+	
+	@RequestMapping("holiday.me")
+	public String myholiday(Model model,HttpSession session,@RequestParam(value="p",defaultValue = "1")int currentPage) {
+		String memNo = ((Member)session.getAttribute("loginUser")).getMemNo();
+		int listCount = pService.adjustMeCount(memNo);
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 3, 10);
+		ArrayList<Adjust> list = pService.adjustMe(pi, memNo);
+		model.addAttribute("list", list);
+		return "personnel/myholiday";
 	}
 }

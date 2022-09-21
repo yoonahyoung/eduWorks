@@ -122,4 +122,6 @@ public interface PersonnelService {
 	//개인 조정신청내역
 	int adjustMeCount(String memNo);
 	ArrayList<Adjust> adjustMe(PageInfo pi, String memNo);
+	int adjModify(SearchAt s);
+	int adjDelete(SearchAt s);
 }
