@@ -73,6 +73,14 @@
 		<result column="add_memo" property="addMemo" />
 		<result column="add_enroll_date" property="addEnrollDate" />
 	</resultMap>
+	
+	<resultMap id="tagResult" type="Tag">
+		<result column="tag_no" property="tagNo" />
+		<result column="tag_name" property="tagName" />
+		<result column="tag_color" property="tagColor" />
+		<result column="tag_enroll_date" property="tagEnrollDate" />
+		<result column="tag_modify_date" property="tagModifyDate" />
+	</resultMap>
 
 	<!-- 보낸 메일 개수 조회 -->
 	<select id="sendListCount" resultType="_int">
@@ -832,6 +840,38 @@
 			</otherwise>
 		</choose>
 	</update>
+	
+	<!-- 메일 태그 추가 -->
+	<insert id="insertTag">
+		insert
+		    into tb_tag
+		      (
+		        tag_no
+		      , mem_no
+		      , tag_name
+		      , tag_color
+		      , tag_enroll_date
+		      )
+		    values
+		     ( 
+		       seq_mtno.nextval
+		     , #{memNo}
+		     , #{tagName}
+		     , #{tagColor}
+		     , sysdate
+		     )
+	</insert>
+	
+	<!-- 메일 태그 목록 조회 -->
+	<select id="selectTagList" resultMap="tagResult">
+		select 
+		    tag_no
+		  , mem_no
+		  , tag_name
+		  , tag_color
+		from tb_tag
+		where mem_no = #{memNo}
+	</select>
 	
 
 </mapper>

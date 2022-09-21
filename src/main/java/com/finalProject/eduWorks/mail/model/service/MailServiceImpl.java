@@ -14,6 +14,7 @@ import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.mail.model.dao.MailDao;
 import com.finalProject.eduWorks.mail.model.vo.Mail;
 import com.finalProject.eduWorks.mail.model.vo.MailStatus;
+import com.finalProject.eduWorks.mail.model.vo.Tag;
 import com.finalProject.eduWorks.member.model.vo.Member;
 
 @Service
@@ -375,6 +376,26 @@ public class MailServiceImpl implements MailService {
 	@Override
 	public int updateReadMail(MailStatus ms) {
 		return mDao.updateReadMail(sqlSession, ms);
+	}
+	
+	/**
+	 * 16_1. 태그 추가
+	 * @param t : 로그인한 회원 사번, 태그명, 태그 색상
+	 * @return : 태그 추가 성공 여부가 담긴 int형 변수(성공 : 1 | 실패 : 0)
+	 */
+	@Override
+	public int insertTag(Tag t) {
+		return mDao.insertTag(sqlSession, t);
+	}
+	
+	/**
+	 * 16_2. 태그 목록 조회
+	 * @param memNo : 로그인한 회원 사번
+	 * @return : 조회된 태그 목록
+	 */
+	 @Override
+	public ArrayList<Tag> selectTagList(String memNo) {
+		return mDao.selectTagList(sqlSession, memNo);
 	}
 	
 	

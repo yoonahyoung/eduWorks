@@ -92,7 +92,7 @@ a:hover{
 
 .tag-modify, .tag-modify:hover{
     color: lightgray;
-    margin-left: 80px;
+   /* margin-left: 80px; */
 }
 
 
@@ -370,5 +370,93 @@ table{
 
 .importCheck{
 	vertical-align:3px;
+}
+
+#select-tag{
+	padding: 0px;
+}
+
+#select-tag a{
+	float: left;
+    width: 25px;     
+    height: 25px;
+    text-indent: -3000em;
+    margin-top: 8px;
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.bgcolor1{
+	background: red;
+    border: red;
+}
+
+.bgcolor2{
+	background: orange;
+    border: orange;
+}
+
+.bgcolor3{
+	background: gold;
+    border: gold;
+}
+
+.bgcolor4{
+	background: green;
+    border: green;
+}
+
+.bgcolor5{
+	background: rgb(123, 209, 72);
+    border: 1px solid rgb(123, 209, 72);
+}
+
+.bgcolor6{
+	background: blue;
+    border: blue;
+}
+
+.bgcolor7{
+	background: rgb(205, 116, 230);
+    border: 1px solid rgb(205, 116, 230);
+}
+
+.bgcolor8{
+	background: pink;
+    border: pink;
+}
+
+.bgcolor9{
+	background: rgb(144, 83, 65);
+    border: 1px solid rgb(144, 83, 65);
+}
+
+.bgcolor10{
+	background: gray;
+    border: gray;
+}
+
+.tagBtn{
+	margin-top: 30px;
+}
+
+.tagColor:hover, .active{
+	border: 2px solid black;
+}
+
+.addTag{
+	background-color:slategray; 
+	color:white; 
+	border:none;
+}
+
+#tagName{
+	width: 100%;
+	font-size: 16px;
+    font-weight: 500;
+}
+
+.tag-name{
+	width:190px;
 }
 

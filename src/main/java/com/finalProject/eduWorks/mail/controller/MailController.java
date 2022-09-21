@@ -24,6 +24,7 @@ import com.finalProject.eduWorks.common.template.Pagination;
 import com.finalProject.eduWorks.mail.model.service.MailServiceImpl;
 import com.finalProject.eduWorks.mail.model.vo.Mail;
 import com.finalProject.eduWorks.mail.model.vo.MailStatus;
+import com.finalProject.eduWorks.mail.model.vo.Tag;
 import com.finalProject.eduWorks.member.model.vo.Member;
 import com.google.gson.Gson;
 
@@ -751,6 +752,36 @@ public class MailController {
 		}
 
 		return mv;
+		
+	}
+	
+	/**
+	 * 16_1. 태그 추가
+	 * @param t : 로그인한 회원 사번, 태그명, 태그 색상
+	 * @return : 태그 추가 성공여부 (성공 : "success" | 실패 : "fail")
+	 */
+	@ResponseBody
+	@RequestMapping("insertTag.ma")
+	public String ajaxInsertMailTag(Tag t) {
+
+		int result = mService.insertTag(t);
+		
+		return result > 0 ? "success" : "fail";
+		
+	}
+	
+	/**
+	 * 16_2. 태그 목록 조회
+	 * @param memNo : 로그인한 회원 사번
+	 * @return : 조회된 태그 목록
+	 */
+	@ResponseBody
+	@RequestMapping(value="selectTagList.ma", produces="application/json; charset=UTF-8")
+	public String ajaxSelectTagList(String memNo) {
+		
+		ArrayList<Tag> tList = mService.selectTagList(memNo);
+		
+		return new Gson().toJson(tList);
 		
 	}
 

@@ -8,6 +8,7 @@ import com.finalProject.eduWorks.common.model.vo.Attachment;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.mail.model.vo.Mail;
 import com.finalProject.eduWorks.mail.model.vo.MailStatus;
+import com.finalProject.eduWorks.mail.model.vo.Tag;
 import com.finalProject.eduWorks.member.model.vo.Member;
 
 public interface MailService {
@@ -78,5 +79,11 @@ public interface MailService {
 	Mail selectMailDetail(MailStatus ms);
 	int updateReadMail(MailStatus ms);
 	ArrayList<Attachment> selectAttachment(MailStatus ms);
+	
+	// 15_1. 메일 태그 추가
+ 	int insertTag(Tag t);
+ 	
+ 	// 15_2. 태그 목록 조회
+ 	ArrayList<Tag> selectTagList(String memNo);
 
 }

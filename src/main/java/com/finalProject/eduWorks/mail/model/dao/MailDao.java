@@ -1,7 +1,6 @@
 package com.finalProject.eduWorks.mail.model.dao;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -13,6 +12,7 @@ import com.finalProject.eduWorks.common.model.vo.Attachment;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.mail.model.vo.Mail;
 import com.finalProject.eduWorks.mail.model.vo.MailStatus;
+import com.finalProject.eduWorks.mail.model.vo.Tag;
 import com.finalProject.eduWorks.member.model.vo.Member;
 
 @Repository
@@ -389,6 +389,26 @@ public class MailDao {
 	public int updateReadMail(SqlSessionTemplate sqlSession, MailStatus ms) {
 		return sqlSession.update("mailMapper.updateReadMail", ms);
 	}
+	
+	/**
+	 * 16_1. 태그 추가
+	 * @param t : 로그인한 회원 사번, 태그명, 태그 색상
+	 * @return : 태그 추가 성공 여부가 담긴 int형 변수(성공 : 1 | 실패 : 0)
+	 */
+	public int insertTag(SqlSessionTemplate sqlSession, Tag t) {
+		return sqlSession.insert("mailMapper.insertTag", t);
+	}
+	
+	/**
+	 * 16_2. 태그 목록 조회
+	 * @param memNo : 로그인한 회원 사번
+	 * @return : 조회된 태그 목록
+	 */
+	public ArrayList<Tag> selectTagList(SqlSessionTemplate sqlSession, String memNo){
+		return (ArrayList)sqlSession.selectList("mailMapper.selectTagList", memNo);
+	}
+	
+	
 	
 	
 
