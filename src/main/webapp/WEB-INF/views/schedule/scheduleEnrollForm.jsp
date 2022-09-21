@@ -363,7 +363,10 @@
 	                        	var hCount = 0;	// 인사
 	                        	$.ajax({
 	                        		url: "search.ca",
-	                        		data: {keyword: key},
+	                        		data: {
+	                        			keyword: key,
+	                        			memNo : ${ loginUser.memNo }	
+	                        		},
 	                        		success: function(list){
 	                        			console.log(list);
 	                        			

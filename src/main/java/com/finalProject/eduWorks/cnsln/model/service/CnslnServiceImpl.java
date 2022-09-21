@@ -33,8 +33,8 @@ public class CnslnServiceImpl implements CnslnService{
 	}
 
 	@Override
-	public ArrayList<Member> selectMemberList(String keyword) {
-		return cDao.selectMemberList(sqlSession, keyword);
+	public ArrayList<Member> selectMemberList(String keyword, String memNo) {
+		return cDao.selectMemberList(sqlSession, keyword, memNo);
 	}
 
 	@Override

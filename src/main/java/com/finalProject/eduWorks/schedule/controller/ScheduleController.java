@@ -35,9 +35,8 @@ public class ScheduleController {
 	// 캘린더 화면 조회
 	@RequestMapping("list.ca")
 	public ModelAndView calendar(String memNo, ModelAndView mv) {
-		// 멤버 리스트
-		String keyword = "";
-		ArrayList<Member> aList = sService.selectMemberList(keyword) ;
+
+
 		// 마이 캘린더 리스트
 		ArrayList<Mycal> clist = sService.selectMycalList(memNo);
 		String str = "";
@@ -46,8 +45,7 @@ public class ScheduleController {
 		}
 		var calArr = str.substring(0, str.lastIndexOf(","));
 		
-		mv.addObject("aList", aList).addObject("calArr", calArr)
-		  .setViewName("schedule/calendarView");
+		mv.addObject("calArr", calArr).setViewName("schedule/calendarView");
 		
 		return mv;
 	}
@@ -132,7 +130,7 @@ public class ScheduleController {
 	public ModelAndView enrollForm(String day, String memNo, ModelAndView mv) {
 		ArrayList<Mycal> list = sService.selectMycalList(memNo);
 		String keyword = "";
-		ArrayList<Member> aList = sService.selectMemberList(keyword) ;
+		ArrayList<Member> aList = sService.selectMemberList(keyword, memNo) ;
 		
 		mv.addObject("day", day).addObject("list", list).addObject("aList", aList);
 		mv.setViewName("schedule/scheduleEnrollForm");
@@ -191,7 +189,7 @@ public class ScheduleController {
 		ArrayList<Mycal> mlist = sService.selectMycalList(memNo);
 		// 멤버 리스트
 		String keyword = "";
-		ArrayList<Member> aList = sService.selectMemberList(keyword) ;
+		ArrayList<Member> aList = sService.selectMemberList(keyword, memNo) ;
 		
 		mv.addObject("s", s).addObject("n", nArr).addObject("l", lArr)
 		  .addObject("mlist", mlist).addObject("aList", aList);
@@ -300,8 +298,8 @@ public class ScheduleController {
 	// 참석자 검색
 	@ResponseBody
 	@RequestMapping(value="search.ca", produces="application/json; charset=UTF-8")
-	public String ajaxSearchAtnd(String keyword) {
-		ArrayList<Member> list = sService.selectMemberList(keyword);
+	public String ajaxSearchAtnd(String keyword, String memNo) {
+		ArrayList<Member> list = sService.selectMemberList(keyword, memNo);
 		return new Gson().toJson(list);
 	}
 	

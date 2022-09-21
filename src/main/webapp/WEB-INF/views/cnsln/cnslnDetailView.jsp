@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -50,7 +51,7 @@
 	
 	             <!-- 수정삭제 버튼 -->
 	             <!-- 작성자에게만 보임 -->
-	             <c:if test="${ loginUser.memNo == c.cnslnWriter }">
+	             <c:if test="${ loginUser.memNo == c.cnslnWriter || fn:contains(c.cnslnChargeNo, loginUser.memNo)}">
 		             <div class="detailDot" style="float:right; width:10%; margin-right:-130px">
 		                <ul class="navbar-nav ml-auto moDelte">
 		                    <li class="nav-item dropdown no-arrow mx-1">
@@ -70,6 +71,7 @@
 		                </ul>
 		            </div>
 	            </c:if>
+	            
 
 	            <!-- 삭제 모달창 -->
 	            <div class="modal" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

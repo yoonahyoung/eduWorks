@@ -307,7 +307,10 @@
 	                        	var pCount = 0;	// 홍보
 	                        	$.ajax({
 	                        		url: "search.cn",
-	                        		data: {keyword: key},
+	                        		data: {
+	                        			keyword: key,
+	                        			memNo : ${ loginUser.memNo }
+	                        			},
 	                        		success: function(list){
 	                        			console.log(list);
 	                        			

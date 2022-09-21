@@ -1,6 +1,7 @@
 package com.finalProject.eduWorks.cnsln.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -26,8 +27,11 @@ public class CnslnDao {
 	}
 	
 	// 담당자 명단 조회
-	public ArrayList<Member> selectMemberList(SqlSessionTemplate sqlSession, String keyword){
-		return(ArrayList) sqlSession.selectList("cnslnMapper.selectMemberList", keyword);
+	public ArrayList<Member> selectMemberList(SqlSessionTemplate sqlSession, String keyword, String memNo){
+		HashMap<String, String> map = new HashMap<>();
+		map.put("memNo", memNo);
+		map.put("keyword", keyword);
+		return(ArrayList) sqlSession.selectList("cnslnMapper.selectMemberList", map);
 	}
 	
 	// 상담 일정 조회

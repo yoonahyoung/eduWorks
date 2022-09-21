@@ -251,7 +251,7 @@
 			                                <span aria-hidden="true">&laquo;</span></a>
 			                            </c:when>
 			                            <c:otherwise>
-			                            	<a class="page-link su_page_btn su_prenext" href="list.pr?ppage=${ pi.currentPage - 1 }" aria-label="Previous">
+			                            	<a class="page-link su_page_btn su_prenext" href="list.tcn?cpage=${ pi.currentPage - 1 }" aria-label="Previous">
 			                                <span aria-hidden="true">&laquo;</span></a>
 			                            </c:otherwise>
 			                        </c:choose>
@@ -261,10 +261,10 @@
 		                        
 		                        	<c:choose>
 		                        		<c:when test="${pi.currentPage eq p }">
-		                        			<li class="page-item"><a class="page-link su_page_btn su_curPage_btn disabled" href="list.pr?ppage=${ p }">${ p }</a></li>
+		                        			<li class="page-item"><a class="page-link su_page_btn su_curPage_btn disabled" href="list.tcn?cpage=${ p }">${ p }</a></li>
 		                        		</c:when>
 		                        		<c:otherwise>
-		                        			<li class="page-item"><a class="page-link su_page_btn" href="list.pr?ppage=${ p }">${ p }</a></li>
+		                        			<li class="page-item"><a class="page-link su_page_btn" href="list.tcn?cpage=${ p }">${ p }</a></li>
 		                        		</c:otherwise>
 		                        	</c:choose>
 		                        	
@@ -280,7 +280,7 @@
 	                                		<span aria-hidden="true">&raquo;</span></a>
 			                            </c:when>
 			                            <c:otherwise>
-			                            	<a class="page-link su_page_btn su_prenext" href="list.pr?ppage=${ pi.currentPage + 1 }" aria-label="Next">
+			                            	<a class="page-link su_page_btn su_prenext" href="list.tcn?cpage=${ pi.currentPage + 1 }" aria-label="Next">
 	                                		<span aria-hidden="true">&raquo;</span></a>
 			                            </c:otherwise>
 			                        </c:choose>

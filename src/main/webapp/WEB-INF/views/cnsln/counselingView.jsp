@@ -59,12 +59,12 @@
 			        plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'list' ],
 			        dateClick:function(arg){
 					    //console.log(arg.dateStr); // 날짜 출력
-					    location.href="enrollForm.cn?day=" + arg.dateStr;
+					    location.href="enrollForm.cn?day=" + arg.dateStr + "&memNo=" + ${loginUser.memNo};
 					},
 					
 					// 이벤트 클릭시 일정 상세 조회 페이지로 이동
 					eventClick:function(e){
-						location.href = "detail.cn?cNo=" + e.event.id;
+						location.href = "detail.cn?cNo=" + e.event.id + "&memNo=" + ${loginUser.memNo};
 						//console.log(e.event.id);
 					},
 			        header: {

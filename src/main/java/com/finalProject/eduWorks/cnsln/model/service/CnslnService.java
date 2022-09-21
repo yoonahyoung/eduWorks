@@ -14,7 +14,7 @@ public interface CnslnService {
 	ArrayList<Cnsln> selectCnslnList(String memNo);
 	
 	// 상담 일정 등록
-	ArrayList<Member> selectMemberList(String keyword);
+	ArrayList<Member> selectMemberList(String keyword, String memNo);
 	ArrayList<Student> selectStudentList(String key);
 	int insertCnsln(Cnsln c);
 	Member selectMember(String memNo);

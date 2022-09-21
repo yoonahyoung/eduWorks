@@ -21,8 +21,11 @@ public class ScheduleDao {
 	}
 	
 	// 멤버 명단 조회
-	public ArrayList<Member> selectMemberList(SqlSessionTemplate sqlSession, String keyword){
-		return (ArrayList) sqlSession.selectList("scheduleMapper.selectMemberList", keyword);
+	public ArrayList<Member> selectMemberList(SqlSessionTemplate sqlSession, String keyword, String memNo){
+		HashMap<String, String> map = new HashMap<>();
+		map.put("keyword", keyword);
+		map.put("memNo", memNo);
+		return (ArrayList) sqlSession.selectList("scheduleMapper.selectMemberList", map);
 	}
 	
 	//  내 캘린더 리스트 조회

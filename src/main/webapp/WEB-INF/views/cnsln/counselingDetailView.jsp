@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -66,7 +68,7 @@
 								<span style="display: none;" id="chargeList2">${ c.cnslnChargeList }</span>
 								<input type="hidden" id="cnslnChargeNo" name="cnslnChargeNo" value="${ c.cnslnChargeNo }">
 								<input type="hidden" id="cnslnChargeList" name="cnslnChargeList" value="${ c.cnslnChargeList }">
-								<input type="hidden" name="cnslnWriter" value="${ loginUser.memNo }">
+								<input type="hidden" name="cnslnWriter" value="${ c.cnslnWriter }">
 								<input type="hidden" name="studentPhone" value="${ s.studentPhone }" >
 								<input type="hidden" name="studentNo" value="${ c.studentNo }">
 								<input type="hidden" name="studentName" value="${ s.studentName }">
@@ -224,14 +226,24 @@
 		                    <br><br>
 		
 		                    <div class="su_btn_two_center" style="width: 80%;">
+		                    	
 		                    	<c:if test="${ loginUser.memNo == c.cnslnWriter }">
 		                        	<button type="button" class="btn su_btn_two su_btn_border" id="updateBtn" data-toggle="modal" data-target="#noContent">수정</button>
 		                        	<button type="button" class="btn su_btn_two su_btn_border" id="deleteBtn" data-toggle="modal" data-target="#delete">삭제</button>
 		                        </c:if>
-		                        <c:if test="${ loginUser.memNo != c.cnslnWriter }">
-		                        	<button type="button" class="btn su_btn_two su_btn_border" id="updateBtn" disabled>수정</button>
-		                        	<button type="button" class="btn su_btn_two su_btn_border" id="deleteBtn" data-toggle="modal" data-target="#delete" disabled>삭제</button>
-		                        </c:if>
+		                        
+		                        <c:choose>
+			                    	<c:when test="${ fn:contains(c.cnslnChargeNo, loginUser.memNo) }">
+			                        	<button type="button" class="btn su_btn_two su_btn_border" id="updateBtn" data-toggle="modal" data-target="#noContent">수정</button>
+			                        	<button type="button" class="btn su_btn_two su_btn_border" id="deleteBtn" data-toggle="modal" data-target="#delete">삭제</button>
+			                        </c:when>
+			                        <c:otherwise>
+				                        <c:if test="${ loginUser.memNo != c.cnslnWriter }">
+				                        	<button type="button" class="btn su_btn_two su_btn_border" id="updateBtn" disabled>수정</button>
+				                        	<button type="button" class="btn su_btn_two su_btn_border" id="deleteBtn" data-toggle="modal" data-target="#delete" disabled>삭제</button>
+				                        </c:if>
+				                    </c:otherwise>
+			                    </c:choose>
 		                        
 		                        <button type="button" class="btn su_btn_two su_btn_border" onclick="location.href='list.cn';">돌아가기</button>
 		                        <button type="button" class="btn su_btn_two su_btn_border" onclick="location.href='detail.tcn?cNo=${ c.cnslnNo }';">상담진행</button>
@@ -384,7 +396,10 @@
 	                        	var pCount = 0;	// 홍보
 	                        	$.ajax({
 	                        		url: "search.cn",
-	                        		data: {keyword: key},
+	                        		data: {
+	                        			keyword: key,
+	                        			memNo : ${loginUser.memNo}	
+	                        		},
 	                        		success: function(list){
 	                        			console.log(list);
 	                        			

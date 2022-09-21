@@ -15,7 +15,7 @@ public interface ScheduleService {
 	int updateMycal(int mcNo, String mcName);	//  내 캘린더 수정
 	int deleteMycal(String checkCnt);	// 내 캘린더 삭제
 	int colorMycal(Mycal m);	// 캘린더 색상 변경
-	ArrayList<Member> selectMemberList(String keyword);	// 주소록
+	ArrayList<Member> selectMemberList(String keyword, String memNo);	// 주소록
 	
 	// 일정 조회
 	Schedule selectSche(int scheNo);
