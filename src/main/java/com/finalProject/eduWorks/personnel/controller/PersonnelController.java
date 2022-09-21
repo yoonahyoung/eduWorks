@@ -30,6 +30,8 @@ import com.finalProject.eduWorks.member.model.vo.Member;
 import com.finalProject.eduWorks.personnel.model.service.PersonnelService;
 import com.finalProject.eduWorks.personnel.model.vo.Adjust;
 import com.finalProject.eduWorks.personnel.model.vo.Attendance;
+import com.finalProject.eduWorks.personnel.model.vo.Holiday;
+import com.finalProject.eduWorks.personnel.model.vo.HolidayForm;
 import com.finalProject.eduWorks.personnel.model.vo.Ojt;
 import com.finalProject.eduWorks.personnel.model.vo.PersonnelCount;
 import com.finalProject.eduWorks.personnel.model.vo.Restdate;
@@ -1097,12 +1099,50 @@ public class PersonnelController {
 	}
 	
 	@RequestMapping("holiday.me")
-	public String myholiday(Model model,HttpSession session,@RequestParam(value="p",defaultValue = "1")int currentPage) {
+	public String myholiday(Model model,HttpSession session,@RequestParam(value="p1",defaultValue = "1")int currentPage1,
+			                @RequestParam(value="p2",defaultValue = "1")int currentPage2,String selectY1,String selectY2) {
+		//select 목록 자동화
+		int start = 2021; //시작연도설정
+		String now = LocalDate.now()+"";
+		String year = now.substring(0, 4);
+		ArrayList<String> selectlist = new ArrayList<>();
+		int r = Integer.parseInt(year)-start;
+		for(int i=0;i<=r;i++) {
+			int year1 = start+i;
+			String option = year1+"-01-01 ~ "+year1+"-12-31";
+			selectlist.add(option);
+		}
+		model.addAttribute("selectlist",selectlist);
+		
 		String memNo = ((Member)session.getAttribute("loginUser")).getMemNo();
-		int listCount = pService.adjustMeCount(memNo);
-		PageInfo pi = Pagination.getInfo(listCount, currentPage, 3, 10);
-		ArrayList<Adjust> list = pService.adjustMe(pi, memNo);
-		model.addAttribute("list", list);
+		if(selectY1==null) {
+			selectY1=year;
+		}
+		if(selectY2==null) {
+			selectY2=year;
+		}
+		
+		HashMap<String,String> m1 = new HashMap<String, String>();
+		m1.put("memNo", memNo); m1.put("year", selectY1);
+		int listCount1 = pService.hoApproveCount(m1);
+		PageInfo pi1 = Pagination.getInfo(listCount1, currentPage1 , 3, 5);
+		ArrayList<HolidayForm> list1 = pService.hoApproveList(pi1,m1);
+		model.addAttribute("list1", list1);
+		model.addAttribute("pi1", pi1);
+		
+		HashMap<String,String> m2 = new HashMap<>();
+		m2.put("memNo", memNo); m2.put("year", selectY2);
+		int listCount2= pService.hoCount(m2);
+		PageInfo pi2 = Pagination.getInfo(listCount2, currentPage2 , 3, 5);
+		ArrayList<Holiday> list2 = pService.hoList(pi2,m2);
+		model.addAttribute("list2", list2);
+		model.addAttribute("pi2", pi2);
+		
+		String totalHo = pService.totalHo(memNo);
+		String useHo = pService.useHo(memNo);
+		model.addAttribute("totalHo", totalHo);
+		model.addAttribute("useHo", useHo);
+		
 		return "personnel/myholiday";
 	}
 }

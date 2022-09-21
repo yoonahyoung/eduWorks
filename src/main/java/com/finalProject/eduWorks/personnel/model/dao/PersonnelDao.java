@@ -15,6 +15,8 @@ import com.finalProject.eduWorks.member.model.vo.Job;
 import com.finalProject.eduWorks.member.model.vo.Member;
 import com.finalProject.eduWorks.personnel.model.vo.Adjust;
 import com.finalProject.eduWorks.personnel.model.vo.Attendance;
+import com.finalProject.eduWorks.personnel.model.vo.Holiday;
+import com.finalProject.eduWorks.personnel.model.vo.HolidayForm;
 import com.finalProject.eduWorks.personnel.model.vo.Ojt;
 import com.finalProject.eduWorks.personnel.model.vo.Restdate;
 import com.finalProject.eduWorks.personnel.model.vo.SearchAt;
@@ -306,5 +308,30 @@ public class PersonnelDao {
 
 	public int adjDelete(SqlSessionTemplate sqlSession,SearchAt s) {
 		return sqlSession.delete("personnelMapper.adjDelete", s);
+	}
+	//------------------------------------
+	public int hoApproveCount(SqlSessionTemplate sqlSession,HashMap<String, String> m1) {
+		return sqlSession.selectOne("personnelMapper.hoApproveCount", m1);
+	}
+	public ArrayList<HolidayForm> hoApproveList(SqlSessionTemplate sqlSession,PageInfo pi1, HashMap<String, String> m1) {
+		int limit = pi1.getBoardLimit();
+		int offset = (pi1.getCurrentPage()-1)*limit;
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("personnelMapper.hoApproveList", m1, rowBounds);
+	}
+	public int hoCount(SqlSessionTemplate sqlSession,HashMap<String, String> m2) {
+		return sqlSession.selectOne("personnelMapper.hoCount", m2);
+	}
+	public ArrayList<Holiday> hoList(SqlSessionTemplate sqlSession,PageInfo pi2, HashMap<String, String> m2) {
+		int limit = pi2.getBoardLimit();
+		int offset = (pi2.getCurrentPage()-1)*limit;
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("personnelMapper.hoList", m2, rowBounds);
+	}
+	public String totalHo(SqlSessionTemplate sqlSession,String memNo) {
+		return sqlSession.selectOne("personnelMapper.totalHo", memNo);
+	}
+	public String useHo(SqlSessionTemplate sqlSession,String memNo) {
+		return sqlSession.selectOne("personnelMapper.useHo", memNo);
 	}
 }

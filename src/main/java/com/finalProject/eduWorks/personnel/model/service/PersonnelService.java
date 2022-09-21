@@ -10,6 +10,8 @@ import com.finalProject.eduWorks.member.model.vo.Job;
 import com.finalProject.eduWorks.member.model.vo.Member;
 import com.finalProject.eduWorks.personnel.model.vo.Adjust;
 import com.finalProject.eduWorks.personnel.model.vo.Attendance;
+import com.finalProject.eduWorks.personnel.model.vo.Holiday;
+import com.finalProject.eduWorks.personnel.model.vo.HolidayForm;
 import com.finalProject.eduWorks.personnel.model.vo.Ojt;
 import com.finalProject.eduWorks.personnel.model.vo.Restdate;
 import com.finalProject.eduWorks.personnel.model.vo.SearchAt;
@@ -124,4 +126,12 @@ public interface PersonnelService {
 	ArrayList<Adjust> adjustMe(PageInfo pi, String memNo);
 	int adjModify(SearchAt s);
 	int adjDelete(SearchAt s);
+	
+	//개인연차조회페이지
+	int hoApproveCount(HashMap<String,String> m1);
+	ArrayList<HolidayForm> hoApproveList(PageInfo pi1,HashMap<String,String> m1);
+	int hoCount(HashMap<String,String> m1);
+	ArrayList<Holiday> hoList(PageInfo pi2,HashMap<String,String> m1);
+	String totalHo(String memNo);
+	String useHo(String memNo);
 }

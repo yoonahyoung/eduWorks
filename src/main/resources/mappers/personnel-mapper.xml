@@ -108,6 +108,27 @@
 		<result column="adj_denycontent" property="adjDenycontent"/>
 	</resultMap>
 	
+	<resultMap type="com.finalProject.eduWorks.personnel.model.vo.HolidayForm" id="resultHolidayForm">
+		<result column="aprv_no" property="aprvNo"/>
+		<result column="mem_no" property="memNo"/>
+		<result column="APRV_TYPE" property="aprvType"/>
+		<result column="APRV_DOC_STATUS" property="aprvDocStatus"/>
+		<result column="APRV_DOC_ENDATE" property="aprvDocEndate"/>
+		<result column="APRV_STATUS" property="aprvStatus"/>
+		<result column="LEAVE_TYPE" property="leaveType"/>
+		<result column="LEAVE_START_DATE" property="leaveStartDate"/>
+		<result column="LEAVE_END_DATE" property="leaveEndDate"/>
+		<result column="REQUEST_PERIOD" property="requestPeriod"/>
+		<result column="S_HALF_DAY_LEAVE" property="sHalfDayLeave"/>
+		<result column="F_HALF_DAY_LEAVE" property="fHalfDayLeave"/>
+	</resultMap>
+	<resultMap type="com.finalProject.eduWorks.personnel.model.vo.Holiday" id="resultHoliday">
+		<result column="mem_no" property="memNo"/>
+		<result column="ho_date" property="hoDate"/>
+		<result column="ho_num" property="hoNum"/>
+		<result column="ho_comment" property="hoComment"/>
+	</resultMap>
+	
 	<select id="teacherListCount" resultType="_int">
 		select count(*)
 		  from tb_member
@@ -1333,4 +1354,66 @@
 		  from tb_adjust
 		 where adj_no = #{userNo}
 	</delete>
+	
+	<select id="hoApproveCount" resultType="_int">
+		select count(*)
+		  from TB_APRV_FORM ap
+		  join TB_ANNUAL_LEAVE al on (ap.aprv_no = al.aprv_no)
+		 where mem_no = #{memNo}
+		   and substr(LEAVE_START_DATE,0,4) = #{year}
+		 order 
+		    by LEAVE_START_DATE desc
+	</select>
+	
+	<select id="hoApproveList" resultMap="resultHolidayForm">
+		select ap.aprv_no
+		     , mem_no
+		     , APRV_TYPE
+		     , APRV_DOC_STATUS
+		     , APRV_DOC_ENDATE
+		     , APRV_STATUS
+		     , LEAVE_TYPE
+		     , LEAVE_START_DATE
+		     , LEAVE_END_DATE
+		     , REQUEST_PERIOD
+		     , S_HALF_DAY_LEAVE
+		     , F_HALF_DAY_LEAVE
+		  from TB_APRV_FORM ap
+		  join TB_ANNUAL_LEAVE al on (ap.aprv_no = al.aprv_no)
+		 where mem_no = #{memNo}
+		   and substr(LEAVE_START_DATE,0,4) = #{year}
+	</select>
+	
+	<select id="hoCount" resultType="_int">
+		select count(*)
+		  from tb_holiday
+		 where mem_no = #{memNo}
+		   and extract(YEAR from ho_date) = #{year}
+	</select>
+	
+	<select id="hoList" resultMap="resultHoliday">
+		select mem_no
+		     , ho_date
+		     , ho_num
+		     , ho_comment
+		  from tb_holiday
+		 where mem_no = #{memNo}
+		   and extract(YEAR from ho_date) = #{year}
+	</select>
+	
+	<select id="totalHo" resultType="string">
+		select sum(ho_num)
+		  from tb_holiday 
+		 where extract(YEAR from ho_date) = extract(YEAR from sysdate)
+		   and mem_no = #{memNo}
+	</select>
+	
+	<select id="useHo" resultType="string">
+		select sum(REQUEST_PERIOD)
+		  from tb_aprv_form ap
+		  join tb_annual_leave al on (ap.aprv_no=al.aprv_no)
+		 where ap.mem_no = #{memNo}
+		   and substr(LEAVE_START_DATE,0,4) = to_char(sysdate,'YYYY')
+		   and APRV_STATUS = 'D'
+	</select>
 </mapper>
