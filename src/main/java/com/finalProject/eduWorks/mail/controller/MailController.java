@@ -92,7 +92,7 @@ public class MailController {
 
 		// 안읽은 메일 개수 조회
 		int unreadList = mService.receiveUnReadCount(m);
-		System.out.println(unreadList);
+
 		mv.addObject("count", listCount);
 		mv.addObject("unread", unreadList);
 		mv.addObject("list", list);
@@ -195,7 +195,6 @@ public class MailController {
 			
 			// ------------- 받은 메일 ------------
 			String[] receiveArr = m.getReceiverMem().split(","); // ','를 구분지어서 배열로 넣기
-			System.out.println(receiveArr);
 			
 			for(String r : receiveArr) {
 				
@@ -212,8 +211,7 @@ public class MailController {
 			if( !m.getCcMem().equals("") ) { // 참조 이메일이 있는 경우
 				
 				String[] ccArr = m.getCcMem().split(","); 
-				System.out.println(ccArr);
-				
+
 				for(String c : ccArr) {
 
 					MailStatus ms3 = new MailStatus();
@@ -567,9 +565,6 @@ public class MailController {
 		// 안읽은 메일 조회
 		ArrayList<Mail> list = mService.selectUnReadMailList(pi, m);
 
-		System.out.println(listCount);
-		System.out.println(list);
-				
 		mv.addObject("count", listCount);
 		mv.addObject("list", list);
 		mv.addObject("pi", pi);
@@ -624,8 +619,7 @@ public class MailController {
 
 		// 삭제하는 메일 목록을 담을 ArrayList
 		ArrayList<MailStatus> list = new ArrayList<>();	
-		System.out.println(ms);
-		System.out.println(list);
+
 		// 결과값
 		int result = 0;
 		
@@ -694,7 +688,7 @@ public class MailController {
 	
 	/**
 	 * 15. 메일 상세 조회
-	 * @param ms : 메일 번호, 메일 파일(보낸/받은/참조), 로그인한 회원 사번 및 이메일
+	 * @param ms : 메일 번호, 메일 폴더(보낸/받은/참조), 로그인한 회원 사번 및 이메일
 	 * @return : 메일 상세 조회 페이지
 	 */
 	@RequestMapping("mailDetail.ma")
