@@ -308,6 +308,16 @@ public class PersonnelServiceImpl implements PersonnelService {
 		return pDao.adjustMe(sqlSession, memNo);
 	}
 
+	@Override
+	public int adjModify(SearchAt s) {
+		return pDao.adjModify(sqlSession, s);
+	}
+
+	@Override
+	public int adjDelete(SearchAt s) {
+		return pDao.adjDelete(sqlSession, s);
+	}
+
 	
 
 

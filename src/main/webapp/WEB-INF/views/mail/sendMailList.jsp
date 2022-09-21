@@ -27,7 +27,7 @@
 	<div class="main-content">
 		<div class="second-title">
 			<div>
-				보낸 메일함 <span class="mail-count">전체메일 ${count }</span>
+				보낸 메일함 <span class="mail-count">전체메일 ${count } / 안읽은 메일 0</span>
 			</div>
 
 			<ul class="navbar-nav ml-auto moDelte">
@@ -114,7 +114,9 @@
                         </c:if>
                          
 					</td>
-					<td class="mail-person" width="15%"><div class="person">${loginUser.memName }</div></td>
+					<td class="mail-person" width="15%">
+						<div class="person">${loginUser.memName }</div>
+					</td>
 					<td class="mail-title">
 						<c:if test="${m.mailType == 1}"><span style="color:red;">[중요!]</span></c:if>
 						${m.mailTitle }
@@ -131,7 +133,6 @@
 		</div>
 		
 		<form id="postMailDetail" action="mailDetail.ma" method="post">
-			<input type="hidden" name="memEmail" value="${loginUser.memEmail }">
 			<input type="hidden" name="mailFolder" value="1">
 			<input type="hidden" name="mailNo" id="detailNo">
 		</form>

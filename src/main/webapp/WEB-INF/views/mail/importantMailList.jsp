@@ -81,7 +81,7 @@
 					<td>
 						<!-- 찜하기 후 -->
 						<i class="icon fas fa-star" id="import"
-						   onclick="importantBtn(${m.mailNo}, '${m.mailStatus.mailImportant }');"></i>
+						   onclick="importantBtn(${m.mailNo}, '${m.mailStatus.mailImportant }', '${m.mailStatus.mailFolder }');"></i>
 					</td>
 					<td>
 						<c:choose>
@@ -101,11 +101,21 @@
                          	<i class="icon fas fa-paperclip"></i>
                         </c:if>
 					</td>
-					<td class="mail-person" width="15%"><div class="person">${loginUser.memName }</div></td>
+					<td class="mail-person" width="15%">
+						<c:choose>
+							<c:when test="${loginUser.memNo == m.memNo }">
+								<div class="person">${loginUser.memName }</div>
+							</c:when>
+							<c:otherwise>
+								<div class="person">${m.sendName }</div>
+							</c:otherwise>
+						</c:choose>
+					</td>
 					<td class="mail-title">
 						<c:if test="${m.mailType == 1}"><span style="color:red;">[중요!]</span></c:if>
 						${m.mailTitle }
 						<input type="hidden" name="mailNo" value="${m.mailNo }">
+						<input type="hidden" name="mailFolder" value="${m.mailStatus.mailFolder }">
 					</td>
 					<td class="mail-sendtime">${m.sendDate }</td>
 				</tr>
@@ -115,6 +125,11 @@
 					
 			</table>
 		</div>
+		
+		<form id="postMailDetail" action="mailDetail.ma" method="post">
+			<input type="hidden" name="mailFolder" id="detailFolder">
+			<input type="hidden" name="mailNo" id="detailNo">
+		</form>
 
 		<script>
 		
@@ -132,15 +147,14 @@
 	        }
 					
 			// '중요메일' 설정시 실행하는 함수
-			function importantBtn(mailNo, important){
+			function importantBtn(mailNo, important, folder){
 	
 				$.ajax({
 					url : "updateImportant.ma",
 					data : {
 						mailNo : mailNo
-					  , sendMail : '${loginUser.memEmail}'
-					  , mailFolder : 1
 					  , mailImportant : important
+					  , mailFolder : folder
 					},
 					success : function(result){
 						console.log(result);
@@ -154,6 +168,20 @@
 				})
 	
 			}
+			
+			// '메일 조회'시 실행하는 함수
+			$(function(){
+				$(".mail-title").click(function(){
+					
+					let mailNo = $(this).children('input[type=hidden]').val();
+					let mailFolder = $(this).children('input[name=mailFolder]').val();
+
+					$("#detailNo").val(mailNo);
+					$("#detailFolder").val(mailFolder);
+					$("#postMailDetail").submit();
+
+				})
+			})
 			
 			// 메일 '삭제'시 실행하는 함수
 			function chooseDelete(){

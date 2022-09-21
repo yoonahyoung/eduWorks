@@ -173,7 +173,7 @@
 	                    <div class="bg-white py-2 collapse-inner rounded">
 	                        <h6 class="collapse-header">근태 관리</h6>
 	                        <a class="collapse-item" href="AttManage.me">출퇴근/근무내역관리</a>
-	                        <a class="collapse-item" href="">내 연차내역</a>
+	                        <a class="collapse-item" href="holiday.me">내 연차내역</a>
 	                        <a class="collapse-item" href="info.me">내 인사정보</a>
 	                        <a class="collapse-item" href="list.te">강사 관리</a>
 	                        <a class="collapse-item" href="list.em">직원 관리</a>

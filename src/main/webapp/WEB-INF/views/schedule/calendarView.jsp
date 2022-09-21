@@ -57,6 +57,71 @@
 	                        </div>
 	                    </li>
 	                </ul>
+	                
+	                 <!-- 서브메뉴 관심 캘린더 -->
+                     <ul class="accordion" id="accordionSidebar" >
+                         <li class="su_sub_menu_item">
+
+                             <!-- 변경 버튼 클릭 전 -->
+                             <span class="fas fa-pen pen_icon dis_bl" id="pen2"></span>
+
+                             <!-- 변경버튼 클릭 후 -->
+                             <div class="dis_no" id="nopen2">
+                                 <!-- <span class="fas fa-xmark pen_icon" id="x1"></span> -->
+                                 <span class="fas fa-check pen_icon" id="check1"></span>
+                             </div>
+
+                             <div class="collapsed su_sub_menu_list" style="width:70%;" data-toggle="collapse" data-target="#attCalendar" aria-expanded="true" aria-controls="collapseTwo">
+                                 <span>&nbsp;관심 캘린더</span>
+                             </div>
+
+                             <div id="attCalendar" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                                 <table>
+                                     <tr style="width: 100%;">
+                                         <td width="20%;"></td>
+                                         <td><input type="checkbox"></td>
+                                         <td width="90%;"> &nbsp;이승엽 대표</td>
+                                         <!-- 기본은 색상 편집 눌렀을 때 x -->
+                                         <td class="su_attCalBasic">
+                                             <a type="button">
+                                                 <div class="calColor" style="border: 1px solid red; background: red;"></div>
+                                             </a>
+                                         </td>
+
+                                         <td class="su_attCalX dis_no"><a type="button">x</a></td>
+                                     </tr>
+                                     <tr>
+                                         <td></td>
+                                         <td><input type="checkbox"></td>
+                                         <td> &nbsp;강보람 부장</td>
+                                         <!-- 기본은 색상 편집 눌렀을 때 x -->
+                                         <td class="su_attCalBasic">
+                                             <a type="button">
+                                                 <div class="calColor" style="border: 1px solid red; background: red;"></div>
+                                             </a>
+                                         </td>
+
+                                         <td class="su_attCalX dis_no"><a type="button">x</a></td>
+                                     </tr>
+                                     <tr>
+                                         <td></td>
+                                         <td><input type="checkbox"></td>
+                                         <td> &nbsp;박대리 대리</td>
+                                         <!-- 기본은 색상 편집 눌렀을 때 x -->
+                                         <td class="su_attCalBasic">
+                                             <a type="button">
+                                                 <div class="calColor" style="border: 1px solid red; background: red;"></div>
+                                             </a>
+                                         </td>
+
+                                         <td class="su_attCalX dis_no"><a type="button">x</a></td>
+                                     </tr>
+                                 </table>
+                                 
+                                 <a type="button" class="addCal" id="addAttCal">+ 관심 캘린더 추가</a>
+                             </div>
+                         </li>
+                     </ul>
 	
 	                <!-- 내 캘린더 추가 모달창 -->
 	                <div class="modal fade" id="addMyCal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

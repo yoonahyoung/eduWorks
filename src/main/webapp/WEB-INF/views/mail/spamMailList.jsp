@@ -139,7 +139,6 @@
 		</div>
 		
 		<form id="postMailDetail" action="mailDetail.ma" method="post">
-			<input type="hidden" name="memEmail" value="${loginUser.memEmail }">
 			<input type="hidden" name="mailFolder" value="2">
 			<input type="hidden" name="mailNo" id="detailNo">
 		</form>
@@ -194,7 +193,6 @@
 
 				})
 			})
-
 					
 			// 메일 '삭제'시 실행하는 함수
 			function chooseDelete(){

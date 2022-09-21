@@ -43,7 +43,10 @@ public class Mail {
 	// --------- 추가 ----------
 	private MailStatus mailStatus;
 	private Attachment attachment;
+	private String sendMem;
 	private String sendMail;
 	private String sendName;
+	private String ccMail;
+	
 
 }

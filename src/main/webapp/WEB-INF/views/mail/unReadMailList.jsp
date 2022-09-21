@@ -114,7 +114,12 @@
 					
 			</table>
 		</div>
-
+		
+		<form id="postMailDetail" action="mailDetail.ma" method="post">
+			<input type="hidden" name="mailFolder" value="2">
+			<input type="hidden" name="mailNo" id="detailNo">
+		</form>
+		
 		<script>
 		
 		    // '전체클릭'버튼 클릭시 실행하는 함수
@@ -129,6 +134,18 @@
 	              
 	           });
 	        }
+			
+			// '메일 조회'시 실행하는 함수
+			$(function(){
+				$(".mail-title").click(function(){
+					
+					let mailNo = $(this).children('input[type=hidden]').val();
+					console.log(mailNo);
+					$("#detailNo").val(mailNo);
+					$("#postMailDetail").submit();
+
+				})
+			})
 					
 			// '중요메일' 설정시 실행하는 함수
 			function importantBtn(mailNo, important){

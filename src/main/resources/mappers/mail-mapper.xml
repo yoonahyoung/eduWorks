@@ -14,6 +14,8 @@
 		<result column="mail_type" property="mailType" />
 		<result column="send_date" property="sendDate" />
 		<result column="send_name" property="sendName" />
+		<result column="cc_mail" property="ccMail" />
+		<result column="sned_mem" property="sendMem" />
 		<association property="mailStatus" resultMap="mailStatusResult" />
 		<association property="attachment" resultMap="attachmentResult" />
 	</resultMap>
@@ -82,6 +84,7 @@
           and mail_folder = 1
 		  and receiver_mem != #{receiverMem}
 		  and mail_delete = 'N'
+		  and mail_spam = 'N'
 	</select>
 
 	<!-- 보낸 메일함 조회 -->
@@ -115,6 +118,7 @@
 		  and receiver_mem != #{receiverMem}
 		  and mail_folder = 1
 		  and mail_delete = 'N'
+		  and mail_spam = 'N'
 		order 
             by mail_type, mail_no
 	</select>
@@ -129,6 +133,7 @@
           and mail_folder in (2,3)
 		  and receive_mail = #{receiverMem}
 		  and mail_delete = 'N'
+		  and mail_spam = 'N'
 	</select>
 	
 	<!-- 받은 메일 중 안읽은 메일 개수 조회 -->
@@ -142,6 +147,7 @@
 		  and receive_mail = #{receiverMem}
 		  and mail_read = 'N'
 		  and mail_delete = 'N'
+		  and mail_spam = 'N'
 	</select>
 	
 	<!-- 받은 메일 목록 조회 -->
@@ -181,6 +187,7 @@
 		  and mem_no != #{memNo}
 		  and mail_folder in (2,3)
 		  and mail_delete = 'N'
+		  and mail_spam = 'N'
 		order 
     		by mail_type, mail_no
 	</select>
@@ -351,6 +358,7 @@
 		where mem_no = #{memNo}
 		  and receiver_mem = #{receiverMem}
 		  and mail_delete = 'N'
+		  and mail_spam = 'N'
           and mail_folder = 1
 	</select>
 	
@@ -365,6 +373,7 @@
 		  and receiver_mem = #{receiverMem}
 		  and mail_read = 'N'
 		  and mail_delete = 'N'
+		  and mail_spam = 'N'
 	</select>
 	
 	<!-- 나에게 보낸 메일 목록 조회 -->
@@ -404,6 +413,7 @@
           and mem_no = #{memNo}
 		  and receiver_mem = #{receiverMem}
 		  and mail_delete = 'N'
+		  and mail_spam = 'N'
         order 
            by mail_type, mail_no
 	</select>
@@ -479,6 +489,7 @@
 		where receive_mail = #{receiverMem}
 		  and mail_read = 'Y'
 		  and mail_delete = 'N'
+		  and mail_spam = 'N'
 		  and mail_folder in (2,3)
 	</select>
 	
@@ -518,6 +529,7 @@
 		where mail_folder in (2,3)
 		  and receive_mail = #{receiverMem}
           and mail_delete = 'N'
+          and mail_spam = 'N'
           and mail_read = 'Y'
           order 
             by mail_type, mail_no
@@ -531,6 +543,7 @@
 		where receive_mail = #{receiverMem}
 		  and mail_read = 'N'
 		  and mail_delete = 'N'
+		  and mail_spam = 'N'
 		  and mail_folder in (2,3)
 	</select>
 	
@@ -571,6 +584,7 @@
 		  and receive_mail = #{receiverMem}
           and mail_delete = 'N'
           and mail_read = 'N'
+          and mail_spam = 'N'
           order 
             by mail_type, mail_no
 	</select>
@@ -582,6 +596,7 @@
 		from tb_mail_status
 		where mail_important = 'Y'
 		  and mail_delete = 'N'
+		  and mail_spam = 'N'
 		  and (send_mail = #{sendMail}
 		   or receive_mail = #{receiverMem} )
 
@@ -595,6 +610,7 @@
 		where mail_important = 'Y'
 		  and mail_read = 'N'
 		  and mail_delete = 'N'
+		  and mail_spam = 'N'
 		  and (send_mail = #{sendMail}
 		   or receive_mail = #{receiverMem} )
 	</select>
@@ -634,6 +650,7 @@
 			join tb_mail_status ms using (mail_no)
 			where mail_delete = 'N'
 	          and mail_important = 'Y'
+	          and mail_spam = 'N'
               and ( receive_mail = #{receiverMem}
                or mem_no = #{memNo} )
 	          order 
@@ -739,6 +756,82 @@
 		  and ( send_mail = #{sendMail}
 		   or receive_mail = #{receiveMail} )
 	</delete>
+	
+	<!-- 메일 상세 조회 -->
+	<select id="selectMailDetail" resultMap="mailResult">
+		select 
+		    mail_no
+		  , mem_no
+		  , mail_title
+		  , (select
+		        mem_name
+		    from tb_mail
+		    join tb_member using (mem_no)
+		    where mail_no = #{mailNo} ) as send_mem 
+		  , send_mail
+		  , (select 
+		        mem_name
+		    from tb_mail
+		    join tb_member on( mem_email = receiver_mem)
+		    where mail_no = #{mailNo} ) as receiver_mem
+		  , receive_mail
+		  , (select
+		        mem_name
+		    from tb_mail
+		    join tb_member on (mem_email = cc_mem)
+		    where mail_no = #{mailNo} ) as cc_mem
+		  , cc_mem as cc_mail
+		  , mail_content
+		  , to_char(send_date, 'YYYY-MM-DD(DY) HH24:MI:SS') "send_date"
+		  ,	(
+				select
+					count(*)
+		        from tb_attachment
+				where at_category = 2
+				and at_ref_bno = mail_no
+			 ) "at_count"
+		 , mail_important
+		 , ms.tag_no
+		 , mail_folder
+		from tb_mail m
+		join tb_mail_status ms using (mail_no)
+		where mail_no = #{mailNo}
+		  and mail_folder = #{mailFolder}
+		  and mail_delete = 'N'
+	</select>
+	
+	<!-- 메일 상세 조회(첨부파일) -->
+	<select id="selectAttachment" resultMap="attachmentResult">
+	  	  select
+		       at_no
+		     , at_ref_bno
+		     , at_origin_name
+		     , at_change_name
+		     , at_upload_date
+		  from tb_attachment
+		 where at_ref_bno = #{mailNo}
+		   and at_category = 2
+		   and at_status = 'Y'
+	</select>
+	
+	<!-- 메일 읽음 표시로 변경 -->
+	<update id="updateReadMail">
+		update
+		    tb_mail_status
+		    set mail_read = 'Y'
+		      , mail_change_date = sysdate
+		where mail_no = #{mailNo}
+		<choose>
+			<when test="mailFolder == 1">
+			 and mail_folder = 1
+		  	 and send_mail = #{sendMail}
+			</when>
+			<otherwise>
+			 and mail_folder in (2,3)
+		  	 and receive_mail = #{receiveMail}
+			</otherwise>
+		</choose>
+	</update>
 	
 
 </mapper>

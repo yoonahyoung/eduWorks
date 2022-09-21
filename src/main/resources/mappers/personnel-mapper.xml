@@ -1318,4 +1318,19 @@
 				  WHERE AD.MEM_NO = #{memNo}
 				  ORDER BY ADJ_NO DESC
 	</select>
+	
+	<update id="adjModify">
+		update tb_adjust
+		   set adj_reason = #{reason}
+		   <if test="keyword != null">
+		   	, adj_file = #{keyword}
+		   </if>
+		 where adj_no = #{userNo}
+	</update>
+	
+	<delete id="adjDelete">
+		delete 
+		  from tb_adjust
+		 where adj_no = #{userNo}
+	</delete>
 </mapper>

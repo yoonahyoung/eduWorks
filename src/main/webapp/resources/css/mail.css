@@ -301,5 +301,74 @@ table{
 	color:black;
 }
 
+/* ============ 메일 조회 ============== */
+.mail-content {
+    border: 1px solid lightgray;
+    width: 100%;
+    height: 500px;
+    margin-top: 15px;
+    padding: 2.5em;
+}
 
+.mail-form {
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.mail-form table {
+  width: 100%;
+}
+
+.mail-form th {
+  width: 150px;
+  height: 35px;
+}
+
+#mail-file {
+  background-color: #f7f7f7;
+  width: 100%;
+  padding: 8px;
+  margin-top: 15px;
+}
+
+.mail-content table {
+  width: 100%;
+  border: 1px solid lightgray;
+}
+
+.mail-content table th {
+  width: 10%;
+  height: 50px;
+  padding-left: 18px;
+  font-size: 17px;
+}
+
+.shortcut-btn {
+  width: 200px;
+  height: 40px;
+  border: none;
+  background-color: #cfdeeb;
+  font-size: 17px;
+}
+
+.mail tr {
+  cursor: pointer;
+}
+
+.mail tr:hover {
+  background-color: #ebebeb;
+}
+
+.detail-title{
+	color:black;
+}
+
+.detail-form th{
+	font-size: 16px;
+	font-weight: 600;
+}
+
+.importCheck{
+	vertical-align:3px;
+}
 
