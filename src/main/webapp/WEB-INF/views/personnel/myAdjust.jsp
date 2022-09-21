@@ -140,18 +140,20 @@
                                 <div style="width: 40%; height: 100%; float: left;">
                                     <div style="width: 100%; height: 90%;" align="center">
                                         <table id="tab1" style="border-collapse: separate; border-spacing: 0 10px;">
+                                        	<c:if test="${ not empty list }">
                                         	<thead>
                                             <tr  style="background-color: #e6e9ec;">
                                                 <th style="width: 200px;">조정신청날짜</th>
                                                 <th style="width: 150px;">처리상태</th>
                                             </tr>
                                             </thead>
+                                            </c:if>
                                             <c:choose>
                                             	<c:when test="${ empty list }">
-                                            		<tr><th colspan="2">조회목록없음</th></tr>
+                                            		<h2>조회목록없음</h2>
                                             	</c:when>
                                             	<c:otherwise>
-                                            		<tbody>
+                                            		<tbody id="tab3">
                                             			<c:forEach var="list" items="${ list }">
                                             				<tr>
                                             					<th>${ list.adjDate }</th>
@@ -168,6 +170,7 @@
                                             					<th id="sel3" style="display: none;">${ list.adjReason }</th>
                                             					<th id="sel4" style="display: none;">${ list.adjStatus }</th>
                                             					<th id="sel5" style="display: none;">${ list.adjFile }</th>
+                                            					<th id="sel6" style="display: none;">${ list.adjNo }</th>
                                             				</tr>
                                             			</c:forEach>
                                             		</tbody>
@@ -176,13 +179,20 @@
                                         </table>
                                         
                                         <script>
-                                        	$('#tab1>tbody>tr').on('click',function(){
+                                        	$('#tab3>tr').on('click',function(){
                                         		
                                         		$('#tab2').css('display','')
                                         		$('.alls').val('')
                                         		
+                                        		$('#adjNo').val($(this).children('#sel6').text())
                                         		$('#date1').val($(this).children('#sel2').text())
                                         		$('#content1').val($(this).children('#sel3').text())
+                                        		if($(this).children('#sel4').text()!='W'){
+                                        			$('#content1').attr('readonly',true)
+                                        		}else{
+                                        			$('#content1').attr('readonly',false)
+                                        			console.log('readonly')
+                                        		}
                                         		if($(this).children('#sel0').text()=='D'){
                                         			$('#status').val('정상')
                                         		}else if($(this).children('#sel0').text()=='E' || $(this).children('#sel0').text()=='L'){
@@ -202,61 +212,94 @@
                                         		}else{
                                         			$('#reasontr').css('display','none')
                                         		}
-                                        		if($(this).children('#sel4').text()=='W' && $(this).children('#sel5').text()!=''){
+                                        		if($(this).children('#sel4').text()=='W' ){
                                         			$('#adjFile').attr('href',$(this).children('#sel5').text())
-                                        			$('#readf').css('display','')
                                         			$('#inputf').css('display','')
                                         		}else{
                                         			$('#inputf').css('display','none')
                                         		}
+                                        		if($(this).children('#sel5').text()!=''){
+                                        			$('#readf').css('display','')
+                                        		}else{
+                                        			$('#readf').css('display','none')
+                                        		}
                                         		if($(this).children('#sel4').text()=='W'){
                                         			$('#rebtn').css('display','')
+                                        		}else{
+                                        			$('#rebtn').css('display','none')
                                         		}
                                         	})
                                         </script>
                                         
                                     </div>
-                                    <div style="width: 100%; height: 10%;" align="center">
-                                        <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
-                                            &lt;
-                                        </span>
-                                        <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
-                                            1
-                                        </span>
-                                        <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
-                                            2
-                                        </span>
-                                        <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
-                                            3
-                                        </span>
-                                        <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
-                                            &gt;
-                                        </span>
-                                    </div>
-                                </div>
+                                    <c:choose>
+                            	<c:when test="${ empty list }">
+                            	
+                            	</c:when>
+                            	<c:otherwise>
+                            		<div style="margin-top: 10px; width: 1000px; height: 40px;" align="center" id="pagebar">
+			                            <c:if test="${ pi.currentPage ne 1 }">
+				                           <a href="list.te?p=${ pi.currentPage-1 }">
+						                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
+						                                    &lt;
+						                                </span>
+					                                </a>
+				                        </c:if>
+			                            	<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+					                            	<c:if test="${ p eq pi.currentPage }">
+					                            		<a href="adjust.me?p=${ p }">
+							                                <span style="width: 40px; height: 40px; background-color: #5e7e9b; display: inline-block; border-radius: 15%;padding-top: 5px;">
+							                                    ${ p }
+							                                </span>
+					                                	</a>
+					                            	</c:if>
+					                            	<c:if test="${ p ne pi.currentPage }">
+					                            		<a href="adjust.me?p=${ p }">
+							                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
+							                                    ${ p }
+							                                </span>
+					                                	</a>
+					                            	</c:if>
+							                    	
+							                  	</c:forEach>	
+											
+							         	<c:if test="${ pi.currentPage ne pi.maxPage }">
+				                            		<a href="adjust.me?p=${ pi.currentPage+1 }">
+						                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
+						                                    &gt;
+						                                </span>
+					                                </a>
+			                            </c:if>
+			                            	
+			                                
+			                            </div>
+                            	</c:otherwise>
+                            </c:choose>
                                 <div style="width: 60%; height: 100%; float: left; padding-left: 10%;">
+                                <form id='forms1' action="modifyAdj.me" method="post" enctype="multipart/form-data">
+                                	<input type="hidden" name="userNo" id="adjNo">
                                     <table id="tab2" style="display: none;">
                                         <tr>
                                             <th colspan="2"><h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;조정신청 세부내역</h3></th>
                                         </tr>
                                         <tr>
                                             <th>변경신청날짜</th>
-                                            <td><input id="date1" class="all" type="text"></td>
+                                            <td><input id="date1" class="all" type="text" readonly="readonly"></td>
                                         </tr>
                                         <tr>
                                             <th>신청날짜 근태현황</th>
-                                            <td><input id="status" class="alls"  type="text"></td>
+                                            <td><input id="status" class="alls"  type="text" readonly="readonly"></td>
                                         </tr>
                                         <tr>
                                             <th>조정내용/사유</th>
-                                            <td><textarea name="" class="alls"  id="content1" cols="30" rows="10" style="resize: none;"></textarea></td>
+                                            <td><textarea name="reason" class="alls"  id="content1" cols="30" rows="10" style="resize: none;" readonly="readonly" required="required"></textarea></td>
                                         </tr>
                                         <tr id="reasontr" style="display: none;">
                                         	<th>거절사유</th>
-                                            <td><textarea name="" class="alls"  id="reason" cols="30" rows="10" style="resize: none;"></textarea></td>
+                                            <td><textarea name="" class="alls"  id="reason" cols="30" rows="10" style="resize: none;" readonly="readonly" ></textarea></td>
                                        	<tr id="inputf" style="display: none;">
                                         	<th>파일첨부</th>
-                                        	<td><input id="infile" type="file" class="alls" ></td>
+                                        	<td><input id="infile" name="upfile" type="file" class="alls" ></td>
                                         </tr>
                                         <tr id="readf" style="display:none;">	
                                         	<th>첨부파일</th>
@@ -265,11 +308,21 @@
                                         <tr id="rebtn" style="display: none;">
                                             <th colspan="2">
                                                 <br>
-                                                <button type="button" class="btn su_btn_border">수정하기</button>
+                                                <button type="submit" class="btn su_btn_border">수정하기</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <button type="button" onclick="deleteAdj()" class="btn su_btn_border">삭제하기</button>
                                             </th>
                                         </tr>
                                     </table>
+                                </form>
                                 </div>
+                                
+                                <script type="text/javascript">
+                                	function deleteAdj(){
+                                		$('#forms1').attr('action','deleteAdj.me');
+                                		$('#forms1').submit();
+                                	}
+                                </script>
+                                
                             </div>
                             <br style="clear: both;">
                             

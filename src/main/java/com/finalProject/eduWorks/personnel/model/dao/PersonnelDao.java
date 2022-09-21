@@ -299,4 +299,12 @@ public class PersonnelDao {
 	public ArrayList<Adjust> adjustMe(SqlSessionTemplate sqlSession,String memNo){
 		return (ArrayList)sqlSession.selectList("personnelMapper.adjustMe", memNo);
 	}
+	
+	public int adjModify(SqlSessionTemplate sqlSession,SearchAt s) {
+		return sqlSession.update("personnelMapper.adjModify", s);
+	}
+
+	public int adjDelete(SqlSessionTemplate sqlSession,SearchAt s) {
+		return sqlSession.delete("personnelMapper.adjDelete", s);
+	}
 }
