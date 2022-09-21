@@ -363,6 +363,33 @@ public class MailDao {
 		return sqlSession.delete("mailMapper.deleteAllMail", ms);
 	}
 	
+	/**
+	 * 15_1. 메일 상세 조회
+	 * @param ms : 메일 번호, 메일 폴더(보낸/받은/참조)
+	 * @return : 상세조회된 메일 정보
+	 */
+	public Mail selectMailDetail(SqlSessionTemplate sqlSession, MailStatus ms) {
+		return sqlSession.selectOne("mailMapper.selectMailDetail", ms);
+	}
+	
+	/**
+	 * 15_2. 메일 상세 조회(첨부파일)
+	 * @param ms 메일 번호
+	 * @return : 메일 상세조회시 첨부된 파일 목록
+	 */
+	public ArrayList<Attachment> selectAttachment(SqlSessionTemplate sqlSession, MailStatus ms){
+		return (ArrayList)sqlSession.selectList("mailMapper.selectAttachment", ms);
+	}
+	
+	/**
+	 * 15_3. 메일 상세조회시 '읽음'으로 변경
+	 * @param ms : 로그인한 회원 이메일, 메일 번호
+	 * @return : '읽음' 성공 여부가 담긴 int형 변수(성공 : 1 | 실패 : 0)
+	 */
+	public int updateReadMail(SqlSessionTemplate sqlSession, MailStatus ms) {
+		return sqlSession.update("mailMapper.updateReadMail", ms);
+	}
+	
 	
 
 }

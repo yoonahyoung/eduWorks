@@ -68,7 +68,8 @@
 						</a>
 
 
-					</div></li>
+					</div>
+				</li>
 			</ul>
 		</div>
 
@@ -138,7 +139,6 @@
 		</div>
 		
 		<form id="postMailDetail" action="mailDetail.ma" method="post">
-			<input type="hidden" name="memEmail" value="${loginUser.memEmail }">
 			<input type="hidden" name="mailFolder" value="2">
 			<input type="hidden" name="mailNo" id="detailNo">
 		</form>

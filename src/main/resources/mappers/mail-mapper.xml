@@ -14,6 +14,8 @@
 		<result column="mail_type" property="mailType" />
 		<result column="send_date" property="sendDate" />
 		<result column="send_name" property="sendName" />
+		<result column="cc_mail" property="ccMail" />
+		<result column="sned_mem" property="sendMem" />
 		<association property="mailStatus" resultMap="mailStatusResult" />
 		<association property="attachment" resultMap="attachmentResult" />
 	</resultMap>
@@ -739,6 +741,82 @@
 		  and ( send_mail = #{sendMail}
 		   or receive_mail = #{receiveMail} )
 	</delete>
+	
+	<!-- 메일 상세 조회 -->
+	<select id="selectMailDetail" resultMap="mailResult">
+		select 
+		    mail_no
+		  , mem_no
+		  , mail_title
+		  , (select
+		        mem_name
+		    from tb_mail
+		    join tb_member using (mem_no)
+		    where mail_no = #{mailNo} ) as send_mem 
+		  , send_mail
+		  , (select 
+		        mem_name
+		    from tb_mail
+		    join tb_member on( mem_email = receiver_mem)
+		    where mail_no = #{mailNo} ) as receiver_mem
+		  , receive_mail
+		  , (select
+		        mem_name
+		    from tb_mail
+		    join tb_member on (mem_email = cc_mem)
+		    where mail_no = #{mailNo} ) as cc_mem
+		  , cc_mem as cc_mail
+		  , mail_content
+		  , to_char(send_date, 'YYYY-MM-DD(DY) HH24:MI:SS') "send_date"
+		  ,	(
+				select
+					count(*)
+		        from tb_attachment
+				where at_category = 2
+				and at_ref_bno = mail_no
+			 ) "at_count"
+		 , mail_important
+		 , ms.tag_no
+		 , mail_folder
+		from tb_mail m
+		join tb_mail_status ms using (mail_no)
+		where mail_no = #{mailNo}
+		  and mail_folder = #{mailFolder}
+		  and mail_delete = 'N'
+	</select>
+	
+	<!-- 메일 상세 조회(첨부파일) -->
+	<select id="selectAttachment" resultMap="attachmentResult">
+	  	  select
+		       at_no
+		     , at_ref_bno
+		     , at_origin_name
+		     , at_change_name
+		     , at_upload_date
+		  from tb_attachment
+		 where at_ref_bno = #{mailNo}
+		   and at_category = 2
+		   and at_status = 'Y'
+	</select>
+	
+	<!-- 메일 읽음 표시로 변경 -->
+	<update id="updateReadMail">
+		update
+		    tb_mail_status
+		    set mail_read = 'Y'
+		      , mail_change_date = sysdate
+		where mail_no = #{mailNo}
+		<choose>
+			<when test="mailFolder == 1">
+			 and mail_folder = 1
+		  	 and send_mail = #{sendMail}
+			</when>
+			<otherwise>
+			 and mail_folder in (2,3)
+		  	 and receive_mail = #{receiveMail}
+			</otherwise>
+		</choose>
+	</update>
 	
 
 </mapper>

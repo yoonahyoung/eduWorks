@@ -74,5 +74,9 @@ public interface MailService {
 	int deleteSendToMeMail(ArrayList<MailStatus> list);
 	int deleteAllMail(MailStatus ms);
 
+	// 14. 메일 상세 조회
+	Mail selectMailDetail(MailStatus ms);
+	int updateReadMail(MailStatus ms);
+	ArrayList<Attachment> selectAttachment(MailStatus ms);
 
 }

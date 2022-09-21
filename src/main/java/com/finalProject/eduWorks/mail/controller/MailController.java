@@ -136,13 +136,13 @@ public class MailController {
 		m.setSendMail(memEmail);
 		m.setReceiverMem(memEmail);
 		
-		// 내게 쓴 메일 개수 조회
+		// 중요 메일 개수 조회
 		int listCount = mService.importantListCount(m);
 
 		// 페이징
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
 		
-		// 내게 쓴 메일 조회
+		// 중요 메일 목록 조회
 		ArrayList<Mail> list = mService.selectImportantMailList(pi, m);
 		
 		// 안읽은 메일 조회
@@ -425,7 +425,15 @@ public class MailController {
 	 */
 	@ResponseBody
 	@RequestMapping("updateImportant.ma")
-	public String ajaxUpdateImportant(MailStatus ms) {
+	public String ajaxUpdateImportant(MailStatus ms, HttpSession session) {
+		
+		String memEmail = ( (Member)session.getAttribute("loginUser") ).getMemEmail();
+
+		if(ms.getMailFolder() == 1) {
+			ms.setSendMail(memEmail);
+		} else {
+			ms.setReceiveMail(memEmail);
+		}
 
 		int result = mService.updateImportant(ms);
 		
@@ -461,6 +469,7 @@ public class MailController {
 
 		mv.addObject("count", listCount);
 		mv.addObject("list", list);
+		mv.addObject("unread", unread);
 		mv.addObject("pi", pi);
 		mv.setViewName("mail/sendToMeList");
 		
@@ -683,8 +692,73 @@ public class MailController {
 		
 	}
 	
-	
-	
+	/**
+	 * 15. 메일 상세 조회
+	 * @param ms : 메일 번호, 메일 파일(보낸/받은/참조), 로그인한 회원 사번 및 이메일
+	 * @return : 메일 상세 조회 페이지
+	 */
+	@RequestMapping("mailDetail.ma")
+	public ModelAndView mailDetail(MailStatus ms, ModelAndView mv, HttpSession session) {
+		
+		String memNo = ( (Member)session.getAttribute("loginUser") ).getMemNo();
+		String memEmail = ( (Member)session.getAttribute("loginUser") ).getMemEmail();
+		
+		// 메일 상세조회
+		Mail detail = mService.selectMailDetail(ms);
+		
+		// 메일 읽음 표시로 변경
+		ms.setSendMail(memEmail);
+		ms.setReceiveMail(memEmail);
+		
+		int update = mService.updateReadMail(ms);
+		
+		// ======== 보낸 / 받은메일 수량 조회 ========
+		Mail m = new Mail();
+		
+		m.setMemNo(memNo);
+		m.setReceiverMem(memEmail);
+
+		// ===== 남에게 쓴 메일 =====
+		int count = 0;
+		int unread = 0;
+		// ===== 니에게 쓴 메일 =====
+		int countMe = 0;
+		int unreadMe = 0;
+		
+		// ========== 보낸 메일 ============
+		if(ms.getMailFolder() == 1) {
+
+			count = mService.sendListCount(m);
+			countMe = mService.sendToMeListCount(m);
+			unreadMe = mService.sendMeUnReadCount(m);
+			
+		// ========== 받은 메일 ============
+		} else {
+
+			count = mService.receiveListCount(m);
+			unread = mService.receiveUnReadCount(m);
+			
+		}
+		
+		// 첨부파일 목록 조회
+		ArrayList<Attachment> atList = mService.selectAttachment(ms);
+		
+		// 메일 조회 성공시
+		if(update > 0) {
+				
+		mv.addObject("count", count);
+		mv.addObject("unread", unread);
+		mv.addObject("countMe", countMe);
+		mv.addObject("unreadMe", unreadMe);
+		mv.addObject("m", detail);
+		mv.addObject("at", atList);
+		mv.setViewName("mail/mailDetailView");	
+
+		}
+
+		return mv;
+		
+	}
 
 	
 }

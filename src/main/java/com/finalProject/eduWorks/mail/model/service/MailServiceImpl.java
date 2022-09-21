@@ -347,6 +347,36 @@ public class MailServiceImpl implements MailService {
 		return mDao.deleteAllMail(sqlSession, ms);
 	}
 	
+	/**
+	 * 15_1. 메일 상세 조회
+	 * @param ms : 메일 번호, 메일 폴더(보낸/받은/참조)
+	 * @return : 상세조회된 메일 정보
+	 */
+	@Override
+	public Mail selectMailDetail(MailStatus ms) {
+		return mDao.selectMailDetail(sqlSession, ms);
+	}
+	
+	/**
+	 * 15_2. 메일 상세 조회(첨부파일)
+	 * @param ms 메일 번호
+	 * @return : 메일 상세조회시 첨부된 파일 목록
+	 */
+	@Override
+	public ArrayList<Attachment> selectAttachment(MailStatus ms) {
+		return mDao.selectAttachment(sqlSession, ms);
+	}
+	
+	/**
+	 * 15_3. 메일 상세조회시 '읽음'으로 변경
+	 * @param ms : 로그인한 회원 이메일, 메일 번호
+	 * @return : '읽음' 성공 여부가 담긴 int형 변수(성공 : 1 | 실패 : 0)
+	 */
+	@Override
+	public int updateReadMail(MailStatus ms) {
+		return mDao.updateReadMail(sqlSession, ms);
+	}
+	
 	
 
 
