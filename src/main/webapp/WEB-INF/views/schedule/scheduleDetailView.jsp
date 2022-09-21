@@ -36,14 +36,14 @@
 		                            <td>
 			                            &ensp; &ensp;<input type="text" name="scheTitle" style="width:300px;" value="${ s.scheTitle }" required>
 			                            <c:choose>
-			                            	<c:when test="${ s.scheOpen eq N }">
-			                            		&ensp;&ensp;<input type="checkbox" name="scheOpen" checked><span> &nbsp;비공개</span>
+			                            	<c:when test="${ s.scheOpen eq 'N' }">
+			                            		&ensp;&ensp;<input type="checkbox" id="scheOpen" checked><span> &nbsp;비공개</span>
 			                            	</c:when>
 			                            	<c:otherwise>
-			                            		&ensp;&ensp;<input type="checkbox" name="scheOpen"><span> &nbsp;비공개</span>
+			                            		&ensp;&ensp;<input type="checkbox" id="scheOpen"><span> &nbsp;비공개</span>
 			                            	</c:otherwise>
 			                            </c:choose>
-			                            <input type="hidden" name="scheOpen" value='N'>
+			                            <input type="hidden" name="scheOpen" value='Y'>
 		                            </td>
 		                        </tr>
 		
@@ -218,7 +218,7 @@
 	                                        <table class="su_Tb_Pr">
 	                                        
 			                                    <c:forEach var="a" items="${ aList }">
-	                                        		<c:if test="${ a.deptCode eq 'D2' }">
+	                                        		<c:if test="${ a.deptCode eq 'D3' }">
 			                                            <tr style="width: 100%;" class="ph_padding">
 			                                                <td width="90%;">
 			                                                    <div class="su_ph_line" onclick="chooseAtnd(${ a.memNo });">
@@ -333,9 +333,9 @@
 		                    		// 비공개 선택하면
 		                            $("#scheOpen").change(function(){
 		                            	if( $("#scheOpen").is(":checked") ){
-		                            		$("input[name=scheOpen]").val("Y");
-		                            	} else{
 		                            		$("input[name=scheOpen]").val("N");
+		                            	} else{
+		                            		$("input[name=scheOpen]").val("Y");
 		                            	}
 		                            	
 		                            });

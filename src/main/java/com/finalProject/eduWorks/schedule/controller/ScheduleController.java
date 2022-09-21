@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.finalProject.eduWorks.common.model.vo.Reply;
 import com.finalProject.eduWorks.member.model.vo.Member;
 import com.finalProject.eduWorks.schedule.model.service.ScheduleService;
+import com.finalProject.eduWorks.schedule.model.vo.Likecal;
 import com.finalProject.eduWorks.schedule.model.vo.Mycal;
 import com.finalProject.eduWorks.schedule.model.vo.Schedule;
 import com.google.gson.Gson;
@@ -35,18 +36,21 @@ public class ScheduleController {
 	// 캘린더 화면 조회
 	@RequestMapping("list.ca")
 	public ModelAndView calendar(String memNo, ModelAndView mv) {
-
-
+		
+		// 멤버 리스트 조회
+		String keyword = "";
+		ArrayList<Member> aList = sService.selectMemberList(keyword, memNo);
+		
 		// 마이 캘린더 리스트
 		ArrayList<Mycal> clist = sService.selectMycalList(memNo);
 		String str = "";
 		for(int i = 0; i < clist.size(); i++) {
 			str += clist.get(i).getMycalNo() + ",";
 		}
-		System.out.println(str);
+		
 		var calArr = str.substring(0, str.lastIndexOf(","));
 		
-		mv.addObject("calArr", calArr).setViewName("schedule/calendarView");
+		mv.addObject("calArr", calArr).addObject("aList", aList).setViewName("schedule/calendarView");
 		
 		return mv;
 	}
@@ -57,6 +61,17 @@ public class ScheduleController {
 	public String ajaxSelectMycalList(String memNo) {
 		
 		ArrayList<Mycal> list = sService.selectMycalList(memNo);
+		
+		return new Gson().toJson(list);
+	}
+	
+	// 관심 캘린더 리스트 조회
+	@ResponseBody
+	@RequestMapping(value="lclist.ca", produces="application/json; charset=UTF-8")
+	public String ajaxSelectlikecalList(String memNo) {
+		
+		// 관심 캘린더 조회
+		ArrayList<Likecal> list = sService.selectLikecalList(memNo);
 		
 		return new Gson().toJson(list);
 	}
@@ -83,6 +98,14 @@ public class ScheduleController {
 	@RequestMapping("mcdelete.ca")
 	public String ajaxDeleteMycal(String checkCnt) {
 		int result = sService.deleteMycal(checkCnt);
+		return result > 0 ? "success" : "fail";
+	}
+	
+	// 관심 캘린더 삭제
+	@ResponseBody
+	@RequestMapping("lcdelete.ca")
+	public String ajaxDeleteLikecal(int lcNo) {
+		int result = sService.deleteLikecal(lcNo);
 		return result > 0 ? "success" : "fail";
 	}
 	
@@ -119,6 +142,7 @@ public class ScheduleController {
 	            map.put("atnd", list.get(i).getScheAtndNo());
 	            map.put("cmpy", list.get(i).getScheCmpy());
 	            map.put("mycal", list.get(i).getMycalNo());
+	            map.put("writer", list.get(i).getScheWriter());
 	            
 	            mapList.add(map);
 	            map = new HashMap<String, Object>();
@@ -311,5 +335,17 @@ public class ScheduleController {
 	public String ajaxselectMycalNo(String memNo) {
 		ArrayList<Mycal> list = sService.selectMycalList(memNo);
 		return new Gson().toJson(list);
+	}
+	
+	// 관심 캘린더 추가
+	@ResponseBody
+	@RequestMapping("lcinsert.ca")
+	public String ajaxInsertLikecal(String memNo, String likeMemNo) {
+		Likecal l = new Likecal();
+		l.setMemNo(memNo);
+		l.setLikeMemNo(likeMemNo);
+		int result = sService.insertLikecal(l);
+		
+		return result > 0 ? "success" : "fail";
 	}
 }

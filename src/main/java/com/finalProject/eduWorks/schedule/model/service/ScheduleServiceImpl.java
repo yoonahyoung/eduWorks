@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.finalProject.eduWorks.common.model.vo.Reply;
 import com.finalProject.eduWorks.member.model.vo.Member;
 import com.finalProject.eduWorks.schedule.model.dao.ScheduleDao;
+import com.finalProject.eduWorks.schedule.model.vo.Likecal;
 import com.finalProject.eduWorks.schedule.model.vo.Mycal;
 import com.finalProject.eduWorks.schedule.model.vo.Schedule;
 
@@ -105,6 +106,21 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Override
 	public int deleteReply(int replyNo) {
 		return sDao.deleteReply(sqlSession, replyNo);
+	}
+
+	@Override
+	public ArrayList<Likecal> selectLikecalList(String memNo) {
+		return sDao.selectLikecalList(sqlSession, memNo);
+	}
+
+	@Override
+	public int deleteLikecal(int lcNo) {
+		return sDao.deleteLikecal(sqlSession, lcNo);
+	}
+
+	@Override
+	public int insertLikecal(Likecal l) {
+		return sDao.insertLikecal(sqlSession, l);
 	}
 
 	

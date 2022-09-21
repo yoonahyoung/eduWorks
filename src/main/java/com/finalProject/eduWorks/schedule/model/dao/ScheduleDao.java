@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.finalProject.eduWorks.common.model.vo.Reply;
 import com.finalProject.eduWorks.member.model.vo.Member;
+import com.finalProject.eduWorks.schedule.model.vo.Likecal;
 import com.finalProject.eduWorks.schedule.model.vo.Mycal;
 import com.finalProject.eduWorks.schedule.model.vo.Schedule;
 
@@ -108,4 +109,18 @@ public class ScheduleDao {
 		return sqlSession.update("scheduleMapper.deleteReply", replyNo);
 	}
 	
+	// 관심 캘린더 리스트 조회
+	public ArrayList<Likecal> selectLikecalList(SqlSessionTemplate sqlSession, String memNo){
+		return (ArrayList) sqlSession.selectList("scheduleMapper.selectLikecalList", memNo);
+	}
+	
+	// 관심 캘린더 삭제
+	public int deleteLikecal(SqlSessionTemplate sqlSession, int lcNo) {
+		return sqlSession.update("scheduleMapper.deleteLikecal", lcNo);
+	}
+	
+	// 관심 캘린더 추가
+	public int insertLikecal(SqlSessionTemplate sqlSession, Likecal l) {
+		return sqlSession.insert("scheduleMapper.insertLikecal", l);
+	}
 }

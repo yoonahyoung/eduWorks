@@ -17,6 +17,7 @@
 		<typeAlias type="com.finalProject.eduWorks.schedule.model.vo.Mycal" alias="Mycal" />
 		<typeAlias type="com.finalProject.eduWorks.schedule.model.vo.Schedule" alias="Schedule"/>
 		<typeAlias type="com.finalProject.eduWorks.cnsln.model.vo.Cnsln" alias="Cnsln"/>
+		<typeAlias type="com.finalProject.eduWorks.schedule.model.vo.Likecal" alias="Likecal" />
 		<typeAlias type="com.finalProject.eduWorks.member.model.vo.Member" alias="Member" />
 		<typeAlias type="com.finalProject.eduWorks.member.model.vo.Department" alias="Department" />
 		<typeAlias type="com.finalProject.eduWorks.member.model.vo.Job" alias="Job" />
