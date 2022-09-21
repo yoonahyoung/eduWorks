@@ -12,9 +12,6 @@
 	<!-- 은영 -->
 	<jsp:include page="../common/header.jsp" />
 
-	<!-- 공통요소 모달 -->
-	<jsp:include page="commonMailModal.jsp" />
-
 	<!-- 공통요소 사이드 메뉴바(메일만 해당) -->
 	<jsp:include page="commonMailMenu.jsp" />
 	

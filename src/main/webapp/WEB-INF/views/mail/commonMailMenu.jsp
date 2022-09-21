@@ -187,17 +187,17 @@
 
 									<div id="select-tag" style="text-align: center;">
 
-										<a class="bgcolor1 tagColor" color="bgcolor1">bgcolor1</a> 
-										<a class="bgcolor2 tagColor" color="bgcolor2">bgcolor2</a> 
-										<a class="bgcolor3 tagColor" color="bgcolor3">bgcolor3</a> 
-										<a class="bgcolor4 tagColor" color="bgcolor4">bgcolor4</a> 
-										<a class="bgcolor5 tagColor" color="bgcolor5">bgcolor5</a> <br>
-										<a class="bgcolor6 tagColor" color="bgcolor6">bgcolor6</a> 
-										<a class="bgcolor7 tagColor" color="bgcolor7">bgcolor7</a> 
-										<a class="bgcolor8 tagColor" color="bgcolor8">bgcolor8</a> 
-										<a class="bgcolor9 tagColor" color="bgcolor9">bgcolor9</a> 
-										<a class="bgcolor10 tagColor" color="bgcolor10">bgcolor10</a>
-
+										<a class="bgcolor1 tagColor" color="bgcolor1" onclick="choiceTag(1);">bgcolor1</a>
+										<a class="bgcolor2 tagColor" color="bgcolor2" onclick="choiceTag(2);">bgcolor2</a>
+										<a class="bgcolor3 tagColor" color="bgcolor3" onclick="choiceTag(3);">bgcolor3</a>
+										<a class="bgcolor4 tagColor" color="bgcolor4" onclick="choiceTag(4);">bgcolor4</a>
+										<a class="bgcolor5 tagColor" color="bgcolor5" onclick="choiceTag(5);">bgcolor5</a> <br>
+										<a class="bgcolor6 tagColor" color="bgcolor6" onclick="choiceTag(6);">bgcolor6</a>
+										<a class="bgcolor7 tagColor" color="bgcolor7" onclick="choiceTag(7);">bgcolor7</a>
+										<a class="bgcolor8 tagColor" color="bgcolor8" onclick="choiceTag(8);">bgcolor8</a>
+										<a class="bgcolor9 tagColor" color="bgcolor9" onclick="choiceTag(9);">bgcolor9</a>
+										<a class="bgcolor10 tagColor" color="bgcolor10" onclick="choiceTag(10);">bgcolor10</a>
+									
 									</div>
 								</div>
 
@@ -296,16 +296,16 @@
 
 									<div id="select-tag" style="text-align: center;">
 
-										<a class="bgcolor1 tagColor" color="bgcolor1">bgcolor1</a> 
-										<a class="bgcolor2 tagColor" color="bgcolor2">bgcolor2</a> 
-										<a class="bgcolor3 tagColor" color="bgcolor3">bgcolor3</a> 
-										<a class="bgcolor4 tagColor" color="bgcolor4">bgcolor4</a> 
-										<a class="bgcolor5 tagColor" color="bgcolor5">bgcolor5</a> <br>
-										<a class="bgcolor6 tagColor" color="bgcolor6">bgcolor6</a> 
-										<a class="bgcolor7 tagColor" color="bgcolor7">bgcolor7</a> 
-										<a class="bgcolor8 tagColor" color="bgcolor8">bgcolor8</a> 
-										<a class="bgcolor9 tagColor" color="bgcolor9">bgcolor9</a> 
-										<a class="bgcolor10 tagColor" color="bgcolor10">bgcolor10</a>
+										<a class="bgcolor1 tagColor" color="bgcolor1" onclick="choiceTag(1);">bgcolor1</a>
+										<a class="bgcolor2 tagColor" color="bgcolor2" onclick="choiceTag(2);">bgcolor2</a>
+										<a class="bgcolor3 tagColor" color="bgcolor3" onclick="choiceTag(3);">bgcolor3</a>
+										<a class="bgcolor4 tagColor" color="bgcolor4" onclick="choiceTag(4);">bgcolor4</a>
+										<a class="bgcolor5 tagColor" color="bgcolor5" onclick="choiceTag(5);">bgcolor5</a> <br>
+										<a class="bgcolor6 tagColor" color="bgcolor6" onclick="choiceTag(6);">bgcolor6</a>
+										<a class="bgcolor7 tagColor" color="bgcolor7" onclick="choiceTag(7);">bgcolor7</a>
+										<a class="bgcolor8 tagColor" color="bgcolor8" onclick="choiceTag(8);">bgcolor8</a>
+										<a class="bgcolor9 tagColor" color="bgcolor9" onclick="choiceTag(9);">bgcolor9</a>
+										<a class="bgcolor10 tagColor" color="bgcolor10" onclick="choiceTag(10);">bgcolor10</a>
 
 									</div>
 								</div>
