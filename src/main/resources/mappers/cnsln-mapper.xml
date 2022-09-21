@@ -177,6 +177,7 @@
 		  join tb_job using (job_code)
 		 where mem_name like '%' || #{keyword} || '%'
 		   and dept_code in ('DN', 'D3')
+		   and not mem_no = #{memNo}
 		 union
 		 select mem_no
 		     , mem_name
@@ -186,6 +187,7 @@
 		  join tb_job using (job_code)
 		 where job_name like '%' || #{keyword} || '%'
 		   and dept_code in ('DN', 'D3')
+		   and not mem_no = #{memNo}
 		 )
 		 order
 		    by mem_no

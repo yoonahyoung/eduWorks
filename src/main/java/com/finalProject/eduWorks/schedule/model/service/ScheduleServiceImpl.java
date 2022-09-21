@@ -27,8 +27,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 	}
 
 	@Override
-	public ArrayList<Member> selectMemberList(String keyword) {
-		return sDao.selectMemberList(sqlSession, keyword);
+	public ArrayList<Member> selectMemberList(String keyword, String memNo) {
+		return sDao.selectMemberList(sqlSession, keyword, memNo);
 	}
 
 	@Override

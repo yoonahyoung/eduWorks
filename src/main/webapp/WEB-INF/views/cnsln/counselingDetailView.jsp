@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -228,6 +230,10 @@
 		                        	<button type="button" class="btn su_btn_two su_btn_border" id="updateBtn" data-toggle="modal" data-target="#noContent">수정</button>
 		                        	<button type="button" class="btn su_btn_two su_btn_border" id="deleteBtn" data-toggle="modal" data-target="#delete">삭제</button>
 		                        </c:if>
+		                    	<c:if test="${ fn:contains(c.cnslnChargeNo, loginUser.memNo) }">
+		                        	<button type="button" class="btn su_btn_two su_btn_border" id="updateBtn" data-toggle="modal" data-target="#noContent">수정</button>
+		                        	<button type="button" class="btn su_btn_two su_btn_border" id="deleteBtn" data-toggle="modal" data-target="#delete">삭제</button>
+		                        </c:if>
 		                        <c:if test="${ loginUser.memNo != c.cnslnWriter }">
 		                        	<button type="button" class="btn su_btn_two su_btn_border" id="updateBtn" disabled>수정</button>
 		                        	<button type="button" class="btn su_btn_two su_btn_border" id="deleteBtn" data-toggle="modal" data-target="#delete" disabled>삭제</button>
@@ -384,7 +390,10 @@
 	                        	var pCount = 0;	// 홍보
 	                        	$.ajax({
 	                        		url: "search.cn",
-	                        		data: {keyword: key},
+	                        		data: {
+	                        			keyword: key,
+	                        			memNo : ${loginUser.memNo}	
+	                        		},
 	                        		success: function(list){
 	                        			console.log(list);
 	                        			

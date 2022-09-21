@@ -61,10 +61,10 @@ public class CnslnController {
 		
 	// 상담 일정 등록 페이지 
 	@RequestMapping("enrollForm.cn")
-	public ModelAndView enrollForm(String day, ModelAndView mv) {
+	public ModelAndView enrollForm(String day, String memNo, ModelAndView mv) {
 		
 		String keyword = "";
-		ArrayList<Member> mList = cService.selectMemberList(keyword) ;
+		ArrayList<Member> mList = cService.selectMemberList(keyword, memNo) ;
 		String key = "";
 		ArrayList<Student> sList = cService.selectStudentList(key);
 		
@@ -113,16 +113,16 @@ public class CnslnController {
 	// 담당자 검색
 	@ResponseBody
 	@RequestMapping(value="search.cn", produces="application/json; charset=UTF-8")
-	public String ajaxSearchCharge(String keyword) {
-		ArrayList<Member> list = cService.selectMemberList(keyword);
+	public String ajaxSearchCharge(String keyword, String memNo) {
+		ArrayList<Member> list = cService.selectMemberList(keyword, memNo);
 		return new Gson().toJson(list);
 	}
 	
 	// 상담 일정 상세 조회
 	@RequestMapping("detail.cn")
-	public ModelAndView selectCnsln(int cNo, ModelAndView mv) {
+	public ModelAndView selectCnsln(int cNo, String memNo, ModelAndView mv) {
 		String keyword = "";
-		ArrayList<Member> mList = cService.selectMemberList(keyword) ;
+		ArrayList<Member> mList = cService.selectMemberList(keyword, memNo) ;
 		String key = "";
 		ArrayList<Student> sList = cService.selectStudentList(key);
 		
