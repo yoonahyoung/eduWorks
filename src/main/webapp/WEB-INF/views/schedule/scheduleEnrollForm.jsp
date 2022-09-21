@@ -32,8 +32,8 @@
 	                            <td style="width: 114px;"><span>&nbsp;일정명</span></td>
 	                            <td style="width: 80%;">
 	                            &ensp; &ensp;<input type="text" id="scheTitle" name="scheTitle" placeholder="일정명 입력" style="width:300px;" required>
-	                            &ensp;&ensp;<input type="checkbox" id="scheOpen"><span> &nbsp;비공개</span>
-	                            <input type="hidden" name="scheOpen" value='N'>
+	                            &ensp;&ensp;<input type="checkbox" id="open"><span> &nbsp;비공개</span>
+	                            <input type="hidden" name="scheOpen" value='Y'>
 	                            </td>
 	                        </tr>
 	
@@ -600,11 +600,11 @@
 	                            });
 	                            
 	                            // 비공개 선택하면
-	                            $("#scheOpen").change(function(){
-	                            	if( $("#scheOpen").is(":checked") ){
-	                            		$("input[name=scheOpen]").val("Y");
-	                            	} else{
+	                            $("#open").change(function(){
+	                            	if( $("#open").is(":checked") ){
 	                            		$("input[name=scheOpen]").val("N");
+	                            	} else{
+	                            		$("input[name=scheOpen]").val("Y");
 	                            	}
 	                            	
 	                            });

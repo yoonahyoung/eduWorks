@@ -6,64 +6,1291 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link href="${pageContext.request.contextPath}/resources/css/sumin.css" rel="stylesheet" type="text/css">
+<link href="${pageContext.request.contextPath}/resources/css/board.css" rel="stylesheet" type="text/css">
+<link href="${pageContext.request.contextPath}/resources/css/schedule.css" rel="stylesheet" type="text/css">
+<link href="${pageContext.request.contextPath}/resources/css/mail.css" rel="stylesheet" type="text/css">
+
+<style>
+	td, th{
+            border: 1px solid #858796;
+            
+            
+            padding: 0 0 5px 0;
+        }
+        .tb6 td,.tb6 th{
+            border: 0;
+            padding:0px;
+        }
+        .tb6 th{width: 40%;}
+        .positionab{
+            position:absolute ;
+            top: 0;
+            padding: 30px;
+        }
+        .detailInfo{
+            background-color: whitesmoke;
+            width: 500px;
+            height: 700px;
+            left: 25%;
+            z-index: 10;
+           
+            box-shadow: 10px 10px 20px grey;
+        }
+
+       
+        .close {
+	        position:relative;
+	        display:inline-block;
+	        display:inline;
+	        width:50px;
+	        height:50px;
+	        text-align:center;
+        
+        
+        }
+        .close2:after {
+	        content: "\00d7"; 
+	        font-size:25pt;
+	        line-height:45px;
+	        }
+        
+        .fc-sun {color:#e31b23}
+		.fc-sat {color:#007dc3}
+		.fc-view-container{
+			width:210px;
+			height:300px;
+		}
+		.fc-left, .fc-right{
+			display:none;
+		}
+	
+		.su_calendar_size {
+		    margin: auto;
+		    width: 90%;
+		}
+		.fc {
+		    direction: ltr;
+		    text-align: center;
+		}
+		#calendar *{
+			text-align:center;
+			padding:0px;
+			font-size:0.7rem;
+			text-align: center;
+		    height: auto;
+		}
+	
+		#calendar h2{
+			font-size:1.3rem;
+			
+		}
+	
+		element.style {
+		}
+		body .fc {
+		    font-size: 1em;
+		}
+		.fc {
+		    direction: ltr;
+		    text-align: left;
+		}
+		.fc {
+		    direction: ltr;
+		    text-align: center;
+		}
+		.su_calendar_size {
+		    margin: auto;
+		    width: 90%;
+		}
+		.su_calendar_size {
+		    /* padding: 30px; */
+		    /* margin: auto; */
+		    /* width: 90%; */
+		}
+		.su_calendar_size{
+				padding:0;
+			}
+			#profileE *{
+				color:black;
+			}
+		.person{
+			font-size:18px;
+			font-weight:400;
+		    margin-top: 8px;
+		}
+		.mail-title, .mail-title *{
+			font-size:18px;
+			font-weight:400;
+		}
+		.mail-sendtime {
+		    text-align: center;
+			}
+		#ajaxMail, #ajaxMail *{
+			font-size:15px;
+			font-weight:400;
+		}
+		
+		table{
+			border:none;
+		}
+		
+		.divBox{
+	    	background-color: whitesmoke;
+		}
+		
+		.table th, .table td {
+		    padding: 0.75rem;
+		    vertical-align: top;
+		    border-top: 1px solid #e3e6f0;
+		    border: none;
+		}
+</style>
 </head>
 <body>
 
 	<jsp:include page="common/header.jsp" />
+	<div style="background-color:whitesmoke; height:1200px;">
+	<div style="width:100%; height:auto; ">
+		<div style="float: left; width:15%; height:100%; background-color:whitesmoke;" class="divBox">
+		
+			<div id="profileE" style="width:100%; text-align:center; margin:3%; border-radius:5px; background-color: white;">
+				<div style="margin-top:7%; height:80px">
+				<c:choose>
+              		<c:when test="${ empty m.memProfile }">
+              			<img id="Profile" name="Profile" src="resources/profile_images/defaultProfile.png" width="35%" height="100%" onclick="$('#profileImgFile').click();">
+              		</c:when>
+              		<c:otherwise>
+              			<img id="Profile" name="Profile" src="${ m.memProfile }" width="30%" height="100% " onclick="$('#profileImgFile').click();">
+              		</c:otherwise>
+              	</c:choose>
+              	</div> <br>
+              	<h4>${ loginUser.memName } ${loginUser.jobName }님</h4> <br>
+				<h5 class="date1"></h5> 
+                <h5 class="clock"></h5> <br>
+               	<div style="padding-bottom:2%;">
+                <span>
+                    <button type="button" class="btn su_btn_border" onclick=submitIn();>출근하기</button>
+                </span>
+                &nbsp;&nbsp;&nbsp;
+                <span>
+                    <button type="button" class="btn su_btn_border"  onclick=submitOut();>퇴근하기</button>
+                </span>
+                </div>
+			</div>
+			
+			<script type="text/javascript">
+                            	function submitIn(){
+                            		let c = new Date();
+  	                              	c.setHours(c.getHours() + 9)
+  	                              	let c1 = c.toISOString();
+	  	                            let date2 = c1.slice(0,10);
+		                            let time2 = c1.slice(11,16);
+		                            
+		                            $.ajax({
+		                            	url: 'submitIn.me',
+                           				type: 'POST',
+                           				data: {
+                           					inDate : date2,
+                           					inTime : time2
+                           				},
+                           				success: function(result) {
+                           					console.log(result)
+                           					if(result=='success'){
+                           						alert('출근처리완료')
+                           						location.reload();
+                           					}else if(result='errors'){
+                           						alert('이미출근하였습니다.')
+                           					}else{
+                           						alert('출근처리실패')
+                           					}
+                           				},error:function(){
+                           					console.log('error')
+                           				}
+		                            })
+                            	}
+                            	
+                            	function submitOut(){
+                            		let c = new Date();
+  	                              	c.setHours(c.getHours() + 9)
+  	                              	let c1 = c.toISOString();
+	  	                            let date2 = c1.slice(0,10);
+		                            let time2 = c1.slice(11,16);
+		                            
+		                            $.ajax({
+		                            	url: 'submitOut.me',
+                           				type: 'POST',
+                           				data: {
+                           					outDate : date2,
+                           					outTime : time2
+                           				},
+                           				success: function(result) {
+                           					console.log(result)
+                           					if(result=='success'){
+                           						alert('퇴근처리완료')
+                           						location.reload();
+                           					}else if(result=='none'){
+                           						alert('아직출근전입니다.')
+                           					}else if(result=='zzz'){
+                           						alert('이미퇴근하였습니다.')
+                           					}else{
+                           						alert('퇴근처리실패')
+                           					}
+                           				},error:function(){
+                           					console.log('error')
+                           				}
+		                            })
+                            	}
+                            	
+                            	$(function(){
+                            		const clock = $(".clock");
+                            		const date = $('.date1');
+                            		
+    	                            function dateClock(){
+    	                              let d2 = new Date();
+    	                              d2.setHours(d2.getHours() + 9)
+    	                              let d3 = d2.toISOString();
+    	                              //console.log(d3) //2022-09-18T20:48:07.964Z
+    	                              let date1 = d3.slice(0,10);
+    	                              let time = d3.slice(11,19);
+    	                              let week = new Array('일', '월', '화', '수', '목', '금', '토');
+    	                              let day = week[d2.getDay()]
+    	                              clock.text(time)
+    	                              date.text(date1+'('+day+")")
+    	                            }
+    	                            
+    	                            dateClock();
+    	                            setInterval(dateClock, 1000);
+                            	})
+                            </script>
+			
+			<div style="text-align:center; margin:3%; border-radius:5px; height:280px; background-color: white;">
+				<br>
+					<div id='calendar' class="su_calendar_size" ></div>
+			</div>
+			<script>
 	
-	<div id="go-dashboard-10" class="go-dashboard go_dashboard_3_3">
-		<div>
-			<div class="gadget_design_wrap"><div class="profile">
-				<span class="photo"><img src="/resources/images/photo_profile_small.jpg" title="김상후 대표이사" alt=""></span>
-					<span class="info">
-					<span class="name" title="김상후">김상후</span>
-					<span class="position">대표이사</span>
-					<span class="part">다우그룹</span>
-				</span>
-			</div>
-			<ul class="type_simple_list today_list">
-				<li class="summary-mail">
-					<a href="/app/mail?work=quick&amp;folder=today" data-bypass="true">
-						<span class="type">
-							<span class="ic_dashboard2 ic_type_mail" title="mail"></span>
-						</span>
-						<span class="txt">오늘 온 메일</span>
-						<span class="badge badge_zero">0</span>
-					</a>
-				</li>
-				<li class="summary-calendar">
-					<a href="/app/calendar/daily/2022-09-21" data-bypass="true">
-						<span class="type">
-							<span class="ic_dashboard2 ic_type_cal" title="calendar"></span>
-						</span>
-						<span class="txt">오늘의 일정</span>
-						<span class="badge badge_zero">0</span>
-					</a>
-				</li>
-			</ul>
-			</div>
-			<div></div>
+				// function getEvent로 이벤트 연결하기 
+				
+			    document.addEventListener('DOMContentLoaded', function() {
+			    var calendarEl = document.getElementById('calendar');
+			
+			    var calendar = new FullCalendar.Calendar(calendarEl, {
+			    plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'list' ],
+			 	// 날짜 칸 클릭시 해당 날짜 데이터를 갖고 일정 입력 페이지로 이동 
+				dateClick:function(arg){
+				    //console.log(arg.dateStr); // 날짜 출력
+				    location.href="enrollForm.ca?day=" + arg.dateStr + "&memNo=" + ${ loginUser.memNo };
+				},
+				
+				// 이벤트 클릭시 일정 상세 조회 페이지로 이동
+				eventClick:function(e){
+					location.href = "detail.ca?sNo=" + e.event.id + "&memNo=" + ${ loginUser.memNo };
+					//console.log(e.event.id);
+				},
+			    
+			    header: {
+			        left: 'prev,next today',
+			        center: 'title',
+			        right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+			    },
+			    locale: "ko",
+			    // defaultDate: '2020-02-12',
+			    navLinks: true, // can click day/week names to navigate views
+			    businessHours: true, // display business hours
+			    editable: true,
+			    timeFormat:'H(:mm)',
+			    events: function(info, successCallback, failureCallback){
+			    	console.log($("#calArr").text());
+			    	var calStr = $("#calArr").text();
+			    	$.ajax({
+			    		type: 'post',
+			    		cache: false,
+			    		url: "sclist.ca",
+			    		dataType:'json',
+			    		data:{
+		              		memNo: ${ loginUser.memNo },
+		              		checkCnt: $("#calArr").text(),
+		              		atnd: $("#atnd").text(),
+		              		cmpy: $("#cmpy").text()
+		              	},
+		              	//contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+		              	success: function(param){
+		              		var event = [];
+		              		
+		              		//console.log(calStr);
+		              		$.each(param, function(index, data){
+		              			// map에서 값 불러와서 조건넣어서 이벤트 푸쉬하기...
+		              			if(calStr.includes(data.mycal)){
+		              				event.push({
+		    	              			id: data.id,
+		    	              			title: data.title,
+		    	              			start: data.start,
+		    	              			end: data.end,
+		    	              			color: hexToRgb(data.color)
+		    	              			//backgroundColor: 'rgba(94, 126, 155, 0.6)'
+		    	              		});
+		              			 }
+		              			else if( ($("#atnd").text() == 'Y')){
+		              				if(data.atnd != ""){
+		              					event.push({
+		        	              			id: data.id,
+		        	              			title: data.title,
+		        	              			start: data.start,
+		        	              			end: data.end,
+		        	              			color: hexToRgb(data.color)
+		        	              			//backgroundColor: 'rgba(94, 126, 155, 0.6)'
+		        	              		});
+		              				}
+		              			} else if($("#cmpy").text() == 'Y'){
+		              				if(data.cmpy == 'Y'){
+		              					event.push({
+		        	              			id: data.id,
+		        	              			title: data.title,
+		        	              			start: data.start,
+		        	              			end: data.end,
+		        	              			color: hexToRgb(data.color)
+		        	              			//backgroundColor: 'rgba(94, 126, 155, 0.6)'
+		        	              		});
+		              				}
+		              			}
+		              			 
+			              		
+		              	    });
+		              		
+		              		console.log(event);
+		              		successCallback(event);
+		              		}
+		              	
+		              	
+			    		});
+			 	 	  }
+			   	 });
+							    $(document).on("change", "input[type=checkbox]", function(){
+							    	calendar.refetchEvents();
+							    })
+							
+							    calendar.render();
+							    
+							    });
+					</script>
+					
+					 <script>
+	                	$(function(){
+	                		
+	                		calList();
+	                		selectMycalList();
+	                		
+	                	})
+	                	
+	                	// 내 캘린더 리스트 출력 이벤트
+	                	function selectMycalList(){
+	                		$.ajax({
+	                			url: "mclist.ca",
+	                			data: { memNo: ${ loginUser.memNo } },
+	                			success: function(list){
+	                				
+	                				let value = "";
+	                				let str = "";
+	                                
+	                                for(let i = 0; i < list.length; i++){
+		                                value += '<tr style="width: 100%;">'
+		                                    		+ '<td width="20%;"><span class="myNo" style="color: white !important;">' + list[i].mycalNo + '</span></td>'
+		                                    		+ '<td><input type="checkbox" name="mycalList" checked></td>';
+		                                    	if(i == 0){
+		                                    		value += '<td width="90%;" id="mcName' + list[i].mycalNo + '"> &nbsp;' + list[i].mycalName + '</td>';
+		                                    	} else{
+		                                    		value += '<td width="90%;" id="mcName' + list[i].mycalNo + '" onclick="changeMycal(' + list[i].mycalNo + ')"> &nbsp;' + list[i].mycalName + '</td>';
+		                                    	}
+			                                  
+				                                    value += '<td class="su_myCalBasic">'
+				                                        + '<a type="button">'
+				                                            + '<div class="calColor" id="colorBtn' + list[i].mycalNo + '" style="border: 1px solid ' + list[i].mycalColor + '; background: ' + list[i].mycalColor + ';" onclick="colorMycal(' + list[i].mycalNo + ');"></div>'
+				                                        	+ '<input type="hidden" id="calColor' + list[i].mycalNo + '" value="' + list[i].mycalColor + '">'	
+				                                        + '</a>'
+				                                    + '</td>';
+		
+				                                    if(i == 0){
+				                                    	value += '<td class="su_myCalX dis_no"></td>';
+				                                    } else {
+		                                    			value += '<td class="su_myCalX dis_no"><a type="button" onclick="deleteMycal(' + list[i].mycalNo + ');">x</a></td>';
+				                                    }
+		                                		+ '</tr>';
+		                                		
+		                                str += list[i].mycalNo + ",";
+	                                }
+		                                
+		                           //value += '</table>';
+		                           
+		                           $("#tb_myCal").html(value);
+		                           //console.log(str);
+		                           str = str.substring(0, str.lastIndexOf(","));
+		                           $("#calArr").text(str);
+		                           //console.log($("#calArr").text());
+	                			}, error: function(){
+	                				console.log("ajax 내 캘린더 조회 실패");
+	                			}
+	                		});
+	                		
+	                	}
+	                	
+	                	var checkCnt = "";
+	            		
+	            		// 내 캘린더 체크 리스트
+	            		function calList(){
+	            	        checkCnt = "";
+	            	        $("input[name='mycalList']:checked").each(function(){
+	            	        	
+	            	        	//console.log($(this).parent().parent().children().eq(0).text());
+	            	            checkCnt += ($(this).parent().parent().children().eq(0).text()) + ","; // 체크된 것만 게시글번호 뽑기 "2,3,4,"
+	            	        });
+	            	        
+	            	        checkCnt = checkCnt.substring(0,checkCnt.lastIndexOf(",")); // 맨 뒤 콤마 삭제 "2,3,4"
+	            	        //console.log(checkCnt);
+	            	        $("#calArr").text(checkCnt);
+	            		}
+	            		
+	            		$(document).on("change", "input[name='mycalList']", function(){
+	            			calList();
+	            			console.log($("#calArr").text());
+	            		});
+	            		
+	                	// 선택된 캘린더 번호 출력 이벤트
+	                	function selectMycalNo(){
+	                		var result = "";
+	                		$.ajax({
+	                			url: "mcnolist.ca",
+	                			async: false,
+	                			data: { memNo: ${ loginUser.memNo } },
+	                			success: function(list){
+	                				console.log(list[0].mycalNo);
+	                				for(let i = 0; i < list.length; i++){
+	                					result += list[i].mycalNo + ',';
+	                				}
+	                				result = result.substring(0, result.lastIndexOf(","));
+	                				$("#calArr").text(result);
+	                				
+	                				return result;
+	                			}, error: function(){
+	                				console.log("ajax 내 캘린더 번호 조회 실패");
+	                			}
+	                		});
+	                		return result;
+	                	}
+	                		
+	               		// 내 캘린더 추가
+	               		$("#insertMyCal").click(function(){
+	               			$.ajax({
+	               				url: "mcinsert.ca",
+	               				data: { 
+	               					memNo: ${ loginUser.memNo},
+	               					mycalName: $("#myCalName").val()
+	               				},
+	               				success: function(result){
+	               					if(result == "success"){
+	               						alert("내 캘린더가 추가되었습니다.");
+	               						$("#myCalName").val("");
+	               						$("#addMyCal").modal('hide');
+	               						selectMycalList();
+	               					}
+	               				}, error: function(){
+	               					console.log("ajax 내 캘린더 추가 실패");
+	               				}
+	               			});
+	               		});
+	               		
+	               		// 내 캘린더 이름 변경
+	               		function changeMycal(mcNo){
+	               		// mcNo : 내 캘린더 번호
+	               		var id = "mcName" + mcNo;
+	               			var name = $("#" + id).text();
+	               			//console.log(name);
+	               			$("#chCalName").val(name);
+	               			$("#updateMyCal").modal("show");
+	               			$("#updateMyCalBtn").click(function(){
+	               				//console.log("j");
+	               				$.ajax({
+	               					url: "mcupdate.ca",
+	               					data: {
+	               						mcNo: mcNo,
+	               						mcName: $('#chCalName').val()
+	               						},
+	               					success: function(result){
+	               						if(result == "success"){
+	               							alert("수정되었습니다.");
+	               							$("#chCalName").val("");
+	               							$("#updateMyCal").modal("hide");
+	               							selectMycalList();
+	               						}
+	               					}, error: function(){
+	               						console.log("ajax 내 캘린더 수정 실패");
+	               					}
+	               				});
+	               			});
+	               		}
+	               		
+	               		// 내 캘린더 삭제
+	               		function deleteMycal(mcNo){
+	               			// mcNo : 내 캘린더 번호
+	               			$("#delete").modal("show");
+	               			$("#realDelete").click(function(){
+	               				console.log("j");
+	               				$.ajax({
+	               					url: "mcdelete.ca",
+	               					data: {checkCnt: mcNo},
+	               					success: function(result){
+	               						if(result == "success"){
+	               							alert("삭제되었습니다.");
+	               							$("#delete").modal("hide");
+	               							selectMycalList();
+	               						}
+	               					}, error: function(){
+	               						console.log("ajax 내 캘린더 삭제 실패");
+	               					}
+	               				});
+	               			});
+	               		}
+	               		
+	               		// 캘린더 색상 변경
+	               		function colorMycal(mcNo){
+	               			let value = "";
+	               			let id = "colorBtn" + mcNo;
+	               			let c = "calColor" + mcNo;
+	               			let color = $("#" + c).val();
+	               			
+	               			value += '<input type="color" id="colorArea" value="' + color + '">'
+	    	                       + '<button type="button" class="btn btn-sm su_btn_border" id="chColorBtn" onclick="changeColor(' + mcNo + ');">변경</button>';
+	    	                
+	    	                $("#colorPal").html(value);
+	    	                $("#colorPal").show();
+	    	                $("#" + id).attr("onclick", "cancleColor(" + mcNo + ");");
+	               		}
+	               		
+	               		function cancleColor(mcNo){
+	               			$("#colorPal").hide();
+	               			let id = "colorBtn" + mcNo;
+	               		 	$("#" + id).attr("onclick", "colorMycal(" + mcNo + ");");
+	               		}
+	               		
+	               		// 색상 기본값 설정하기
+	               		function changeColor(mcNo){
+	               			let c = $("#colorArea").val();
+	               			let color = c;
+	               			$.ajax({
+	               				url: "mccolor.ca",
+	               				data: {
+	               					mycalNo: mcNo,
+	               					mycalColor: c
+	               				},
+	               				success: function(result){
+	               					if(result == "success"){
+	               						selectMycalList();
+	               						location.reload();	// 이벤트 색상 변경을 위해
+	               					}
+	               				}, error: function(){
+	               					console.log("ajax 캘린더 색상 변경 실패");
+	               				}
+	               			});
+	               		}
+	               		
+	               		// color HEX to rgb
+                        function hexToRgb ( hexType ){ 
+                            /* 맨 앞의 "#" 기호를 삭제하기. */ 
+                            var hex = hexType.trim().replace( "#", "" ); 
+                            
+                            /* rgb로 각각 분리해서 배열에 담기. */ 
+                            var rgb = ( 3 === hex.length ) ? 
+                                hex.match( /[a-f\d]/gi ) : hex.match( /[a-f\d]{2}/gi );     
+                            
+                            rgb.forEach(function (str, x, arr){     
+                                /* rgb 각각의 헥사값이 한자리일 경우, 두자리로 변경하기. */ 
+                                if ( str.length == 1 ) str = str + str; 
+                                
+                                /* 10진수로 변환하기. */ 
+                                arr[ x ] = parseInt( str, 16 ); 
+                            }); 
+                            
+                            return "rgba(" + rgb.join(", ") + ", 0.5)"; 
+                        };
+                        
+	                </script>
+	                
+	                <script>
+	                    $(document).ready(function(){
+	                    	
+	                    	// 일정 페이지로 이동 (현재 날짜 데이터를 갖고)
+	                    	$("#enrollBtn").click(function(){
+	                    		var now = new Date();
+	                    		var month = now.getMonth() + 1;
+	                    		var date = now.getDate();
+	                    		var d = now.getFullYear();
+	                    		d += "-";
+	                    		
+	                    		if(month < 10){
+	                    			d += "0" + month;
+	                    		} else{
+	                    			d += month;
+	                    		}
+	                    		
+	                    		d += "-";
+	                    		
+	                    		if(date < 10){
+	                    			d += "0" + date;
+	                    		} else{
+	                    			d += date;
+	                    		}
+	                    		
+	                    		
+	                    		//console.log(d);
+	                    		location.href="enrollForm.ca?day=" + d + "&memNo=" + ${ loginUser.memNo };
+	                    	});
+	                    	
+	                    	
+	                        // 내/관심 캘린더 수정, 취소버튼 클릭시 보여지는 부분
+	                        $("#pen1").click(function(){
+	                            $("#nopen1").show();
+	                            $("#pen1").hide();
+	                            $(".su_myCalBasic").hide();
+	                            $(".su_myCalX").show();
+	                        });
+	
+	                        $("#nopen1").click(function(){
+	                            $("#pen1").show();
+	                            $("#nopen1").hide();
+	                            $(".su_myCalBasic").show();
+	                            $(".su_myCalX").hide();
+	                        });
+	
+	                        $("#pen2").click(function(){
+	                            $("#nopen2").show();
+	                            $("#pen2").hide();
+	                            $(".su_attCalBasic").hide();
+	                            $(".su_attCalX").show();
+	                        });
+	
+	                        $("#nopen2").click(function(){
+	                            $("#pen2").show();
+	                            $("#nopen2").hide();
+	                            $(".su_attCalBasic").show();
+	                            $(".su_attCalX").hide();
+	                        });
+	
+	                        $("#addAttCal").click(function(){
+	                            $("#attCalList").show();
+	                        })
+	
+	                        $("#xBtn").click(function(){
+	                            $("#attCalList").hide();
+	                        });
+	
+	                     	// 전사일정, 참석자 일정 체크박스 이벤트
+		            		$("#cmpyBox").change(function(){
+		            			
+			            		if( $("#cmpyBox").is(":checked") ){
+			            			$("#cmpy").text('Y');
+			            		} else{
+			            			$("#cmpy").text('N');
+			            		}
+			            		
+		            		});
+	                     	
+		            		$("#atndBox").change(function(){
+			            		if( $("#atndBox").is(":checked") ){
+			            			$("#atnd").text('Y');
+			            		} else{
+			            			$("#atnd").text('N');
+			            		}
+		            			
+		            		});
+		            		
+		            		
+	
+	                        
+	                    });
+	                </script>
+			
 			<div></div>
 			<div></div>
 			<div></div>
 		</div>
-		<div>
-			<div>
-				<div></div>
-				<div></div>
-				<div></div>
-				<div></div>
-				<div></div>
+	
+		<div style="float: left; width:52%; height:100%;"  class="divBox">
+			<div style="text-align:center; margin:1%; border-radius:5px; background-color: white;">
+				<div style="margin:0px 10px 0px 10px;">
+					<div class="d-sm-flex align-items-center mb-4" id="boardHeader">
+		                <div style="font-size:23px; ">전사 공지</div>
+		            </div>
+					<br>
+		            <div class="main_width">
+		                <table class="board-content table" align="center" id="mainNoticeList" style="border:2px solid slategray;"> 
+		                    <thead>
+		                        <tr class="table_thead_border">
+		                            <th width="5%">번호</th>
+		                            <th width="30%">제목</th>
+		                            <th width="7%">작성자</th>
+		                            <th width="7%">작성일</th>
+		                            <th width="5%">조회수</th>
+		                        </tr>
+		                    </thead>
+		                    <tbody class="board-tbody">
+		                        <c:choose>
+		                        	<c:when test="${ empty list }">
+		                        		<tr>
+		                        			<td colspan="6">등록된 글이 없습니다.</td>
+		                        		</tr>
+		                        	</c:when>
+		                        	
+		                        </c:choose>
+		                        	<c:if test="${ not empty list }">
+		                        		
+				                    </c:if>
+		                        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!리스트 화면 검색기능, 여러개 클릭기능 구현(하다말았음) -->
+		                    </tbody>
+		                </table>
+		        	</div>
+	        	</div>
+	        	<hr style="margin:0;">
+	        	
+	        	 <div id="n-pagingBar" style="margin:10px;">
+	                <nav aria-label="Page navigation example">
+	                    <ul id="ajaxPaging" class="pagination justify-content-center"> 
+	                    	
+	                    </ul>
+	                </nav>
+	            </div>
 			</div>
-			<div>
-				<div></div>
-				<div></div>
-				<div></div>
-				<div></div>
-			</div>
-		</div>
-	</div>
+			
+	
+			
+			<script>
+				$(function(){
+					
+					mainNoticeList(1);
+					
+					setInterval(mainNoticeList,3600000); // 1000 => 1초 마다 새로고침
+					
+					// => 이 방법으로는 동적으로 만들어진 요소에 이벤트 부여 불가
+					/*
+					$("#boardList>tbody>tr").click(function(){
+						location.href = "detail.bo?no=" + $(this).children().eq(0).text();
+					})
+					*/
+					
+					//$(상위요소).on("이벤트명","이벤트걸고자하는요소", function(){})
+					// 동적으로 만들어진 요소에 이벤트 부여 방법!!!!
+					$(document).on("click","#mainNoticeList>tbody>tr", function(){
+						location.href = "detail.no?no=" + $(this).children().eq(0).text();
+					})
+					
+				})
+				
+				function mainNoticeList(page){
+					$.ajax({
+						url:"mainList.ma",
+						data:{cpage:page}, 
+						success:function(map){
+							
+							console.log(map); // { pi:{currentPage:x, listCount:x, ..}, list:[{}, {}] };
+							
+							//map.pi => {currentPage:x, listCount:x, ..}
+							//map.list => [{}, {}]
+							
+							let value = "";
+							
+							for(let i in map.list){
+								value += "<tr>"
+								        +	"<td>" + map.list[i].boardNo + "</td>"
+								        +	"<td>" + map.list[i].boardTitle + "</td>"
+								        +	"<td>" + map.list[i].boWriter + "</td>"
+								        +	"<td>" + map.list[i].boardEnDate + "</td>"
+								        +	"<td>" + map.list[i].boardCount + "</td>"
+								       + "</tr>";
+							}
 
+							$("#mainNoticeList tbody").html(value);
+							
+							let paging = "";
+							
+                    		
+                    		if(map.pi.currentPage == 1){
+                    			paging = "<li class='page-item'>"
+                    				   	+ "<a class='page-link disabled' style='color:slategray' aria-label='Previous'>"
+                    				   	 + "<span aria-hidden='true'> &laquo; </span>"
+                    				   	+ "</a>"
+                    				   + "</li>"
+                    				   	 
+                    		}else{
+                    			paging = "<li class='page-item'>"
+                				   	+ "<a class='page-link disabled' style='color:slategray' onclick='mainNoticeList(" + (map.pi.currentPage-1) + ");' aria-label='Previous'>"
+                				   	 + "<span aria-hidden='true'> &laquo; </span>"
+                				   	+ "</a>"
+                				   + "</li>"
+                    		}
+							
+                    		for(let p=map.pi.startPage; p<=map.pi.endPage; p++){
+                    			paging += "<li class='page-item'><a class='page-link' style='color:slategray' onclick='mainNoticeList(" + p + ");'>" + p + "</a></li>"
+                    		}
+		            		
+                    		if(map.pi.currentPage == map.pi.maxPage){
+                    			paging += "<li class='page-item'>"
+                    				   	+ "<a class='page-link disabled' style='color:slategray' aria-label='Next'>"
+                    				   	 + "<span aria-hidden='true'> &raquo; </span>"
+                    				   	+ "</a>"
+                    				   + "</li>"
+                    				   	 
+                    		}else{
+                    			paging += "<li class='page-item'>"
+                				   	+ "<a class='page-link disabled' style='color:slategray' onclick='mainNoticeList(" + (map.pi.currentPage+1) + ");' aria-label='Next'>"
+                				   	 + "<span aria-hidden='true'> &raquo; </span>"
+                				   	+ "</a>"
+                				   + "</li>"
+                    		}
+		            	
+                    		$("#ajaxPaging").html(paging);
+							
+							
+							
+						},error:function(){
+							console.log("조회수 top5 게시글 조회용 ajax 통신 실패");
+						}
+					})
+				}
+				
+			</script>
+			
+			<div>
+				<div class="second-title" style="text-align:left; margin:1%; border-radius:5px; padding:1%; background-color: white;">
+					<div style="font-size:20px; margin:1%;">
+					받은 메일함 <span id="mail-count" class="mail-count"></span>
+					</div>
+				
+				<div class="mail-list">
+
+					<table class="mail">
+						<tbody id="mainMailList">
+							
+						</tbody>
+					</table>
+		
+				<hr style="margin:2;">
+				
+				<div id="n-pagingBar" style="margin:10px;">
+	                <nav aria-label="Page navigation example">
+	                    <ul id="ajaxMail" class="pagination justify-content-center"> 
+	                    	
+	                    </ul>
+	                </nav>
+	            </div>
+				</div>
+			</div>
+				
+			</div>
+			
+			<script>
+				$(function(){
+					
+					mainMailList(1);
+					
+					setInterval(mainMailList,3600000); // 1000 => 1초 마다 새로고침
+					
+					// => 이 방법으로는 동적으로 만들어진 요소에 이벤트 부여 불가
+					/*
+					$("#boardList>tbody>tr").click(function(){
+						location.href = "detail.bo?no=" + $(this).children().eq(0).text();
+					})
+					*/
+					
+					//$(상위요소).on("이벤트명","이벤트걸고자하는요소", function(){})
+					// 동적으로 만들어진 요소에 이벤트 부여 방법!!!!
+					$(document).on("click","#mainMailList>tbody>tr", function(){
+						location.href = "mailDetail.ma?no=" + $(this).children().eq(0).text();
+					})
+					
+				})
+				
+				function mainMailList(page){
+					$.ajax({
+						url:"mainMailList.ma",
+						data:{cpage:page}, 
+						success:function(map){
+							
+							console.log(map.list); // { pi:{currentPage:x, listCount:x, ..}, list:[{}, {}] };
+							
+							//map.pi => {currentPage:x, listCount:x, ..}
+							//map.list => [{}, {}]
+							
+							let value = "";
+							
+							
+							
+								for(let i in map.list){
+									value += "<tr>"
+									        +	"<td>";
+									if(map.list[i].mailStatus.mailRead == 'N'){
+										value += "<i class='icon fas fa-envelope'></i>"
+									}else{
+										value += "<i class='icon far fa-envelope-open'></i>"
+												
+									}
+										value +=  "</td>";
+									if(map.list[i].mailTitle == null){
+										value += "<tr>"
+	                    			 	    + "<td colspan='6'>메일함이 비어있습니다.</td>" + "</tr>"
+	                    			
+									}
+									if(map.list[i].sendName.isEmpty){
+										value += "<td class='mail-person' width='15%''><div class='person'>" + map.list[i].sendMail + "</div></td>"
+									}else{
+										value += "<td class='mail-person' width='15%''><div class='person'>" + map.list[i].sendName + "</div></td>"
+									}
+									
+									value += "<td class='mail-title'>";
+									
+									if(map.list[i].mailType == 1){
+										value += "<span style='color:red;''>&nbsp;[중요!]</span>";
+									}
+									
+									value += "&nbsp;" + map.list[i].mailTitle + "<input type='hidden' name='mailNo' value=" + map.list[i].mailNo + "></td> <td class='mail-sendtime'>" + map.list[i].sendDate + "</td></tr>";
+								
+							}
+
+							$("#mainMailList").html(value);
+							let count = "전체메일 " + map.count + " / 안읽은 메일 " + map.unread;
+							$("#mail-count").html(count);
+							
+							let paging = "";
+							
+                    		
+                    		if(map.pi.currentPage == 1){
+                    			paging = "<li class='page-item'>"
+                    				   	+ "<a class='page-link disabled' style='color:slategray' aria-label='Previous'>"
+                    				   	 + "<span aria-hidden='true'> &laquo; </span>"
+                    				   	+ "</a>"
+                    				   + "</li>"
+                    				   	 
+                    		}else{
+                    			paging = "<li class='page-item'>"
+                				   	+ "<a class='page-link disabled' style='color:slategray' onclick='mainMailList(" + (map.pi.currentPage-1) + ");' aria-label='Previous'>"
+                				   	 + "<span aria-hidden='true'> &laquo; </span>"
+                				   	+ "</a>"
+                				   + "</li>"
+                    		}
+							
+                    		for(let p=map.pi.startPage; p<=map.pi.endPage; p++){
+                    			paging += "<li class='page-item'><a class='page-link' style='color:slategray' onclick='mainMailList(" + p + ");'>" + p + "</a></li>"
+                    		}
+		            		
+                    		if(map.pi.currentPage == map.pi.maxPage){
+                    			paging += "<li class='page-item'>"
+                    				   	+ "<a class='page-link disabled' style='color:slategray' aria-label='Next'>"
+                    				   	 + "<span aria-hidden='true'> &raquo; </span>"
+                    				   	+ "</a>"
+                    				   + "</li>"
+                    				   	 
+                    		}else{
+                    			paging += "<li class='page-item'>"
+                				   	+ "<a class='page-link disabled' style='color:slategray' onclick='mainMailList(" + (map.pi.currentPage+1) + ");' aria-label='Next'>"
+                				   	 + "<span aria-hidden='true'> &raquo; </span>"
+                				   	+ "</a>"
+                				   + "</li>"
+                    		}
+		            	
+                    		$("#ajaxMail").html(paging);
+							
+							
+							
+						},error:function(){
+							console.log("조회수 top5 게시글 조회용 ajax 통신 실패");
+						}
+					})
+				}
+				
+			</script>
+			
+			<div class="main-list" style="text-align:center; margin:1%; border-radius:5px; background-color: white;">
+				<div >
+				<table class="board-content table" align="center" id="mainAddressList">
+					<thead>
+						<tr class="table_thead_border">
+							<th width="10%">이름</th>
+							<th width="10%">부서명</th>
+							<th width="10%">직급명</th>
+							<th width="15%">내선번호</th>
+							<th width="18%">이메일</th>
+							<th width="15%">전화번호</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- 값은 다 DB와 연결될 것 -->
+						<!-- 반복문 시작 -->
+						<c:choose>
+							<c:when test="${empty list }">
+								<td colspan="7">현재 주소록이 없습니다.</td>
+							</c:when>
+								
+						</c:choose>
+					</tbody>
+				</table>
+				
+			<hr style="margin:0;">
+	        	
+	        	 <div id="n-pagingBar" style="padding:5px; margin:10px;">
+	                <nav aria-label="Page navigation example">
+	                    <ul id="ajaxAddressPaging" class="pagination justify-content-center"> 
+	                    	
+	                    </ul>
+	                </nav>
+	            </div>
+			</div>
+		</div>
+			
+			<script>
+				$(function(){
+					
+					mainAddressList(1);
+					
+					setInterval(mainAddressList,3600000); // 1000 => 1초 마다 새로고침
+					
+					// => 이 방법으로는 동적으로 만들어진 요소에 이벤트 부여 불가
+					/*
+					$("#boardList>tbody>tr").click(function(){
+						location.href = "detail.bo?no=" + $(this).children().eq(0).text();
+					})
+					*/
+					
+					//$(상위요소).on("이벤트명","이벤트걸고자하는요소", function(){})
+					// 동적으로 만들어진 요소에 이벤트 부여 방법!!!!
+					$(document).on("click","#mainDeptList>tbody>tr", function(){
+						location.href = "detail.de?no=" + $(this).children().eq(0).text();
+					})
+					
+				})
+				
+				function mainAddressList(page){
+					$.ajax({
+						url:"mainAddressList.ma",
+						data:{cpage:page}, 
+						success:function(map){
+							
+							console.log(map); // { pi:{currentPage:x, listCount:x, ..}, list:[{}, {}] };
+							
+							//map.pi => {currentPage:x, listCount:x, ..}
+							//map.list => [{}, {}]
+							
+							
+							let value = "";
+							
+							for(let i in map.list){
+								value += "<tr>"
+								        +	"<td>" + map.list[i].memName + "</td>"
+								        +	"<td>" + map.list[i].deptCode + "</td>"
+								        +	"<td>" + map.list[i].jobCode + "</td>"
+								        +	"<td>" + map.list[i].memBusinessnum + "</td>"
+								        +	"<td>" + map.list[i].memPhone + "</td>"
+								       + "</tr>";
+							}
+
+							$("#mainAddressList tbody").html(value);
+							
+							let paging = "";
+							
+                    		
+                    		if(map.pi.currentPage == 1){
+                    			paging = "<li class='page-item'>"
+                    				   	+ "<a class='page-link disabled' style='color:slategray' aria-label='Previous'>"
+                    				   	 + "<span aria-hidden='true'> &laquo; </span>"
+                    				   	+ "</a>"
+                    				   + "</li>"
+                    				   	 
+                    		}else{
+                    			paging = "<li class='page-item'>"
+                				   	+ "<a class='page-link disabled' style='color:slategray' onclick='mainAddressList(" + (map.pi.currentPage-1) + ");' aria-label='Previous'>"
+                				   	 + "<span aria-hidden='true'> &laquo; </span>"
+                				   	+ "</a>"
+                				   + "</li>"
+                    		}
+							
+                    		for(let p=map.pi.startPage; p<=map.pi.endPage; p++){
+                    			paging += "<li class='page-item'><a class='page-link' style='color:slategray' onclick='mainAddressList(" + p + ");'>" + p + "</a></li>"
+                    		}
+		            		
+                    		if(map.pi.currentPage == map.pi.maxPage){
+                    			paging += "<li class='page-item'>"
+                    				   	+ "<a class='page-link disabled' style='color:slategray' aria-label='Next'>"
+                    				   	 + "<span aria-hidden='true'> &raquo; </span>"
+                    				   	+ "</a>"
+                    				   + "</li>"
+                    				   	 
+                    		}else{
+                    			paging += "<li class='page-item'>"
+                				   	+ "<a class='page-link disabled' style='color:slategray' onclick='mainAddressList(" + (map.pi.currentPage+1) + ");' aria-label='Next'>"
+                				   	 + "<span aria-hidden='true'> &raquo; </span>"
+                				   	+ "</a>"
+                				   + "</li>"
+                    		}
+                    		
+                    		$("#ajaxAddressPaging").html(paging);
+							
+						},error:function(){
+							console.log("조회수 top5 게시글 조회용 ajax 통신 실패");
+						}
+					})
+				}
+				
+			</script>
+			<div></div>
+			<div></div>
+		</div>
+		<div style="float: left; width:33%; height:100%;" class="divBox">
+			<div style="text-align:center; margin:1%; border-radius:5px; background-color: white; height: 620px;">
+				<div style="margin:0px 10px 0px 10px;">
+					<div class="d-sm-flex align-items-center mb-4" id="boardHeader">
+		                <div id="deptBoard" style="font-size:23px;">부서 게시판 | ${deptName}</div>
+		            </div>
+					<br>
+		            <div class="main_width">
+		                <table class="board-content table" align="center" id="mainDeptList" style="border:2px solid slategray;"> 
+		                    <thead>
+		                        <tr class="table_thead_border">
+		                            <th width="5%">번호</th>
+		                            <th width="30%">제목</th>
+		                            <th width="7%">작성자</th>
+		                            <th width="7%">작성일</th>
+		                            <th width="5%">조회수</th>
+		                        </tr>
+		                    </thead>
+		                    <tbody class="board-tbody">
+		                        <c:choose>
+		                        	<c:when test="${ empty list }">
+		                        		<tr>
+		                        			<td colspan="6">등록된 글이 없습니다.</td>
+		                        		</tr>
+		                        	</c:when>
+		                        	
+		                        </c:choose>
+		                        	<c:if test="${ not empty list }">
+		                        		
+				                    </c:if>
+		                        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!리스트 화면 검색기능, 여러개 클릭기능 구현(하다말았음) -->
+		                    </tbody>
+		                </table>
+		        	</div>
+	        	</div>
+	        	<hr style="margin:0;">
+	        	
+	        	 <div id="n-pagingBar" style="margin:10px;">
+	                <nav aria-label="Page navigation example">
+	                    <ul id="ajaxDeptPaging" class="pagination justify-content-center"> 
+	                    	
+	                    </ul>
+	                </nav>
+	            </div>
+			</div>
+			
+	
+			
+			<script>
+				$(function(){
+					
+					mainDeptList(1);
+					
+					setInterval(mainDeptList,3600000); // 1000 => 1초 마다 새로고침
+					
+					// => 이 방법으로는 동적으로 만들어진 요소에 이벤트 부여 불가
+					/*
+					$("#boardList>tbody>tr").click(function(){
+						location.href = "detail.bo?no=" + $(this).children().eq(0).text();
+					})
+					*/
+					
+					//$(상위요소).on("이벤트명","이벤트걸고자하는요소", function(){})
+					// 동적으로 만들어진 요소에 이벤트 부여 방법!!!!
+					$(document).on("click","#mainDeptList>tbody>tr", function(){
+						location.href = "detail.de?no=" + $(this).children().eq(0).text();
+					})
+					
+				})
+				
+				function mainDeptList(page){
+					$.ajax({
+						url:"mainDeptList.ma",
+						data:{cpage:page}, 
+						success:function(map){
+							
+							console.log(map); // { pi:{currentPage:x, listCount:x, ..}, list:[{}, {}] };
+							
+							//map.pi => {currentPage:x, listCount:x, ..}
+							//map.list => [{}, {}]
+							
+							
+							let value = "";
+							
+							for(let i in map.list){
+								value += "<tr>"
+								        +	"<td>" + map.list[i].boardNo + "</td>"
+								        +	"<td>" + map.list[i].boardTitle + "</td>"
+								        +	"<td>" + map.list[i].boWriter + "</td>"
+								        +	"<td>" + map.list[i].boardEnDate + "</td>"
+								        +	"<td>" + map.list[i].boardCount + "</td>"
+								       + "</tr>";
+							}
+
+							$("#mainDeptList tbody").html(value);
+							
+							let paging = "";
+							
+                    		
+                    		if(map.pi.currentPage == 1){
+                    			paging = "<li class='page-item'>"
+                    				   	+ "<a class='page-link disabled' style='color:slategray' aria-label='Previous'>"
+                    				   	 + "<span aria-hidden='true'> &laquo; </span>"
+                    				   	+ "</a>"
+                    				   + "</li>"
+                    				   	 
+                    		}else{
+                    			paging = "<li class='page-item'>"
+                				   	+ "<a class='page-link disabled' style='color:slategray' onclick='mainDeptList(" + (map.pi.currentPage-1) + ");' aria-label='Previous'>"
+                				   	 + "<span aria-hidden='true'> &laquo; </span>"
+                				   	+ "</a>"
+                				   + "</li>"
+                    		}
+							
+                    		for(let p=map.pi.startPage; p<=map.pi.endPage; p++){
+                    			paging += "<li class='page-item'><a class='page-link' style='color:slategray' onclick='mainDeptList(" + p + ");'>" + p + "</a></li>"
+                    		}
+		            		
+                    		if(map.pi.currentPage == map.pi.maxPage){
+                    			paging += "<li class='page-item'>"
+                    				   	+ "<a class='page-link disabled' style='color:slategray' aria-label='Next'>"
+                    				   	 + "<span aria-hidden='true'> &raquo; </span>"
+                    				   	+ "</a>"
+                    				   + "</li>"
+                    				   	 
+                    		}else{
+                    			paging += "<li class='page-item'>"
+                				   	+ "<a class='page-link disabled' style='color:slategray' onclick='mainDeptList(" + (map.pi.currentPage+1) + ");' aria-label='Next'>"
+                				   	 + "<span aria-hidden='true'> &raquo; </span>"
+                				   	+ "</a>"
+                				   + "</li>"
+                    		}
+                    		
+                    		$("#ajaxDeptPaging").html(paging);
+							
+						},error:function(){
+							console.log("조회수 top5 게시글 조회용 ajax 통신 실패");
+						}
+					})
+				}
+				
+			</script>
+			
+			
+			<div></div>
+			<div></div>
+		</div>
+		
+	</div>
+</div>
 	<jsp:include page="common/footer.jsp" />
 
 </body>

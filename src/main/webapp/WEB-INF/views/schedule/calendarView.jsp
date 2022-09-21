@@ -75,53 +75,173 @@
                                  <span>&nbsp;관심 캘린더</span>
                              </div>
 
+							<span style="display:none" id="lcalArr"></span>
+								
                              <div id="attCalendar" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                                 <table>
-                                     <tr style="width: 100%;">
-                                         <td width="20%;"></td>
-                                         <td><input type="checkbox"></td>
-                                         <td width="90%;"> &nbsp;이승엽 대표</td>
-                                         <!-- 기본은 색상 편집 눌렀을 때 x -->
-                                         <td class="su_attCalBasic">
-                                             <a type="button">
-                                                 <div class="calColor" style="border: 1px solid red; background: red;"></div>
-                                             </a>
-                                         </td>
-
-                                         <td class="su_attCalX dis_no"><a type="button">x</a></td>
-                                     </tr>
-                                     <tr>
-                                         <td></td>
-                                         <td><input type="checkbox"></td>
-                                         <td> &nbsp;강보람 부장</td>
-                                         <!-- 기본은 색상 편집 눌렀을 때 x -->
-                                         <td class="su_attCalBasic">
-                                             <a type="button">
-                                                 <div class="calColor" style="border: 1px solid red; background: red;"></div>
-                                             </a>
-                                         </td>
-
-                                         <td class="su_attCalX dis_no"><a type="button">x</a></td>
-                                     </tr>
-                                     <tr>
-                                         <td></td>
-                                         <td><input type="checkbox"></td>
-                                         <td> &nbsp;박대리 대리</td>
-                                         <!-- 기본은 색상 편집 눌렀을 때 x -->
-                                         <td class="su_attCalBasic">
-                                             <a type="button">
-                                                 <div class="calColor" style="border: 1px solid red; background: red;"></div>
-                                             </a>
-                                         </td>
-
-                                         <td class="su_attCalX dis_no"><a type="button">x</a></td>
-                                     </tr>
+                                 <table id="tb_likeCal" style="margin-left: -42px;">
+                                     
                                  </table>
                                  
                                  <a type="button" class="addCal" id="addAttCal">+ 관심 캘린더 추가</a>
                              </div>
                          </li>
                      </ul>
+                     
+                        <!-- 관심 캘린더 추가 창 -->
+	                    <div class="su_ph_div dis_no ui-draggable" id="attCalList" style="top: 350px; left: 470px;">
+	                        <aside class="ph_aside">
+	                            <div class="su_ph_header" style="position: static">
+	                                <div class="su_ph_title">
+	                                    <h5 class="mt-1 mb-2" id="moveCal" style="color: black; cursor: move;">관심 캘린더 추가<span class="fas fa-xmark" id="xBtn" style="cursor: pointer;"></span></h5>
+	                                </div>
+	                            </div>
+	                        </aside>
+	                        
+	                        
+	                        <hr class="hr_line">
+	
+	                        <div class="su_ph_body">
+	                            <div class="div_left_line" id="atndArea" style="margin-top: -1rem;">
+	                                	<c:forEach var="a" items="${ aList }">
+	                                		<c:if test="${ a.deptCode eq 'DN' }">
+	                                			<div class="su_ph_line ph_padding" onclick="chooseAtt(${ a.memNo });">
+				                                    <span style="font-size: 20px;">&nbsp;</span>
+				                                    <span class="fas fa-user"></span>
+				                                    <span>&nbsp; ${ a.memName } &nbsp; ${ a.jobName }</span>
+				                                </div>
+			                                </c:if>
+			                            </c:forEach>
+	
+	                                <!-- 강사진 주소록 -->
+	                                <div>
+	                                    <div class="collapsed ph_padding" data-toggle="collapse" data-target="#teacherList" aria-expanded="true" aria-controls="collapseTwo">
+	                                        <span style="font-size: 20px;">-&nbsp;</span>
+	                                        <span style="font-size: 20px;">+&nbsp;</span>
+	                                        <span>&nbsp; 강사진</span>
+	                                    </div>
+	
+	                                    <div id="teacherList" class="collapse div_left_line" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+	                                        <table class="su_Tb_Te">
+	                                        
+	                                        	<c:forEach var="a" items="${ aList }">
+	                                        		<c:if test="${ a.deptCode eq 'D0' }">
+			                                            <tr style="width: 100%;" class="ph_padding">
+			                                                <td width="90%;">
+			                                                    <div class="su_ph_line" onclick="chooseAtt(${ a.memNo });">
+			                                                    	<input type="hidden" value="${ a.memNo }">
+			                                                        <span style="font-size: 20px;">-&nbsp;</span>
+			                                                        <span class="fas fa-user"></span>
+			                                                        <span>&nbsp; ${ a.memName } &nbsp; ${ a.jobName }</span>
+			                                                    </div>
+			                                                </td>
+			                                            </tr>
+			                                        </c:if>
+			                                    </c:forEach>
+	                                           
+	                                        </table>
+	                                    </div>
+	                                </div>
+	
+	                                <!-- 운영부 주소록 -->
+	                                <div>
+	                                    <div class="collapsed ph_padding" data-toggle="collapse" data-target="#opList" aria-expanded="true" aria-controls="collapseTwo">
+	                                        <span style="font-size: 20px;">-&nbsp;</span>
+	                                        <span style="font-size: 20px;">+&nbsp;</span>
+	                                        <span>&nbsp; 운영부</span>
+	                                    </div>
+	
+	                                    <div id="opList" class="collapse div_left_line" aria-expanded="true" data-parent="#accordionSidebar">
+	                                        <div class="collapsed ph_padding" data-toggle="collapse" data-target="#promoList" aria-expanded="true" aria-controls="collapseTwo">
+	                                            <span style="font-size: 20px;">-&nbsp;</span>
+	                                            <span style="font-size: 20px;">+&nbsp;</span>
+	                                            <span>&nbsp; 홍보팀</span>
+	                                        </div>
+	
+	                                        <!-- 홍봉팀 리스트 -->
+	                                    <div id="promoList" class="collapse div_left_line" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+	                                        <table class="su_Tb_Pr">
+	                                        
+			                                    <c:forEach var="a" items="${ aList }">
+	                                        		<c:if test="${ a.deptCode eq 'D3' }">
+			                                            <tr style="width: 100%;" class="ph_padding">
+			                                                <td width="90%;">
+			                                                    <div class="su_ph_line" onclick="chooseAtt(${ a.memNo });">
+			                                                        <span style="font-size: 20px;">-&nbsp;</span>
+			                                                        <span class="fas fa-user"></span>
+			                                                        <span>&nbsp; ${ a.memName } &nbsp; ${ a.jobName }</span>
+			                                                    </div>
+			                                                </td>
+			                                            </tr>
+			                                        </c:if>
+			                                    </c:forEach>
+	                                            
+	                                        </table>
+	                                    </div>
+	
+	                                        <div class="collapsed ph_padding" data-toggle="collapse" data-target="#adminiList" aria-expanded="true" aria-controls="collapseTwo">
+	                                            <span style="font-size: 20px;">-&nbsp;</span>
+	                                            <span style="font-size: 20px;">+&nbsp;</span>
+	                                            <span>&nbsp; 행정팀</span>
+	                                        </div>
+	
+	                                        <!-- 행정팀 리스트 -->
+	                                    <div id="adminiList" class="collapse div_left_line" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+	                                        <table class="su_Tb_Ad">
+	                                            <c:forEach var="a" items="${ aList }">
+	                                        		<c:if test="${ a.deptCode eq 'D2' }">
+			                                            <tr style="width: 100%;" class="ph_padding">
+			                                                <td width="90%;">
+			                                                    <div class="su_ph_line" onclick="chooseAtt(${ a.memNo });">
+			                                                        <span style="font-size: 20px;">-&nbsp;</span>
+			                                                        <span class="fas fa-user"></span>
+			                                                        <span>&nbsp; ${ a.memName } &nbsp; ${ a.jobName }</span>
+			                                                    </div>
+			                                                </td>
+			                                            </tr>
+			                                        </c:if>
+			                                    </c:forEach>
+	                                            
+	                                        </table>
+	                                    </div>
+	                                </div>
+	
+	                                    </div>
+	
+	                                    
+	                                <!-- 인사팀 주소록 -->
+	                                <div>
+	                                    <div class="collapsed ph_padding" data-toggle="collapse" data-target="#hrList" aria-expanded="true" aria-controls="collapseTwo">
+	                                        <span style="font-size: 20px;">-&nbsp;</span>
+	                                        <span style="font-size: 20px;">+&nbsp;</span>
+	                                        <span>&nbsp; 인사팀</span>
+	                                    </div>
+	
+	                                    <div id="hrList" class="collapse div_left_line" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+	                                        <table class="su_Tb_Hr">
+	                                            <c:forEach var="a" items="${ aList }">
+	                                        		<c:if test="${ a.deptCode eq 'D1' }">
+			                                            <tr style="width: 100%;" class="ph_padding">
+			                                                <td width="90%;">
+			                                                    <div class="su_ph_line" onclick="chooseAtt(${ a.memNo });">
+			                                                        <span style="font-size: 20px;">-&nbsp;</span>
+			                                                        <span class="fas fa-user"></span>
+			                                                        <span>&nbsp; ${ a.memName } &nbsp; ${ a.jobName }</span>
+			                                                    </div>
+			                                                </td>
+			                                            </tr>
+			                                        </c:if>
+			                                    </c:forEach>
+	                                            
+	                                        </table>
+	                                    </div>
+	                                </div>
+	
+	                            </div>
+	                        </div>
+	                        
+	                    </div>
+	                    
+	                    
 	
 	                <!-- 내 캘린더 추가 모달창 -->
 	                <div class="modal fade" id="addMyCal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -183,6 +303,7 @@
 	                		
 	                		calList();
 	                		selectMycalList();
+	                		selectLikecalList();
 	                		
 	                	})
 	                	
@@ -237,6 +358,36 @@
 	                		
 	                	}
 	                	
+	                	// 관심 캘린더 리스트 출력 이벤트
+	                	function selectLikecalList(){
+	                		$.ajax({
+	                			url: "lclist.ca",
+	                			data: { memNo: ${loginUser.memNo} },
+	                			success: function(list){
+	                				console.log(list);
+	                				var value = "";
+	                				var str = "";
+	                				
+	                				for(let i = 0; i < list.length; i++){
+	                					value += '<tr style="width: 100%;">'
+		                                    		+ '<td width="20%;"><span class="lcNo" style="color: white !important;">' + list[i].likeMemNo + '</span></td>'
+		                                    		+ '<td><input type="checkbox" name="likecalList"></td>'
+		                                    		+ '<td width="90%;"> &nbsp;' + list[i].Member.memName + ' ' + list[i].Member.jobName + '</td>'
+		                                    		+ '<td class="su_attCalX dis_no"><a type="button" onclick="deleteLikecal(' + list[i].likecalNo + ');">x</a></td>'
+		                                		+ '</tr>';
+		                                
+	                					str += list[i].likecalNo + ",";
+	                				}
+	                				
+	                				$("#tb_likeCal").html(value);
+	                				//$("#lcalArr").text(str);
+	                				
+	                			}, error: function(){
+	                				console.log("ajax 관심 캘린더 리스트 출력 실패");
+	                			}
+	                		});
+	                	}
+	                	
 	                	var checkCnt = "";
 	            		
 	            		// 내 캘린더 체크 리스트
@@ -255,7 +406,29 @@
 	            		
 	            		$(document).on("change", "input[name='mycalList']", function(){
 	            			calList();
-	            			console.log($("#calArr").text());
+	            			//console.log($("#calArr").text());	
+	            		});
+	            		
+	            		// 관심 캘린더 체크 리스트 (memNo로)
+	            		
+	            		var checkList = "";
+	            		
+	            		function likecalList(){
+	            			checkList = "";
+	            			$("input[name=likecalList]:checked").each(function(){
+	            				//console.log($(this).parent().parent().children().eq(0).text());
+	            				checkList += ($(this).parent().parent().children().eq(0).text()) + ","; // 체크된 것만 게시글번호 뽑기
+	            			});
+	            			checkList = checkList.substring(0,checkList.lastIndexOf(",")); // 맨 뒤 콤마 삭제
+	            			$("#lcalArr").text(checkList);
+	            			console.log(checkList);
+	            			
+	            			
+	            		}
+	            		
+	            		$(document).on("change", "input[name='likecalList']", function(){
+	            			likecalList();
+	            			
 	            		});
 	            		
 	                	// 선택된 캘린더 번호 출력 이벤트
@@ -332,12 +505,32 @@
 	               			});
 	               		}
 	               		
+	               		// 관심 캘린더 추가
+	               		function chooseAtt(mNo){
+	               			$.ajax({
+	               				url: "lcinsert.ca",
+	               				data:{
+	               					memNo: ${loginUser.memNo},
+	               					likeMemNo: mNo
+	               				},
+	               				success:function(result){
+	               					if(result == "success"){
+	               						alert("관심 캘린더가 추가되었습니다.");
+	               						//$("#addMyCal").modal('hide');
+	               						selectLikecalList();
+	               					}
+	               				}, error:function(){
+	               					console.log("ajax 관심 캘린더 추가 실패");
+	               				}
+	               			});
+	               		}
+	               		
 	               		// 내 캘린더 삭제
 	               		function deleteMycal(mcNo){
 	               			// mcNo : 내 캘린더 번호
 	               			$("#delete").modal("show");
 	               			$("#realDelete").click(function(){
-	               				console.log("j");
+	               				//console.log("j");
 	               				$.ajax({
 	               					url: "mcdelete.ca",
 	               					data: {checkCnt: mcNo},
@@ -352,6 +545,28 @@
 	               					}
 	               				});
 	               			});
+	               		}
+	               		
+	               		// 관심 캘린더 삭제
+	               		function deleteLikecal(lcNo){
+	               			// lcNo : 관심 캘린더 번호
+	               			$("#deleteLc").modal("show");
+	               			$("#realDeleteLc").click(function(){
+	               				$.ajax({
+	               					url: "lcdelete.ca",
+	               					data: {lcNo: lcNo},
+	               					success: function(result){
+	               						if(result == "success"){
+	               							alert("삭제되었습니다.");
+	               							$("#deleteLc").modal("hide");
+	               							selectLikecalList();
+	               						}
+	               					}, error: function(){
+	               						console.log("ajax 관심 캘린더 삭제 실패");
+	               					}
+	               				});
+	               			});
+	               		
 	               		}
 	               		
 	               		// 캘린더 색상 변경
@@ -420,7 +635,7 @@
 	                
 	                
 	                
-	                <!-- 삭제 모달창 -->
+	                <!-- 내 캘린더 삭제 모달창 -->
 	                <div class="modal" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	                <div class="modal-dialog modal-dialog-centered cascading-modal modal-avatar" role="document">
 	                    <!--Content-->
@@ -434,6 +649,28 @@
 	                                <br>
 	                                <div class="text-center mt-4"> 
 	                                    <button type="button" id="realDelete" class="btn su_btn_all su_btn_medium">확인</button>
+	                                    <button type="button" id="next" class="btn su_btn_border su_btn_medium" data-dismiss="modal">취소</button>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	            
+	             <!-- 관심 캘린더 삭제 모달창 -->
+	                <div class="modal" id="deleteLc" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	                <div class="modal-dialog modal-dialog-centered cascading-modal modal-avatar" role="document">
+	                    <!--Content-->
+	                    <div class="modal-content modal_alert">
+	                        
+	                        <!--Body-->
+	                        <div class="modal-body text-center modal_alert_child">
+	                            <div style="margin-top: 1.5rem;">
+	            
+	                                <h5 class="mt-1 mb-2" style="color: black;">정말 삭제하시겠습니까?</h5>
+	                                <br>
+	                                <div class="text-center mt-4"> 
+	                                    <button type="button" id="realDeleteLc" class="btn su_btn_all su_btn_medium">확인</button>
 	                                    <button type="button" id="next" class="btn su_btn_border su_btn_medium" data-dismiss="modal">취소</button>
 	                                </div>
 	                            </div>
@@ -471,6 +708,8 @@
 	                    		
 	                    		//console.log(d);
 	                    		location.href="enrollForm.ca?day=" + d + "&memNo=" + ${ loginUser.memNo };
+	                    		
+	                    		
 	                    	});
 	                    	
 	                    	
@@ -505,7 +744,7 @@
 	
 	                        $("#addAttCal").click(function(){
 	                            $("#attCalList").show();
-	                        })
+	                        });
 	
 	                        $("#xBtn").click(function(){
 	                            $("#attCalList").hide();
@@ -531,7 +770,51 @@
 		            			
 		            		});
 		            		
-		            		
+		            		// 위치 드래그 기능
+                            //Make the DIV element draggagle:
+                            dragElement(document.getElementById("attCalList"));
+
+                            function dragElement(elmnt) {
+                            var pos1 = 210, pos2 = 0, pos3 = 0, pos4 = 450;
+                            if (document.getElementById(elmnt.id + "header")) {
+                                /* if present, the header is where you move the DIV from:*/
+                                document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+                            } else {
+                                /* otherwise, move the DIV from anywhere inside the DIV:*/
+                                elmnt.onmousedown = dragMouseDown;
+                            }
+
+                            function dragMouseDown(e) {
+                                e = e || window.event;
+                                e.preventDefault();
+                                // get the mouse cursor position at startup:
+                                pos3 = e.clientX;
+                                pos4 = e.clientY;
+                                document.onmouseup = closeDragElement;
+                                // call a function whenever the cursor moves:
+                                document.onmousemove = elementDrag;
+                            }
+
+                            function elementDrag(e) {
+                                e = e || window.event;
+                                e.preventDefault();
+                                // calculate the new cursor position:
+                                pos1 = pos3 - e.clientX;
+                                pos2 = pos4 - e.clientY;
+                                pos3 = e.clientX;
+                                pos4 = e.clientY;
+                                // set the element's new position:
+                                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+                            }
+
+                            function closeDragElement() {
+                                /* stop moving when mouse button is released:*/
+                                document.onmouseup = null;
+                                document.onmousemove = null;
+                            }
+                            
+                            }
 	
 	                        
 	                    });
@@ -620,8 +903,10 @@
 	    editable: true,
 	    timeFormat:'H(:mm)',
 	    events: function(info, successCallback, failureCallback){
-	    	console.log($("#calArr").text());
+	    	//console.log($("#calArr").text());
 	    	var calStr = $("#calArr").text();
+	    	var lcalStr = $("#lcalArr").text();
+	    	var mem = ${loginUser.memNo};
 	    	$.ajax({
 	    		type: 'post',
 	    		cache: false,
@@ -629,14 +914,15 @@
 	    		dataType:'json',
 	    		data:{
               		memNo: ${ loginUser.memNo },
-              		checkCnt: $("#calArr").text(),
+              		checkCnt: $("#calArr").text(),	// 내 캘린더
+              		checkList: $("#lcalArr").text(),	// 관심 캘린더
               		atnd: $("#atnd").text(),
               		cmpy: $("#cmpy").text()
               	},
               	//contentType:"application/x-www-form-urlencoded; charset=UTF-8",
               	success: function(param){
               		var event = [];
-              		
+              		//console.log(param);
               		//console.log(calStr);
               		$.each(param, function(index, data){
               			// map에서 값 불러와서 조건넣어서 이벤트 푸쉬하기...
@@ -650,8 +936,10 @@
     	              			//backgroundColor: 'rgba(94, 126, 155, 0.6)'
     	              		});
               			 }
-              			else if( ($("#atnd").text() == 'Y')){
-              				if(data.atnd != ""){
+              			else if( ($("#atnd").text() == 'Y') && data.atnd != null){
+              				var atndNoStr = data.atnd;
+              				console.log(atndNoStr);
+              				if(atndNoStr.includes(mem)){
               					event.push({
         	              			id: data.id,
         	              			title: data.title,
@@ -672,8 +960,18 @@
         	              			//backgroundColor: 'rgba(94, 126, 155, 0.6)'
         	              		});
               				}
+              			} 
+              			
+              			if(lcalStr.includes(data.writer)){
+              				event.push({
+    	              			id: data.id,
+    	              			title: data.title,
+    	              			start: data.start,
+    	              			end: data.end,
+    	              			color: hexToRgb(data.color)
+    	              			//backgroundColor: 'rgba(94, 126, 155, 0.6)'
+    	              		});
               			}
-              			 
 	              		
               	    });
               		

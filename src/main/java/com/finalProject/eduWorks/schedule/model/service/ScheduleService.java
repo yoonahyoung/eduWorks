@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.finalProject.eduWorks.common.model.vo.Reply;
 import com.finalProject.eduWorks.member.model.vo.Member;
+import com.finalProject.eduWorks.schedule.model.vo.Likecal;
 import com.finalProject.eduWorks.schedule.model.vo.Mycal;
 import com.finalProject.eduWorks.schedule.model.vo.Schedule;
 
@@ -16,6 +17,12 @@ public interface ScheduleService {
 	int deleteMycal(String checkCnt);	// 내 캘린더 삭제
 	int colorMycal(Mycal m);	// 캘린더 색상 변경
 	ArrayList<Member> selectMemberList(String keyword, String memNo);	// 주소록
+	ArrayList<Likecal> selectLikecalList(String memNo);	// 관심 캘린더 리스트 조회
+	// 관심 캘린더 삭제
+	int deleteLikecal(int lcNo);
+	
+	// 관심 캘린더 추가
+	int insertLikecal(Likecal l);
 	
 	// 일정 조회
 	Schedule selectSche(int scheNo);

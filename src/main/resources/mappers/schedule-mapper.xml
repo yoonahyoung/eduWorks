@@ -50,6 +50,15 @@
 		<result column="reply_status" property="replyStatus" />
 	</resultMap>
 	
+	<resultMap id="likecalResult" type="Likecal">
+		<result column="likecal_no" property="likecalNo" />
+		<result column="mem_no" property="memNo" />
+		<result column="like_mem_no" property="likeMemNo" />
+		<result column="likecal_status" property="likecalStatus" />
+		<collection property="schedule" resultMap="scheduleResult" />
+		<collection property="member" resultMap="memberResult" />
+	</resultMap>
+	
 	<select id="selectScheList" resultMap="scheduleResult">
 		select sche_no
 			 , sche_title
@@ -116,6 +125,30 @@
 		  join tb_mycal m using (mycal_no)
 		 where sche_status = 'Y'
 		   and sche_atnd_no like '%' || #{memNo} || '%'
+		 union
+		select distinct sche_no
+			 , sche_title
+			 , sche_writer
+			 , sche_start_date
+			 , sche_end_date
+			 , sche_all
+			 , sche_cmpy
+			 , sche_open
+             , m.mycal_no
+			 , m.mycal_color
+			 , sche_atnd_no
+			 , sche_atnd_list
+			 , sche_place
+			 , sche_content
+			 , sche_create_date
+			 , sche_modify_date
+			 , sche_status
+         from tb_schedule s
+         join tb_mycal m on (s.mycal_no = m.mycal_no)
+         join tb_likecal l on (l.like_mem_no = sche_writer)
+         join tb_mycal m on (l.like_mem_no = m.mem_no)
+        where l.mem_no = #{memNo}
+          and sche_open = 'Y'
 	</select>
 	
 	<select id="selectMemberList" resultMap="memberResult">
@@ -348,5 +381,41 @@
 		   set reply_status = 'N'
 		 where reply_no = #{replyNo}
 	</update>
+	
+	<select id="selectLikecalList" resultMap="likecalResult">
+		select l.likecal_no
+			 , m.mem_name
+		     , j.job_name
+		     , l.like_mem_no
+		  from tb_likecal l
+		  join tb_member m on (l.like_mem_no = m.mem_no)
+		  join tb_job j on (m.job_code = j.job_code)
+		 where l.mem_no = #{memNo}
+		   and l.likecal_status = 'Y'
+		 order
+		    by l.likecal_no
+	</select>
+	
+	<update id="deleteLikecal">
+		update tb_likecal
+		   set likecal_status = 'N'
+		 where likecal_no = #{lcNo}
+	</update>
+	
+	<insert id="insertLikecal">
+		insert
+		  into tb_likecal
+		  (
+		    likecal_no
+		  , mem_no
+		  , like_mem_no
+		  )
+		  values
+		  (
+		    seq_lcno.nextval
+		  , #{memNo}
+		  , #{likeMemNo}
+		  )
+	</insert>
 	
 </mapper>
