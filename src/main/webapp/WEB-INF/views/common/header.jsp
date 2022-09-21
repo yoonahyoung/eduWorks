@@ -103,6 +103,9 @@
 	#alert-area a:hover{
 		cursor:pointer;
 	}
+	.rep-alarm:hover{
+		cursor:default !important;
+	}
 </style>
 </head>
 	<c:if test="${ not empty alertMsg }">
@@ -410,8 +413,8 @@
 	
 	                        <!-- Nav Item - Alerts 알람 메뉴바 -->
 	                        <li class="nav-item dropdown no-arrow mx-1" id="btnSend">
-	                            <a class="nav-link dropdown-toggle xBtn" href="#" id="alertsDropdown" role="button"
-	                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	                            <a class="nav-link dropdown-toggle xBtn" id="alertsDropdown" role="button"
+	                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-bs-auto-close="outside">
 	                                <i class="fas fa-bell fa-fw"></i>
 	                                <!-- Counter - Alerts -->
 	                                <span class="badge badge-danger badge-counter" id="alarm-count"></span>
@@ -564,6 +567,7 @@
 					data:{mno:${loginUser.memNo}},
 					success(list){
 						let value = "";
+						let repValue = ""; // 신고알람용
 						let count = 0;
 						
 						if(list.length != 0){ // 리스트가 있을 시
@@ -578,33 +582,49 @@
 								case 3: hrefB = 'detail.bl?no=' + list[i].alBoardNo; break;
 								}
 								
-								// 1. 블라인드 처리되거나 삭제된 게시글일 경우
-								if(list[i].boardStatus != 'Y'){
-									if(list[i].alReadDate != null){ // 1-1) 미확인 알람
-										value += '<a class="dropdown-item d-flex align-items-center" onclick="readAlarm(1);" style="padding-right:0">';
+								if(list[i].alCategory == 1){ // 댓글 알람일 경우
+									// 1. 블라인드 처리되거나 삭제된 게시글일 경우
+									if(list[i].boardStatus != 'Y'){
+										if(list[i].alReadDate != null){ // 1-1) 미확인 알람
+											value += '<a class="dropdown-item d-flex align-items-center" onclick="readAlarm(1);" style="padding-right:0">';
+											count+=1;
+										}else{ // 1-2) 확인 알람
+											value += '<a class="dropdown-item d-flex align-items-center" onclick="alert(존재하지 않는 게시글입니다!);" style="padding-right:0; background-color:rgb(243, 243, 243);">';
+										}
+									}else // 2. 확인된 알람
+									if(list[i].alReadDate != null){
+										value += '<a class="dropdown-item d-flex align-items-center" href="' + hrefB + '" style="padding-right:0; background-color:rgb(243, 243, 243);">';
+									}else{ // 3. 미확인된 알람
+										value += '<a class="dropdown-item d-flex align-items-center" onclick="readAlarm(&quot;' + hrefB + '&quot;, &quot;' + list[i].alNo + '&quot;);" style="padding-right:0;">';
 										count+=1;
-									}else{ // 1-2) 확인 알람
-										value += '<a class="dropdown-item d-flex align-items-center" onclick="alert(존재하지 않는 게시글입니다!);" style="padding-right:0; background-color:rgb(243, 243, 243);">';
-									}
-								}else // 2. 확인된 알람
-								if(list[i].alReadDate != null){
-									value += '<a class="dropdown-item d-flex align-items-center" href="' + hrefB + '" style="padding-right:0; background-color:rgb(243, 243, 243);">';
-								}else{ // 3. 미확인된 알람
-									value += '<a class="dropdown-item d-flex align-items-center" onclick="readAlarm(&quot;' + hrefB + '&quot;, &quot;' + list[i].alNo + '&quot;);" style="padding-right:0;">';
-									count+=1;
-									}
-			                    // 공통 요소
-								value += '<div class="mr-3">'
-	                                   		+ '<div class="icon-circle" style="border:1px solid">'
-	                                       		+ '<i class="fa fa-comments fa-regular"></i>'
-	                                  			+ '</div>'
-	                              			+ '</div>'
-	                              			+ '<div>'
-	                                  			+ '<div class="small text-gray-500">' + list[i].alDate + '</div>'
-	                                  			+ '<span class="font-weight-bold">' + list[i].alContent + ' (' + list[i].alCount + ')</span>'
-	                              			+ '</div>'
-	                               		+ '<span onclick="return false;"><button type="button" class="btn" onclick="deleteAlarm(&quot;' + list[i].alNo + '&quot;);"><span class="fas fa-x" style="font-size: 12px;"></span></button></span>'
-	                          			+ '</a>';
+										}
+				                    // 공통 요소
+									value += '<div class="mr-3">'
+		                                   		+ '<div class="icon-circle" style="border:1px solid">'
+		                                       		+ '<i class="fa fa-comments fa-regular"></i>'
+		                                  			+ '</div>'
+		                              			+ '</div>'
+		                              			+ '<div>'
+		                                  			+ '<div class="small text-gray-500">' + list[i].alDate + '</div>'
+		                                  			+ '<span class="font-weight-bold">' + list[i].alContent + ' (' + list[i].alCount + ')</span>'
+		                              			+ '</div>'
+		                               		+ '<span onclick="return false;"><button type="button" class="btn" onclick="deleteAlarm(&quot;' + list[i].alNo + '&quot;);"><span class="fas fa-x" style="font-size: 12px;"></span></button></span>'
+		                          			+ '</a>';
+								}else{ // 신고 알람일 경우
+									value += '<a class="dropdown-item d-flex align-items-center rep-alarm" style="padding-right:0;">'
+											 + '<div class="mr-3">'
+	                                  			+ '<div class="icon-circle" style="border:1px solid yellow;">'
+	                                      			+ '<span class="material-symbols-outlined" style="color:rgb(250, 71, 71); font-size: 24px;">E911_Emergency</span>'
+	                                 			+ '</div>'
+	                             			+ '</div>'
+	                             			+ '<div>'
+	                                 			+ '<div class="small text-gray-500">' + list[i].alDate + '</div>'
+	                                 			+ '<span class="font-weight-bold">' + list[i].alContent + '</span>'
+	                             			+ '</div>'
+	                              			+ '<span onclick="return false;"><button type="button" class="btn" onclick="deleteAlarm(&quot;' + list[i].alNo + '&quot;);"><span class="fas fa-x" style="font-size: 12px;"></span></button></span>'
+	                         			 + '</a>';
+								}
+								
 							}
 							
 							$("#alert-area").html(value);
