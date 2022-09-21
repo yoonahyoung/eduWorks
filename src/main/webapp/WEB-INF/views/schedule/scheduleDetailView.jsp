@@ -546,7 +546,7 @@
 		                        		url: "search.ca",
 		                        		data: {
 		                        			keyword: key,
-		                        			loginUser.memNo	
+		                        			memNo : ${loginUser.memNo}	
 		                        		},
 		                        		success: function(list){
 		                        			console.log(list);

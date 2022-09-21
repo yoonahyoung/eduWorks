@@ -43,6 +43,7 @@ public class ScheduleController {
 		for(int i = 0; i < clist.size(); i++) {
 			str += clist.get(i).getMycalNo() + ",";
 		}
+		System.out.println(str);
 		var calArr = str.substring(0, str.lastIndexOf(","));
 		
 		mv.addObject("calArr", calArr).setViewName("schedule/calendarView");
@@ -156,12 +157,12 @@ public class ScheduleController {
 			session.setAttribute("alertIcon", "success");
 			session.setAttribute("alertTitle", "일정 등록 완료");
 			session.setAttribute("alertMsg", "일정 등록을 완료하였습니다.");
-			return "redirect:list.ca";
+			return "redirect:list.ca?memNo=" + s.getScheWriter();
 		} else {
 			session.setAttribute("alertIcon", "error");
 			session.setAttribute("alertTitle", "일정 등록 실패");
 			session.setAttribute("alertMsg", "일정 등록을 실패하였습니다.");
-			return "redirect:list.ca";
+			return "redirect:list.ca?memNo=" + s.getScheWriter();
 		}
 		
 	}
@@ -222,18 +223,19 @@ public class ScheduleController {
 	// 일정 삭제
 	@RequestMapping("delete.ca")
 	public String deleteSche(int sNo, HttpSession session) {
+		Schedule s = sService.selectSche(sNo);
 		int result = sService.deleteSche(sNo);
 		
 		if(result > 0) {
 			session.setAttribute("alertIcon", "success");
 			session.setAttribute("alertTitle", "일정 삭제 완료");
 			session.setAttribute("alertMsg", "일정 삭제를 완료하였습니다.");
-			return "redirect:list.ca";
+			return "redirect:list.ca?memNo=" + s.getScheWriter();
 		} else {
 			session.setAttribute("alertIcon", "error");
 			session.setAttribute("alertTitle", "일정 삭제 실패");
 			session.setAttribute("alertMsg", "일정 삭제를 실패하였습니다.");
-			return "redirect:list.ca";
+			return "redirect:list.ca?memNo=" + s.getScheWriter();
 		}
 	}
 	
