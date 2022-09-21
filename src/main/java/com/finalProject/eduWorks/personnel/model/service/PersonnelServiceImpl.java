@@ -15,6 +15,8 @@ import com.finalProject.eduWorks.member.model.vo.Member;
 import com.finalProject.eduWorks.personnel.model.dao.PersonnelDao;
 import com.finalProject.eduWorks.personnel.model.vo.Adjust;
 import com.finalProject.eduWorks.personnel.model.vo.Attendance;
+import com.finalProject.eduWorks.personnel.model.vo.Holiday;
+import com.finalProject.eduWorks.personnel.model.vo.HolidayForm;
 import com.finalProject.eduWorks.personnel.model.vo.Ojt;
 import com.finalProject.eduWorks.personnel.model.vo.Restdate;
 import com.finalProject.eduWorks.personnel.model.vo.SearchAt;
@@ -316,6 +318,36 @@ public class PersonnelServiceImpl implements PersonnelService {
 	@Override
 	public int adjDelete(SearchAt s) {
 		return pDao.adjDelete(sqlSession, s);
+	}
+
+	@Override
+	public int hoApproveCount(HashMap<String, String> m1) {
+		return pDao.hoApproveCount(sqlSession,m1);
+	}
+
+	@Override
+	public ArrayList<HolidayForm> hoApproveList(PageInfo pi1, HashMap<String, String> m1) {
+		return pDao.hoApproveList(sqlSession,pi1, m1);
+	}
+
+	@Override
+	public int hoCount(HashMap<String, String> m2) {
+		return pDao.hoCount(sqlSession,m2);
+	}
+
+	@Override
+	public ArrayList<Holiday> hoList(PageInfo pi2, HashMap<String, String> m2) {
+		return pDao.hoList(sqlSession,pi2, m2);
+	}
+
+	@Override
+	public String totalHo(String memNo) {
+		return pDao.totalHo(sqlSession,memNo);
+	}
+
+	@Override
+	public String useHo(String memNo) {
+		return pDao.useHo(sqlSession,memNo);
 	}
 
 	
