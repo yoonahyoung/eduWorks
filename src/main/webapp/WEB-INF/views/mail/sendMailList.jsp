@@ -132,7 +132,7 @@
 
 		</div>
 		
-		<form id="postMailDetail" action="mailDetail.ma" method="get">
+		<form id="postMailDetail" action="mailDetail.ma" method="post">
 			<input type="hidden" name="mailFolder" value="1">
 			<input type="hidden" name="mailNo" id="detailNo">
 		</form>

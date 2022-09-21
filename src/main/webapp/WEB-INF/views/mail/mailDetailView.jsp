@@ -93,9 +93,9 @@
 			<div class="detail-form">
 
 				<table>
-					<tr class="detail-title">
+					<tr>
 						<th colspan="2">
-							<h3>
+							<h3 class="detail-title">
 								<c:choose>
 									<c:when test="${m.mailStatus.mailImportant == 'N' }">
 										<span class="importCheck" 
@@ -156,8 +156,6 @@
 					url : "updateImportant.ma",
 					data : {
 						mailNo : mailNo
-					  , sendMail : '${loginUser.memEmail}'
-					  , receiveMail : '${loginUser.memEmail}'
 					  , mailFolder : ${m.mailStatus.mailFolder}
 					  , mailImportant : important
 					},
