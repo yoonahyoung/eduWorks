@@ -33,9 +33,15 @@ public class MemberController {
 			case "J3": loginUser.setJobName("팀장"); break;
 			case "J4": loginUser.setJobName("대표"); break;
 			}
-			System.out.println(loginUser.getJobCode());
-			System.out.println(loginUser.getJobName());
-			System.out.println(loginUser.getDeptCode());
+			
+			switch(loginUser.getDeptCode()) {
+			case "D0" : session.setAttribute("deptName", "강사"); break;
+			case "D1" : session.setAttribute("deptName", "인사팀"); break;
+			case "D2" : session.setAttribute("deptName", "행정팀"); break;
+			case "D3" : session.setAttribute("deptName", "홍보팀"); break;
+			case "DN" : session.setAttribute("deptName", "대표"); break;
+			// 대표일 경우 게시판 고를 수 있도록 처리할 예정
+			}
 			session.setAttribute("loginUser", loginUser);
 			mv.setViewName("main");
 			return mv;
@@ -53,6 +59,11 @@ public class MemberController {
 		session.invalidate();
 		
 		return "member/loginForm";
+	}
+	
+	@RequestMapping("mainpage.me")
+	public String mainPage() {
+		return "main";
 	}
 	
 	
