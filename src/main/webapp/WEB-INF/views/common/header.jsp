@@ -100,6 +100,9 @@
 	  width: 100%;
 	  overflow-x: hidden;
 	}
+	#alert-area a:hover{
+		cursor:pointer;
+	}
 </style>
 </head>
 	<c:if test="${ not empty alertMsg }">
@@ -562,7 +565,6 @@
 					success(list){
 						let value = "";
 						let count = 0;
-						console.log(list);
 						
 						if(list.length != 0){ // 리스트가 있을 시
 							// href용 변수
@@ -615,8 +617,6 @@
 							value += '<div style="height:100px;"><h5 style="line-height: 100px;text-align: center;color: black;font-weight: 500;">알람 내역이 없습니다</h5></div>';
 							$("#alert-area").html(value);
 						}
-						
-						
 					},error(){
 						console.log("ajax통신 실패");
 					}
@@ -625,8 +625,6 @@
 		    
 		    // 알람 읽음 처리
 		    function readAlarm(hrefB, alNo){
-		    	console.log(hrefB);
-		    	console.log(alNo);
 		    	
 		    	$.ajax({
 		    		url:"read.al",
@@ -642,7 +640,6 @@
 		    
 		    // 알람 지워지기
 		    function deleteAlarm(alNo){
-		    	console.log(alNo);
 		    	$.ajax({
 		    		url:"delete.al",
 		    		data:{alNo:alNo},
