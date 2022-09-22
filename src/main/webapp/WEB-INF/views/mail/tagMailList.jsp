@@ -1,11 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+
+<!-- css  -->
+<link href="${pageContext.request.contextPath}/resources/css/mail.css"
+	rel="stylesheet" type="text/css">
+
+<title>보낸 메일함</title>
 </head>
 <body>
 
@@ -14,17 +19,20 @@
 
 	<!-- 공통요소 사이드 메뉴바(메일만 해당) -->
 	<jsp:include page="commonMailMenu.jsp" />
-	
+
 	<!-- 메인 콘텐츠 영역 -->
 	<div class="main-content">
 		<div class="second-title">
 			<div>
-				읽은 메일함 <span class="mail-count">전체메일 ${count }</span>
+				<i class='fas fa-bookmark' style='color:${t.tagColor}'></i>
+				${t.tagName }	
+				 <span class="mail-count">전체메일 ${count } / 안읽은 메일 ${unread }</span>
 			</div>
 
 			<ul class="navbar-nav ml-auto moDelte">
-				<li class="nav-item dropdown no-arrow"><span
-					class="mailListCheck"><input type="checkbox" onclick="allCheck(this)"></span>
+				<li class="nav-item dropdown no-arrow navigation"><span
+					class="mailListCheck"><input type="checkbox" id="allCheck"
+						onclick="allCheck(this)"></span>
 					<button type="button" class="reply-btn">
 						<i class="fas fa-location-arrow"></i>&nbsp;&nbsp;답장
 					</button>
@@ -48,6 +56,7 @@
 					</div>
 				</li>
 			</ul>
+			
 		</div>
 		
 		<script>
@@ -88,6 +97,7 @@
 				
 			}
 			
+			/*
 			// 메일에 태그 삽입하는 함수
 			$(document).on("click", "#tag", function(){
 				
@@ -132,13 +142,12 @@
 				}
 
 			})
+			*/
 			
 		</script>
-		
+
 		<hr style="margin: 20px 0px 15px 0px;">
 		<div class="mail-list">
-
-
 			<table class="mail">
 				
 				<!-- 반복문 사용 시작 -->
@@ -160,14 +169,24 @@
 						</c:choose>
 					</td>
 					<td>
-						<!-- 읽은 메일 -->
-						<i class="icon far fa-envelope-open"></i>
+						<c:choose>
+							<c:when test="${m.mailStatus.mailRead == 'N' and m.mailStatus.mailFolder != 1}">
+								<!-- 안읽은 메일 --> 
+								<i class="icon fas fa-envelope"></i> 
+							</c:when>
+							<c:otherwise>
+								<!-- 읽은 메일 -->
+								<i class="icon far fa-envelope-open"></i> 
+							</c:otherwise>
+						</c:choose>
 					</td>
 					<td>
+
 						<!-- 첨부파일 있는 경우 생성 -->
 						<c:if test="${m.attachment.atCount > 0 }">
                          	<i class="icon fas fa-paperclip"></i>
                         </c:if>
+                         
 					</td>
 					<td>
 						<c:choose>
@@ -203,13 +222,14 @@
 				</c:forEach>
 					
 			</table>
+
 		</div>
 		
 		<form id="postMailDetail" action="mailDetail.ma" method="post">
-			<input type="hidden" name="mailFolder" value="2">
+			<input type="hidden" name="mailFolder" value="1">
 			<input type="hidden" name="mailNo" id="detailNo">
 		</form>
-
+		
 		<script>
 		
 		    // '전체클릭'버튼 클릭시 실행하는 함수
@@ -224,28 +244,16 @@
 	              
 	           });
 	        }
-			
-			// '메일 조회'시 실행하는 함수
-			$(function(){
-				$(".mail-title").click(function(){
-					
-					let mailNo = $(this).children('input[type=hidden]').val();
-					console.log(mailNo);
-					$("#detailNo").val(mailNo);
-					$("#postMailDetail").submit();
-
-				})
-			})
 					
 			// '중요메일' 설정시 실행하는 함수
 			function importantBtn(mailNo, important){
-	
+
 				$.ajax({
 					url : "updateImportant.ma",
 					data : {
 						mailNo : mailNo
-					  , receiveMail : '${loginUser.memEmail}'
-					  , mailFolder : 2
+					  , sendMail : '${loginUser.memEmail}'
+					  , mailFolder : 1
 					  , mailImportant : important
 					},
 					success : function(result){
@@ -258,8 +266,21 @@
 						console.log("좋아요 실패");
 					}
 				})
-	
+
 			}
+			
+			// '메일 상세 조회'시 실행하는 함수
+			$(function(){
+				$(".mail-title").click(function(){
+					
+					let mailNo = $(this).children('input[type=hidden]').val();
+					console.log(mailNo);
+					$("#detailNo").val(mailNo);
+					$("#postMailDetail").submit();
+
+				})
+			})
+			
 			
 			// 메일 '삭제'시 실행하는 함수
 			function chooseDelete(){
@@ -278,8 +299,9 @@
 				$.ajax({
 					url : "deleteMail.ma",
 					data : {
-						receiveMail : '${loginUser.memEmail}',
-						mailNo : mailNo
+						sendMail : '${loginUser.memEmail}',
+						mailNo : mailNo,
+						mailFolder : 1
 					},
 					success : function(result){
 						console.log(result);
@@ -293,8 +315,10 @@
 				})
 				
 			}
-		</script>
+			
 
+		</script>
+		
 		<!-- 페이지 바 -->
 		<div class="page-nav" style="margin: 30px 0 30px 0">
 			<c:choose>
@@ -322,7 +346,7 @@
 									<!-- 현재 페이지가 1이 아닌 경우 -->
 									<li class="page-item">
 										<a class="page-link"
-											href="readMailList.ma?page=${pi.currentPage - 1 }"
+											href="tagMailList.ma?page=${pi.currentPage - 1 }"
 											aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 										</a>
 									</li>
@@ -332,7 +356,7 @@
 							<c:forEach var="p" begin="${pi.startPage }" end="${pi.endPage }">
 								<li class="page-item">
 									<a class="page-link"
-									   href="readMailList.ma?page=${p }">${p }</a>
+									   href="tagMailList.ma?page=${p }">${p }</a>
 								</li>
 							</c:forEach>
 							
@@ -346,7 +370,7 @@
 								<c:otherwise>
 									<!-- 현재 페이지가 마지막이 아닌 경우 -->
 									<li class="page-item"><a class="page-link"
-										href="readMailList.ma?page=${pi.currentPage + 1}"
+										href="tagMailList.ma?page=${pi.currentPage + 1}"
 										aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 									</a></li>
 								</c:otherwise>
@@ -361,6 +385,126 @@
 
 	</div>
 	<!-- /.container-fluid -->
+
+	<!-- 태그 추가(addTags Model) 모달-->
+
+	<div class="modal" id="addTags">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">
+						<b>태그 추가</b>
+					</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<!-- 해당 버튼 클릭시 모달과 연결해제 -->
+				</div>
+
+				<!-- Modal body -->
+				<form action="" method="post">
+					<div class="modal-body" align="center">
+
+
+						<input type="hidden" name="" value="">
+
+						<div class="setup-tag">
+
+							<div>태그 이름</div>
+							<input type="text" name="" style="width: 100%;"> <br>
+
+							<div class="tag-color">
+								<div>태그 색상</div>
+
+								<div id="select-tag" style="text-align: center;">
+									<i class="fas fa-bookmark fa-lg" style="color: red;"></i> <i
+										class="fas fa-bookmark fa-lg" style="color: orange;"></i> <i
+										class="fas fa-bookmark fa-lg" style="color: gold;"></i> <i
+										class="fas fa-bookmark fa-lg" style="color: green"></i> <i
+										class="fas fa-bookmark fa-lg" style="color: blue;"></i> <br>
+									<i class="fas fa-bookmark fa-lg" style="color: purple;"></i> <i
+										class="fas fa-bookmark fa-lg" style="color: violet;"></i> <i
+										class="fas fa-bookmark fa-lg" style="color: gray;"></i> <i
+										class="fas fa-bookmark fa-lg" style="color: pink;"></i> <i
+										class="fas fa-bookmark fa-lg" style="color: yellowgreen;"></i>
+								</div>
+							</div>
+
+						</div>
+
+
+						<div>
+							<button type="submit" class="mailBtn"
+								style="background-color: slategray; color: white; border: none;">추가</button>
+							<button type="button" data-dismiss="modal" class="mailBtn">취소</button>
+						</div>
+
+					</div>
+
+				</form>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- 태그 수정(updateTags Model) 모달-->
+
+	<div class="modal" id="updateTags">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">
+						<b>태그 수정</b>
+					</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<!-- 해당 버튼 클릭시 모달과 연결해제 -->
+				</div>
+
+				<!-- Modal body -->
+				<form action="" method="post">
+					<div class="modal-body" align="center">
+							<input type="hidden" name="" value="">
+
+							<div class="setup-tag">
+
+								<div>태그 이름</div>
+								<input type="text" name="" value="" style="width: 100%;">
+								<br>
+
+								<div class="tag-color">
+									<div>태그 색상</div>
+
+									<div id="select-tag" style="text-align: center;">
+										<i class="fas fa-bookmark fa-lg" style="color: red;"></i> <i
+											class="fas fa-bookmark fa-lg" style="color: orange;"></i> <i
+											class="fas fa-bookmark fa-lg" style="color: gold;"></i> <i
+											class="fas fa-bookmark fa-lg" style="color: green"></i> <i
+											class="fas fa-bookmark fa-lg" style="color: blue;"></i> <br>
+										<i class="fas fa-bookmark fa-lg" style="color: purple;"></i> <i
+											class="fas fa-bookmark fa-lg" style="color: violet;"></i> <i
+											class="fas fa-bookmark fa-lg" style="color: gray;"></i> <i
+											class="fas fa-bookmark fa-lg" style="color: pink;"></i> <i
+											class="fas fa-bookmark fa-lg" style="color: yellowgreen;"></i>
+									</div>
+								</div>
+
+							</div>
+
+
+							<div>
+								<button type="submit" class="mailBtn"
+									style="background-color: slategray; color: white; border: none;">확인</button>
+								<button type="button" data-dismiss="modal" class="mailBtn">취소</button>
+							</div>
+					</div>
+
+				</form>
+
+			</div>
+		</div>
+	</div>
 
 	<jsp:include page="../common/footer.jsp" />
 

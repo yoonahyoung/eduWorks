@@ -348,13 +348,28 @@
 					  , cnsln_real
 					  , cnsln_create_date
 					  , cnsln_count
+					  , cnsln_status
 				   from tb_cnsln
 				   join tb_member m on (cnsln_writer = mem_no)
                    join tb_job j on (m.job_code = j.job_code)
-                  where cnsln_status in ('Y', 'N')
+                  where 1=1
 					 <if test="keyword != null and keyword neq ''">
 					    and cnsln_phone like '%' || #{keyword} || '%'
 					 </if>
+					 <if test="cate == 1">
+					 	and not cnsln_status = 'NN'
+					 </if>
+					 <if test="cate == 2">
+				 		and cnsln_status = 'Y'
+				 		and cnsln_real is null
+				 	</if>
+				 	<if test="cate == 3">
+				 		and cnsln_status = 'Y'
+				 		and cnsln_real is not null
+				 	</if>
+				 	<if test="cate == 4">
+				 		and cnsln_status = 'N'
+				 	</if>
 				 union
 				 select cnsln_no
 					  , cnsln_title
@@ -369,13 +384,28 @@
 					  , cnsln_real
 					  , cnsln_create_date
 					  , cnsln_count
+					  , cnsln_status
 				   from tb_cnsln
 				   join tb_member m on (cnsln_writer = mem_no)
                    join tb_job j on (m.job_code = j.job_code)
-                  where cnsln_status in ('Y', 'N')
+                  where 1=1
 					 <if test="keyword != null and keyword neq ''">
 					    and cnsln_title like '%' || #{keyword} || '%'
 					 </if>
+					 <if test="cate == 1">
+					 	and not cnsln_status = 'NN'
+					 </if>
+					 <if test="cate == 2">
+				 		and cnsln_status = 'Y'
+				 		and cnsln_real is null
+				 	</if>
+				 	<if test="cate == 3">
+				 		and cnsln_status = 'Y'
+				 		and cnsln_real is not null
+				 	</if>
+				 	<if test="cate == 4">
+				 		and cnsln_status = 'N'
+				 	</if>
 				)
 	</select>
 	
@@ -403,10 +433,24 @@
 						   from tb_cnsln
 						  join tb_member m on (cnsln_writer = mem_no)
                    		  join tb_job j on (m.job_code = j.job_code)
-						 where cnsln_status in ('Y', 'N')
+						 where 1=1
 						 <if test="keyword != null and keyword neq ''">
 						    and cnsln_phone like '%' || #{keyword} || '%'
 						 </if>
+						 <if test="cate == 1">
+						 	and not cnsln_status = 'NN'
+						 </if>
+						 <if test="cate == 2">
+					 		and cnsln_status = 'Y'
+					 		and cnsln_real is null
+					 	</if>
+					 	<if test="cate == 3">
+					 		and cnsln_status = 'Y'
+					 		and cnsln_real is not null
+					 	</if>
+					 	<if test="cate == 4">
+					 		and cnsln_status = 'N'
+					 	</if>
 						 )
 				 union
 				 select *
@@ -430,10 +474,24 @@
 						   from tb_cnsln
 						  join tb_member m on (cnsln_writer = mem_no)
                    		  join tb_job j on (m.job_code = j.job_code)
-						 where cnsln_status in ('Y', 'N')
+						 where 1=1
 						 <if test="keyword != null and keyword neq ''">
 						    and cnsln_title like '%' || #{keyword} || '%'
 						 </if>
+						 <if test="cate == 1">
+						 	and not cnsln_status = 'NN'
+						 </if>
+						 <if test="cate == 2">
+					 		and cnsln_status = 'Y'
+					 		and cnsln_real is null
+					 	</if>
+					 	<if test="cate == 3">
+					 		and cnsln_status = 'Y'
+					 		and cnsln_real is not null
+					 	</if>
+					 	<if test="cate == 4">
+					 		and cnsln_status = 'N'
+					 	</if>
 					)
 				)
 			 order

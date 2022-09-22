@@ -86,17 +86,25 @@ public class CnslnDao {
 	
 	// 상담 내역 조회
 	// 게시글 리스트 개수 조회
-	public int selectListCount(SqlSessionTemplate sqlSession, String keyword) {
-		return sqlSession.selectOne("cnslnMapper.selectListCount", keyword);
+	public int selectListCount(SqlSessionTemplate sqlSession, String keyword, int cate) {
+		String c = Integer.toString(cate);
+		HashMap<String, String> map = new HashMap<>();
+		map.put("keyword", keyword);
+		map.put("cate", c);
+		return sqlSession.selectOne("cnslnMapper.selectListCount", map);
 	}
 	
 	// 게시글 리스트 조회
-	public ArrayList<Cnsln> selectCnslnList(SqlSessionTemplate sqlSession, PageInfo pi, String keyword){
+	public ArrayList<Cnsln> selectCnslnList(SqlSessionTemplate sqlSession, PageInfo pi, String keyword, int cate){
 		int limit = pi.getBoardLimit();
 		int offset = (pi.getCurrentPage() - 1) * limit;
 		RowBounds rowBounds = new RowBounds(offset, limit);
+		String c = Integer.toString(cate);
+		HashMap<String, String> map = new HashMap<>();
+		map.put("keyword", keyword);
+		map.put("cate", c);
 		
-		return (ArrayList) sqlSession.selectList("cnslnMapper.selectCnslnReList", keyword, rowBounds);
+		return (ArrayList) sqlSession.selectList("cnslnMapper.selectCnslnReList", map, rowBounds);
 	}
 	
 	// 상담 내역 삭제

@@ -297,5 +297,26 @@
 		</if>
 		 where board_no in (${checkList})
   	</update>
+	
+  	<!-- 천제검색 전사공지사항 -->
+  	<select id="searchNotice"	resultMap="noticeResult">
+		select
+			   board_no
+			 , board_title
+			 , board_content
+			 , m.mem_name as "b_writer"
+			 , m.dept_code
+			 , to_char(board_en_date, 'YYYY-MM-DD') as "board_en_date"
+			 , board_count
+			 , board_top
+		  from tb_board b
+		  join tb_member m on(b.board_writer = m.mem_no)
+		 where board_category = 1
+		   and board_status = 'Y'
+		   and (board_content like '%' || #{key} || '%'
+  		    or board_title like '%' || #{key} || '%')	
+	</select>
+  	
+  	
   	
 </mapper>

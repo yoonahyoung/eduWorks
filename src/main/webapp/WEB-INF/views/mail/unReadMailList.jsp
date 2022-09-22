@@ -42,26 +42,98 @@
 					<button type="button" class="sub-btn warning-btn">
 						<i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;스팸신고
 					</button>
-					<div class="dropdown-list dropdown-menu shadow"
+					<div class="dropdown-list dropdown-menu shadow" id="tagList"
 						aria-labelledby="dotDropdown" style="margin-top: -10px;">
 
-						<!-- 태그없으면 안보임  -->
-						<a class="dropdown-item d-flex align-items-center" href="#"> <span
-							class="font-weight-bold">태그색성 + 태그명</span>
-						</a> <a class="dropdown-item d-flex align-items-center" href="#"
-							data-toggle="modal" data-target="#delete"> <span
-							class="font-weight-bold">태그색성 + 태그명</span>
-						</a>
-
-						<!-- 태그 생성유무 상관없이 보임-->
-						<a class="dropdown-item d-flex align-items-center"
-							data-toggle="modal" data-target="#addTags" href="#"> <span
-							class="font-weight-bold">+ 태그 추가</span>
-						</a>
 					</div>
 				</li>
 			</ul>
 		</div>
+		
+		<script>
+			
+			// 태그 목록 조회
+			$(".tag-btn").click(function(){
+				insertTagList();
+			})
+
+			// 태그 목록 조회
+			function insertTagList(){
+				
+				$.ajax({
+					url : "selectTagList.ma",
+					data : {
+						memNo : ${loginUser.memNo}
+					},
+					success : function(tag){
+						let value="";
+	
+						for(let i=0; i < tag.length; i++){
+	
+							value += "<a class='dropdown-item d-flex align-items-center' id='tag'>"
+									+ "<input type='hidden' name='tagNo' value='" + tag[i].tagNo + "'>"
+									+ "<span class='font-weight-bold'>"
+									+ "<i class='fas fa-bookmark' style='color:" + tag[i].tagColor + "'></i>&nbsp;&nbsp;"
+									+ tag[i].tagName
+									+ "</span>"
+									+ "</a>"
+						}
+						
+						$("#tagList").html(value);
+					},
+					error : function(){
+						console.log("태그 조회 실패");
+					}
+				})
+				
+			}
+			
+			// 메일에 태그 삽입하는 함수
+			$(document).on("click", "#tag", function(){
+				
+				let tagNo = $(this).children("input[name=tagNo]").val();
+				console.log(tagNo);
+				
+				let checkArr = [];
+				
+				$(".mail-select").each(function(){
+					if($(this).prop("checked")){
+						checkArr.push( $(this).val() );
+					}
+				})
+				//console.log(checkArr.length);
+				
+				if(checkArr.length < 1){
+					alert("태그를 추가할 메일을 선택해주세요.");					
+				} else {
+					
+					const mailNo = checkArr.toString();
+					console.log(mailNo);
+					
+					$.ajax({
+						url : "insertMailTag.ma",
+						data : {
+							tagNo : tagNo,
+							memNo : ${loginUser.memNo},
+							mailNo : mailNo,
+							receiveMail : '${loginUser.memEmail}',
+						},
+						success : function(result){
+							console.log(result);
+							if(result == 'success'){
+								location.reload();
+							}
+						},
+						error : function(){
+							console.log("메일에 태그 추가 실패");
+						}
+					})	
+
+				}
+
+			})
+			
+		</script>
 		
 		<hr style="margin: 20px 0px 15px 0px;">
 		<div class="mail-list">
@@ -97,7 +169,28 @@
                          	<i class="icon fas fa-paperclip"></i>
                         </c:if>
 					</td>
-					<td class="mail-person" width="15%"><div class="person">${loginUser.memName }</div></td>
+					<td>
+						<c:choose>
+							<c:when test="${empty m.sendName}">
+								<!-- 사내직원이 보내지 않은 경우 -->
+								<td class="mail-person" width="15%"><div class="person">${m.sendMail }</div></td>
+							</c:when>
+							<c:otherwise>
+								<!-- 사내직원이 보낸 경우 -->
+								<td class="mail-person" width="15%"><div class="person">${m.sendName }</div></td>
+							</c:otherwise>
+						</c:choose>
+					</td>
+					<td>	
+						<c:choose>
+							<c:when test="${m.tagNo == '' }">
+									
+							</c:when>
+							<c:otherwise>
+								<i class='fas fa-bookmark' style="color:${m.tag.tagColor};" ></i>
+							</c:otherwise>
+						</c:choose>
+					</td>
 					<td class="mail-title">
 						<c:if test="${m.mailType == 1}"><span style="color:red;">[중요!]</span></c:if>
 						${m.mailTitle }

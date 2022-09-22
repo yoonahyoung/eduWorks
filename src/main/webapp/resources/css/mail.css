@@ -461,3 +461,7 @@ table{
 	cursor: pointer;
 }
 
+.dropdown-item{
+	cursor:pointer;
+}
+

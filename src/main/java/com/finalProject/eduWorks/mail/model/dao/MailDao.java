@@ -426,6 +426,61 @@ public class MailDao {
 		return sqlSession.delete("mailMapper.deleteTag", t);
 	}
 	
+	/**
+	 * 17. 선택한 메일에 태그 삽입
+	 * @param list : 선택한 메일 번호, 삽입할 태그 번호, 로그인한 회원 이메일
+	 * @return : 태그 삽입 성공 여부가 담긴 int형 변수
+	 */
+	public int insertMailTag(SqlSessionTemplate sqlSession, ArrayList<MailStatus> list) {
+
+		int result = 0;
+		for(MailStatus ms : list ) {
+			result += sqlSession.update("mailMapper.insertMailTag", ms);
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 18_1. 해당 태그가 첨부된 메일 개수 조회
+	 * @param ms : 첨부된 태그 번호, 로그인한 회원 이메일
+	 * @return : 해당 태그가 첨부된 메일 개수
+	 */
+	public int tagListCount(SqlSessionTemplate sqlSession, MailStatus ms) {
+		return sqlSession.selectOne("mailMapper.tagListCount", ms);
+	}
+	
+	/**
+	 * 18_2. 해당 태그가 첨부된 메일 목록 조회
+	 * @param ms : 첨부된 태그 번호, 로그인한 회원 이메일
+	 * @return : 해당 태그가 첨부된 메일 목록
+	 */
+	public ArrayList<Mail> selectTagMailList(SqlSessionTemplate sqlSession, PageInfo pi, MailStatus ms){
+		
+		int limit = pi.getBoardLimit(); // 조회해야되는 게시글 갯수
+		int offset = (pi.getCurrentPage() - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return (ArrayList)sqlSession.selectList("mailMapper.selectTagMailList", ms, rowBounds);
+	}
+	
+	/**
+	 * 18_3. 해당 태그가 첨부된 메일 중 안읽은 메일 개수 조회
+	 * @param ms : 첨부된 태그 번호, 로그인한 회원 이메일
+	 * @return : 해당 태그가 첨부된 메일 중 안읽은 메일 개수
+	 */
+	public int tagUnReadCount(SqlSessionTemplate sqlSession, MailStatus ms) {
+		return sqlSession.selectOne("mailMapper.tagUnReadCount", ms);
+	}
+	
+	/**
+	 * 18_4. 해당 태그 조회
+	 * @param t : 로그인한 회원 사번, 태그 번호
+	 * @return : 해당 태그 정보
+	 */
+	public Tag selectTagInfo(SqlSessionTemplate sqlSession, Tag t) {
+		return sqlSession.selectOne("mailMapper.selectTagInfo", t);
+	}
 	
 
 }

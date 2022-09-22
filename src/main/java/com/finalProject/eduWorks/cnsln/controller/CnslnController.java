@@ -249,10 +249,10 @@ public class CnslnController {
 	// 상담 내역 리스트
 	@RequestMapping("list.tcn")
 	public ModelAndView selectCnslnList(@RequestParam(value="cpage", defaultValue="1") int currentPage, String keyword, String cNo, ModelAndView mv) {
-		int listCount = cService.selectListCount(keyword);
-		
+		int cate = 1;
+		int listCount = cService.selectListCount(keyword, cate);
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 4, 5);
-		ArrayList<Cnsln> list = cService.selectCnslnList(pi, keyword);
+		ArrayList<Cnsln> list = cService.selectCnslnList(pi, keyword, cate);
 
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
@@ -265,22 +265,25 @@ public class CnslnController {
 	@RequestMapping("detail.tcn")
 	public ModelAndView selectCnslnRe(int cNo, ModelAndView mv) {
 		Cnsln c = cService.selectCnsln(cNo);
+		int result = cService.increaseCount(cNo);
 		
-		mv.addObject("c", c).setViewName("cnsln/cnslnDetailView");
+		if(result > 0) {
+			mv.addObject("c", c).setViewName("cnsln/cnslnDetailView");
+		}
 		return mv;
 	}
 	
 	// 상담 내역 리스트 검색
 	@ResponseBody
 	@RequestMapping(value="search.tcn", produces="application/json; charset=UTF-8")
-	public String ajaxSelectCnslnList(@RequestParam(value="cpage", defaultValue="1") int currentPage, String keyword) {
-		int listCount = cService.selectListCount(keyword);
+	public String ajaxSelectCnslnList(@RequestParam(value="cpage", defaultValue="1") int currentPage, String keyword, int cate) {
+		int listCount = cService.selectListCount(keyword, cate);
 		
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 4, 5);
 		
 		
-		ArrayList<Cnsln> list = cService.selectCnslnList(pi, keyword);
-		
+		ArrayList<Cnsln> list = cService.selectCnslnList(pi, keyword, cate);
+		System.out.println(list);
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("pi", pi);
 		map.put("list", list);

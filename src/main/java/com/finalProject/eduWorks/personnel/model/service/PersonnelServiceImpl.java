@@ -350,6 +350,26 @@ public class PersonnelServiceImpl implements PersonnelService {
 		return pDao.useHo(sqlSession,memNo);
 	}
 
+	@Override
+	public int holidayMgCount(SearchAt s) {
+		return pDao.holidayMgCount(sqlSession,s);
+	}
+
+	@Override
+	public ArrayList<HolidayForm> holidayMgList(PageInfo pi1, SearchAt s) {
+		return pDao.holidayMgList(sqlSession,pi1,s);
+	}
+
+	@Override
+	public int holidayAddCount(SearchAt s) {
+		return pDao.holidayAddCount(sqlSession,s);
+	}
+
+	@Override
+	public ArrayList<Holiday> holidayAddList(PageInfo pi2, SearchAt s) {
+		return pDao.holidayAddList(sqlSession,pi2,s);
+	}
+
 	
 
 

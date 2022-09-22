@@ -1004,8 +1004,8 @@
 		                    <thead>
 		                        <tr class="table_thead_border">
 		                            <th width="5%">번호</th>
-		                            <th width="30%">제목</th>
-		                            <th width="7%">작성자</th>
+		                            <th width="25%">제목</th>
+		                            <th width="12%">작성자</th>
 		                            <th width="7%">작성일</th>
 		                            <th width="5%">조회수</th>
 		                        </tr>

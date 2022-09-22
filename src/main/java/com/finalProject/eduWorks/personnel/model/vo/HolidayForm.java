@@ -27,4 +27,7 @@ public class HolidayForm {
 	private String aa;
 	private String bb;
 	private String leave;
+	private String memName;
+	private String jobName;
+	private String deptName;
 }

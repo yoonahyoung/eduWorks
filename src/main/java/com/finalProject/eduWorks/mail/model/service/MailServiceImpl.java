@@ -419,6 +419,56 @@ public class MailServiceImpl implements MailService {
 		return mDao.deleteTag(sqlSession, t);
 	}
 	
+	/**
+	 * 17. 선택한 메일에 태그 삽입
+	 * @param list : 선택한 메일 번호, 삽입할 태그 번호, 로그인한 회원 이메일
+	 * @return : 태그 삽입 성공 여부가 담긴 int형 변수
+	 */
+	@Override
+	public int insertMailTag(ArrayList<MailStatus> list) {
+		return mDao.insertMailTag(sqlSession, list);
+	}
+	
+	/**
+	 * 18_1. 해당 태그가 첨부된 메일 개수 조회
+	 * @param ms : 첨부된 태그 번호, 로그인한 회원 이메일
+	 * @return : 해당 태그가 첨부된 메일 개수
+	 */
+	@Override
+	public int tagListCount(MailStatus ms) {
+		return mDao.tagListCount(sqlSession, ms);
+	}
+	
+	/**
+	 * 18_2. 해당 태그가 첨부된 메일 목록 조회
+	 * @param ms : 첨부된 태그 번호, 로그인한 회원 이메일
+	 * @return : 해당 태그가 첨부된 메일 목록
+	 */
+	@Override
+	public ArrayList<Mail> selectTagMailList(PageInfo pi, MailStatus ms) {
+		return mDao.selectTagMailList(sqlSession, pi, ms);
+	}
+	
+	/**
+	 * 18_3. 해당 태그가 첨부된 메일 중 안읽은 메일 개수 조회
+	 * @param ms : 첨부된 태그 번호, 로그인한 회원 이메일
+	 * @return : 해당 태그가 첨부된 메일 중 안읽은 메일 개수
+	 */
+	@Override
+	public int tagUnReadCount(MailStatus ms) {
+		return mDao.tagUnReadCount(sqlSession, ms);
+	}
+	
+	/**
+	 * 18_4. 해당 태그 조회
+	 * @param t : 로그인한 회원 사번, 태그 번호
+	 * @return : 해당 태그 정보
+	 */
+	@Override
+	public Tag selectTagInfo(Tag t) {
+		return mDao.selectTagInfo(sqlSession, t);
+	}
+	
 	
 
 

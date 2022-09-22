@@ -214,7 +214,7 @@ public class ScheduleController {
 		}
 		
 		// 내 캘린더 항목
-		ArrayList<Mycal> mlist = sService.selectMycalList(memNo);
+		ArrayList<Mycal> mlist = sService.selectMycalList(s.getScheWriter());
 		// 멤버 리스트
 		String keyword = "";
 		ArrayList<Member> aList = sService.selectMemberList(keyword, memNo) ;

@@ -108,12 +108,14 @@
 	                        // 제목, 작성자 키워드 검색 / 카테고리 분류 기능 ajax=======================================================
                             function searchList(page){
 	                            var cate = $("#selectNo").val();	
+	                            console.log(cate);
 	                            
                             	$.ajax({
                             		url:"search.tcn",
                             		data:{
                             				keyword:$("#cnslnKeyword").val(),
-                            				cpage: page
+                            				cpage: page,
+                            				cate: cate
                             			},
                             		success:function(map){
                             			const pi = map.pi;
@@ -139,7 +141,7 @@
 		                            					} else{
 		                            						nList += '<td>상담 완료</td>';
 		                            					}
-		                            				} else{
+		                            				} else if(list[i].cnslnStatus == 'N'){
 		                            					nList += '<td>상담 취소</td>';
 		                            				}
 					                                
@@ -147,7 +149,7 @@
 		                            					  + '<td>' + list[i].cnslnWriter + '</td>'
 		                            					  + '<td>' + list[i].cnslnCreateDate + '</td>'
 		                            					  + '</tr>';
-	                            				} else if(cate == 2 && list[i].cnslnStatus == 'Y' && list[i].cnslnReal == null){
+	                            				} else if(cate == 2){
 	                            					nList += "<tr>"
 		                            				      + '<td class="no">' + list[i].cnslnNo + '</td>';
 		                            				
@@ -157,7 +159,7 @@
 		                            					  + '<td>' + list[i].cnslnWriter + '</td>'
 		                            					  + '<td>' + list[i].cnslnCreateDate + '</td>'
 		                            					  + '</tr>';
-	                            				} else if(cate == 3 && list[i].cnslnStatus == 'Y' && list[i].cnslnReal != null){
+	                            				} else if(cate == 3){
 	                            					nList += "<tr>"
 		                            				      + '<td class="no">' + list[i].cnslnNo + '</td>';
 		                            				
@@ -167,7 +169,7 @@
 		                            					  + '<td>' + list[i].cnslnWriter + '</td>'
 		                            					  + '<td>' + list[i].cnslnCreateDate + '</td>'
 		                            					  + '</tr>';
-	                            				} else if(cate == 4 && list[i].cnslnStatus == 'N'){
+	                            				} else if(cate == 4){
 	                            					nList += "<tr>"
 		                            				      + '<td class="no">' + list[i].cnslnNo + '</td>';
 		                            				

@@ -252,7 +252,7 @@ select {
                                 <br><br>
                                 <h3 class="su_sub_menu_name">연차승인내역</h3>
                                 <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b; position:relative">
-                                <div class="detailInfo positionab" id="div1" style="display: ;">
+                                <div class="detailInfo positionab" id="div1" style="display:none ;">
                                     
                                             
                                     <div class="close close2"></div>
@@ -285,7 +285,7 @@ select {
                                      </form>
                             	</div>
                             	
-                            	<div class="detailInfo positionab" id="div1" style="display: ;">
+                            	<div class="detailInfo positionab" id="div1" style="display:none ;">
                                     
                                             
                                     <div class="close close2"></div>
@@ -350,7 +350,7 @@ select {
                                         <td align="center">xx</td>
                                         <td align="center">xx</td>
                                         <td align="center">xx</td>
-                                        <input type="hidden" id="inputCk" name="leave">
+                                        <td id="sel0" style="display: none;"><input type="hidden" id="inputCk" name="leave"></td>
                                    </tr>
                                    </table>
                             </div>
@@ -400,9 +400,11 @@ select {
                                         <th>지급일</th>
                                         <th>지급상태</th>
                                         <th>지급갯수</th>
+                                        <th>비고</th>
                                     </tr>
                                     <tr>
                                         <td align="center">2022-07-20</td>
+                                        <td align="center">xx</td>
                                         <td align="center">xx</td>
                                         <td align="center">xx</td>
                                         <td align="center">xx</td>
