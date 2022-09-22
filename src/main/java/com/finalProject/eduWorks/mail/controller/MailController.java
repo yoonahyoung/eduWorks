@@ -784,6 +784,21 @@ public class MailController {
 		return new Gson().toJson(tList);
 		
 	}
+	
+	/**
+	 * 16_3. 태그 수정
+	 * @param t : 수정하고자하는 태그 이름, 태그 색상, 태그 번호
+	 * @return : 태그 수정 성공여부 (성공 : "success" | 실패 : "fail")
+	 */
+	@ResponseBody
+	@RequestMapping("updateTag.ma")
+	public String ajaxUpdateTag(Tag t) {
+		
+		int result = mService.updateTag(t);
+		
+		return result > 0 ? "success" : "fail";
+		
+	}
 
 	
 }

@@ -67,7 +67,51 @@
 		</nav>
 
 		<script>
+		
+    	
+	    	// 태그 '추가'시 실행하는 함수
+	    	function insertTag(){
+	    		
+	    		let color = $("#tagColor").val();
+	    		console.log(color);
+	    		let name = $("#tagName").val();
+	    		console.log(name);
+	    		
+	    		$.ajax({
+	    			url : "insertTag.ma",
+	    			data : {
+	    				memNo : "${loginUser.memNo}",
+	    				tagName : name,
+	    				tagColor : color
+	    			},
+	    			success : function(result){
+	    				console.log(result);
+	    				selectTagList();
+	    			},
+	    			error : function(){
+	    				console.log("태그 추가 실패");
+	    			}
+	    		})
+	
+	    	}
 
+	    	// 태그 선택시 클래스명 지정하는 함수
+	    	function choiceTag(num){
+	    		
+	    		// 선택한 색상에 클래스 추가
+	    		$(".bgcolor" + num).addClass("active");
+	    		
+	    		// 선택한 색상 외 클래스 제거
+	    		$(".tagColor").not($(".bgcolor" + num)).removeClass("active");
+	    		
+	    		// 선택한 색상 배경색 추출
+	    		let color = $(".bgcolor" + num).css("background-color");
+	
+	    		// tagColor value값에 넣기
+	    		$("input[name=tagColor]").val(color);
+	      		
+	    	}
+	    	
 			// '태그 삭제'클릭시 실행하는 함수
 			function deleteTags() {
 				let answer = confirm("태그를 삭제하시겠습니까?");
@@ -110,16 +154,15 @@
 				$.ajax({
 					url : "selectTagList.ma",
 					data : {
-						memNo : "${loginUser.memNo}"
+						memNo : ${loginUser.memNo}
 					},
 					success : function(tag){
 						let value="";
-						console.log(tag);
-						console.log(tag.length);
+
 						for(let i=0; i < tag.length; i++){
-							console.log(tag);
+
 							value += "<div class='tag-title'>" 
-								+ "<a href='' class='tag-name'>"
+								+ "<a class='tag-name' onclick='tagPage(" + tag[i].tagNo + ");'>"
 								+ "<h6>"
 								+ "<i class='fas fa-bookmark' style='color:" + tag[i].tagColor + "'></i>&nbsp;&nbsp;"
 							    + tag[i].tagName
@@ -129,7 +172,10 @@
 								+ "<i class='fas fa-ellipsis-v'></i>"
 								+ "</a>"
 								+ "<div class='dropdown-list dropdown-menu shadow' aria-labelledby='dotDropdown' style='margin-left: -180px; margin-top: -10px;'>"
-								+ "<a class='dropdown-item d-flex align-items-center' href='#' data-toggle='modal' data-target='#updateTags'>"
+								+ "<a class='dropdown-item d-flex align-items-center' id='updateTag' data-toggle='modal' data-target='#updateTags'>"
+								+ "<input type='hidden' name='tagNo' value='" + tag[i].tagNo + "'>"
+								+ "<input type='hidden' name='tagName' value='" + tag[i].tagName + "'>"
+								+ "<input type='hidden' name='tagColor' value='" + tag[i].tagColor + "'>"
 								+ "<span class='font-weight-bold'>수정하기</span>"
 								+ "</a>"
 								+ "<a class='dropdown-item d-flex align-items-center' onclick='deleteTags();'>"
@@ -154,6 +200,69 @@
 			})
 
 			
+			// 해당 태그 페이지로 이동하는 함수
+			
+			function tagPage(tagNo){
+				
+				console.log(tagNo);
+
+			}
+
+			// 태그 '수정하기'클릭시 실행하는 함수
+			$(document).on("click", "#updateTag", function(){
+
+				let no = $(this).children("input[name=tagNo]").val();
+
+				let name = $(this).children("input[name=tagName]").val();
+
+				let color = $(this).children("input[name=tagColor]").val();
+				console.log(color);
+				
+				// 동일한 색상인 경우 클래스 추가하기
+				for(let num = 1; num <= 10; num++){
+					let no = $(".bgcolor" + num).css("background-color");
+					console.log(no);
+					if(color == no){
+						$(".bgcolor" + num).addClass("active");
+						$(".tagColor").not($(".bgcolor" + num)).removeClass("active");
+					} 
+				}
+				
+				// 수정 모달창에 value값 띄우기
+				$("#newTagName").val(name);
+				$("#newTagNo").val(no);
+				$("#newTagColor").val(color);
+
+			})
+		
+			// 태그 수정처리하는 함수
+			function updateTag(){
+				
+				let color = $("#tagColor").val();
+	    		console.log(color);
+				
+				$.ajax({
+					url : "updateTag.ma",
+					data : {
+						memNo : ${loginUser.memNo},
+						tagNo : $("#newTagNo").val(),						
+						tagColor : color,
+						tagName : $("#newTagName").val()
+					},
+					success : function(result){
+						console.log(result);
+						if(result == 'success'){
+							selectTagList();
+						}
+					},
+					error : function(){
+						console.log("태그 수정 실패");
+					}
+					
+				})
+				
+			}
+
 		</script>
 
 		<!-- 태그 추가(addTags Model) 모달-->
@@ -176,11 +285,11 @@
 
 							<input type="hidden" name="memNo" value="${loginUser.memNo }">
 							<input type="hidden" name="tagColor" id="tagColor">
-
+	
 							<div class="setup-tag">
 
 								<div>태그 이름</div>
-								<input type="text" name="tagName" id="tagName"> <br>
+								<input type="text" name="tagName"> <br>
 
 								<div class="tag-color">
 									<div>태그 색상</div>
@@ -217,55 +326,6 @@
 			</div>
 		</div>
 
-		<script>
-    	
-    	// 태그 선택시 클래스명 지정하는 함수
-    	function choiceTag(num){
-    		
-    		// 선택한 색상에 클래스 추가
-    		$(".bgcolor" + num).addClass("active");
-    		
-    		// 선택한 색상 외 클래스 제거
-    		$(".tagColor").not($(".bgcolor" + num)).removeClass("active");
-    		
-    		// 선택한 색상 배경색 추출
-    		let color = $(".bgcolor" + num).css("background-color");
-
-    		// tagColor value값에 넣기
-    		$("input[name=tagColor]").val(color);
-      		
-    	}
-    	
-    	// 태그 '추가'시 실행하는 함수
-    	function insertTag(){
-    		
-    		let color = $("#tagColor").val();
-    		console.log(color);
-    		let name = $("#tagName").val();
-    		console.log(name);
-    		
-    		$.ajax({
-    			url : "insertTag.ma",
-    			data : {
-    				memNo : "${loginUser.memNo}",
-    				tagName : name,
-    				tagColor : color
-    			},
-    			success : function(result){
-    				console.log(result);
-    				selectTagList();
-    			},
-    			error : function(){
-    				console.log("태그 추가 실패");
-    			}
-    		})
-
-    		
-    	}
-
-    	</script>
-
-
 		<!-- 태그 수정(updateTags Model) 모달-->
 		<div class="modal" id="updateTags">
 			<div class="modal-dialog modal-dialog-centered" style="width: 400px;">
@@ -281,14 +341,17 @@
 					</div>
 
 					<!-- Modal body -->
-					<form action="" method="post">
+
 						<div class="modal-body" align="center">
-							<input type="hidden" name="" value="">
+						
+							<input type="hidden" name="memNo" value="${loginUser.memNo }">
+							<input type="hidden" name="tagColor" id="newTagColor">
+							<input type="hidden" name="tagNo" id="newTagNo">
 
 							<div class="setup-tag">
 
 								<div>태그 이름</div>
-								<input type="text" name="" value="" style="width: 100%;">
+								<input type="text" name="tagName" id="newTagName">
 								<br>
 
 								<div class="tag-color">
@@ -313,14 +376,15 @@
 							</div>
 
 							<div class="tagBtn">
-								<button type="submit" class="mailBtn addTag">확인</button>
+								<button type="button" class="mailBtn addTag" onclick="updateTag();" data-dismiss="modal">확인</button>
 								<button type="button" data-dismiss="modal" class="mailBtn">취소</button>
 							</div>
 						</div>
-					</form>
+
 				</div>
 			</div>
 		</div>
+
 
 </body>
 </html>

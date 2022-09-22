@@ -873,5 +873,14 @@
 		where mem_no = #{memNo}
 	</select>
 	
+	<!-- 매일 태그 수정 -->
+	<update id="updateTag">
+		update 
+		    tb_tag
+		  set tag_name = #{tagName}
+		    , tag_color = #{tagColor}
+		where tag_no = #{tagNo}
+	</update>
+	
 
 </mapper>

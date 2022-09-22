@@ -458,5 +458,6 @@ table{
 
 .tag-name{
 	width:190px;
+	cursor: pointer;
 }
 

@@ -24,7 +24,7 @@ import lombok.ToString;
 @ToString
 public class Tag {
 	
-	private int TagNo;
+	private int tagNo;
 	private String memNo;
 	private String tagName;
 	private String tagColor;

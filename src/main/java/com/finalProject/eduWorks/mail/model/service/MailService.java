@@ -85,5 +85,8 @@ public interface MailService {
  	
  	// 15_2. 태그 목록 조회
  	ArrayList<Tag> selectTagList(String memNo);
+ 	
+ 	// 15_3. 메일 태그 수정
+ 	int updateTag(Tag t);
 
 }

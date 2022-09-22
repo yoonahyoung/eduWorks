@@ -408,7 +408,14 @@ public class MailDao {
 		return (ArrayList)sqlSession.selectList("mailMapper.selectTagList", memNo);
 	}
 	
-	
+	/**
+	 * 16_3. 태그 수정
+	 * @param t : 수정하고자하는 태그 이름, 태그 색상, 태그 번호
+	 * @return : 태그 수정 성공 여부가 담긴 int형 변수(성공 : 1 | 실패 : 0)
+	 */
+	public int updateTag(SqlSessionTemplate sqlSession, Tag t) {
+		return sqlSession.update("mailMapper.updateTag", t);
+	}
 	
 	
 
