@@ -43,8 +43,7 @@
         .fc-sun {color:#e31b23}
 		.fc-sat {color:#007dc3}
 		.fc-view-container{
-			width:210px;
-			height:300px;
+			
 		}
 		.fc-left, .fc-right{
 			display:none;
@@ -141,6 +140,10 @@
 			border:none
 		}
 		
+		.fc-view-container div{
+			width:460px;
+			
+		}
 		
 		
 		
