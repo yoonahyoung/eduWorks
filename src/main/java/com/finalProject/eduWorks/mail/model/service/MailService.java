@@ -88,5 +88,10 @@ public interface MailService {
  	
  	// 15_3. 메일 태그 수정
  	int updateTag(Tag t);
+ 	
+ 	// 15_4. 메일 태그 삭제
+ 	int deleteTag(Tag t);
+ 	
+ 	
 
 }

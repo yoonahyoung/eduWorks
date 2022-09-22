@@ -799,6 +799,20 @@ public class MailController {
 		return result > 0 ? "success" : "fail";
 		
 	}
+	
+	/**
+	 * 16_4. 태그 삭제
+	 * @param t : 로그인한 회원 사번, 삭제하고자하는 태그 번호
+	 * @return : 태그 삭제 성공여부 (성공 : "success" | 실패 : "fail")
+	 */
+	@ResponseBody
+	@RequestMapping("deleteTag.ma")
+	public String ajaxDeleteTag(Tag t) {
+		
+		int result = mService.deleteTag(t);
+		
+		return result > 0 ? "success" : "fail";
+	}
 
 	
 }

@@ -408,6 +408,16 @@ public class MailServiceImpl implements MailService {
 	public int updateTag(Tag t) {
 		return mDao.updateTag(sqlSession, t);
 	}
+
+	/**
+	 * 16_4. 태그 삭제
+	 * @param t : 로그인한 회원 사번, 삭제하고자하는 태그 번호
+	 * @return : 태그 삭제 성공 여부가 담긴 int형 변수(성공 : 1 | 실패 : 0)
+	 */
+	@Override
+	public int deleteTag(Tag t) {
+		return mDao.deleteTag(sqlSession, t);
+	}
 	
 	
 

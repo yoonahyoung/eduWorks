@@ -882,5 +882,13 @@
 		where tag_no = #{tagNo}
 	</update>
 	
+	<!-- 메일 태그 삭제 -->
+	<delete id="deleteTag">
+		delete 
+		    from tb_tag
+		where mem_no = #{memNo}
+		  and tag_no = #{tagNo}
+	</delete>
+	
 
 </mapper>

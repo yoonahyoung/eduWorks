@@ -111,14 +111,7 @@
 	    		$("input[name=tagColor]").val(color);
 	      		
 	    	}
-	    	
-			// '태그 삭제'클릭시 실행하는 함수
-			function deleteTags() {
-				let answer = confirm("태그를 삭제하시겠습니까?");
-
-				
-			}
-
+	
 			// '비우기' 클릭시 실행하는 함수
 			function emptyMail() {
 				let answer = confirm("휴지통을 비우시면 지워진 메일(중요메일 포함)들은 복구할 수 없습니다.\n\n휴지통을 비우시겠습니까?");
@@ -178,7 +171,7 @@
 								+ "<input type='hidden' name='tagColor' value='" + tag[i].tagColor + "'>"
 								+ "<span class='font-weight-bold'>수정하기</span>"
 								+ "</a>"
-								+ "<a class='dropdown-item d-flex align-items-center' onclick='deleteTags();'>"
+								+ "<a class='dropdown-item d-flex align-items-center' id='deleteTag'>"
 								+ "<span class='font-weight-bold'>삭제하기</span>"
 								+ "</a>"
 								+ "</div>"
@@ -220,8 +213,9 @@
 				
 				// 동일한 색상인 경우 클래스 추가하기
 				for(let num = 1; num <= 10; num++){
+					
 					let no = $(".bgcolor" + num).css("background-color");
-					console.log(no);
+
 					if(color == no){
 						$(".bgcolor" + num).addClass("active");
 						$(".tagColor").not($(".bgcolor" + num)).removeClass("active");
@@ -238,7 +232,7 @@
 			// 태그 수정처리하는 함수
 			function updateTag(){
 				
-				let color = $("#tagColor").val();
+				let color = $("#newTagColor").val();
 	    		console.log(color);
 				
 				$.ajax({
@@ -251,6 +245,7 @@
 					},
 					success : function(result){
 						console.log(result);
+						console.log($("#newTagName").val());
 						if(result == 'success'){
 							selectTagList();
 						}
@@ -262,6 +257,36 @@
 				})
 				
 			}
+			
+			// 태그 삭제처리하는 함수
+			$(document).on("click", "#deleteTag", function(){
+
+				let answer = confirm("메일 태그를 삭제하시겠습니까?");
+				
+				if(answer == true){
+					
+					let no = $(this).prev().children("input[name=tagNo]").val();
+					console.log(no);
+						
+					$.ajax({
+						url : "deleteTag.ma",
+						data : {
+							memNo : ${loginUser.memNo},
+							tagNo : no
+						},
+						success : function(result){
+							console.log(result);
+							if(result == 'success'){
+								selectTagList();
+							}
+						},
+						error : function(){
+							console.log("태그 삭제 실패");
+						}
+					})
+				}
+			
+			})
 
 		</script>
 
