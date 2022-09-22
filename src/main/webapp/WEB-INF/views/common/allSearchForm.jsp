@@ -17,7 +17,7 @@
 
 	<jsp:include page="header.jsp" />
 	
-	<div class="wrapSearch" style="margin:10px">
+	<div class="wrapSearch" style="margin:20px">
 
 		<h1>검색 결과</h1>
 		<br><br>
@@ -26,7 +26,7 @@
 		<div class="searchResult">
 
 			<div class="mailResult">
-					<h3>메일</h3><br><br>
+					<h3>메일</h3><br>
 				<c:forEach var="m" items="${ mail }">
 				<div class="searchForm">
 					<div id="mailView">
@@ -40,29 +40,10 @@
 				<hr>
 			</div>
 			
-			<script>
-			  let target = document.getElementById('target');
-
-			  let src = target.innerHTML;
-			  console.log( src );
-			  /**
-			   * ->
-			   * <h1>This Content is target</h1>
-			   * <span>to replace</span>
-			   * .
-			   */
-			  let extractedText = src.replace(extractTextPattern, '');
-			  console.log( extractedText );
-			  /**
-			   * ->
-			   * This Content is target
-			   * to replace
-			   * .
-			   */
-			</script>
+			
 
 			<div class="companyNoticeResult">
-					<h3>전사 공지</h3><br><br>
+					<h3>전사 공지</h3><br>
 				<c:forEach var="n" items="${ notice }">
 				<div class="searchForm">
 					<div id="noticeView">
@@ -76,7 +57,7 @@
 			</div>
 
 			<div class="deptBoardResult">
-						<h3>부서 게시판</h3><br><br>
+						<h3>부서 게시판</h3><br>
 				<c:forEach var="b" items="${ board }">
 					<div class="searchForm">
 						<div id="BoardView">
@@ -87,25 +68,44 @@
 					</div>
 					<br><br>
 				</c:forEach>
-						<hr>
+				<hr>
 			</div>
 				
 			<div class="calendarResult">
-					<h3>캘린더</h3><br><br>
+					<h3>캘린더</h3><br>
 				<c:forEach var="s" items="${ schedule }">
-				<div class="searchForm">
-					<div id="calendarView">
-						<span style="color:black;">${ s.scheStartDate } / ${ s.scheEndDate }</span>
-						<a href="">${ s.scheTitle }</a>
-						<br>
-						<span>참석자 </span>&nbsp;
-						<span> | </span>&nbsp;
-						<span style="color:black;"> ${ s.scheAtndList } </span>
+					<div class="searchForm">
+						<div id="calendarView">
+							<span style="color:black;">${ s.scheStartDate } / ${ s.scheEndDate }</span>
+							<a href="">${ s.scheTitle }</a>
+							<br>
+							<span>참석자 </span>&nbsp;
+							<span> | </span>&nbsp;
+							<span style="color:black;"> ${ s.scheAtndList } </span>
+						</div>
 					</div>
-				</div>
 				</c:forEach>
+				<hr>
 			</div>
 
+		</div>
+		<div>
+			<h4>다음 메뉴에 대해 일치하는 검색 결과가 없습니다.</h4>
+			<div>
+				<c:if test="${ empty mail }">
+					<span><i class="fa-solid fa-envelope"></i> 메일</span>&nbsp;&nbsp;
+				</c:if>
+				<c:if test="${ empty notice }">
+					<span><i class="fa-sharp fa-solid fa-clipboard-list"></i> 전사 공지</span>&nbsp;&nbsp;
+				</c:if>
+				<c:if test="${ empty board }">
+					<span><i class="fa-solid fa-rectangle-list"></i> 부서 게시판</span>&nbsp;&nbsp;
+				</c:if>
+				<c:if test="${ empty schedule }">
+					<span><i class="fa-solid fa-calendar-check"></i> 캘린더</span>
+				</c:if>
+			</div>
+			<br><br>
 		</div>
 	</div>
 	<jsp:include page="footer.jsp" />
@@ -125,13 +125,13 @@
 		})
 		
 		$(function(){
-			if(${empty mail}){
-				$(".noticeResult").css("display", "none");
+			if(${empty notice}){
+				$(".companyNoticeResult").css("display", "none");
 			}
 		})
 		
 		$(function(){
-			if(${empty mail}){
+			if(${empty schedule}){
 				$(".calendarResult").css("display", "none");
 			}
 		})
