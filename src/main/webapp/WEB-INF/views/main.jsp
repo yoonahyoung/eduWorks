@@ -11,6 +11,16 @@
 <link href="${pageContext.request.contextPath}/resources/css/schedule.css" rel="stylesheet" type="text/css">
 <link href="${pageContext.request.contextPath}/resources/css/mail.css" rel="stylesheet" type="text/css">
 <link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet" type="text/css">
+
+<style>
+	#calendar table:hover{
+		cursor:default !important;
+		
+	}
+	#calendar .fc-content{
+		width:auto;
+	}
+</style>
 </head>
 <body>
 
@@ -18,8 +28,7 @@
 	<div style="background-color:whitesmoke; height:auto;">
 	<div style="width:100%; height:auto; ">
 		<div style="float: left; width:15%; height:100%; background-color:whitesmoke;" class="divBox">
-		
-			<div id="profileE" style="width:100%; text-align:center; margin:3%; border-radius:5px; background-color: white;">
+			<div id="profileE" style="height:380px; width:100%; text-align:center; padding-top:10px; margin: 10% 5% 5% 4%; border-radius:5px; background-color: white;">
 				<div style="margin-top:7%; height:80px">
 				<c:choose>
               		<c:when test="${ empty m.memProfile }">
@@ -129,450 +138,7 @@
                             	})
                             </script>
 			
-			<div style="text-align:center; margin:3%; border-radius:5px; height:280px; background-color: white;">
-				<br>
-					<div id='calendar' class="su_calendar_size" ></div>
-			</div>
-			<script>
-	
-				// function getEvent로 이벤트 연결하기 
-				
-			    document.addEventListener('DOMContentLoaded', function() {
-			    var calendarEl = document.getElementById('calendar');
 			
-			    var calendar = new FullCalendar.Calendar(calendarEl, {
-			    plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'list' ],
-			 	// 날짜 칸 클릭시 해당 날짜 데이터를 갖고 일정 입력 페이지로 이동 
-				dateClick:function(arg){
-				    //console.log(arg.dateStr); // 날짜 출력
-				    location.href="enrollForm.ca?day=" + arg.dateStr + "&memNo=" + ${ loginUser.memNo };
-				},
-				
-				// 이벤트 클릭시 일정 상세 조회 페이지로 이동
-				eventClick:function(e){
-					location.href = "detail.ca?sNo=" + e.event.id + "&memNo=" + ${ loginUser.memNo };
-					//console.log(e.event.id);
-				},
-			    
-			    header: {
-			        left: 'prev,next today',
-			        center: 'title',
-			        right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
-			    },
-			    locale: "ko",
-			    // defaultDate: '2020-02-12',
-			    navLinks: true, // can click day/week names to navigate views
-			    businessHours: true, // display business hours
-			    editable: true,
-			    timeFormat:'H(:mm)',
-			    events: function(info, successCallback, failureCallback){
-			    	console.log($("#calArr").text());
-			    	var calStr = $("#calArr").text();
-			    	$.ajax({
-			    		type: 'post',
-			    		cache: false,
-			    		url: "sclist.ca",
-			    		dataType:'json',
-			    		data:{
-		              		memNo: ${ loginUser.memNo },
-		              		checkCnt: $("#calArr").text(),
-		              		atnd: $("#atnd").text(),
-		              		cmpy: $("#cmpy").text()
-		              	},
-		              	//contentType:"application/x-www-form-urlencoded; charset=UTF-8",
-		              	success: function(param){
-		              		var event = [];
-		              		
-		              		//console.log(calStr);
-		              		$.each(param, function(index, data){
-		              			// map에서 값 불러와서 조건넣어서 이벤트 푸쉬하기...
-		              			if(calStr.includes(data.mycal)){
-		              				event.push({
-		    	              			id: data.id,
-		    	              			title: data.title,
-		    	              			start: data.start,
-		    	              			end: data.end,
-		    	              			color: hexToRgb(data.color)
-		    	              			//backgroundColor: 'rgba(94, 126, 155, 0.6)'
-		    	              		});
-		              			 }
-		              			else if( ($("#atnd").text() == 'Y')){
-		              				if(data.atnd != ""){
-		              					event.push({
-		        	              			id: data.id,
-		        	              			title: data.title,
-		        	              			start: data.start,
-		        	              			end: data.end,
-		        	              			color: hexToRgb(data.color)
-		        	              			//backgroundColor: 'rgba(94, 126, 155, 0.6)'
-		        	              		});
-		              				}
-		              			} else if($("#cmpy").text() == 'Y'){
-		              				if(data.cmpy == 'Y'){
-		              					event.push({
-		        	              			id: data.id,
-		        	              			title: data.title,
-		        	              			start: data.start,
-		        	              			end: data.end,
-		        	              			color: hexToRgb(data.color)
-		        	              			//backgroundColor: 'rgba(94, 126, 155, 0.6)'
-		        	              		});
-		              				}
-		              			}
-		              			 
-			              		
-		              	    });
-		              		
-		              		console.log(event);
-		              		successCallback(event);
-		              		}
-		              	
-		              	
-			    		});
-			 	 	  }
-			   	 });
-							    $(document).on("change", "input[type=checkbox]", function(){
-							    	calendar.refetchEvents();
-							    })
-							
-							    calendar.render();
-							    
-							    });
-					</script>
-					
-					 <script>
-	                	$(function(){
-	                		
-	                		calList();
-	                		selectMycalList();
-	                		
-	                	})
-	                	
-	                	// 내 캘린더 리스트 출력 이벤트
-	                	function selectMycalList(){
-	                		$.ajax({
-	                			url: "mclist.ca",
-	                			data: { memNo: ${ loginUser.memNo } },
-	                			success: function(list){
-	                				
-	                				let value = "";
-	                				let str = "";
-	                                
-	                                for(let i = 0; i < list.length; i++){
-		                                value += '<tr style="width: 100%;">'
-		                                    		+ '<td width="20%;"><span class="myNo" style="color: white !important;">' + list[i].mycalNo + '</span></td>'
-		                                    		+ '<td><input type="checkbox" name="mycalList" checked></td>';
-		                                    	if(i == 0){
-		                                    		value += '<td width="90%;" id="mcName' + list[i].mycalNo + '"> &nbsp;' + list[i].mycalName + '</td>';
-		                                    	} else{
-		                                    		value += '<td width="90%;" id="mcName' + list[i].mycalNo + '" onclick="changeMycal(' + list[i].mycalNo + ')"> &nbsp;' + list[i].mycalName + '</td>';
-		                                    	}
-			                                  
-				                                    value += '<td class="su_myCalBasic">'
-				                                        + '<a type="button">'
-				                                            + '<div class="calColor" id="colorBtn' + list[i].mycalNo + '" style="border: 1px solid ' + list[i].mycalColor + '; background: ' + list[i].mycalColor + ';" onclick="colorMycal(' + list[i].mycalNo + ');"></div>'
-				                                        	+ '<input type="hidden" id="calColor' + list[i].mycalNo + '" value="' + list[i].mycalColor + '">'	
-				                                        + '</a>'
-				                                    + '</td>';
-		
-				                                    if(i == 0){
-				                                    	value += '<td class="su_myCalX dis_no"></td>';
-				                                    } else {
-		                                    			value += '<td class="su_myCalX dis_no"><a type="button" onclick="deleteMycal(' + list[i].mycalNo + ');">x</a></td>';
-				                                    }
-		                                		+ '</tr>';
-		                                		
-		                                str += list[i].mycalNo + ",";
-	                                }
-		                                
-		                           //value += '</table>';
-		                           
-		                           $("#tb_myCal").html(value);
-		                           //console.log(str);
-		                           str = str.substring(0, str.lastIndexOf(","));
-		                           $("#calArr").text(str);
-		                           //console.log($("#calArr").text());
-	                			}, error: function(){
-	                				console.log("ajax 내 캘린더 조회 실패");
-	                			}
-	                		});
-	                		
-	                	}
-	                	
-	                	var checkCnt = "";
-	            		
-	            		// 내 캘린더 체크 리스트
-	            		function calList(){
-	            	        checkCnt = "";
-	            	        $("input[name='mycalList']:checked").each(function(){
-	            	        	
-	            	        	//console.log($(this).parent().parent().children().eq(0).text());
-	            	            checkCnt += ($(this).parent().parent().children().eq(0).text()) + ","; // 체크된 것만 게시글번호 뽑기 "2,3,4,"
-	            	        });
-	            	        
-	            	        checkCnt = checkCnt.substring(0,checkCnt.lastIndexOf(",")); // 맨 뒤 콤마 삭제 "2,3,4"
-	            	        //console.log(checkCnt);
-	            	        $("#calArr").text(checkCnt);
-	            		}
-	            		
-	            		$(document).on("change", "input[name='mycalList']", function(){
-	            			calList();
-	            			console.log($("#calArr").text());
-	            		});
-	            		
-	                	// 선택된 캘린더 번호 출력 이벤트
-	                	function selectMycalNo(){
-	                		var result = "";
-	                		$.ajax({
-	                			url: "mcnolist.ca",
-	                			async: false,
-	                			data: { memNo: ${ loginUser.memNo } },
-	                			success: function(list){
-	                				console.log(list[0].mycalNo);
-	                				for(let i = 0; i < list.length; i++){
-	                					result += list[i].mycalNo + ',';
-	                				}
-	                				result = result.substring(0, result.lastIndexOf(","));
-	                				$("#calArr").text(result);
-	                				
-	                				return result;
-	                			}, error: function(){
-	                				console.log("ajax 내 캘린더 번호 조회 실패");
-	                			}
-	                		});
-	                		return result;
-	                	}
-	                		
-	               		// 내 캘린더 추가
-	               		$("#insertMyCal").click(function(){
-	               			$.ajax({
-	               				url: "mcinsert.ca",
-	               				data: { 
-	               					memNo: ${ loginUser.memNo},
-	               					mycalName: $("#myCalName").val()
-	               				},
-	               				success: function(result){
-	               					if(result == "success"){
-	               						alert("내 캘린더가 추가되었습니다.");
-	               						$("#myCalName").val("");
-	               						$("#addMyCal").modal('hide');
-	               						selectMycalList();
-	               					}
-	               				}, error: function(){
-	               					console.log("ajax 내 캘린더 추가 실패");
-	               				}
-	               			});
-	               		});
-	               		
-	               		// 내 캘린더 이름 변경
-	               		function changeMycal(mcNo){
-	               		// mcNo : 내 캘린더 번호
-	               		var id = "mcName" + mcNo;
-	               			var name = $("#" + id).text();
-	               			//console.log(name);
-	               			$("#chCalName").val(name);
-	               			$("#updateMyCal").modal("show");
-	               			$("#updateMyCalBtn").click(function(){
-	               				//console.log("j");
-	               				$.ajax({
-	               					url: "mcupdate.ca",
-	               					data: {
-	               						mcNo: mcNo,
-	               						mcName: $('#chCalName').val()
-	               						},
-	               					success: function(result){
-	               						if(result == "success"){
-	               							alert("수정되었습니다.");
-	               							$("#chCalName").val("");
-	               							$("#updateMyCal").modal("hide");
-	               							selectMycalList();
-	               						}
-	               					}, error: function(){
-	               						console.log("ajax 내 캘린더 수정 실패");
-	               					}
-	               				});
-	               			});
-	               		}
-	               		
-	               		// 내 캘린더 삭제
-	               		function deleteMycal(mcNo){
-	               			// mcNo : 내 캘린더 번호
-	               			$("#delete").modal("show");
-	               			$("#realDelete").click(function(){
-	               				console.log("j");
-	               				$.ajax({
-	               					url: "mcdelete.ca",
-	               					data: {checkCnt: mcNo},
-	               					success: function(result){
-	               						if(result == "success"){
-	               							alert("삭제되었습니다.");
-	               							$("#delete").modal("hide");
-	               							selectMycalList();
-	               						}
-	               					}, error: function(){
-	               						console.log("ajax 내 캘린더 삭제 실패");
-	               					}
-	               				});
-	               			});
-	               		}
-	               		
-	               		// 캘린더 색상 변경
-	               		function colorMycal(mcNo){
-	               			let value = "";
-	               			let id = "colorBtn" + mcNo;
-	               			let c = "calColor" + mcNo;
-	               			let color = $("#" + c).val();
-	               			
-	               			value += '<input type="color" id="colorArea" value="' + color + '">'
-	    	                       + '<button type="button" class="btn btn-sm su_btn_border" id="chColorBtn" onclick="changeColor(' + mcNo + ');">변경</button>';
-	    	                
-	    	                $("#colorPal").html(value);
-	    	                $("#colorPal").show();
-	    	                $("#" + id).attr("onclick", "cancleColor(" + mcNo + ");");
-	               		}
-	               		
-	               		function cancleColor(mcNo){
-	               			$("#colorPal").hide();
-	               			let id = "colorBtn" + mcNo;
-	               		 	$("#" + id).attr("onclick", "colorMycal(" + mcNo + ");");
-	               		}
-	               		
-	               		// 색상 기본값 설정하기
-	               		function changeColor(mcNo){
-	               			let c = $("#colorArea").val();
-	               			let color = c;
-	               			$.ajax({
-	               				url: "mccolor.ca",
-	               				data: {
-	               					mycalNo: mcNo,
-	               					mycalColor: c
-	               				},
-	               				success: function(result){
-	               					if(result == "success"){
-	               						selectMycalList();
-	               						location.reload();	// 이벤트 색상 변경을 위해
-	               					}
-	               				}, error: function(){
-	               					console.log("ajax 캘린더 색상 변경 실패");
-	               				}
-	               			});
-	               		}
-	               		
-	               		// color HEX to rgb
-                        function hexToRgb ( hexType ){ 
-                            /* 맨 앞의 "#" 기호를 삭제하기. */ 
-                            var hex = hexType.trim().replace( "#", "" ); 
-                            
-                            /* rgb로 각각 분리해서 배열에 담기. */ 
-                            var rgb = ( 3 === hex.length ) ? 
-                                hex.match( /[a-f\d]/gi ) : hex.match( /[a-f\d]{2}/gi );     
-                            
-                            rgb.forEach(function (str, x, arr){     
-                                /* rgb 각각의 헥사값이 한자리일 경우, 두자리로 변경하기. */ 
-                                if ( str.length == 1 ) str = str + str; 
-                                
-                                /* 10진수로 변환하기. */ 
-                                arr[ x ] = parseInt( str, 16 ); 
-                            }); 
-                            
-                            return "rgba(" + rgb.join(", ") + ", 0.5)"; 
-                        };
-                        
-	                </script>
-	                
-	                <script>
-	                    $(document).ready(function(){
-	                    	
-	                    	// 일정 페이지로 이동 (현재 날짜 데이터를 갖고)
-	                    	$("#enrollBtn").click(function(){
-	                    		var now = new Date();
-	                    		var month = now.getMonth() + 1;
-	                    		var date = now.getDate();
-	                    		var d = now.getFullYear();
-	                    		d += "-";
-	                    		
-	                    		if(month < 10){
-	                    			d += "0" + month;
-	                    		} else{
-	                    			d += month;
-	                    		}
-	                    		
-	                    		d += "-";
-	                    		
-	                    		if(date < 10){
-	                    			d += "0" + date;
-	                    		} else{
-	                    			d += date;
-	                    		}
-	                    		
-	                    		
-	                    		//console.log(d);
-	                    		location.href="enrollForm.ca?day=" + d + "&memNo=" + ${ loginUser.memNo };
-	                    	});
-	                    	
-	                    	
-	                        // 내/관심 캘린더 수정, 취소버튼 클릭시 보여지는 부분
-	                        $("#pen1").click(function(){
-	                            $("#nopen1").show();
-	                            $("#pen1").hide();
-	                            $(".su_myCalBasic").hide();
-	                            $(".su_myCalX").show();
-	                        });
-	
-	                        $("#nopen1").click(function(){
-	                            $("#pen1").show();
-	                            $("#nopen1").hide();
-	                            $(".su_myCalBasic").show();
-	                            $(".su_myCalX").hide();
-	                        });
-	
-	                        $("#pen2").click(function(){
-	                            $("#nopen2").show();
-	                            $("#pen2").hide();
-	                            $(".su_attCalBasic").hide();
-	                            $(".su_attCalX").show();
-	                        });
-	
-	                        $("#nopen2").click(function(){
-	                            $("#pen2").show();
-	                            $("#nopen2").hide();
-	                            $(".su_attCalBasic").show();
-	                            $(".su_attCalX").hide();
-	                        });
-	
-	                        $("#addAttCal").click(function(){
-	                            $("#attCalList").show();
-	                        })
-	
-	                        $("#xBtn").click(function(){
-	                            $("#attCalList").hide();
-	                        });
-	
-	                     	// 전사일정, 참석자 일정 체크박스 이벤트
-		            		$("#cmpyBox").change(function(){
-		            			
-			            		if( $("#cmpyBox").is(":checked") ){
-			            			$("#cmpy").text('Y');
-			            		} else{
-			            			$("#cmpy").text('N');
-			            		}
-			            		
-		            		});
-	                     	
-		            		$("#atndBox").change(function(){
-			            		if( $("#atndBox").is(":checked") ){
-			            			$("#atnd").text('Y');
-			            		} else{
-			            			$("#atnd").text('N');
-			            		}
-		            			
-		            		});
-		            		
-		            		
-	
-	                        
-	                    });
-	                </script>
 			
 			<div></div>
 			<div></div>
@@ -583,7 +149,7 @@
 			<div style="text-align:center; margin:1%; border-radius:5px; background-color: white;">
 				<div style="margin:0px 10px 0px 10px;">
 					<div class="d-sm-flex align-items-center mb-4" id="boardHeader">
-		                <div style="font-size:23px; ">전사 공지</div>
+		                <div style="font-size:23px; padding-top: 5px;">전사 공지</div>
 		            </div>
 					<br>
 		            <div class="main_width">
@@ -718,7 +284,7 @@
 			
 			<div>
 				<div class="second-title" style="text-align:left; margin:1%; border-radius:5px; padding:1%; background-color: white;">
-					<div style="font-size:20px; margin:1%;">
+					<div style="font-size:20px; margin:1%; font-weight: 600;">
 					받은 메일함 <span id="mail-count" class="mail-count"></span>
 					</div>
 				
@@ -871,22 +437,25 @@
 			</script>
 			
 			<div class="main-list" style="text-align:center; margin:1%; border-radius:5px; background-color: white;">
-				<div >
-				<table class="board-content table" align="center" id="mainAddressList">
-					<thead>
-						<tr class="table_thead_border">
-							<th width="10%">이름</th>
-							<th width="10%">부서명</th>
-							<th width="10%">직급명</th>
-							<th width="15%">내선번호</th>
-							<th width="18%">이메일</th>
-							<th width="15%">전화번호</th>
-						</tr>
-					</thead>
-					<tbody>
-					
-					</tbody>
-				</table>
+				<div style="font-size:20px; margin:1%; font-size: 20px; margin: 1%; font-weight: 600; text-align: left; margin: 15px 10px 5px 10px; padding: 5px;">
+						전사 주소록 <span id="mail-count" class="mail-count"></span>
+				</div>
+					<div >
+						<table class="board-content table" align="center" id="mainAddressList">
+							<thead>
+								<tr class="table_thead_border">
+									<th width="10%">이름</th>
+									<th width="10%">부서명</th>
+									<th width="10%">직급명</th>
+									<th width="15%">내선번호</th>
+									<th width="18%">이메일</th>
+									<th width="15%">전화번호</th>
+								</tr>
+							</thead>
+							<tbody>
+							
+							</tbody>
+						</table>
 				
 			<hr style="margin:0;">
 	        	
@@ -1002,10 +571,432 @@
 			<div></div>
 		</div>
 		<div style="float: left; width:33%; height:100%; " class="divBox">
+			<div style="text-align:center; margin:3%; border-radius:5px; height:450px; background-color: white;">
+					<br>
+						<div id='calendar' class="su_calendar_size" ></div>
+				</div>
+				<script>
+		
+					// function getEvent로 이벤트 연결하기 
+					
+				    document.addEventListener('DOMContentLoaded', function() {
+				    var calendarEl = document.getElementById('calendar');
+				
+				    var calendar = new FullCalendar.Calendar(calendarEl, {
+				    plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'list' ],
+				 	// 날짜 칸 클릭시 해당 날짜 데이터를 갖고 일정 입력 페이지로 이동 
+					dateClick:function(arg){
+					    //console.log(arg.dateStr); // 날짜 출력
+					    location.href="enrollForm.ca?day=" + arg.dateStr + "&memNo=" + ${ loginUser.memNo };
+					},
+					
+					// 이벤트 클릭시 일정 상세 조회 페이지로 이동
+					eventClick:function(e){
+						location.href = "detail.ca?sNo=" + e.event.id + "&memNo=" + ${ loginUser.memNo };
+						//console.log(e.event.id);
+					},
+				    
+				    header: {
+				        left: 'prev,next today',
+				        center: 'title',
+				        right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+				    },
+				    locale: "ko",
+				    // defaultDate: '2020-02-12',
+				    navLinks: true, // can click day/week names to navigate views
+				    businessHours: true, // display business hours
+				    editable: true,
+				    timeFormat:'H(:mm)',
+				    events: function(info, successCallback, failureCallback){
+				    	console.log($("#calArr").text());
+				    	var calStr = $("#calArr").text();
+				    	$.ajax({
+				    		type: 'post',
+				    		cache: false,
+				    		url: "sclist.ca",
+				    		dataType:'json',
+				    		data:{
+			              		memNo: ${ loginUser.memNo },
+			              		checkCnt: $("#calArr").text(),
+			              		atnd: $("#atnd").text(),
+			              		cmpy: $("#cmpy").text()
+			              	},
+			              	//contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+			              	success: function(param){
+			              		var event = [];
+			              		
+			              		//console.log(calStr);
+			              		$.each(param, function(index, data){
+			              			// map에서 값 불러와서 조건넣어서 이벤트 푸쉬하기...
+			              				event.push({
+			    	              			id: data.id,
+			    	              			title: data.title,
+			    	              			start: data.start,
+			    	              			end: data.end,
+			    	              			color: hexToRgb(data.color)
+			    	              			//backgroundColor: 'rgba(94, 126, 155, 0.6)'
+			    	              		});
+			              			
+			              			
+			              			 
+				              		
+			              	    });
+			              		
+			              		console.log(event);
+			              		successCallback(event);
+			              		}
+			              	
+			              	
+				    		});
+				 	 	  }
+				   	 });
+								    $(document).on("change", "input[type=checkbox]", function(){
+								    	calendar.refetchEvents();
+								    })
+								
+								    calendar.render();
+								    
+								    });
+						</script>
+						
+						 <script>
+		                	$(function(){
+		                		
+		                		calList();
+		                		selectMycalList();
+		                		
+		                	})
+		                	
+		                	// 내 캘린더 리스트 출력 이벤트
+		                	function selectMycalList(){
+		                		$.ajax({
+		                			url: "mclist.ca",
+		                			data: { memNo: ${ loginUser.memNo } },
+		                			success: function(list){
+		                				
+		                				let value = "";
+		                				let str = "";
+		                                
+		                                for(let i = 0; i < list.length; i++){
+			                                value += '<tr style="width: 100%;">'
+			                                    		+ '<td width="20%;"><span class="myNo" style="color: white !important;">' + list[i].mycalNo + '</span></td>'
+			                                    		+ '<td><input type="checkbox" name="mycalList" checked></td>';
+			                                    	if(i == 0){
+			                                    		value += '<td width="90%;" id="mcName' + list[i].mycalNo + '"> &nbsp;' + list[i].mycalName + '</td>';
+			                                    	} else{
+			                                    		value += '<td width="90%;" id="mcName' + list[i].mycalNo + '" onclick="changeMycal(' + list[i].mycalNo + ')"> &nbsp;' + list[i].mycalName + '</td>';
+			                                    	}
+				                                  
+					                                    value += '<td class="su_myCalBasic">'
+					                                        + '<a type="button">'
+					                                            + '<div class="calColor" id="colorBtn' + list[i].mycalNo + '" style="border: 1px solid ' + list[i].mycalColor + '; background: ' + list[i].mycalColor + ';" onclick="colorMycal(' + list[i].mycalNo + ');"></div>'
+					                                        	+ '<input type="hidden" id="calColor' + list[i].mycalNo + '" value="' + list[i].mycalColor + '">'	
+					                                        + '</a>'
+					                                    + '</td>';
+			
+					                                    if(i == 0){
+					                                    	value += '<td class="su_myCalX dis_no"></td>';
+					                                    } else {
+			                                    			value += '<td class="su_myCalX dis_no"><a type="button" onclick="deleteMycal(' + list[i].mycalNo + ');">x</a></td>';
+					                                    }
+			                                		+ '</tr>';
+			                                		
+			                                str += list[i].mycalNo + ",";
+		                                }
+			                                
+			                           //value += '</table>';
+			                           
+			                           $("#tb_myCal").html(value);
+			                           //console.log(str);
+			                           str = str.substring(0, str.lastIndexOf(","));
+			                           $("#calArr").text(str);
+			                           //console.log($("#calArr").text());
+		                			}, error: function(){
+		                				console.log("ajax 내 캘린더 조회 실패");
+		                			}
+		                		});
+		                		
+		                	}
+		                	
+		                	var checkCnt = "";
+		            		
+		            		// 내 캘린더 체크 리스트
+		            		function calList(){
+		            	        checkCnt = "";
+		            	        $("input[name='mycalList']:checked").each(function(){
+		            	        	
+		            	        	//console.log($(this).parent().parent().children().eq(0).text());
+		            	            checkCnt += ($(this).parent().parent().children().eq(0).text()) + ","; // 체크된 것만 게시글번호 뽑기 "2,3,4,"
+		            	        });
+		            	        
+		            	        checkCnt = checkCnt.substring(0,checkCnt.lastIndexOf(",")); // 맨 뒤 콤마 삭제 "2,3,4"
+		            	        //console.log(checkCnt);
+		            	        $("#calArr").text(checkCnt);
+		            		}
+		            		
+		            		$(document).on("change", "input[name='mycalList']", function(){
+		            			calList();
+		            			console.log($("#calArr").text());
+		            		});
+		            		
+		                	// 선택된 캘린더 번호 출력 이벤트
+		                	function selectMycalNo(){
+		                		var result = "";
+		                		$.ajax({
+		                			url: "mcnolist.ca",
+		                			async: false,
+		                			data: { memNo: ${ loginUser.memNo } },
+		                			success: function(list){
+		                				console.log(list[0].mycalNo);
+		                				for(let i = 0; i < list.length; i++){
+		                					result += list[i].mycalNo + ',';
+		                				}
+		                				result = result.substring(0, result.lastIndexOf(","));
+		                				$("#calArr").text(result);
+		                				
+		                				return result;
+		                			}, error: function(){
+		                				console.log("ajax 내 캘린더 번호 조회 실패");
+		                			}
+		                		});
+		                		return result;
+		                	}
+		                		
+		               		// 내 캘린더 추가
+		               		$("#insertMyCal").click(function(){
+		               			$.ajax({
+		               				url: "mcinsert.ca",
+		               				data: { 
+		               					memNo: ${ loginUser.memNo},
+		               					mycalName: $("#myCalName").val()
+		               				},
+		               				success: function(result){
+		               					if(result == "success"){
+		               						alert("내 캘린더가 추가되었습니다.");
+		               						$("#myCalName").val("");
+		               						$("#addMyCal").modal('hide');
+		               						selectMycalList();
+		               					}
+		               				}, error: function(){
+		               					console.log("ajax 내 캘린더 추가 실패");
+		               				}
+		               			});
+		               		});
+		               		
+		               		// 내 캘린더 이름 변경
+		               		function changeMycal(mcNo){
+		               		// mcNo : 내 캘린더 번호
+		               		var id = "mcName" + mcNo;
+		               			var name = $("#" + id).text();
+		               			//console.log(name);
+		               			$("#chCalName").val(name);
+		               			$("#updateMyCal").modal("show");
+		               			$("#updateMyCalBtn").click(function(){
+		               				//console.log("j");
+		               				$.ajax({
+		               					url: "mcupdate.ca",
+		               					data: {
+		               						mcNo: mcNo,
+		               						mcName: $('#chCalName').val()
+		               						},
+		               					success: function(result){
+		               						if(result == "success"){
+		               							alert("수정되었습니다.");
+		               							$("#chCalName").val("");
+		               							$("#updateMyCal").modal("hide");
+		               							selectMycalList();
+		               						}
+		               					}, error: function(){
+		               						console.log("ajax 내 캘린더 수정 실패");
+		               					}
+		               				});
+		               			});
+		               		}
+		               		
+		               		// 내 캘린더 삭제
+		               		function deleteMycal(mcNo){
+		               			// mcNo : 내 캘린더 번호
+		               			$("#delete").modal("show");
+		               			$("#realDelete").click(function(){
+		               				console.log("j");
+		               				$.ajax({
+		               					url: "mcdelete.ca",
+		               					data: {checkCnt: mcNo},
+		               					success: function(result){
+		               						if(result == "success"){
+		               							alert("삭제되었습니다.");
+		               							$("#delete").modal("hide");
+		               							selectMycalList();
+		               						}
+		               					}, error: function(){
+		               						console.log("ajax 내 캘린더 삭제 실패");
+		               					}
+		               				});
+		               			});
+		               		}
+		               		
+		               		// 캘린더 색상 변경
+		               		function colorMycal(mcNo){
+		               			let value = "";
+		               			let id = "colorBtn" + mcNo;
+		               			let c = "calColor" + mcNo;
+		               			let color = $("#" + c).val();
+		               			
+		               			value += '<input type="color" id="colorArea" value="' + color + '">'
+		    	                       + '<button type="button" class="btn btn-sm su_btn_border" id="chColorBtn" onclick="changeColor(' + mcNo + ');">변경</button>';
+		    	                
+		    	                $("#colorPal").html(value);
+		    	                $("#colorPal").show();
+		    	                $("#" + id).attr("onclick", "cancleColor(" + mcNo + ");");
+		               		}
+		               		
+		               		function cancleColor(mcNo){
+		               			$("#colorPal").hide();
+		               			let id = "colorBtn" + mcNo;
+		               		 	$("#" + id).attr("onclick", "colorMycal(" + mcNo + ");");
+		               		}
+		               		
+		               		// 색상 기본값 설정하기
+		               		function changeColor(mcNo){
+		               			let c = $("#colorArea").val();
+		               			let color = c;
+		               			$.ajax({
+		               				url: "mccolor.ca",
+		               				data: {
+		               					mycalNo: mcNo,
+		               					mycalColor: c
+		               				},
+		               				success: function(result){
+		               					if(result == "success"){
+		               						selectMycalList();
+		               						location.reload();	// 이벤트 색상 변경을 위해
+		               					}
+		               				}, error: function(){
+		               					console.log("ajax 캘린더 색상 변경 실패");
+		               				}
+		               			});
+		               		}
+		               		
+		               		// color HEX to rgb
+	                        function hexToRgb ( hexType ){ 
+	                            /* 맨 앞의 "#" 기호를 삭제하기. */ 
+	                            var hex = hexType.trim().replace( "#", "" ); 
+	                            
+	                            /* rgb로 각각 분리해서 배열에 담기. */ 
+	                            var rgb = ( 3 === hex.length ) ? 
+	                                hex.match( /[a-f\d]/gi ) : hex.match( /[a-f\d]{2}/gi );     
+	                            
+	                            rgb.forEach(function (str, x, arr){     
+	                                /* rgb 각각의 헥사값이 한자리일 경우, 두자리로 변경하기. */ 
+	                                if ( str.length == 1 ) str = str + str; 
+	                                
+	                                /* 10진수로 변환하기. */ 
+	                                arr[ x ] = parseInt( str, 16 ); 
+	                            }); 
+	                            
+	                            return "rgba(" + rgb.join(", ") + ", 0.5)"; 
+	                        };
+	                        
+		                </script>
+		                
+		                <script>
+		                    $(document).ready(function(){
+		                    	
+		                    	// 일정 페이지로 이동 (현재 날짜 데이터를 갖고)
+		                    	$("#enrollBtn").click(function(){
+		                    		var now = new Date();
+		                    		var month = now.getMonth() + 1;
+		                    		var date = now.getDate();
+		                    		var d = now.getFullYear();
+		                    		d += "-";
+		                    		
+		                    		if(month < 10){
+		                    			d += "0" + month;
+		                    		} else{
+		                    			d += month;
+		                    		}
+		                    		
+		                    		d += "-";
+		                    		
+		                    		if(date < 10){
+		                    			d += "0" + date;
+		                    		} else{
+		                    			d += date;
+		                    		}
+		                    		
+		                    		
+		                    		//console.log(d);
+		                    		location.href="enrollForm.ca?day=" + d + "&memNo=" + ${ loginUser.memNo };
+		                    	});
+		                    	
+		                    	
+		                        // 내/관심 캘린더 수정, 취소버튼 클릭시 보여지는 부분
+		                        $("#pen1").click(function(){
+		                            $("#nopen1").show();
+		                            $("#pen1").hide();
+		                            $(".su_myCalBasic").hide();
+		                            $(".su_myCalX").show();
+		                        });
+		
+		                        $("#nopen1").click(function(){
+		                            $("#pen1").show();
+		                            $("#nopen1").hide();
+		                            $(".su_myCalBasic").show();
+		                            $(".su_myCalX").hide();
+		                        });
+		
+		                        $("#pen2").click(function(){
+		                            $("#nopen2").show();
+		                            $("#pen2").hide();
+		                            $(".su_attCalBasic").hide();
+		                            $(".su_attCalX").show();
+		                        });
+		
+		                        $("#nopen2").click(function(){
+		                            $("#pen2").show();
+		                            $("#nopen2").hide();
+		                            $(".su_attCalBasic").show();
+		                            $(".su_attCalX").hide();
+		                        });
+		
+		                        $("#addAttCal").click(function(){
+		                            $("#attCalList").show();
+		                        })
+		
+		                        $("#xBtn").click(function(){
+		                            $("#attCalList").hide();
+		                        });
+		
+		                     	// 전사일정, 참석자 일정 체크박스 이벤트
+			            		$("#cmpyBox").change(function(){
+			            			
+				            		if( $("#cmpyBox").is(":checked") ){
+				            			$("#cmpy").text('Y');
+				            		} else{
+				            			$("#cmpy").text('N');
+				            		}
+				            		
+			            		});
+		                     	
+			            		$("#atndBox").change(function(){
+				            		if( $("#atndBox").is(":checked") ){
+				            			$("#atnd").text('Y');
+				            		} else{
+				            			$("#atnd").text('N');
+				            		}
+			            			
+			            		});
+			            		
+			            		
+		
+		                        
+		                    });
+		                </script>
+		
 			<div style="text-align:center; margin:1%; border-radius:5px; background-color: white; height: 100%;">
 				<div style="margin:0px 10px 0px 10px;">
 					<div class="d-sm-flex align-items-center mb-4" id="boardHeader">
-		                <div id="deptBoard" style="font-size:23px;">부서 게시판 | ${deptName}</div>
+		                <div id="deptBoard" style="font-size:23px; padding-top: 5px;">부서 게시판 | ${deptName}</div>
 		            </div>
 					<br>
 		            <div class="main_width">
