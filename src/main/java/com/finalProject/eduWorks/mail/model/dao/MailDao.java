@@ -426,6 +426,16 @@ public class MailDao {
 		return sqlSession.delete("mailMapper.deleteTag", t);
 	}
 	
+	public int insertMailTag(SqlSessionTemplate sqlSession, ArrayList<MailStatus> list) {
+
+		int result = 0;
+		for(MailStatus ms : list ) {
+			result += sqlSession.update("mailMapper.insertMailTag", ms);
+		}
+		
+		return result;
+	}
+	
 	
 
 }

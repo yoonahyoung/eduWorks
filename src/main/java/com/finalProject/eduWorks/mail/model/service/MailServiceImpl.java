@@ -418,6 +418,11 @@ public class MailServiceImpl implements MailService {
 	public int deleteTag(Tag t) {
 		return mDao.deleteTag(sqlSession, t);
 	}
+
+	@Override
+	public int insertMailTag(ArrayList<MailStatus> list) {
+		return mDao.insertMailTag(sqlSession, list);
+	}
 	
 	
 

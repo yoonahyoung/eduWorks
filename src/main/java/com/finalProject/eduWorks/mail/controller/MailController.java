@@ -813,6 +813,69 @@ public class MailController {
 		
 		return result > 0 ? "success" : "fail";
 	}
+	
+	@ResponseBody
+	@RequestMapping("insertMailTag.ma")
+	public String ajaxInsertMailTag(MailStatus ms) {
+		
+		String[] mailNo = ms.getMailNo().split(",");
+		int result = 0;
+		
+		ArrayList<MailStatus> list = new ArrayList<>();	
+		System.out.println(list);
+		
+		for(String m : mailNo) {
+			
+			// =========== 보낸 메일 ===========
+			if(ms.getReceiveMail() == null) {
+				
+				MailStatus ms2 = new MailStatus();
+				
+				ms2.setSendMail(ms.getSendMail());
+				ms2.setTagNo(ms.getTagNo());
+				ms2.setMailNo(m);
+				ms2.setMailFolder(ms.getMailFolder());
+
+				list.add(ms2);
+				
+				result = mService.insertMailTag(list);
+				
+			// =========== 받은/참조 메일 ===========
+			} else if (ms.getSendMail() == null){
+				
+				MailStatus ms3 = new MailStatus();
+				
+				ms3.setReceiveMail(ms.getReceiveMail());
+				ms3.setTagNo(ms.getTagNo());
+				ms3.setMailNo(m);
+				ms3.setMailFolder(ms.getMailFolder());
+				
+				list.add(ms3);
+
+				result = mService.insertMailTag(list);
+			
+			// ============= 나에게 쓴 메일 =============
+			} else {
+				
+				MailStatus ms4 = new MailStatus();
+				
+				ms4.setSendMail(ms.getSendMail());
+				ms4.setReceiveMail(ms.getReceiveMail());
+				ms4.setTagNo(ms.getTagNo());
+				ms4.setMailNo(m);
+				ms4.setMailFolder(ms.getMailFolder());
+				
+				list.add(ms4);
+
+				result = mService.insertMailTag(list);
+			}
+			
+		}
+		
+		System.out.println(result);
+	
+		return result > 0 ? "success" : "fail";
+	}
 
 	
 }

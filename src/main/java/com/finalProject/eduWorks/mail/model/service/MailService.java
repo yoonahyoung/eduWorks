@@ -92,6 +92,7 @@ public interface MailService {
  	// 15_4. 메일 태그 삭제
  	int deleteTag(Tag t);
  	
- 	
+ 	// 16. 메일에 태그 추가하기
+ 	int insertMailTag(ArrayList<MailStatus> list);
 
 }

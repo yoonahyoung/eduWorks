@@ -42,28 +42,54 @@
 					<button type="button" class="sub-btn warning-btn">
 						<i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;스팸신고
 					</button>
-					<div class="dropdown-list dropdown-menu shadow"
+					<div class="dropdown-list dropdown-menu shadow" id="tagList"
 						aria-labelledby="dotDropdown" style="margin-top: -10px;">
 
-						<!-- 태그없으면 안보임  -->
-						<a class="dropdown-item d-flex align-items-center" href="#"> <span
-							class="font-weight-bold">태그색성 + 태그명</span>
-						</a> <a class="dropdown-item d-flex align-items-center" href="#"
-							data-toggle="modal" data-target="#delete"> <span
-							class="font-weight-bold">태그색성 + 태그명</span>
-						</a>
-
-						<!-- 태그 생성유무 상관없이 보임-->
-						<a class="dropdown-item d-flex align-items-center"
-							data-toggle="modal" data-target="#addTags" href="#"> <span
-							class="font-weight-bold">+ 태그 추가</span>
-						</a>
-
-
-					</div></li>
+					</div>
+				</li>
 			</ul>
 
 		</div>
+		
+		<script>
+			
+			// 태그 목록 조회
+			$(".tag-btn").click(function(){
+				insertTagList();
+			})
+
+			// 태그 목록 조회
+			function insertTagList(){
+				
+				$.ajax({
+					url : "selectTagList.ma",
+					data : {
+						memNo : ${loginUser.memNo}
+					},
+					success : function(tag){
+						let value="";
+						console.log(tag);
+						for(let i=0; i < tag.length; i++){
+	
+							value += "<a class='dropdown-item d-flex align-items-center'>"
+									+ "<span class='font-weight-bold'>"
+									+ "<i class='fas fa-bookmark' style='color:" + tag[i].tagColor + "'></i>&nbsp;&nbsp;"
+									+ tag[i].tagName
+									+ "</span>"
+									+ "</a>"
+						}
+						
+						$("#tagList").html(value);
+					},
+					error : function(){
+						console.log("태그 조회 실패");
+					}
+				})
+				
+			}
+			
+		</script>
+		
 		<hr style="margin: 20px 0px 15px 0px;">
 		<div class="mail-list">
 			<table class="mail">
