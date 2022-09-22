@@ -9,7 +9,6 @@
 		<result column="board_writer" property="boardWriter"/> <!-- 사원번호 -->
 		<result column="b_writer" property="boWriter"/> <!-- 사원이름 -->
 		<result column="dept_code" property="deptCode"/>
-		<result column="job_name" property="jobName" />
 		<result column="board_count" property="boardCount"/>
 		<result column="board_category" property="boardCategory"/>
 		<result column="board_en_date" property="boardEnDate"/>
@@ -46,26 +45,26 @@
 	<select id="selectListCount" resultType="_int">
 		select
 			   count(*)
-		  from tb_board
-		 where board_category = 1
-		   and board_status = 'Y'
-	</select>
-	
-	<!-- 전사공지 공지 리스트 조회 -->
-	<select id="selectTopList" resultMap="noticeResult">
-		select
-		       board_no
-		     , board_title
-		     , m.mem_name as "b_writer"
-		     , m.dept_code
-		     , to_char(board_en_date, 'YYYY-MM-DD') as "board_en_date"
-		     , board_count
-		     , board_top
-		  from tb_board b
-		  join tb_member m on(b.board_writer = m.mem_no)
-		 where board_category = 1
-		   and board_status = 'Y'
-		   and board_top = 'Y'
+		  from (
+				select
+					   board_no
+					 , board_title
+					 , m.mem_name || ' ' || job_name as "b_writer"
+					 , m.dept_code
+					 , to_char(board_en_date, 'YYYY-MM-DD') as "board_en_date"
+					 , board_count
+					 , board_top
+				  from tb_board b
+				  join tb_member m on(b.board_writer = m.mem_no)
+				  join tb_job j using(job_code)
+				 where board_category = 1
+				   and board_status = 'Y'
+				   <if test="keyword != null and keyword neq ''">
+		           		and board_title || mem_name like ('%${keyword}%')
+		           </if>
+				 order
+				 	by (CASE WHEN board_top = 'Y' THEN 1 ELSE 2 END) asc, 1 desc
+		  )
 	</select>
 	
 	<!-- 전사공지 리스트 조회 -->
@@ -73,17 +72,21 @@
 		select
 			   board_no
 			 , board_title
-			 , m.mem_name as "b_writer"
+			 , m.mem_name || ' ' || job_name as "b_writer"
 			 , m.dept_code
 			 , to_char(board_en_date, 'YYYY-MM-DD') as "board_en_date"
 			 , board_count
 			 , board_top
 		  from tb_board b
 		  join tb_member m on(b.board_writer = m.mem_no)
+		  join tb_job j using(job_code)
 		 where board_category = 1
 		   and board_status = 'Y'
+		   <if test="keyword != null and keyword neq ''">
+           		and board_title || mem_name like ('%${keyword}%')
+           </if>
 		 order
-		 	by 1 desc
+		 	by (CASE WHEN board_top = 'Y' THEN 1 ELSE 2 END) asc, 1 desc
 	</select>
 	
 	<!-- 조회수 증가 -->
@@ -102,10 +105,9 @@
   			 , board_title
   			 , board_content
   			 , board_writer
-  			 , m.mem_name as "b_writer"
+  			 , m.mem_name || ' ' || job_name as "b_writer"
   			 , board_count
   			 , to_char(board_en_date, 'YYYY/MM/DD HH24:MI') as "board_en_date"
-  			 , j.job_name
   		  from tb_board b
   		  join tb_member m on(b.board_writer = m.mem_no)
   		  join tb_job j using(job_code)
@@ -282,6 +284,18 @@
   		update tb_attachment
   		   set at_status = 'N'
   		 where at_no = #{atNo}
+  	</update>
+  	
+  	<!-- 공지 등록/해제 -->
+  	<update id="goTop">
+  		update tb_board
+  		<if test="isYN eq 1">
+		   set board_top = 'Y'
+		</if>
+		<if test="isYN eq 2">
+			set board_top = 'N'
+		</if>
+		 where board_no in (${checkList})
   	</update>
   	
 </mapper>
