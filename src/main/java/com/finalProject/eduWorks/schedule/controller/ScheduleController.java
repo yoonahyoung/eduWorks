@@ -44,11 +44,14 @@ public class ScheduleController {
 		// 마이 캘린더 리스트
 		ArrayList<Mycal> clist = sService.selectMycalList(memNo);
 		String str = "";
+		String calArr = "";
 		for(int i = 0; i < clist.size(); i++) {
 			str += clist.get(i).getMycalNo() + ",";
 		}
 		
-		var calArr = str.substring(0, str.lastIndexOf(","));
+		if(str.contains(",")) {
+			calArr = str.substring(0, str.lastIndexOf(","));
+		}
 		
 		mv.addObject("calArr", calArr).addObject("aList", aList).setViewName("schedule/calendarView");
 		
