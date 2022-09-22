@@ -177,6 +177,7 @@
                             </div>
                             <form action="adjust.me">
                             <div style="float: right;">
+                            	<input type="hidden" name="p" value="1">
                                 <button type="submit" class="btn su_btn_border">조정신청현황</button>
                             </div>
                             </form>

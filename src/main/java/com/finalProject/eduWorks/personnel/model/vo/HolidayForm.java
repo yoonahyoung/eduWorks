@@ -23,7 +23,8 @@ public class HolidayForm {
 	private String leaveType;
 	private String leaveStartDate;
 	private String leaveEndDate;
-	private String requestPeriod;
-	private String sHalfDayLeave;
-	private String fHalfDayLeave;
+	private double requestPeriod;
+	private String aa;
+	private String bb;
+	private String leave;
 }

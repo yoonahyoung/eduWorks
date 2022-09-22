@@ -238,13 +238,17 @@
 	            		        		let t = (new Date('2022-01-01T'+$("#attOut2").val())-new Date('2022-01-01T'+$("#attIn2").val()))
 	            		        		let ti = t/1000/60/60
 	            		        		let ti2 = ti.toFixed(1)
-	            		        		$('#attWorktime').val(ti2)
+	            		        		if(ti2!='NaN'){
+	            		        			$('#attWorktime').val(ti2)
+	            		        		}
 	            		        	})
 	            		        	$("#attOut2").on('change',function(){
 	            		        		let t = (new Date('2022-01-01T'+$("#attOut2").val())-new Date('2022-01-01T'+$("#attIn2").val()))
 	            		        		let ti = t/1000/60/60
 	            		        		let ti2 = ti.toFixed(1)
-	            		        		$('#attWorktime').val(ti2)
+	            		        		if(ti2!='NaN'){
+	            		        			$('#attWorktime').val(ti2)
+	            		        		}
 	            		        	})
 	            		        	$("#radio7").on('change',function(){
 	            		        		if($("#radio7").prop('checked')){
@@ -537,6 +541,8 @@
                             			
                             			$('#div1').css('display','')
                             		})
+                            		
+                            		
                             	}) 
                             </script>
                             

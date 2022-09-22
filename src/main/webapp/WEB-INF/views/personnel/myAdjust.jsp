@@ -10,6 +10,11 @@
 	#tab1>th,td{
 		padding:7px
 	}
+	
+	#pagebar a>span{
+        	text-decoration: none;
+        	color:black;
+    }
 </style>
 </head>
 <body>
@@ -137,7 +142,7 @@
                             <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b; clear: both;">
 
                             <div  style="margin-left: 10px; padding-top: 30px;  width: 1000px; height: 500px; " >
-                                <div style="width: 40%; height: 100%; float: left;">
+                                <div class="tt1" style="width: 40%; height: 100%; float: left;">
                                     <div style="width: 100%; height: 90%;" align="center">
                                         <table id="tab1" style="border-collapse: separate; border-spacing: 0 10px;">
                                         	<c:if test="${ not empty list }">
@@ -177,7 +182,8 @@
                                             	</c:otherwise>
                                             </c:choose>
                                         </table>
-                                        
+                                      </div>
+                                     
                                         <script>
                                         	$('#tab3>tr').on('click',function(){
                                         		
@@ -231,15 +237,15 @@
                                         	})
                                         </script>
                                         
-                                    </div>
+                                    
                                     <c:choose>
                             	<c:when test="${ empty list }">
                             	
                             	</c:when>
                             	<c:otherwise>
-                            		<div style="margin-top: 10px; width: 1000px; height: 40px;" align="center" id="pagebar">
+                            		<div style="margin-top: 10px; width: 350px; height: 40px;" align="center" id="pagebar">
 			                            <c:if test="${ pi.currentPage ne 1 }">
-				                           <a href="list.te?p=${ pi.currentPage-1 }">
+				                           <a href="adjust.me?p=${ pi.currentPage-1 }">
 						                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
 						                                    &lt;
 						                                </span>
@@ -275,6 +281,8 @@
 			                            </div>
                             	</c:otherwise>
                             </c:choose>
+                            
+                            </div>
                                 <div style="width: 60%; height: 100%; float: left; padding-left: 10%;">
                                 <form id='forms1' action="modifyAdj.me" method="post" enctype="multipart/form-data">
                                 	<input type="hidden" name="userNo" id="adjNo">
@@ -323,6 +331,7 @@
                                 	}
                                 </script>
                                 
+                            </div>
                             </div>
                             <br style="clear: both;">
                             

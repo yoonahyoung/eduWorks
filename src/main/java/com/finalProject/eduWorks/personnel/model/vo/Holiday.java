@@ -14,6 +14,6 @@ import lombok.ToString;
 public class Holiday {
 	private String memNo;
 	private String hoDate;
-	private String hoNum;
+	private double hoNum;
 	private String hoComment;
 }

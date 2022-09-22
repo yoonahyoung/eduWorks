@@ -808,10 +808,10 @@ public class PersonnelController {
 			if(!at.getAttStatus().equals("F") && !at.getAttHstatus().equals("H0")) {
 				HashMap m = new HashMap();
 				m.put("start", at.getAttDate());
-				if(at.getAttStatus().equals("D")) {
+				if(at.getAttStatus().equals("D")&&at.getAttHstatus().equals("N")) {
 					m.put("title", at.getAttIn()+" 출근");
 					m.put("color", "green");
-				}else if(at.getAttStatus().equals("H")) {
+				}else if(at.getAttStatus().equals("H") || at.getAttStatus().equals("D")) {
 					if(at.getAttHstatus().equals("H1")) {
 						m.put("title", at.getAttIn()+" 오전연차");
 						m.put("color", "blue");
@@ -1095,6 +1095,7 @@ public class PersonnelController {
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 3, 10);
 		ArrayList<Adjust> list = pService.adjustMe(pi, memNo);
 		model.addAttribute("list", list);
+		model.addAttribute("pi", pi);
 		return "personnel/myAdjust";
 	}
 	
@@ -1129,6 +1130,7 @@ public class PersonnelController {
 		ArrayList<HolidayForm> list1 = pService.hoApproveList(pi1,m1);
 		model.addAttribute("list1", list1);
 		model.addAttribute("pi1", pi1);
+		System.out.println(list1);
 		
 		HashMap<String,String> m2 = new HashMap<>();
 		m2.put("memNo", memNo); m2.put("year", selectY2);
@@ -1140,9 +1142,18 @@ public class PersonnelController {
 		
 		String totalHo = pService.totalHo(memNo);
 		String useHo = pService.useHo(memNo);
+		double remain = Double.parseDouble(totalHo)-Double.parseDouble(useHo);
 		model.addAttribute("totalHo", totalHo);
 		model.addAttribute("useHo", useHo);
+		model.addAttribute("remain", remain);
+		model.addAttribute("selectY1", selectY1);
+		model.addAttribute("selectY2", selectY2);
 		
 		return "personnel/myholiday";
+	}
+	
+	@RequestMapping("selectManage.ho")
+	public String selectManageHo() {
+		return "personnel/holidayManage";
 	}
 }

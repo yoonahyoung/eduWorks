@@ -29,7 +29,7 @@
                             <h4>근태관리</h4>
                             <a href="select.at"><h6>부서별 근태조회</h6></a>
                             <a href="objectionManage.ad"><h6>조정신청관리</h6></a>
-                            <a href=""><h6>연차관리</h6></a>
+                            <a href="selectManage.ho"><h6>연차관리</h6></a>
                             <a href="addHoliday.ho"><h6>연차추가</h6></a>
                         </div>                        
                     </nav>

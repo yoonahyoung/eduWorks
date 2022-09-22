@@ -119,8 +119,9 @@
 		<result column="LEAVE_START_DATE" property="leaveStartDate"/>
 		<result column="LEAVE_END_DATE" property="leaveEndDate"/>
 		<result column="REQUEST_PERIOD" property="requestPeriod"/>
-		<result column="S_HALF_DAY_LEAVE" property="sHalfDayLeave"/>
-		<result column="F_HALF_DAY_LEAVE" property="fHalfDayLeave"/>
+		<result column="S_HALF_DAY_LEAVE" property="aa"/>
+		<result column="F_HALF_DAY_LEAVE" property="bb"/>
+		<result column="LEAVE_REASON" property="leave"/>
 	</resultMap>
 	<resultMap type="com.finalProject.eduWorks.personnel.model.vo.Holiday" id="resultHoliday">
 		<result column="mem_no" property="memNo"/>
@@ -847,7 +848,7 @@
 			</if>
 			
 			AND MEM_NAME LIKE '%'||#{keyword}||'%'
-			ORDER BY 4 DESC, 2)
+			ORDER BY 5 DESC, 2)
 		WHERE 
 			<choose>
 			 	<when test="check1==true and check2==false and check3==false">
@@ -1378,6 +1379,7 @@
 		     , REQUEST_PERIOD
 		     , S_HALF_DAY_LEAVE
 		     , F_HALF_DAY_LEAVE
+		     , LEAVE_REASON
 		  from TB_APRV_FORM ap
 		  join TB_ANNUAL_LEAVE al on (ap.aprv_no = al.aprv_no)
 		 where mem_no = #{memNo}
@@ -1393,12 +1395,14 @@
 	
 	<select id="hoList" resultMap="resultHoliday">
 		select mem_no
-		     , ho_date
+		     , to_char(ho_date,'YYYY-MM-DD') ho_date
 		     , ho_num
 		     , ho_comment
 		  from tb_holiday
 		 where mem_no = #{memNo}
 		   and extract(YEAR from ho_date) = #{year}
+		 order
+		   by 2 desc
 	</select>
 	
 	<select id="totalHo" resultType="string">

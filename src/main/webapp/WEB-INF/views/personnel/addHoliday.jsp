@@ -20,6 +20,8 @@
     -moz-appearance: none;
     appearance: none;
   }
+  
+  
 </style>
 </head>
 <body>
@@ -129,99 +131,14 @@
 					                })
 				               </script>
 				               
-				               <script>
-				               		let rNo=[];
-				               		
-				               		$('.rbtn').on('click',function(){
-				               			$('#ch1').prop('checked',false)
-				               			$('#ch2').prop('checked',false)
-				               			
-				               			
-				               			let li = $('input[class="userNo"]:checked');
-				               			$(li).each(function(){
-				               				rNo.push($(this).val())
-				               				$(this).parent().parent().css('display','none')
-										})
-										
-										let li2 = $('input[class="selectNo"]');
-				               			console.log(li2)
-				               			$(li2).each(function(){
-				               				for(let i=0;i<rNo.length;i++){
-				               					if($(this).val()==rNo[i]){
-				               						$(this).parent().parent().css('display','')
-				               					}
-				               				}
-										})
-										console.log(rNo)
-										$('.userNo').prop('checked',false)
-				               			$('.selectNo').prop('checked',false)
-				               			
-				               			$('#memNo').val(rNo)
-				               		})
-				               		
-				               		$('.lbtn').on('click',function(){
-				               			$('#ch2').prop('checked',false)
-				               			$('#ch1').prop('checked',false)
-				               			
-				               			let arr = [];
-				                    	let li = $('input[class="selectNo"]:checked');
-										$(li).each(function(){
-											arr.push($(this).val())
-											$(this).parent().parent().css('display','none')
-											$(this).prop('checked',false)
-										})
-										
-										
-										for(let i=0;i<arr.length;i++){
-											for(let j=0;j<rNo.length;j++){
-												if(arr[i]==rNo[j]){
-													
-													$('#a'+rNo[j]).parent().parent().css('display','')
-													console.log('제거수:'+rNo.splice(j,1))
-													
-												}
-											}
-										}
-										console.log(rNo)
-										$('.userNo').prop('checked',false)
-				               			$('.selectNo').prop('checked',false)
-				               			$('#memNo').val(rNo)
-				               		})
-				               		
-				               		$('#searchbtn').on('click',function(){
-				               			$.ajax({
-                                			url:'searchSelectMem.ho',
-                                			method:'POST',
-                                			data:{'deptCode':$('#deptCode').val(),
-                                			      'jobCode':$('#jobCode').val(),
-                                			      'keyword':$('.keyword').val()
-                                			      },
-                                			success:function(list){
-                                				console.log(list)
-                                				
-                                				$('.userNo').parent().parent().css('display','none')
-                                				for(let i=0;i<list.length;i++){
-            										$('#a'+list[i].memNo).parent().parent().css('display','')
-            									}
-                                				for(let i=0;i<rNo.length;i++){
-        												$('#a'+rNo[i]).parent().parent().css('display','none')
-        										}
-                                				$('#memNo').val(rNo)
-                                			},error:function(){
-                                				alert('애러')
-                                				console.log('애러')
-                                			}
-                                		})
-				               		})
-				               		
-				               </script>
+				               
                                 
                                 <form id="forms" action="" method="post">
                                 <div class="sendbtn">
                                     <br>
                                     <div style="padding-left:20px ; text-align: left;">
                                         <select name="dateCount" id="select1">
-                                            <option value="">연차일수</option>
+                                            <option value="all">연차일수</option>
                                             <option style="padding-left:30px ;" value="0.5">0.5일</option>
                                             <option style="padding-left:30px ;" value="1">1일</option>
                                             <option style="padding-left:30px ;" value="2">2일</option>
@@ -238,15 +155,116 @@
                                 </form>
                                 
                                 <script>
-                                	$('#add1').click(function(){
-	                            		$('#forms').attr('action', 'add.ho');
-                            		$('#forms').submit()
-	                            	})
-	                            	
-	                            	$('#delete1').click(function(){
-	                            		$('#forms').attr('action', 'delete.ho');
-                            		$('#forms').submit()
-	                            	})
+                                let rNo=[];
+			               		
+			               		$('.rbtn').on('click',function(){
+			               			$('#ch1').prop('checked',false)
+			               			$('#ch2').prop('checked',false)
+			               			
+			               			
+			               			let li = $('input[class="userNo"]:checked');
+			               			$(li).each(function(){
+			               				rNo.push($(this).val())
+			               				$(this).parent().parent().css('display','none')
+									})
+									
+									let li2 = $('input[class="selectNo"]');
+			               			console.log(li2)
+			               			$(li2).each(function(){
+			               				for(let i=0;i<rNo.length;i++){
+			               					if($(this).val()==rNo[i]){
+			               						$(this).parent().parent().css('display','')
+			               					}
+			               				}
+									})
+									console.log(rNo)
+									$('.userNo').prop('checked',false)
+			               			$('.selectNo').prop('checked',false)
+			               			
+			               			$('#memNo').val(rNo)
+			               		})
+			               		
+			               		$('.lbtn').on('click',function(){
+			               			$('#ch2').prop('checked',false)
+			               			$('#ch1').prop('checked',false)
+			               			
+			               			let arr = [];
+			                    	let li = $('input[class="selectNo"]:checked');
+									$(li).each(function(){
+										arr.push($(this).val())
+										$(this).parent().parent().css('display','none')
+										$(this).prop('checked',false)
+									})
+									
+									
+									for(let i=0;i<arr.length;i++){
+										for(let j=0;j<rNo.length;j++){
+											if(arr[i]==rNo[j]){
+												
+												$('#a'+rNo[j]).parent().parent().css('display','')
+												console.log('제거수:'+rNo.splice(j,1))
+												
+											}
+										}
+									}
+									console.log(rNo)
+									$('.userNo').prop('checked',false)
+			               			$('.selectNo').prop('checked',false)
+			               			$('#memNo').val(rNo)
+			               		})
+			               		
+			               		$('#searchbtn').on('click',function(){
+			               			$.ajax({
+                            			url:'searchSelectMem.ho',
+                            			method:'POST',
+                            			data:{'deptCode':$('#deptCode').val(),
+                            			      'jobCode':$('#jobCode').val(),
+                            			      'keyword':$('.keyword').val()
+                            			      },
+                            			success:function(list){
+                            				console.log(list)
+                            				
+                            				$('.userNo').parent().parent().css('display','none')
+                            				for(let i=0;i<list.length;i++){
+        										$('#a'+list[i].memNo).parent().parent().css('display','')
+        									}
+                            				for(let i=0;i<rNo.length;i++){
+    												$('#a'+rNo[i]).parent().parent().css('display','none')
+    										}
+                            				$('#memNo').val(rNo)
+                            			},error:function(){
+                            				alert('애러')
+                            				console.log('애러')
+                            			}
+                            		})
+			               		})
+			               		
+			               		$('#add1').click(function(){
+                            		if(rNo.length == 0){
+                            			alert('지급회원을 선택해주세요')
+                            		}else{
+                            			if($('#select1').val()=='all'){
+                            				alert('지급일수를 선택해주세요')
+                            			}else{
+                            				$('#forms').attr('action', 'add.ho');
+                                			$('#forms').submit()
+                            			}
+                            		}
+                            	})
+                            	
+                            	$('#delete1').click(function(){
+                            		if(rNo.length == 0){
+                            			alert('지급회원을 선택해주세요')
+                            		}else{
+                            			if($('#select1').val()=='all'){
+                            				alert('지급일수를 선택해주세요')
+                            			}else{
+                            				$('#forms').attr('action', 'delete.ho');
+                                			$('#forms').submit()
+
+                            			}
+                            		}
+                            	})
                                 </script>
                                 
                             </div>
