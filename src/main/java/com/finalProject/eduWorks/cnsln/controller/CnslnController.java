@@ -265,8 +265,11 @@ public class CnslnController {
 	@RequestMapping("detail.tcn")
 	public ModelAndView selectCnslnRe(int cNo, ModelAndView mv) {
 		Cnsln c = cService.selectCnsln(cNo);
+		int result = cService.increaseCount(cNo);
 		
-		mv.addObject("c", c).setViewName("cnsln/cnslnDetailView");
+		if(result > 0) {
+			mv.addObject("c", c).setViewName("cnsln/cnslnDetailView");
+		}
 		return mv;
 	}
 	
