@@ -539,6 +539,7 @@
 	               							alert("삭제되었습니다.");
 	               							$("#delete").modal("hide");
 	               							selectMycalList();
+	               							//location.href="list.ca";
 	               						}
 	               					}, error: function(){
 	               						console.log("ajax 내 캘린더 삭제 실패");
@@ -949,8 +950,9 @@
         	              			//backgroundColor: 'rgba(94, 126, 155, 0.6)'
         	              		});
               				}
-              			} else if($("#cmpy").text() == 'Y'){
+              			} if($("#cmpy").text() == 'Y'){
               				if(data.cmpy == 'Y'){
+              					console.log(data.cmpy);
               					event.push({
         	              			id: data.id,
         	              			title: data.title,

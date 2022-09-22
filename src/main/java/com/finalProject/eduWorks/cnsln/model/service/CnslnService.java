@@ -43,8 +43,8 @@ public interface CnslnService {
 	int deleteReply(int replyNo);
 	
 	// 상담 내역 조회
-	int selectListCount(String keyword);
-	ArrayList<Cnsln> selectCnslnList(PageInfo pi, String keyword);
+	int selectListCount(String keyword, int cate);
+	ArrayList<Cnsln> selectCnslnList(PageInfo pi, String keyword, int cate);
 	
 	// 상담 내역 삭제
 	int deleteReCnsln(int cNo);

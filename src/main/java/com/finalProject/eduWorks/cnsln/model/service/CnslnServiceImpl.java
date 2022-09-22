@@ -88,13 +88,13 @@ public class CnslnServiceImpl implements CnslnService{
 	}
 
 	@Override
-	public int selectListCount(String keyword) {
-		return cDao.selectListCount(sqlSession, keyword);
+	public int selectListCount(String keyword, int cate) {
+		return cDao.selectListCount(sqlSession, keyword, cate);
 	}
 
 	@Override
-	public ArrayList<Cnsln> selectCnslnList(PageInfo pi, String keyword) {
-		return cDao.selectCnslnList(sqlSession, pi, keyword);
+	public ArrayList<Cnsln> selectCnslnList(PageInfo pi, String keyword, int cate) {
+		return cDao.selectCnslnList(sqlSession, pi, keyword, cate);
 	}
 
 	@Override

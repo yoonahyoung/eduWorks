@@ -686,12 +686,10 @@
                   				//console.log(rlist);
                   				
                   				let value = "";
-                  				let rCount = rlist.length;
+                  				let rCount = 0;
                   				var deCount = 0;
                   				
-                  				$("#rCountSpan").text("[" + rCount + "]");
-                  				
-                  				for(let i = 0; i < rCount; i++){
+                  				for(let i = 0; i < rlist.length; i++){
                   					
                   					if(rlist[i].replyParent == 0 && rlist[i].replyStatus == 'Y'){ // 원댓글 이면
                   						value += '<div class="su_one_reply" style="margin-bottom: 12px;" id="sReply'+ rlist[i].replyNo + '">';
@@ -728,8 +726,9 @@
 		    	                            
                                    		}
                                    		
+                                   		rCount++;
                   					} else{
-                  						for(j = i + 1; j < rCount; j++){
+                  						for(j = i + 1; j < rlist.length; j++){
 	                  						if( (rlist[i].replyParent == 0) && (rlist[j].replyParent != 0) && (rlist[j].replyStatus == 'Y') && (rlist[j].replyParent == rlist[i].replyNo) ){	// 원댓이 삭제됬는데 원댓이 부모인 대댓이 있는 경우
 	                  							deCount++;
 	                  						} 
@@ -745,6 +744,7 @@
                   				}
                   				
                   				$("#cnslnReplyArea").html(value);
+                  				$("#rCountSpan").text("[" + rCount + "]");
                   			}, error: function(){
                   				console.log("ajax 댓글 조회 실패");
                   			}
@@ -933,7 +933,7 @@
 		                        			}
 		                        			value += '<p id="rContent' + r.replyNo + '">' + r.replyContent + '</p>';
 		                        			
-		                        			if( r.replyWriter != "${ loginUser.memName }" ){
+		                        			if( r.replyWriter == "${ loginUser.memName }" ){
 	                                   			value += '<button type="button" class="btn btn-sm" style="float: right; border: 0px; color: black;" onclick="deleteReply(' + r.replyNo + ');">삭제</button>'
 	                                   				   + '<button type="button" class="btn btn-sm" style="float: right; border: 0px; color: black;" onclick="updateReplyDiv(' + r.replyNo + ');">수정</button>'
 	                                   		}
