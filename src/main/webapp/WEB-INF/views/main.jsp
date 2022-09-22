@@ -10,147 +10,12 @@
 <link href="${pageContext.request.contextPath}/resources/css/board.css" rel="stylesheet" type="text/css">
 <link href="${pageContext.request.contextPath}/resources/css/schedule.css" rel="stylesheet" type="text/css">
 <link href="${pageContext.request.contextPath}/resources/css/mail.css" rel="stylesheet" type="text/css">
-
-<style>
-	td, th{
-            border: 1px solid #858796;
-            
-            
-            padding: 0 0 5px 0;
-        }
-        .tb6 td,.tb6 th{
-            border: 0;
-            padding:0px;
-        }
-        .tb6 th{width: 40%;}
-        .positionab{
-            position:absolute ;
-            top: 0;
-            padding: 30px;
-        }
-        .detailInfo{
-            background-color: whitesmoke;
-            width: 500px;
-            height: 700px;
-            left: 25%;
-            z-index: 10;
-           
-            box-shadow: 10px 10px 20px grey;
-        }
-
-       
-        .close {
-	        position:relative;
-	        display:inline-block;
-	        display:inline;
-	        width:50px;
-	        height:50px;
-	        text-align:center;
-        
-        
-        }
-        .close2:after {
-	        content: "\00d7"; 
-	        font-size:25pt;
-	        line-height:45px;
-	        }
-        
-        .fc-sun {color:#e31b23}
-		.fc-sat {color:#007dc3}
-		.fc-view-container{
-			width:210px;
-			height:300px;
-		}
-		.fc-left, .fc-right{
-			display:none;
-		}
-	
-		.su_calendar_size {
-		    margin: auto;
-		    width: 90%;
-		}
-		.fc {
-		    direction: ltr;
-		    text-align: center;
-		}
-		#calendar *{
-			text-align:center;
-			padding:0px;
-			font-size:0.7rem;
-			text-align: center;
-		    height: auto;
-		}
-	
-		#calendar h2{
-			font-size:1.3rem;
-			
-		}
-	
-		element.style {
-		}
-		body .fc {
-		    font-size: 1em;
-		}
-		.fc {
-		    direction: ltr;
-		    text-align: left;
-		}
-		.fc {
-		    direction: ltr;
-		    text-align: center;
-		}
-		.su_calendar_size {
-		    margin: auto;
-		    width: 90%;
-		}
-		.su_calendar_size {
-		    /* padding: 30px; */
-		    /* margin: auto; */
-		    /* width: 90%; */
-		}
-		.su_calendar_size{
-				padding:0;
-			}
-			#profileE *{
-				color:black;
-			}
-		.person{
-			font-size:18px;
-			font-weight:400;
-		    margin-top: 8px;
-		}
-		.mail-title, .mail-title *{
-			font-size:18px;
-			font-weight:400;
-		}
-		.mail-sendtime {
-		    text-align: center;
-			}
-		#ajaxMail, #ajaxMail *{
-			font-size:15px;
-			font-weight:400;
-		}
-		
-		table{
-			border:none;
-		}
-		
-		.divBox{
-	    	background-color: whitesmoke;
-		}
-		
-		.table th, .table td {
-		    padding: 0.75rem;
-		    vertical-align: top;
-		    border-top: 1px solid #e3e6f0;
-		    border: none;
-		}
-</style>
+<link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 
 	<jsp:include page="common/header.jsp" />
-	<div style="background-color:whitesmoke; height:1200px;">
+	<div style="background-color:whitesmoke; height:auto;">
 	<div style="width:100%; height:auto; ">
 		<div style="float: left; width:15%; height:100%; background-color:whitesmoke;" class="divBox">
 		
@@ -722,7 +587,7 @@
 		            </div>
 					<br>
 		            <div class="main_width">
-		                <table class="board-content table" align="center" id="mainNoticeList" style="border:2px solid slategray;"> 
+		                <table class="board-content table" align="center" id="mainNoticeList"> 
 		                    <thead>
 		                        <tr class="table_thead_border">
 		                            <th width="5%">번호</th>
@@ -733,18 +598,7 @@
 		                        </tr>
 		                    </thead>
 		                    <tbody class="board-tbody">
-		                        <c:choose>
-		                        	<c:when test="${ empty list }">
-		                        		<tr>
-		                        			<td colspan="6">등록된 글이 없습니다.</td>
-		                        		</tr>
-		                        	</c:when>
-		                        	
-		                        </c:choose>
-		                        	<c:if test="${ not empty list }">
-		                        		
-				                    </c:if>
-		                        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!리스트 화면 검색기능, 여러개 클릭기능 구현(하다말았음) -->
+
 		                    </tbody>
 		                </table>
 		        	</div>
@@ -753,7 +607,7 @@
 	        	
 	        	 <div id="n-pagingBar" style="margin:10px;">
 	                <nav aria-label="Page navigation example">
-	                    <ul id="ajaxPaging" class="pagination justify-content-center"> 
+	                    <ul id="ajaxPaging" class="pagination justify-content-center" style="padding-bottom:10px;"> 
 	                    	
 	                    </ul>
 	                </nav>
@@ -797,16 +651,20 @@
 							
 							let value = "";
 							
-							for(let i in map.list){
+							if(map.list.length != 0){
+								for(let i in map.list){
+									value += "<tr>"
+									        +	"<td>" + map.list[i].boardNo + "</td>"
+									        +	"<td>" + map.list[i].boardTitle + "</td>"
+									        +	"<td>" + map.list[i].boWriter + "</td>"
+									        +	"<td>" + map.list[i].boardEnDate + "</td>"
+									        +	"<td>" + map.list[i].boardCount + "</td>"
+									       + "</tr>";
+								}
+							}else{
 								value += "<tr>"
-								        +	"<td>" + map.list[i].boardNo + "</td>"
-								        +	"<td>" + map.list[i].boardTitle + "</td>"
-								        +	"<td>" + map.list[i].boWriter + "</td>"
-								        +	"<td>" + map.list[i].boardEnDate + "</td>"
-								        +	"<td>" + map.list[i].boardCount + "</td>"
-								       + "</tr>";
+                			 	    + "<td id='nullMail' colspan='6'>등록된 공지사항이 없습니다.</td>" + "</tr>"
 							}
-
 							$("#mainNoticeList tbody").html(value);
 							
 							let paging = "";
@@ -866,17 +724,17 @@
 				
 				<div class="mail-list">
 
-					<table class="mail">
+					<table class="mail" id="mailList">
 						<tbody id="mainMailList">
 							
 						</tbody>
 					</table>
 		
-				<hr style="margin:2;">
+				<hr style="margin-bottom: 5px;">
 				
-				<div id="n-pagingBar" style="margin:10px;">
+				<div id="n-pagingBar" style="margin: 3px 10px -17px 5px;">
 	                <nav aria-label="Page navigation example">
-	                    <ul id="ajaxMail" class="pagination justify-content-center"> 
+	                    <ul id="ajaxMail" class="pagination justify-content-center"  style="padding:3px;"> 
 	                    	
 	                    </ul>
 	                </nav>
@@ -902,7 +760,7 @@
 					
 					//$(상위요소).on("이벤트명","이벤트걸고자하는요소", function(){})
 					// 동적으로 만들어진 요소에 이벤트 부여 방법!!!!
-					$(document).on("click","#mainMailList>tbody>tr", function(){
+					$(document).on("click","#mailList>tbody>tr", function(){
 						location.href = "mailDetail.ma?no=" + $(this).children().eq(0).text();
 					})
 					
@@ -922,22 +780,18 @@
 							let value = "";
 							
 							
-							
+							if(map.list.length != 0){ // 조회된 데이터가 있을경우
 								for(let i in map.list){
 									value += "<tr>"
 									        +	"<td>";
 									if(map.list[i].mailStatus.mailRead == 'N'){
-										value += "<i class='icon fas fa-envelope'></i>"
+										value += "<i style='margin-left: 10px;' class='icon fas fa-envelope'></i>"
 									}else{
-										value += "<i class='icon far fa-envelope-open'></i>"
+										value += "<i style='margin-left: 10px;' class='icon far fa-envelope-open'></i>"
 												
 									}
 										value +=  "</td>";
-									if(map.list[i].mailTitle == null){
-										value += "<tr>"
-	                    			 	    + "<td colspan='6'>메일함이 비어있습니다.</td>" + "</tr>"
-	                    			
-									}
+										
 									if(map.list[i].sendName.isEmpty){
 										value += "<td class='mail-person' width='15%''><div class='person'>" + map.list[i].sendMail + "</div></td>"
 									}else{
@@ -953,6 +807,15 @@
 									value += "&nbsp;" + map.list[i].mailTitle + "<input type='hidden' name='mailNo' value=" + map.list[i].mailNo + "></td> <td class='mail-sendtime'>" + map.list[i].sendDate + "</td></tr>";
 								
 							}
+								
+							}else{ // 없을경우
+								
+								value += "<tr>"
+                			 	    + "<td id='nullMail' colspan='6'>메일함이 비어있습니다.</td>" + "</tr>"
+								
+								
+							}
+								
 
 							$("#mainMailList").html(value);
 							let count = "전체메일 " + map.count + " / 안읽은 메일 " + map.unread;
@@ -1021,22 +884,15 @@
 						</tr>
 					</thead>
 					<tbody>
-						<!-- 값은 다 DB와 연결될 것 -->
-						<!-- 반복문 시작 -->
-						<c:choose>
-							<c:when test="${empty list }">
-								<td colspan="7">현재 주소록이 없습니다.</td>
-							</c:when>
-								
-						</c:choose>
+					
 					</tbody>
 				</table>
 				
 			<hr style="margin:0;">
 	        	
-	        	 <div id="n-pagingBar" style="padding:5px; margin:10px;">
+	        	 <div id="n-pagingBar" style="padding:5px; margin:0px;">
 	                <nav aria-label="Page navigation example">
-	                    <ul id="ajaxAddressPaging" class="pagination justify-content-center"> 
+	                    <ul id="ajaxAddressPaging" class="pagination justify-content-center" style="margin:5px;"> 
 	                    	
 	                    </ul>
 	                </nav>
@@ -1080,16 +936,20 @@
 							
 							let value = "";
 							
-							for(let i in map.list){
+							if(map.list.length != 0){
+								for(let i in map.list){
+									value += "<tr>"
+									        +	"<td>" + map.list[i].memName + "</td>"
+									        +	"<td>" + map.list[i].deptCode + "</td>"
+									        +	"<td>" + map.list[i].jobCode + "</td>"
+									        +	"<td>" + map.list[i].memBusinessnum + "</td>"
+									        +	"<td>" + map.list[i].memPhone + "</td>"
+									       + "</tr>";
+								}
+							}else{
 								value += "<tr>"
-								        +	"<td>" + map.list[i].memName + "</td>"
-								        +	"<td>" + map.list[i].deptCode + "</td>"
-								        +	"<td>" + map.list[i].jobCode + "</td>"
-								        +	"<td>" + map.list[i].memBusinessnum + "</td>"
-								        +	"<td>" + map.list[i].memPhone + "</td>"
-								       + "</tr>";
+                			 	    + "<td id='nullMail' colspan='6'>등록된 주소록이 없습니다.</td>" + "</tr>"
 							}
-
 							$("#mainAddressList tbody").html(value);
 							
 							let paging = "";
@@ -1141,15 +1001,15 @@
 			<div></div>
 			<div></div>
 		</div>
-		<div style="float: left; width:33%; height:100%;" class="divBox">
-			<div style="text-align:center; margin:1%; border-radius:5px; background-color: white; height: 620px;">
+		<div style="float: left; width:33%; height:100%; " class="divBox">
+			<div style="text-align:center; margin:1%; border-radius:5px; background-color: white; height: 100%;">
 				<div style="margin:0px 10px 0px 10px;">
 					<div class="d-sm-flex align-items-center mb-4" id="boardHeader">
 		                <div id="deptBoard" style="font-size:23px;">부서 게시판 | ${deptName}</div>
 		            </div>
 					<br>
 		            <div class="main_width">
-		                <table class="board-content table" align="center" id="mainDeptList" style="border:2px solid slategray;"> 
+		                <table class="board-content table" align="center" id="mainDeptList"> 
 		                    <thead>
 		                        <tr class="table_thead_border">
 		                            <th width="5%">번호</th>
@@ -1160,18 +1020,7 @@
 		                        </tr>
 		                    </thead>
 		                    <tbody class="board-tbody">
-		                        <c:choose>
-		                        	<c:when test="${ empty list }">
-		                        		<tr>
-		                        			<td colspan="6">등록된 글이 없습니다.</td>
-		                        		</tr>
-		                        	</c:when>
-		                        	
-		                        </c:choose>
-		                        	<c:if test="${ not empty list }">
-		                        		
-				                    </c:if>
-		                        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!리스트 화면 검색기능, 여러개 클릭기능 구현(하다말았음) -->
+
 		                    </tbody>
 		                </table>
 		        	</div>
@@ -1180,7 +1029,7 @@
 	        	
 	        	 <div id="n-pagingBar" style="margin:10px;">
 	                <nav aria-label="Page navigation example">
-	                    <ul id="ajaxDeptPaging" class="pagination justify-content-center"> 
+	                    <ul id="ajaxDeptPaging" class="pagination justify-content-center" style="padding-bottom: 10px;"> 
 	                    	
 	                    </ul>
 	                </nav>
@@ -1225,16 +1074,20 @@
 							
 							let value = "";
 							
-							for(let i in map.list){
+							if(map.list.length != 0){
+								for(let i in map.list){
+									value += "<tr>"
+									        +	"<td>" + map.list[i].boardNo + "</td>"
+									        +	"<td>" + map.list[i].boardTitle + "</td>"
+									        +	"<td>" + map.list[i].boWriter + "</td>"
+									        +	"<td>" + map.list[i].boardEnDate + "</td>"
+									        +	"<td>" + map.list[i].boardCount + "</td>"
+									       + "</tr>";
+								}
+							}else{
 								value += "<tr>"
-								        +	"<td>" + map.list[i].boardNo + "</td>"
-								        +	"<td>" + map.list[i].boardTitle + "</td>"
-								        +	"<td>" + map.list[i].boWriter + "</td>"
-								        +	"<td>" + map.list[i].boardEnDate + "</td>"
-								        +	"<td>" + map.list[i].boardCount + "</td>"
-								       + "</tr>";
+                			 	    + "<td id='nullMail' colspan='6'>등록된 게시물이 없습니다.</td>" + "</tr>"
 							}
-
 							$("#mainDeptList tbody").html(value);
 							
 							let paging = "";
