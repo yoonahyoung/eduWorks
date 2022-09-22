@@ -122,12 +122,18 @@
 		<result column="S_HALF_DAY_LEAVE" property="aa"/>
 		<result column="F_HALF_DAY_LEAVE" property="bb"/>
 		<result column="LEAVE_REASON" property="leave"/>
+		<result column="mem_name" property="memName"/>
+		<result column="job_name" property="jobName"/>
+		<result column="dept_name" property="deptName"/>
 	</resultMap>
 	<resultMap type="com.finalProject.eduWorks.personnel.model.vo.Holiday" id="resultHoliday">
 		<result column="mem_no" property="memNo"/>
 		<result column="ho_date" property="hoDate"/>
 		<result column="ho_num" property="hoNum"/>
 		<result column="ho_comment" property="hoComment"/>
+		<result column="mem_name" property="memName"/>
+		<result column="job_name" property="jobName"/>
+		<result column="dept_name" property="deptName"/>
 	</resultMap>
 	
 	<select id="teacherListCount" resultType="_int">
@@ -1419,5 +1425,97 @@
 		 where ap.mem_no = #{memNo}
 		   and substr(LEAVE_START_DATE,0,4) = to_char(sysdate,'YYYY')
 		   and APRV_STATUS = 'D'
+	</select>
+	
+	<select id="holidayMgCount" resultType="_int">
+		select count(*)
+		  from TB_APRV_FORM af
+		  join TB_ANNUAL_LEAVE al on (af.aprv_no = al.aprv_no)
+		  join tb_member m on (m.mem_no = af.mem_no)
+		  join tb_department d on (d.dept_code = m.dept_code)
+		  join tb_job j on (j.job_code = m.job_code)
+		 where APRV_STATUS = 'D'
+		 <if test="deptCode != null and deptCode!='all'">
+		 	and m.deptCode = #{deptCode}
+		 </if>
+		 <if test="jobCode != null and jobCode!='all'">
+		 	and m.jobCode = #{jobCode}
+		 </if>
+		 <if test="startDate != null">
+		 	and to_date(LEAVE_START_DATE) between to_date(#{startDate}) and to_date(#{endDate}) 
+		 </if>
+		   and mem_name like '%'||#{keyword}||'%'
+	</select>
+	
+	<select id="holidayMgList" resultMap="resultHolidayForm">
+		select mem_name,
+		       dept_name,
+		       job_name,
+		       LEAVE_START_DATE,
+		       LEAVE_END_DATE,
+		       S_HALF_DAY_LEAVE,
+		       F_HALF_DAY_LEAVE,
+		       leave_type,
+		       leave_reason
+		  from TB_APRV_FORM af
+		  join TB_ANNUAL_LEAVE al on (af.aprv_no = al.aprv_no)
+		  join tb_member m on (m.mem_no = af.mem_no)
+		  join tb_department d on (d.dept_code = m.dept_code)
+		  join tb_job j on (j.job_code = m.job_code)
+		 where APRV_STATUS = 'D'
+		 <if test="deptCode != null and deptCode!='all'">
+		 	and m.deptCode = #{deptCode}
+		 </if>
+		 <if test="jobCode != null and jobCode!='all'">
+		 	and m.jobCode = #{jobCode}
+		 </if>
+		 <if test="startDate != null">
+		 	and to_date(LEAVE_START_DATE) between to_date(#{startDate}) and to_date(#{endDate}) 
+		 </if>
+		   and mem_name like '%'||#{keyword}||'%'
+		 order
+		    by 4 desc
+	</select>
+	
+	<select id="holidayAddCount" resultType="_int">
+		select count(*)
+		  from tb_holiday h
+		  join tb_member m on (m.mem_no = h.mem_no)
+		  join tb_department d on (d.dept_code = m.dept_code)
+		  join tb_job j on (j.job_code = m.job_code)
+		 where mem_name like '%'||#{keyword}||'%'
+		 <if test="deptCode != null and deptCode!='all'">
+		 	and m.deptCode = #{deptCode}
+		 </if>
+		 <if test="jobCode != null and jobCode!='all'">
+		 	and m.jobCode = #{jobCode}
+		 </if>
+		 <if test="startDate != null">
+		 	and ho_date between to_date(#{startDate}) and to_date(#{endDate}) 
+		 </if>
+	</select>
+	
+	<select id="holidayAddList" resultMap="resultHoliday">
+		select mem_name,
+		       dept_name,
+		       job_name,
+		       ho_date,
+		       ho_num,
+		       ho_comment
+		  from tb_holiday h
+		  join tb_member m on (m.mem_no = h.mem_no)
+		  join tb_department d on (d.dept_code = m.dept_code)
+		  join tb_job j on (j.job_code = m.job_code)
+		  where mem_name like '%'||#{keyword}||'%'
+		 <if test="deptCode != null and deptCode!='all'">
+		 	and m.deptCode = #{deptCode}
+		 </if>
+		 <if test="jobCode != null and jobCode!='all'">
+		 	and m.jobCode = #{jobCode}
+		 </if>
+		 <if test="startDate != null">
+		 	and ho_date between to_date(#{startDate}) and to_date(#{endDate}) 
+		 </if>
+		 order by 4 desc
 	</select>
 </mapper>

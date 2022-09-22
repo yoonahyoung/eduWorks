@@ -134,4 +134,10 @@ public interface PersonnelService {
 	ArrayList<Holiday> hoList(PageInfo pi2,HashMap<String,String> m1);
 	String totalHo(String memNo);
 	String useHo(String memNo);
+	
+	//연차관리매니지
+	int holidayMgCount(SearchAt s);
+	ArrayList<HolidayForm> holidayMgList(PageInfo pi1,SearchAt s);
+	int holidayAddCount(SearchAt s);
+	ArrayList<Holiday> holidayAddList(PageInfo pi1,SearchAt s);
 }

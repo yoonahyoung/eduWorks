@@ -334,4 +334,26 @@ public class PersonnelDao {
 	public String useHo(SqlSessionTemplate sqlSession,String memNo) {
 		return sqlSession.selectOne("personnelMapper.useHo", memNo);
 	}
+	
+	public int holidayMgCount(SqlSessionTemplate sqlSession,SearchAt s) {
+		return sqlSession.selectOne("personnelMapper.holidayMgCount", s);
+	}
+	
+	public ArrayList<HolidayForm> holidayMgList(SqlSessionTemplate sqlSession,PageInfo pi1, SearchAt s) {
+		int limit = pi1.getBoardLimit();
+		int offset = (pi1.getCurrentPage()-1)*limit;
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("personnelMapper.holidayMgList", s, rowBounds);
+	} 
+	
+	public int holidayAddCount(SqlSessionTemplate sqlSession,SearchAt s) {
+		return sqlSession.selectOne("personnelMapper.holidayAddCount", s);
+	}
+	
+	public ArrayList<Holiday> holidayAddList(SqlSessionTemplate sqlSession,PageInfo pi2, SearchAt s) {
+		int limit = pi2.getBoardLimit();
+		int offset = (pi2.getCurrentPage()-1)*limit;
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("personnelMapper.holidayAddList", s, rowBounds);
+	}
 }

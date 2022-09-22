@@ -16,4 +16,7 @@ public class Holiday {
 	private String hoDate;
 	private double hoNum;
 	private String hoComment;
+	private String memName;
+	private String jobName;
+	private String deptName;
 }

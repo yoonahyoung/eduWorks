@@ -1153,7 +1153,25 @@ public class PersonnelController {
 	}
 	
 	@RequestMapping("selectManage.ho")
-	public String selectManageHo() {
+	public String selectManageHo(Model model,HttpSession session,@RequestParam(value="p1",defaultValue = "1")int currentPage1,
+            					 @RequestParam(value="p2",defaultValue = "1")int currentPage2, SearchAt s) {
+		int listCount1 = pService.holidayMgCount(s);
+		PageInfo pi1 = Pagination.getInfo(listCount1, currentPage1, 3, 5);
+		ArrayList<HolidayForm> list1 = pService.holidayMgList(pi1,s);
+		model.addAttribute("list1", list1);
+		model.addAttribute("pi1",pi1);
+		
+		int listCount2 = pService.holidayAddCount(s);
+		PageInfo pi2 = Pagination.getInfo(listCount2, currentPage2, 3, 5);
+		ArrayList<Holiday> list2 = pService.holidayAddList(pi2,s);
+		model.addAttribute("list2", list2);
+		model.addAttribute("pi2",pi2);
+		model.addAttribute("condition", s);
+		
+		ArrayList<Department> dlist = pService.selectDept();
+		ArrayList<Job> jlist = pService.selectJob();
+		model.addAttribute("jlist", jlist);
+		model.addAttribute("dlist", dlist);
 		return "personnel/holidayManage";
 	}
 }
