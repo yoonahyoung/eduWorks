@@ -516,7 +516,7 @@
 	               				success:function(result){
 	               					if(result == "success"){
 	               						alert("관심 캘린더가 추가되었습니다.");
-	               						//$("#addMyCal").modal('hide');
+	               						$("#attCalList").css("display", "none");
 	               						selectLikecalList();
 	               					}
 	               				}, error:function(){
