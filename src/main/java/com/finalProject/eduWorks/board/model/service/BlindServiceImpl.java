@@ -24,14 +24,14 @@ public class BlindServiceImpl implements BlindService{
 
 	// 페이징처리
 	@Override
-	public int selectListCount() {
-		return bDao.selectListCount(sqlSession);
+	public int selectListCount(String keyword) {
+		return bDao.selectListCount(sqlSession, keyword);
 	}
 
 	// 익명 게시판 리스트 조회
 	@Override
-	public ArrayList<Board> selectBlindList(PageInfo pi) {
-		return bDao.selectBlindList(sqlSession, pi);
+	public ArrayList<Board> selectBlindList(PageInfo pi, String keyword) {
+		return bDao.selectBlindList(sqlSession, pi, keyword);
 	}
 
 	// 조회수 증가
@@ -48,14 +48,14 @@ public class BlindServiceImpl implements BlindService{
 	
 	// 댓글 수 조회
 	@Override
-	public ArrayList<Reply> replyCount() {
-		return bDao.replyCount(sqlSession);
+	public ArrayList<Reply> replyCount(String reBoardNoStr) {
+		return bDao.replyCount(sqlSession, reBoardNoStr);
 	}
 		
 	// 추천 수 조회
 	@Override
-	public ArrayList<Like> likeCount() {
-		return bDao.likeCount(sqlSession);
+	public ArrayList<Like> likeCount(String reBoardNoStr) {
+		return bDao.likeCount(sqlSession, reBoardNoStr);
 	}
 	
 	// 추천 조회

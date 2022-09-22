@@ -15,17 +15,17 @@ import com.finalProject.eduWorks.common.model.vo.Reply;
 @Repository
 public class BlindDao {
 	// 페이징처리
-	public int selectListCount(SqlSessionTemplate sqlSession) {
+	public int selectListCount(SqlSessionTemplate sqlSession, String keyword) {
 		return sqlSession.selectOne("blindMapper.selectListCountB");
 	}
 
 	// 익명 게시판 리스트 조회
-	public ArrayList<Board> selectBlindList(SqlSessionTemplate sqlSession, PageInfo pi) {
+	public ArrayList<Board> selectBlindList(SqlSessionTemplate sqlSession, PageInfo pi, String keyword) {
 		int limit = pi.getBoardLimit();
 		int offset = (pi.getCurrentPage()-1) * limit;
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		
-		return (ArrayList)sqlSession.selectList("blindMapper.selectBlindList", null, rowBounds);
+		return (ArrayList)sqlSession.selectList("blindMapper.selectBlindList", keyword, rowBounds);
 	}
 	
 	// 조회수 증가
@@ -39,13 +39,13 @@ public class BlindDao {
 	}
 	
 	// 댓글 수 조회
-	public ArrayList<Reply> replyCount(SqlSessionTemplate sqlSession) {
-		return (ArrayList)sqlSession.selectList("blindMapper.replyCount");
+	public ArrayList<Reply> replyCount(SqlSessionTemplate sqlSession, String reBoardNoStr) {
+		return (ArrayList)sqlSession.selectList("blindMapper.replyCount", reBoardNoStr);
 	}
 	
 	// 추천 수 조회
-	public ArrayList<Like> likeCount(SqlSessionTemplate sqlSession) {
-		return (ArrayList)sqlSession.selectList("blindMapper.likeCount");
+	public ArrayList<Like> likeCount(SqlSessionTemplate sqlSession, String reBoardNoStr) {
+		return (ArrayList)sqlSession.selectList("blindMapper.likeCount", reBoardNoStr);
 	}
 	
 	// 추천 조회

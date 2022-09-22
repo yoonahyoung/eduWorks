@@ -51,11 +51,12 @@ public class BlindController {
 	 */
 	@RequestMapping("list.bl")
 	public ModelAndView selectBlindList(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv, HttpSession session) {
-		int listCount = bService.selectListCount();
+		String keyword ="";
+		int listCount = bService.selectListCount(keyword);
 		
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
 		// 글 리스트 조회
-		ArrayList<Board> list = bService.selectBlindList(pi);
+		ArrayList<Board> list = bService.selectBlindList(pi, keyword);
 		
 		mv.addObject("pi", pi).addObject("list", list).setViewName("board/blindListView");
 		return mv;
@@ -68,15 +69,16 @@ public class BlindController {
 	 */
 	@ResponseBody
 	@RequestMapping(value="likeCount.bl", produces="application/json; charset=utf-8")
-	public String ajaxLikeCount() {
+	public String ajaxLikeCount(String reBoardNoStr) {
+		String keyword ="";
 		// 추천수 조회
-		ArrayList<Like> like = bService.likeCount();
+		ArrayList<Like> like = bService.likeCount(reBoardNoStr);
 		
 		// 페이징 처리의 끝페이지를 listCount로 처리
-		int listCount = bService.selectListCount();
+		int listCount = bService.selectListCount(keyword);
 		PageInfo pi = Pagination.getInfo(listCount, 1, listCount, listCount);
 		// 글 리스트 조회
-		ArrayList<Board> list = bService.selectBlindList(pi);
+		ArrayList<Board> list = bService.selectBlindList(pi, keyword);
 		
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("like", like);
@@ -92,15 +94,16 @@ public class BlindController {
 	 */
 	@ResponseBody
 	@RequestMapping(value="replyCount.bl", produces="application/json; charset=utf-8")
-	public String ajaxReplyCount() {
+	public String ajaxReplyCount(String reBoardNoStr) {
+		String keyword ="";
 		// 댓글 수 조회
-		ArrayList<Reply> reply = bService.replyCount();
+		ArrayList<Reply> reply = bService.replyCount(reBoardNoStr);
 		
 		// 페이징 처리의 끝페이지를 listCount로 처리
-		int listCount = bService.selectListCount();
+		int listCount = bService.selectListCount(keyword);
 		PageInfo pi = Pagination.getInfo(listCount, 1, listCount, listCount);
 		// 글 리스트 조회
-		ArrayList<Board> list = bService.selectBlindList(pi);
+		ArrayList<Board> list = bService.selectBlindList(pi, keyword);
 		
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("reply", reply);
@@ -379,10 +382,27 @@ public class BlindController {
 		return "redirect:detail.bl?no=" + b.getBoardNo();
 	}
 	
+	/**
+	 * 신고 등록 ajax
+	 * @param r	신고 정보
+	 * @return 	성공여부
+	 */
 	@ResponseBody
 	@RequestMapping(value="insertReport.bl", produces="application/json; charset=utf-8")
 	public String insertReport(Report r) {
 		int result = bService.insertReport(r);
 		return new Gson().toJson(result);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="search.bl", produces="application/json; cahrset=utf-8")
+	public String searchBlind(String keyword, int page) {
+		int listCount = bService.selectListCount(keyword);
+		PageInfo pi = Pagination.getInfo(listCount, page, 10, 10);
+		ArrayList<Board> list = bService.selectBlindList(pi, keyword);
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("pi", pi);
+		map.put("list", list);
+		return new Gson().toJson(map);
 	}
 }

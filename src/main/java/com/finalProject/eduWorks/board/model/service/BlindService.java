@@ -10,8 +10,8 @@ import com.finalProject.eduWorks.common.model.vo.Reply;
 
 public interface BlindService {
 	// 1. 익명 게시판 목록 페이지 조회 서비스 (페이징)
-	int selectListCount();
-	ArrayList<Board> selectBlindList(PageInfo pi); 
+	int selectListCount(String keyword);
+	ArrayList<Board> selectBlindList(PageInfo pi, String keyword); 
 	
 	// 2. 익명 게시판 등록 서비스
 	int insertBlind(Board n);
@@ -23,10 +23,10 @@ public interface BlindService {
 	Board selectBlind(int boardNo);
 	
 	// 댓글 수 조회
-	ArrayList<Reply> replyCount();
+	ArrayList<Reply> replyCount(String reBoardNoStr);
 	
 	// 추천 수 조회
-	ArrayList<Like> likeCount();
+	ArrayList<Like> likeCount(String reBoardNoStr);
 	
 	// 추천 조회
 	ArrayList<Like> selectLike(Like l);

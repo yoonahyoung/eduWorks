@@ -26,8 +26,8 @@
                 <div class="filterHead">
                 	<div><!-- 자리 채우기용 --></div>
                     <div style="text-align: center;">
-		                <input type="text" style="width: 300px;" id="promoKeyword" placeholder="제목/작성자 입력">
-		                <button type="button" class="su_btn_border btn-sm su_btn_search">검색</button>
+		                <input type="text" style="width: 300px;" id="blindKeyword" placeholder="제목/작성자 입력">
+		                <button type="button" class="su_btn_border btn-sm su_btn_search" onclick="searchBar(1);">검색</button>
 	            	</div>
                     <div class="board-write-btn">
                         <button type="button" class="btn" id="bWrite-btn" onclick="location.href='enrollForm.bl'">글작성</button>
@@ -40,7 +40,7 @@
                         	<c:choose>
                         		<c:when test="${ empty list }">
                         			<tr>
-                        				<td>
+                        				<td id="emptyList">
                         					글이 존재하지 않습니다.
                         				</td>
                         			</tr>
@@ -88,7 +88,7 @@
 	                    		</c:when>
 	                    		<c:otherwise>
 				                    <li class="page-item">
-				                        <a class="page-link" href="list.no?cpage=${ pi.currentPage-1 }" aria-label="Previous">
+				                        <a class="page-link" href="list.bl?cpage=${ pi.currentPage-1 }" aria-label="Previous">
 				                        	<span aria-hidden="true">&laquo;</span>
 				                        </a>
 				                    </li>
@@ -100,7 +100,7 @@
 			            	</c:forEach>
 			            	
 			            	<c:choose>
-	                    		<c:when test="${ pi.currentPage eq maxPage }">
+	                    		<c:when test="${ pi.currentPage eq pi.maxPage }">
 	                    			<li class="page-item">
 				                        <a class="page-link disabled" aria-label="Next">
 				                        	<span aria-hidden="true">&raquo;</span>
@@ -160,13 +160,20 @@
             <script>
 		           	$(function(){ 
 		           		// 상세화면
-		           		$(".boardTable>tbody>tr").click(function(){
+		           		$(".row").on("click", ".boardTable>tbody>tr", function(){
 		           			// 선택된 tr의 자식요소 중에서 no라는 클래스를 가진 자식의 text값
 		           			location.href = "detail.bl?no=" + $(this).children(".no").text(); 
 		           		})
 		           		
+		           		selectBest("");
+		           		selectReList("");
+		           	})
+		           	
+		           	// 추천 수 조회 및 추천 게시판 리스트 뿌려주기
+	           		function selectBest(reBoardNoStr){
 		           		$.ajax({ // 추천 수 조회
 		           			url:"likeCount.bl",
+		           			data:{reBoardNoStr:reBoardNoStr},
 		           			success(map){
 		           				// 메인 게시판에 갯수 뿌려주기
 		           				for(let i=0; i<map.like.length; i++){
@@ -206,15 +213,20 @@
        							}
        							
        							$("#thumbsHotArea").html(value);
-	           					
+	           					selectReList(reBoardNoStr);
+	           					selectBest(reBoardNoStr);
 		           			},
 		           			error(){
 		           				console.log("ajax통신 실패");
 		           			}
 		           		})
-		           		
+	           		}
+		           	
+		           	// 댓글 수 조회 및 핫 게시판 리스트 뿌려주기
+	           		function selectReList(reBoardNoStr){
 		           		$.ajax({ // 댓글 수 조회
 		           			url:"replyCount.bl",
+		           			data:{reBoardNoStr:reBoardNoStr},
 		           			success(map){
 		           				// 메인 게시판 댓글 수 뿌려주기
 		           				for(let i=0; i<map.reply.length; i++){
@@ -257,9 +269,138 @@
 		           				console.log("ajax통신 실패");
 		           			}
 		           		})
-		           		
-		           		
-		           	})
+	           		}
+		           	
+		        // 검색시 뿌려주는 리스트
+	           	function searchBar(page){
+	           		$.ajax({
+	           			url:"search.bl",
+	           			data:{
+	           				keyword:$("#blindKeyword").val(),
+	           				page:page
+	           			},
+	           			success(map){
+	           				// 리스트
+	           				let list = map.list;
+	           				let sValue = "";
+	           				// 페이징
+	           				let pi = map.pi;
+	           				let pValue = "";
+	           				// 댓글수, 조회수 불러오기용
+	           				let reBoardNoStr = "";
+	           				
+	           				if(list == null){
+	           					sValue += '<tr>'
+                       						+ '<td>검색 결과가 없습니다</td>'
+               							+ '</tr>';
+	           				}else{
+	           					for(let i=0; i<list.length; i++){
+	           						reBoardNoStr += list[i].boardNo;
+	           						sValue += '<tr>'
+				                            	+ '<td class="no" width="5%" align="center" id="no' + list[i].boardNo + '">' + list[i].boardNo + '</td>'
+				                                + '<td id="fContent0">'
+				                                    + '<p>'
+				                                        + '<div class="side_side">'
+				                                            + '<span id="boardTitle">' + list[i].boardTitle + '</span>'
+				                                            + '<div id="likeReply">'
+				                                                + '<div id="reply">'
+				                                                    + '&nbsp;&nbsp;<i class="fas fa-comments"></i><br>'
+				                                                    + '<span class="replyCountSpan' + list[i].boardNo + '">[0]</span>'
+				                                                + '</div>'
+				                                                + '<div id="like">'
+				                                                    + '&nbsp;<i class="fas fa-thumbs-up"></i><br>'
+				                                                    + '<span class="likeCountSpan' + list[i].boardNo + '">[0]</span>'
+				                                                + '</div>'
+				                                            + '</div>'
+				                                        + '</div>' 
+				                                        + '<span id="w-day">작성일 </span><span>' + list[i].boardEnDate + '</span>'
+				                                    + '</p>'
+				                                + '</td>'
+				                            + '</tr>';
+	           					}
+	           					
+	           					// 페이징바 처리
+	           					if(pi.currentPage == 1){
+	           						pValue += '<li class="page-item">'
+	           									+ '<a class="page-link disabled" aria-label="Previous">'
+	           										+ '<span aria-hidden="true">&laquo;</span>'
+	           									+ '</a>'
+	           								+ '</li>';
+	           					}else{
+	           						pValue += '<li class="page-item">'
+	           									+ '<a class="page-link" onclick="searchBar(' + (pi.currentPage-1) + ')" aria-label="Previous">'
+	           										+ '<span aria-hidden="true">&laquo;</span>'
+	           									+ '</a>'
+	           								+ '</li>';
+	           					}
+	           					
+	           					for(let p=pi.startPage; p< pi.endPage; p++){
+	           						pValue += '<li class="page-item"><a class="page-link" onclick="searchBar(' +  p  + ')">' +  p + '</a></li>';
+	           					}
+			            	
+	           					if(pi.currentPage == pi.maxPage){
+	           						pValue += '<li class="page-item">'
+	           									+ '<a class="page-link disabled"  aria-label="Next">'
+	           										+ '<span aria-hidden="true">&raquo;</span>'
+	           									+ '</a>'
+	           								+ '</li>';
+	           					}else{
+	           						pValue += '<li class="page-item">'
+	           									+ '<a class="page-link" onclick="searchBar(' + (pi.currentPage+1) + ')" aria-label="Next">'
+	           										+ '<span aria-hidden="true">&raquo;</span>'
+	           									+ '</a>'
+	           								+ '</li>';
+	           					}
+			            	
+	           					$(".boardTable tbody").empty();
+	           					$(".boardTable tbody").html(sValue);
+	           					$("#n-pagingBar ul").empty();
+	           					$("#n-pagingBar ul").html(pValue);
+	           					
+	           					selectBoardCount(reBoardNoStr);
+	           				}
+	           				
+	           			},error(){
+	           				console.log("ajax통신 실패");
+	           			}
+	           		})
+	           	}
+		        
+		        // 검색 후 뿌려주는 게시판 추천수, 댓글수
+		        function selectBoardCount(reBoardNoStr){
+		        	$.ajax({ // 댓글 수 조회
+	           			url:"replyCount.bl",
+	           			data:{reBoardNoStr:reBoardNoStr},
+	           			success(map){
+	           				// 메인 게시판 댓글 수 뿌려주기
+	           				for(let i=0; i<map.reply.length; i++){
+	           					var id="";
+	           					id = "no" + map.reply[i].reBoardNo;
+			           			if($("#"+id).text() == map.reply[i].reBoardNo){
+			           				$(".replyCountSpan"+id).html("[" + map.reply[i].replyCount + "]");
+			           			}
+			           		}
+	           			},error(){
+	           				console.log("ajax 통신 실패");
+	           			}
+	           			
+		        	})
+		        	
+		        	 
+	        		$.ajax({ // 추천 수 조회
+	           			url:"likeCount.bl",
+	           			data:{reBoardNoStr:reBoardNoStr},
+	           			success(map){
+	           				// 메인 게시판에 갯수 뿌려주기
+	           				for(let i=0; i<map.like.length; i++){
+	           					
+			           			if($("#no"+map.like[i].boardNo).text() == map.like[i].boardNo){
+			           				$(".likeCountSpan"+map.like[i].boardNo).html("[" + map.like[i].likeCount + "]");
+			           			}
+	           				}
+	           			}
+		        	})
+		        }
 		        </script>
 	
 	    </div>
