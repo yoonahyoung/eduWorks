@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -1155,6 +1156,19 @@ public class PersonnelController {
 	@RequestMapping("selectManage.ho")
 	public String selectManageHo(Model model,HttpSession session,@RequestParam(value="p1",defaultValue = "1")int currentPage1,
             					 @RequestParam(value="p2",defaultValue = "1")int currentPage2, SearchAt s) {
+		System.out.println(s);
+		if(s.getStartDate()==null) {
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			LocalDateTime now = LocalDateTime.now();
+			String a = now+"";
+			String end = a.substring(0, 10);
+			String start = a.substring(0, 8)+"01";
+			s.setStartDate(start);
+			s.setEndDate(end);
+		}
+		
+		System.out.println(s);
+		
 		int listCount1 = pService.holidayMgCount(s);
 		PageInfo pi1 = Pagination.getInfo(listCount1, currentPage1, 3, 5);
 		ArrayList<HolidayForm> list1 = pService.holidayMgList(pi1,s);

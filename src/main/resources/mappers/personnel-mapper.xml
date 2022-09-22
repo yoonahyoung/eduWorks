@@ -1436,19 +1436,20 @@
 		  join tb_job j on (j.job_code = m.job_code)
 		 where APRV_STATUS = 'D'
 		 <if test="deptCode != null and deptCode!='all'">
-		 	and m.deptCode = #{deptCode}
+		 	and m.dept_code = #{deptCode}
 		 </if>
 		 <if test="jobCode != null and jobCode!='all'">
-		 	and m.jobCode = #{jobCode}
+		 	and m.job_code = #{jobCode}
 		 </if>
 		 <if test="startDate != null">
-		 	and to_date(LEAVE_START_DATE) between to_date(#{startDate}) and to_date(#{endDate}) 
+		 	and to_date(APRV_DOC_ENDATE) between to_date(#{startDate}) and to_date(#{endDate}) 
 		 </if>
 		   and mem_name like '%'||#{keyword}||'%'
 	</select>
 	
 	<select id="holidayMgList" resultMap="resultHolidayForm">
-		select mem_name,
+		select af.mem_no,
+			   mem_name,
 		       dept_name,
 		       job_name,
 		       LEAVE_START_DATE,
@@ -1464,13 +1465,13 @@
 		  join tb_job j on (j.job_code = m.job_code)
 		 where APRV_STATUS = 'D'
 		 <if test="deptCode != null and deptCode!='all'">
-		 	and m.deptCode = #{deptCode}
+		 	and m.dept_code = #{deptCode}
 		 </if>
 		 <if test="jobCode != null and jobCode!='all'">
-		 	and m.jobCode = #{jobCode}
+		 	and m.job_code = #{jobCode}
 		 </if>
 		 <if test="startDate != null">
-		 	and to_date(LEAVE_START_DATE) between to_date(#{startDate}) and to_date(#{endDate}) 
+		 	and to_date(APRV_DOC_ENDATE) between to_date(#{startDate}) and to_date(#{endDate}) 
 		 </if>
 		   and mem_name like '%'||#{keyword}||'%'
 		 order
@@ -1485,10 +1486,10 @@
 		  join tb_job j on (j.job_code = m.job_code)
 		 where mem_name like '%'||#{keyword}||'%'
 		 <if test="deptCode != null and deptCode!='all'">
-		 	and m.deptCode = #{deptCode}
+		 	and m.dept_code = #{deptCode}
 		 </if>
 		 <if test="jobCode != null and jobCode!='all'">
-		 	and m.jobCode = #{jobCode}
+		 	and m.job_code = #{jobCode}
 		 </if>
 		 <if test="startDate != null">
 		 	and ho_date between to_date(#{startDate}) and to_date(#{endDate}) 
@@ -1496,10 +1497,11 @@
 	</select>
 	
 	<select id="holidayAddList" resultMap="resultHoliday">
-		select mem_name,
+		select h.mem_no
+		       mem_name,
 		       dept_name,
 		       job_name,
-		       ho_date,
+		       to_char(ho_date,'YYYY-MM-DD') ho_date,
 		       ho_num,
 		       ho_comment
 		  from tb_holiday h
@@ -1508,13 +1510,13 @@
 		  join tb_job j on (j.job_code = m.job_code)
 		  where mem_name like '%'||#{keyword}||'%'
 		 <if test="deptCode != null and deptCode!='all'">
-		 	and m.deptCode = #{deptCode}
+		 	and m.dept_code = #{deptCode}
 		 </if>
 		 <if test="jobCode != null and jobCode!='all'">
-		 	and m.jobCode = #{jobCode}
+		 	and m.job_code = #{jobCode}
 		 </if>
 		 <if test="startDate != null">
-		 	and ho_date between to_date(#{startDate}) and to_date(#{endDate}) 
+		 	and to_date(ho_date) between to_date(#{startDate}) and to_date(#{endDate}) 
 		 </if>
 		 order by 4 desc
 	</select>
