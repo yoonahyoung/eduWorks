@@ -68,7 +68,7 @@
 				 where board_category = 3
 				   and board_status = 'Y'
 				   <if test="keyword != null and keyword neq ''">
-				   		and board_title || m.mem_name like ('%${keyword}%')
+				   		and board_title like ('%${keyword}%')
 				   </if>
 				)
 	</select>
@@ -86,7 +86,7 @@
 		 where board_category = 3
 		   and board_status = 'Y'
 		   <if test="keyword != null and keyword neq ''">
-		   		and board_title || m.mem_name like ('%${keyword}%')
+		   		and board_title like ('%${keyword}%')
 		   </if>
 		 order
 		 	by 1 desc

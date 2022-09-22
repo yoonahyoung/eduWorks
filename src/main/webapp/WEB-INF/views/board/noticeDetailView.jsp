@@ -131,7 +131,7 @@
 	                    <img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">
 	                </div>
 	                <div>
-	                    <span class="font-weight-bold">${ b.boWriter } ${ b.jobName }</span>
+	                    <span class="font-weight-bold">${ b.boWriter }</span>
 	                    <span>${ b.boardEnDate }</span>
 	                </div>
 	            </div>
@@ -326,7 +326,6 @@
 								replyParent:replyParentNo,
 								replyContent:$("#replyContent").val(),
 								replyWriter:"${loginUser.memName}",
-								replyJob:"${loginUser.jobName}",
 								replyWno:${loginUser.memNo}
 							},
 							success(result){

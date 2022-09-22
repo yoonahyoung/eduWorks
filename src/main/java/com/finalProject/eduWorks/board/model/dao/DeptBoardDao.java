@@ -15,29 +15,26 @@ import com.finalProject.eduWorks.common.model.vo.Reply;
 @Repository
 public class DeptBoardDao {
 	// 페이징처리
-	public int selectListCount(SqlSessionTemplate sqlSession) {
-		return sqlSession.selectOne("deptBoardMapper.selectListCountD");
+	public int selectListCount(SqlSessionTemplate sqlSession, String keyword, String deptCode) {
+		HashMap<String, String> map = new HashMap<>();
+		map.put("keyword", keyword);
+		map.put("deptCode", deptCode);
+		return sqlSession.selectOne("deptBoardMapper.selectListCountD", map);
 	}
 	
 	// 게시글 리스트 조회
-	public HashMap<String, ArrayList<Board>> selectList(SqlSessionTemplate sqlSession, PageInfo pi) {
+	public ArrayList<Board> selectList(SqlSessionTemplate sqlSession, PageInfo pi, String keyword, String deptCode) {
 		
-		HashMap<String, ArrayList<Board>> map = new HashMap<>();
-
-		// 1. 공지글 조회
-		ArrayList<Board> topList = (ArrayList)sqlSession.selectList("deptBoardMapper.selectTopListD");
-		map.put("topList", topList);
-		
-		// 2. 일반글 페이징처리
+		// 글 페이징처리
 		int limit = pi.getBoardLimit();
 		int offset = (pi.getCurrentPage()-1) * limit;
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		
-		// 3. 일반글 조회
-		ArrayList<Board> list = (ArrayList)sqlSession.selectList("deptBoardMapper.selectListD", null, rowBounds);
-		map.put("list", list);
+		HashMap<String, String> map = new HashMap<>();
+		map.put("keyword", keyword);
+		map.put("deptCode", deptCode);
 		
-		return map;
+		return (ArrayList)sqlSession.selectList("deptBoardMapper.selectListD", map, rowBounds);
 	}
 	
 	// 조회수 증가
@@ -80,30 +77,25 @@ public class DeptBoardDao {
 		return sqlSession.update("deptBoardMapper.deleteReplyD", replyNo);
 	}
 
-
 	// 게시글 등록
 	public int insertDeptBoard(SqlSessionTemplate sqlSession, Board b) {
 		return sqlSession.insert("deptBoardMapper.insertDeptBoard", b);
 	}
-
 
 	// 첨부파일 등록
 	public int insertAttachment(SqlSessionTemplate sqlSession, Attachment at) {
 		return sqlSession.insert("deptBoardMapper.insertAttachmentD", at);
 	}
 
-
 	// 게시글 삭제
 	public int deleteDeptBoard(SqlSessionTemplate sqlSession, int boardNo) {
 		return sqlSession.update("deptBoardMapper.deleteDeptBoard", boardNo);
 	}
 
-
 	// 게시글 수정
 	public int updateDeptBoard(SqlSessionTemplate sqlSession, Board b) {
 		return sqlSession.update("deptBoardMapper.updateDeptBoard", b);
 	}
-
 
 	// 첨부파일 수정
 	public int updateAttachment(SqlSessionTemplate sqlSession, Attachment at) {

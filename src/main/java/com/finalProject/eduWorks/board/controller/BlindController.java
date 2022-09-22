@@ -394,6 +394,12 @@ public class BlindController {
 		return new Gson().toJson(result);
 	}
 	
+	/**
+	 * 익명게시판 검색 결과 리스트
+	 * @param keyword	검색어
+	 * @param page		현재 페이지
+	 * @return	페이징, 검색 리스트
+	 */
 	@ResponseBody
 	@RequestMapping(value="search.bl", produces="application/json; cahrset=utf-8")
 	public String searchBlind(String keyword, int page) {

@@ -24,14 +24,14 @@ public class DeptBoardServiceImpl implements DeptBoardService{
 
 	// 페이징처리
 	@Override
-	public int selectListCount() {
-		return dDao.selectListCount(sqlSession);
+	public int selectListCount(String keyword, String deptCode) {
+		return dDao.selectListCount(sqlSession, keyword, deptCode);
 	}
 
-	// 전사공지 리스트 조회
+	// 부서 게시판 리스트 조회
 	@Override
-	public HashMap<String,ArrayList<Board>> selectList(PageInfo pi) {
-		return dDao.selectList(sqlSession, pi);
+	public ArrayList<Board> selectList(PageInfo pi, String keyword, String deptCode) {
+		return dDao.selectList(sqlSession, pi, keyword, deptCode);
 	}
 	
 	// 조회수 증가
@@ -40,7 +40,7 @@ public class DeptBoardServiceImpl implements DeptBoardService{
 		return dDao.increaseCount(sqlSession, boardNo);
 	}
 	
-	// 전사공지 상세 조회
+	// 부서 게시판 상세 조회
 	@Override
 	public Board selectDeptBoard(int boardNo) {
 		return dDao.selectDeptBoard(sqlSession, boardNo);
@@ -52,7 +52,7 @@ public class DeptBoardServiceImpl implements DeptBoardService{
 		return dDao.selectAttachment(sqlSession, boardNo);
 	}
 	
-	// 전사공지 상세 조회 시 댓글 리스트 조회
+	// 부서 게시판 상세 조회 시 댓글 리스트 조회
 	@Override
 	public ArrayList<Reply> selectReplyList(int boardNo) {
 		return dDao.selectReplyList(sqlSession, boardNo);
@@ -105,7 +105,6 @@ public class DeptBoardServiceImpl implements DeptBoardService{
 	public int updateAttachment(Attachment at) {
 		return dDao.updateAttachment(sqlSession, at);
 	}
-	
 	
 	// 게시글 삭제
 	@Override

@@ -98,6 +98,9 @@ tbody tr:hover{
 	justify-content:space-between;
 }
 
+#noticeList tbody>tr>td:first-child, #noticeList th:hover{
+	cursor:default;
+} 
 
 /* noticeEnrollForm, deptBoardEnrollForm, blindEnrollForm */
 

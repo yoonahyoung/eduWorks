@@ -54,13 +54,13 @@ public class NoticeController {
 	 */
 	@RequestMapping("list.no")
 	public ModelAndView noticeList(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv, HttpSession session) {
-		
-		int listCount = nService.selectListCount();
+		String keyword = "";
+		int listCount = nService.selectListCount(keyword);
 		
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
-		HashMap<String,ArrayList<Board>> map = nService.selectList(pi);
+		ArrayList<Board> list = nService.selectList(pi, keyword);
 		
-		mv.addObject("pi", pi).addObject("topList", map.get("topList")).addObject("list", map.get("list")).setViewName("board/noticeListView");
+		mv.addObject("pi", pi).addObject("list", list).setViewName("board/noticeListView");
 		return mv;
 	}
 	
@@ -347,9 +347,46 @@ public class NoticeController {
 		return "redirect:detail.no?no=" + b.getBoardNo();
 	}
 	
+	/**
+	 * 공지사항 상세화면의 메일전송
+	 * @param model
+	 * @return	메일 작성 화면
+	 */
 	@RequestMapping("noticeMailForm.no")
 	public String noticeMailForm(Model model) {
 		return "board/noticeMailEnrollForm";
+	}
+	
+	/**
+	 * 공지사항 검색 기능
+	 * @param keyword	검색 키워드
+	 * @param page		현재 페이지
+	 * @return	페이징 리스트, 검색 리스트
+	 */
+	@ResponseBody
+	@RequestMapping(value="search.no", produces="application/json; charset=utf-8")
+	public String searchNotice(String keyword, int page) {
+		int listCount = nService.selectListCount(keyword);
+		PageInfo pi = Pagination.getInfo(listCount, page, 10, 10);
+		ArrayList<Board> list = nService.selectList(pi, keyword);
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("pi", pi);
+		map.put("list", list);
+		return new Gson().toJson(map);
+	}
+	
+	/**
+	 * 공지 등록/해제 기능
+	 * @param checkList	공지 번호들 문자열
+	 * @param isYN		1=등록, 2=해제
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="goTop.no", produces="text/html; charset=utf-8")
+	public String goTop(String checkList, int isYN	) {
+		int result = nService.goTop(checkList, isYN);
+		return result > 0 ? "success" : "fail";
 	}
 }
 

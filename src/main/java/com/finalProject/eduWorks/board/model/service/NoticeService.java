@@ -11,8 +11,8 @@ import com.finalProject.eduWorks.common.model.vo.Reply;
 public interface NoticeService {
 	
 	// 1. 공지사항 목록 페이지 조회 서비스 (페이징)
-	int selectListCount();
-	HashMap<String,ArrayList<Board>> selectList(PageInfo pi); 
+	int selectListCount(String keyword);
+	ArrayList<Board> selectList(PageInfo pi, String keyword); 
 	
 	// 2. 공지사항 등록 서비스
 	int insertNotice(Board n);
@@ -36,10 +36,10 @@ public interface NoticeService {
 	// 3-4) 댓글 삭제 서비스
 	int deleteReply(int replyNo);
 	
-	// 3-) 해당 게시글 첨부파일 조회
+	// 3-5) 해당 게시글 첨부파일 조회
 	Attachment selectAttachment(int noticeNo);
 	
-	// 3- ) 첨부파일 등록
+	// 3-6) 첨부파일 등록
 	int insertAttachment(Attachment at);
 	
 	// 4. 공지사항 수정 서비스
@@ -50,5 +50,8 @@ public interface NoticeService {
 	
 	// 5. 공지사항 삭제 서비스
 	int deleteNotice(int noticeNo);
+	
+	// 6. 게시글 공지 등록/해제
+	int goTop(String checkList, int isYN);
 	
 }

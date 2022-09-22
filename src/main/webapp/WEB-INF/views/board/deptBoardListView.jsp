@@ -27,16 +27,19 @@
 	            <br><br><br><br><br>
 	            
 	            <div style="text-align: center;">
-	                <input type="text" style="width: 300px;" id="promoKeyword" placeholder="제목/작성자 입력">
-	                <button type="button" class="su_btn_border btn-sm su_btn_search">검색</button>
+	                <input type="text" style="width: 300px;" id="dBoardKeyword" placeholder="제목/작성자 입력">
+	                <button type="button" class="su_btn_border btn-sm su_btn_search" onclick="searchBar(1)">검색</button>
 	            </div>
 				
 				<br><br>
 				
 	            <div class="tableOption">
 	                <div class="btn_two_spacing">
-	                    <button id="importantNotice">공지등록</button><i class="fas fa-flag"></i>
-	                    <button id="importantNotice">공지해제</button><i class="fas fa-font-awesome"></i>
+	                	<!-- 대리 or 팀장 or 대표 or 운영팀만 보여지는 공지 등록/해제 버튼 -->
+	                	<c:if test="${ loginUser.deptCode eq 'DN' || loginUser.jobCode eq 'J2' || loginUser.jobCode eq 'J3' || loginUser.deptCode eq 'D2'}">
+		                    <button id="importantNotice" type="button" onclick="goTop(1);">공지등록</button><i class="fas fa-flag"></i>
+		                    <button id="importantNotice" type="button" onclick="goTop(2);">공지해제</button><i class="fas fa-font-awesome"></i>
+	                    </c:if>
 	                </div>
 	                
 	            </div>
@@ -54,50 +57,38 @@
 	                        </tr>
 	                    </thead>
 	                    <tbody class="board-tbody">
-	                        <c:choose>
-	                        	<c:when test="${ empty list }">
-	                        		<tr>
-	                        			<td colspan="6">등록된 글이 없습니다.</td>
-	                        		</tr>
-	                        	</c:when>
-	                        	<c:when test="${ not empty topList }">
-	                        		<c:forEach var="tn" items="${topList}">
-				                        <tr style="background:rgb(250, 232, 232)">
-				                            <td><input type="checkbox" id="checkNo${tn.boardNo}"></td>
-				                            <td class="no">${ tn.boardNo }</td>
-				                            <td>${ tn.boardTitle }</td>
-				                            <td>${ tn.boWriter }</td>
-				                            <td>${ tn.boardEnDate }</td>
-				                            <td>${ tn.boardCount }</td>
+	                        <c:if test="${ empty list }">
+                        		<tr>
+                        			<td colspan="6">등록된 글이 없습니다.</td>
+                        		</tr>
+                        	</c:if>
+                        	<c:forEach var="n" items="${list}">
+	                        	<c:if test="${ n.boardTop eq 'Y'}">
+			                        <tr style="background:rgb(250, 232, 232)">
+			                            <td onclick="event.stopPropagation()"><input type="checkbox" id="checkNo${n.boardNo}" name="chkBoardNo" value="${n.boardNo}"></td>
+			                            <td class="no">${ n.boardNo }</td>
+			                            <td>${ n.boardTitle }</td>
+			                            <td>${ n.boWriter }</td>
+			                            <td>${ n.boardEnDate }</td>
+			                            <td>${ n.boardCount }</td>
+			                        </tr>
+	                        	</c:if>
+			                </c:forEach>
+                        	<c:forEach var="n" items="${list}">
+		                        <c:if test="${ n.boardTop eq 'N'}">
+				                        <tr>
+				                            <td onclick="event.stopPropagation()"><input type="checkbox" id="checkNo${n.boardNo}" name="chkBoardNo" value="${n.boardNo}"></td>
+				                            <td class="no">${ n.boardNo }</td>
+				                            <td>${ n.boardTitle }</td>
+				                            <td>${ n.boWriter }</td>
+				                            <td>${ n.boardEnDate }</td>
+				                            <td>${ n.boardCount }</td>
 				                        </tr>
-				                    </c:forEach>
-	                        	</c:when>
-	                        </c:choose>
-	                        	<c:if test="${ not empty list }">
-	                        		<c:forEach var="n" items="${list}">
-	                        			<c:if test="${ n.boardTop eq 'N'}">
-					                        <tr>
-					                            <td><input type="checkbox" id="checkNo${tn.boardNo}"></td>
-					                            <td class="no">${ n.boardNo }</td>
-					                            <td>${ n.boardTitle }</td>
-					                            <td>${ n.boWriter }</td>
-					                            <td>${ n.boardEnDate }</td>
-					                            <td>${ n.boardCount }</td>
-					                        </tr>
-				                        </c:if>
-				                    </c:forEach>
-			                    </c:if>
-	                        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!리스트 화면 검색기능, 여러개 클릭기능 구현(하다말았음) -->
+		                        </c:if>
+		                    </c:forEach>
 	                    </tbody>
 	                </table>
-	                <script>
-			           	$(function(){ // 상세화면
-			           		$("#noticeList>tbody>tr").click(function(){
-			           			// 선택된 tr의 자식요소 중에서 no라는 클래스를 가진 자식의 text값
-			           			location.href = "detail.de?no=" + $(this).children(".no").text(); 
-			           		})
-			           	})
-			        </script>
+	                
 	                <br><br>
 	                
 	            </div>
@@ -129,7 +120,7 @@
 			            	</c:forEach>
 			            	
 			            	<c:choose>
-	                    		<c:when test="${ pi.currentPage eq maxPage }">
+	                    		<c:when test="${ pi.currentPage eq pi.maxPage }">
 	                    			<li class="page-item">
 				                        <a class="page-link disabled" aria-label="Next">
 				                        	<span aria-hidden="true">&raquo;</span>
@@ -148,10 +139,166 @@
 	                </nav>
 	            </div>
 	        </div>
-	
 	    </div>
-	   
 	</div>
+	
+	<script>
+       	$(function(){ // 상세화면
+       		$(".main_width").on("click", "#noticeList>tbody>tr", function(){
+       			// 선택된 tr의 자식요소 중에서 no라는 클래스를 가진 자식의 text값
+       			location.href = "detail.de?no=" + $(this).children(".no").text(); 
+       		})
+       	})
+       	
+       	// 검색시 뿌려주는 리스트
+       	function searchBar(page){
+       		console.log($("#dBoardKeyword").val());
+       		$.ajax({
+       			url:"search.de",
+       			data:{
+       				keyword:$("#dBoardKeyword").val(),
+       				page:page
+       			},
+       			success(map){
+       				// 리스트
+       				let list = map.list;
+       				let sValue = "";
+       				// 페이징
+       				let pi = map.pi;
+       				let pValue = "";
+       				
+       				if(list == null){
+       					sValue += '<tr>'
+               						+ '<td colspan="6">검색 결과가 없습니다</td>'
+       							+ '</tr>';
+       				}else{
+       					for(let i=0; i<list.length; i++){
+       						// 공지글 먼저 담기
+       						if(list[i].boardTop == 'Y'){
+       							sValue += '<tr style="background:rgb(250, 232, 232)">'
+       										+ '<td onclick="event.stopPropagation()"><input type="checkbox" id="checkNo' + list[i].boardNo + '" name="chkBoardNo" value="${n.boardNo}"></td>'
+       										+ '<td class="no">' + list[i].boardNo + '</td>'
+       										+ '<td>' + list[i].boardTitle + '</td>'
+       										+ '<td>' + list[i].boWriter + '</td>'
+       										+ '<td>' + list[i].boardEnDate + '</td>'
+       										+ '<td>' + list[i].boardCount + '</td>'
+       									+ '</tr>';
+       						}
+       					}
+       					
+       					for(let i=0; i<list.length; i++){
+       						// 일반글 담기
+       						if(list[i].boardTop == 'N'){
+       							sValue += '<tr>'
+       										+ '<td><input type="checkbox" id="checkNo' + list[i].boardNo + '" name="chkBoardNo" value="${n.boardNo}"></td>'
+       										+ '<td class="no">' + list[i].boardNo + '</td>'
+       										+ '<td>' + list[i].boardTitle + '</td>'
+       										+ '<td>' + list[i].boWriter + '</td>'
+       										+ '<td>' + list[i].boardEnDate + '</td>'
+       										+ '<td>' + list[i].boardCount + '</td>'
+       									+ '</tr>';
+       						}
+       					}
+       				
+       					// 페이징바 처리
+       					if(pi.currentPage == 1){
+       						pValue += '<li class="page-item">'
+       									+ '<a class="page-link disabled" aria-label="Previous">'
+       										+ '<span aria-hidden="true">&laquo;</span>'
+       									+ '</a>'
+       								+ '</li>';
+       					}else{
+       						pValue += '<li class="page-item">'
+       									+ '<a class="page-link" onclick="searchBar(' + (pi.currentPage-1) + ')" aria-label="Previous">'
+       										+ '<span aria-hidden="true">&laquo;</span>'
+       									+ '</a>'
+       								+ '</li>';
+       					}
+       					
+       					for(let p=pi.startPage; p<= pi.endPage; p++){
+       						pValue += '<li class="page-item"><a class="page-link" onclick="searchBar(' +  p  + ')">' +  p + '</a></li>';
+       					}
+          	
+       					if(pi.currentPage == pi.maxPage){
+       						pValue += '<li class="page-item">'
+       									+ '<a class="page-link disabled"  aria-label="Next">'
+       										+ '<span aria-hidden="true">&raquo;</span>'
+       									+ '</a>'
+       								+ '</li>';
+       					}else{
+       						pValue += '<li class="page-item">'
+       									+ '<a class="page-link" onclick="searchBar(' + (pi.currentPage+1) + ')" aria-label="Next">'
+       										+ '<span aria-hidden="true">&raquo;</span>'
+       									+ '</a>'
+       								+ '</li>';
+       					}
+          	
+       					$(".board-tbody").empty();
+       					$(".board-tbody").html(sValue);
+       					$("#n-pagingBar ul").empty();
+       					$("#n-pagingBar ul").html(pValue);
+       				}
+       				
+       			},error(){
+       				console.log("ajax통신 실패");
+       			}
+       		})
+       	}
+       	
+       	// 전체 선택
+       	$("#noticeList").on("click", "#checkAll", function(){
+       		$("input[id^=checkNo]").attr("selected", true);
+       		if($("#checkAll").is(":checked")){
+       			$("input[name=chkBoardNo]").prop("checked", true);
+       		}else{
+       			$("input[name=chkBoardNo]").prop("checked", false);
+       		}
+       	})
+       	
+       	// -----------체크박스 선택하면 값 가져오기-----------
+       	$("input[name=chkBoardNo]").click(function(){
+            var count = $("input[name='chkBoardNo']").length;
+            var checked = $("input[name='chkBoardNo']:checked").length;
+            
+            // 체크한 체크박스의 개수와 전체 체크박스 개수가 같으면 전체 선택 체크박스가 체크된다.
+            if(count != checked){
+                $("#checkAll").prop("checked", false);
+            } else{
+                $("#checkAll").prop("checked", true);
+            }
+            
+        });
+       	
+       	let checkList = "";
+       	// 체크박스 선택시 값 가져오기
+       	$("input[type=checkbox]").change(function(){
+       		checkList = ""; // 여기서 한번 비워줘야, 중복요소 제거
+       		$("input:checkbox[name=chkBoardNo]:checked").each(function(){
+       			checkList += ($(this).val()) + ",";
+       		})
+   			//console.log(checkList);
+   			checkList = checkList.substring(0,checkList.lastIndexOf(",")); // 맨 뒤 콤마 삭제 "2,3,4"
+       	})
+       	
+       	// 공지 설정 ajax
+		function goTop(isYN){
+       		//console.log(checkList);
+       		// isYN : 1 -> 공지 등록, 2-> 공지 해제
+   			$.ajax({
+   				url:"goTop.no",
+   				data:{
+   					checkList:checkList,
+   					isYN:isYN
+   				},
+   				success(result){
+   					alert("공지 등록/해제 처리 되었습니다");
+   					location.reload();
+   				},error(){
+   					console.log("ajax통신 실패");
+   				}
+   			})
+       	}
+    </script>
 	
 	<jsp:include page="../common/footer.jsp" />
 

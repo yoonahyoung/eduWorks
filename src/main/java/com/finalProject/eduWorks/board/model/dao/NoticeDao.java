@@ -15,29 +15,19 @@ import com.finalProject.eduWorks.common.model.vo.Reply;
 @Repository
 public class NoticeDao {
 	// 페이징처리
-	public int selectListCount(SqlSessionTemplate sqlSession) {
-		return sqlSession.selectOne("noticeMapper.selectListCount");
+	public int selectListCount(SqlSessionTemplate sqlSession, String keyword) {
+		return sqlSession.selectOne("noticeMapper.selectListCount", keyword);
 	}
 	
 	// 게시글 리스트 조회
-	public HashMap<String, ArrayList<Board>> selectList(SqlSessionTemplate sqlSession, PageInfo pi) {
+	public ArrayList<Board> selectList(SqlSessionTemplate sqlSession, PageInfo pi, String keyword) {
 		
-		HashMap<String, ArrayList<Board>> map = new HashMap<>();
-
-		// 1. 공지글 조회
-		ArrayList<Board> topList = (ArrayList)sqlSession.selectList("noticeMapper.selectTopList");
-		map.put("topList", topList);
-		
-		// 2. 일반글 페이징처리
+		// 페이징처리
 		int limit = pi.getBoardLimit();
 		int offset = (pi.getCurrentPage()-1) * limit;
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		
-		// 3. 일반글 조회
-		ArrayList<Board> list = (ArrayList)sqlSession.selectList("noticeMapper.selectList", null, rowBounds);
-		map.put("list", list);
-		
-		return map;
+		return (ArrayList)sqlSession.selectList("noticeMapper.selectList", keyword, rowBounds);
 	}
 	
 	// 조회수 증가
@@ -108,6 +98,14 @@ public class NoticeDao {
 	// 첨부파일 수정
 	public int updateAttachment(SqlSessionTemplate sqlSession, Attachment at) {
 		return sqlSession.update("noticeMapper.updateAttachment", at);
+	}
+
+	// 공지 등록/해제
+	public int goTop(SqlSessionTemplate sqlSession, String checkList, int isYN) {
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("checkList", checkList);
+		map.put("isYN", isYN);
+		return sqlSession.update("noticeMapper.goTop", map);
 	}
 
 }

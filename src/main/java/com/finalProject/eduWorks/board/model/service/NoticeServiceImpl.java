@@ -24,14 +24,14 @@ public class NoticeServiceImpl implements NoticeService{
 
 	// 페이징처리
 	@Override
-	public int selectListCount() {
-		return nDao.selectListCount(sqlSession);
+	public int selectListCount(String keyword) {
+		return nDao.selectListCount(sqlSession, keyword);
 	}
 
 	// 전사공지 리스트 조회
 	@Override
-	public HashMap<String,ArrayList<Board>> selectList(PageInfo pi) {
-		return nDao.selectList(sqlSession, pi);
+	public ArrayList<Board> selectList(PageInfo pi, String keyword) {
+		return nDao.selectList(sqlSession, pi, keyword);
 	}
 	
 	// 조회수 증가
@@ -111,6 +111,12 @@ public class NoticeServiceImpl implements NoticeService{
 	@Override
 	public int deleteNotice(int noticeNo) {
 		return nDao.deleteNotice(sqlSession, noticeNo);
+	}
+
+	// 공지 등록/해제
+	@Override
+	public int goTop(String checkList, int isYN) {
+		return nDao.goTop(sqlSession, checkList, isYN);
 	}
 	
 

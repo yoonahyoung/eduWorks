@@ -53,23 +53,15 @@ public class DeptBoardController {
 	 * @return 부서 게시판 조회 화면
 	 */
 	@RequestMapping("list.de")
-	public ModelAndView noticeList(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv, HttpSession session) {
-		
-		int listCount = dService.selectListCount();
+	public ModelAndView dBoardList(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv, HttpSession session) {
+		String keyword = "";
+		String deptCode = ((Member)session.getAttribute("loginUser")).getDeptCode();
+		int listCount = dService.selectListCount(keyword, deptCode);
 		
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
-		HashMap<String,ArrayList<Board>> map = dService.selectList(pi);
-		
-		switch(((Member)session.getAttribute("loginUser")).getDeptCode()) {
-		case "D0" : session.setAttribute("deptName", "강사"); break;
-		case "D1" : session.setAttribute("deptName", "인사팀"); break;
-		case "D2" : session.setAttribute("deptName", "행정팀"); break;
-		case "D3" : session.setAttribute("deptName", "홍보팀"); break;
-		case "DN" : session.setAttribute("deptName", "대표"); break;
-		// 대표일 경우 게시판 고를 수 있도록 처리할 예정
-		}
-		
-		mv.addObject("pi", pi).addObject("topList", map.get("topList")).addObject("list", map.get("list")).setViewName("board/deptBoardListView");
+		ArrayList<Board> list = dService.selectList(pi, keyword, deptCode);
+
+		mv.addObject("pi", pi).addObject("list", list).setViewName("board/deptBoardListView");
 		return mv;
 	}
 	
@@ -81,7 +73,7 @@ public class DeptBoardController {
 	 * @return 부서 게시판 상세 화면
 	 */
 	@RequestMapping("detail.de")
-	public String selectNotice(int no, Model model) {
+	public String selectDeptBoard(int no, Model model) {
 		
 		// 조회수 증가
 		int result = dService.increaseCount(no);
@@ -216,7 +208,7 @@ public class DeptBoardController {
 	 * @return 글 작성 페이지
 	 */
 	@RequestMapping("enrollForm.de")
-	public String noticeEnrollForm(Model model) {
+	public String dBoardEnrollForm(Model model) {
 		return "board/deptBoardEnrollForm";
 	}
 	
@@ -229,7 +221,7 @@ public class DeptBoardController {
 	 * @return 부서 게시판 리스트
 	 */
 	@RequestMapping("insert.de")
-	public String insertNotice(Board b, MultipartFile atOriginName, Model model, HttpSession session) {
+	public String insertDeptBoard(Board b, MultipartFile atOriginName, Model model, HttpSession session) {
 		Attachment at = new Attachment();
 		b.setDeptCode(((Member)session.getAttribute("loginUser")).getDeptCode());
 		int result1 = 0;
@@ -272,7 +264,7 @@ public class DeptBoardController {
 	 */
 	@ResponseBody
 	@RequestMapping(value="delete.de", produces="application/json; charset=utf-8")
-	public String deleteNotice(int boardNo, String atPath, Model model, HttpSession session) {
+	public String deleteDeptBoard(int boardNo, String atPath, Model model, HttpSession session) {
 		
 		int result =  dService.deleteDeptBoard(boardNo);
 		
@@ -298,7 +290,7 @@ public class DeptBoardController {
 	 * @return 부서 게시판 수정 화면
 	 */
 	@RequestMapping("updateForm.de")
-	public String updateFormNotice(int no, Model model, HttpSession session) {
+	public String updateFormDeptBoard(int no, Model model, HttpSession session) {
 		Board b = dService.selectDeptBoard(no);
 		Attachment at = dService.selectAttachment(no);
 		
@@ -318,7 +310,7 @@ public class DeptBoardController {
 	 * @return 성공여부
 	 */
 	@RequestMapping("update.de")
-	public String updateNotice(Board b, Attachment at, MultipartFile reupfile , Model model, HttpSession session) {
+	public String updateDeptBoard(Board b, Attachment at, MultipartFile reupfile , Model model, HttpSession session) {
 		int result1 = 0;
 		
 		// 새로 넘어온 첨부파일이 있을 경우
@@ -356,4 +348,34 @@ public class DeptBoardController {
 		return "redirect:detail.de?no=" + b.getBoardNo();
 	}
 
+	/**
+	 * 부서게시판 상세화면의 메일전송
+	 * @param model
+	 * @return	메일 작성 화면
+	 */
+	@RequestMapping("noticeMailForm.de")
+	public String dBoardMailForm(Model model) {
+		return "board/noticeMailEnrollForm";
+	}
+	
+	/**
+	 * 부서게시판 검색 기능
+	 * @param keyword	검색 키워드
+	 * @param page		현재 페이지
+	 * @return	페이징 리스트, 검색 리스트
+	 */
+	@ResponseBody
+	@RequestMapping(value="search.de", produces="application/json; charset=utf-8")
+	public String searchdBoard(String keyword, int page, HttpSession session) {
+		String deptCode = ((Member)session.getAttribute("loginUser")).getDeptCode();
+		int listCount = dService.selectListCount(keyword,  deptCode);
+		PageInfo pi = Pagination.getInfo(listCount, page, 10, 10);
+		ArrayList<Board> list = dService.selectList(pi, keyword, deptCode);
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("pi", pi);
+		map.put("list", list);
+		return new Gson().toJson(map);
+	}
+	
 }
