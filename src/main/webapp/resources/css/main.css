@@ -1,0 +1,147 @@
+@charset "UTF-8";
+
+		td, th{
+            font-size:100;
+        }
+        .tb6 td,.tb6 th{
+            border: 0;
+            padding:0px;
+        }
+        .tb6 th{width: 40%;}
+        .positionab{
+            position:absolute ;
+            top: 0;
+            padding: 30px;
+        }
+        .detailInfo{
+            background-color: whitesmoke;
+            width: 500px;
+            height: 700px;
+            left: 25%;
+            z-index: 10;
+           
+            box-shadow: 10px 10px 20px grey;
+        }
+
+       
+        .close {
+	        position:relative;
+	        display:inline-block;
+	        display:inline;
+	        width:50px;
+	        height:50px;
+	        text-align:center;
+        
+        
+        }
+        .close2:after {
+	        content: "\00d7"; 
+	        font-size:25pt;
+	        line-height:45px;
+	        }
+        
+        .fc-sun {color:#e31b23}
+		.fc-sat {color:#007dc3}
+		.fc-view-container{
+			width:210px;
+			height:300px;
+		}
+		.fc-left, .fc-right{
+			display:none;
+		}
+	
+		.su_calendar_size {
+		    margin: auto;
+		    width: 90%;
+		}
+		.fc {
+		    direction: ltr;
+		    text-align: center;
+		}
+		#calendar *{
+			text-align:center;
+			padding:0px;
+			font-size:0.7rem;
+			text-align: center;
+		    height: auto;
+		}
+	
+		#calendar h2{
+			font-size:1.3rem;
+			
+		}
+	
+		element.style {
+		}
+		body .fc {
+		    font-size: 1em;
+		}
+		.fc {
+		    direction: ltr;
+		    text-align: left;
+		}
+		.fc {
+		    direction: ltr;
+		    text-align: center;
+		}
+		.su_calendar_size {
+		    margin: auto;
+		    width: 90%;
+		}
+		.su_calendar_size {
+		    /* padding: 30px; */
+		    /* margin: auto; */
+		    /* width: 90%; */
+		}
+		.su_calendar_size{
+				padding:0;
+			}
+			#profileE *{
+				color:black;
+			}
+		.person{
+			font-size:18px;
+			font-weight:400;
+		    margin-top: 8px;
+		}
+		.mail-title, .mail-title *{
+			font-size:18px;
+			font-weight:400;
+		}
+		.mail-sendtime {
+		    text-align: center;
+			}
+		#ajaxMail, #ajaxMail *{
+			font-size:15px;
+			font-weight:400;
+		}
+		
+		table{
+			border:none;
+		}
+		
+		.divBox{
+	    	background-color: whitesmoke;
+		}
+		
+		.table th, .table td {
+		    padding: 0.75rem;
+		    vertical-align: top;
+		    border-top: 1px solid #e3e6f0;
+		    border: none;
+		}
+		
+		#content{
+			background-color:whitesmoke;
+		}
+		
+		#nullMail{
+			font-size: 15px; 
+			font-weight: 400; 
+			border:none
+		}
+		
+		
+		
+		
+		
