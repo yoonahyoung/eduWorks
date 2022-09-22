@@ -94,5 +94,17 @@ public interface MailService {
  	
  	// 16. 메일에 태그 추가하기
  	int insertMailTag(ArrayList<MailStatus> list);
+ 	
+ 	// 17_1. 해당 태그가 첨부된 메일 개수 조회
+ 	int tagListCount(MailStatus ms);
+ 	
+ 	// 17_2. 해당 태그가 첨부된 메일 목록 조회
+ 	ArrayList<Mail> selectTagMailList(PageInfo pi, MailStatus ms);
+ 	
+ 	// 17_3. 해당 태그가 첨부된 메일 중 안읽은 메일 개수 조회
+ 	int tagUnReadCount(MailStatus ms);
+ 	
+ 	// 17_4. 해당 태그 조회
+ 	Tag selectTagInfo(Tag t);
 
 }

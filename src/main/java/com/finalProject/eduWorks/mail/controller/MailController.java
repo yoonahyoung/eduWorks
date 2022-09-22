@@ -598,7 +598,7 @@ public class MailController {
 		ArrayList<Mail> list = mService.selectSpamMailList(pi, m);
 		
 		// 안읽은 메일 개수 조회
-		int unreadList = mService.deleteUnReadCount(m);
+		int unreadList = mService.spamUnReadCount(m);
 
 		mv.addObject("count", listCount);
 		mv.addObject("list", list);
@@ -814,6 +814,11 @@ public class MailController {
 		return result > 0 ? "success" : "fail";
 	}
 	
+	/**
+	 * 17. 선택한 메일에 태그 추가
+	 * @param ms : 추가할 태그 번호, 선택한 메일 번호, 로그인한 회원 이메일
+	 * @return : 선택한 메일에 태그 추가 성공여부 (성공 : "success" | 실패 : "fail")
+	 */
 	@ResponseBody
 	@RequestMapping("insertMailTag.ma")
 	public String ajaxInsertMailTag(MailStatus ms) {
@@ -876,6 +881,55 @@ public class MailController {
 	
 		return result > 0 ? "success" : "fail";
 	}
+	
+	/**
+	 * 18. 해당 태그가 첨부된 메일 목록 페이지 이동
+	 * @param currentPage
+	 * @param ms : 첨부된 태그 번호, 로그인한 회원 이메일
+	 * @return : 해당 태그가 첨부된 메일 목록 페이지
+	 */
+	@RequestMapping("tagMailList.ma")
+	public ModelAndView selectTagMailList(@RequestParam(value="page", defaultValue="1") int currentPage, MailStatus ms, ModelAndView mv, HttpSession session) {
+		
+		String memNo = ( (Member)session.getAttribute("loginUser") ).getMemNo();
+		
+		Tag t = new Tag();
+		t.setMemNo(memNo);
+		t.setTagNo(ms.getTagNo());
+		
+		// 태그 이름 조회
+		Tag tInfo = mService.selectTagInfo(t);
+		
+		// 중요 메일 개수 조회
+		int listCount = mService.tagListCount(ms);
+
+		// 페이징
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
+				
+		// 중요 메일 목록 조회
+		ArrayList<Mail> list = mService.selectTagMailList(pi, ms);
+				
+		// 안읽은 메일 조회
+		int unread = mService.tagUnReadCount(ms);
+
+		System.out.println(t);
+		System.out.println(tInfo);
+		System.out.println(listCount);
+		System.out.println(list);
+		System.out.println(unread);
+
+		mv.addObject("t", tInfo);
+		mv.addObject("count", listCount);
+		mv.addObject("list", list);
+		mv.addObject("pi", pi);
+		mv.addObject("unread", unread);
+		mv.setViewName("mail/tagMailList");
+				
+		return mv;	
+		
+	}
+	
+
 
 	
 }

@@ -116,7 +116,7 @@
 						<th>받는사람</th>
 						<c:choose>
 							<c:when test="${m.receiverMem == null}">
-								<td>${m.recieveMail }</td>
+								<td>${m.receiverMem }</td>
 							</c:when>
 							<c:otherwise>
 								<td>${m.receiverMem }</td>

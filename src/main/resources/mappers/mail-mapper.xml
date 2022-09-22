@@ -128,6 +128,7 @@
 		join tb_member mb on (m.mem_no = mb.mem_no)
 		left join tb_tag t on (ms.tag_no = t.tag_no)
 		where m.mem_no = #{memNo}
+		  and mail_delete = 'N'
 		  and mail_folder = 1
 		order 
 		    by mail_type, ms.mail_no
@@ -405,7 +406,7 @@
           , send_mail
 		  , receiver_mem
 		  , cc_mem
-          , to_char(send_date, 'YYYY-MM-DD(DY) HH:MI:SS')
+          , to_char(send_date, 'YYYY-MM-DD(DY) HH24:MI:SS')
 		  , mail_title
 		  , mail_content
 		  , mail_type
@@ -529,7 +530,7 @@
           , send_mail
 		  , receive_mail
 		  , cc_mem
-          , to_char(send_date, 'YYYY-MM-DD(DY) HH:MI:SS') "send_date"
+          , to_char(send_date, 'YYYY-MM-DD(DY) HH24:MI:SS') "send_date"
 		  , mail_title
 		  , mail_content
 		  , mail_type
@@ -586,7 +587,7 @@
           , send_mail
 		  , receive_mail
 		  , cc_mem
-          , to_char(send_date, 'YYYY-MM-DD(DY) HH:MI:SS') "send_date"
+          , to_char(send_date, 'YYYY-MM-DD(DY) HH24:MI:SS') "send_date"
 		  , mail_title
 		  , mail_content
 		  , mail_type
@@ -657,7 +658,7 @@
 	          , send_mail
 			  , receive_mail
 			  , cc_mem
-	          , to_char(send_date, 'YYYY-MM-DD(DY) HH:MI:SS') "send_date"
+	          , to_char(send_date, 'YYYY-MM-DD(DY) HH24:MI:SS') "send_date"
 			  , mail_title
 			  , mail_content
 			  , mail_type
@@ -696,7 +697,7 @@
 	</select>
 	
 	<!-- 스팸 메일 중 안읽은 메일 개수 조회 -->
-	<select id="spanUnReadCount" resultType="_int">
+	<select id="spamUnReadCount" resultType="_int">
 		select
 		    count(*)
 		from tb_mail_status
@@ -720,7 +721,7 @@
 	          , send_mail
 			  , receive_mail
 			  , cc_mem
-	          , to_char(send_date, 'YYYY-MM-DD(DY) HH:MI:SS') "send_date"
+	          , to_char(send_date, 'YYYY-MM-DD(DY) HH24:MI:SS') "send_date"
 			  , mail_title
 			  , mail_content
 			  , mail_type
@@ -895,6 +896,8 @@
 		  , tag_color
 		from tb_tag
 		where mem_no = #{memNo}
+		order 
+			by tag_no
 	</select>
 	
 	<!-- 매일 태그 수정 -->
@@ -974,7 +977,86 @@
 		  and mail_spam = 'N'
   		  and (mail_content like '%' || #{key} || '%'
   		   or mail_title like '%' || #{key} || '%')
-  		 	
+	</select>
+	
+	<!-- 해당 태그가 첨부된 메일 개수 조회 -->
+	<select id="tagListCount" resultType="_int">
+		select 
+		    count(*)
+		from tb_mail_status
+		where tag_no = #{tagNo}
+		  and mail_delete = 'N'
+		  and mail_spam = 'N'
+		  and (receive_mail = #{receiveMail}
+		   or send_mail = #{sendMail})
+	</select>
+	
+	<!-- 해당 태그가 첨부된 메일 목록 조회 -->
+	<select id="selectTagMailList" resultMap="mailResult">
+			select
+                m.mail_no
+              , m.mem_no
+              , ms.tag_no
+              , tag_color
+	          , (
+	                select
+	                    mem_name
+	                from tb_member
+	                where mem_email = send_mail) "send_name"
+	          , send_mail
+			  , receive_mail
+			  , cc_mem
+	          , to_char(send_date, 'YYYY-MM-DD(DY) HH24:MI:SS') "send_date"
+			  , mail_title
+			  , mail_content
+			  , mail_type
+			  , mail_folder
+			  , mail_read
+			  , mail_delete
+			  , mail_spam
+			  , mail_important
+			  , (
+			        select
+			            count(*)
+			        from tb_attachment
+			        where at_category = 2
+			          and at_ref_bno = m.mail_no
+			  
+			     ) "at_count"
+			from tb_mail m
+            join tb_mail_status ms on (ms.mail_no = m.mail_no)
+            join tb_member mb on (m.mem_no = mb.mem_no)
+            left join tb_tag t on (ms.tag_no = t.tag_no)
+			where ms.tag_no = #{tagNo}
+              and mail_delete = 'N'
+              and (receive_mail = #{receiveMail}
+               or send_mail = #{sendMail})
+	          order 
+	            by mail_type, m.mail_no
+	</select>
+	
+	<!-- 해당 태그가 첨부된 메일 중 안읽은 메일 개수 조회 -->
+	<select id="tagUnReadCount" resultType="_int">
+		select 
+		    count(*)
+		from tb_mail_status
+		where tag_no = #{tagNo}
+		  and mail_delete = 'N'
+		  and mail_spam = 'N'
+		  and mail_read = 'N'
+		  and (receive_mail = #{receiveMail}
+		   or send_mail = #{sendMail})
+	</select>
+	
+	<!-- 해당 태그 조회 -->
+	<select id="selectTagInfo" resultMap="tagResult">
+		select
+		    tag_no
+		  , tag_name
+		  , tag_color
+		from tb_tag
+		where mem_no = #{memNo}
+		  and tag_no = #{tagNo}
 	</select>
 
 </mapper>

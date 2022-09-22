@@ -128,6 +128,7 @@
 								<i class="icon fas fa-paperclip"></i>
 							</c:if>
 						</td>
+						<td>
 							<c:choose>
 								<c:when test="${empty m.sendName}">
 									<!-- 사내직원이 보내지 않은 경우 -->
@@ -138,6 +139,17 @@
 									<td class="mail-person" width="15%"><div class="person">${m.sendName }</div></td>
 								</c:otherwise>
 							</c:choose>
+						</td>
+						<td>	
+							<c:choose>
+								<c:when test="${m.tagNo == '' }">
+									
+								</c:when>
+								<c:otherwise>
+									<i class='fas fa-bookmark' style="color:${m.tag.tagColor};" ></i>
+								</c:otherwise>
+							</c:choose>
+						</td>
 						<td class="mail-title">
 							<c:if test="${m.mailType == 1}">
 								<span style="color: red;">[중요!]</span>

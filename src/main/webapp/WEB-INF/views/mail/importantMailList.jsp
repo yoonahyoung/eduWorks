@@ -52,7 +52,7 @@
 			</ul>
 		</div>
 		
-		<script>
+	<script>
 			
 			// 태그 목록 조회
 			$(".tag-btn").click(function(){
@@ -69,10 +69,11 @@
 					},
 					success : function(tag){
 						let value="";
-						console.log(tag);
+	
 						for(let i=0; i < tag.length; i++){
 	
-							value += "<a class='dropdown-item d-flex align-items-center'>"
+							value += "<a class='dropdown-item d-flex align-items-center' id='tag'>"
+									+ "<input type='hidden' name='tagNo' value='" + tag[i].tagNo + "'>"
 									+ "<span class='font-weight-bold'>"
 									+ "<i class='fas fa-bookmark' style='color:" + tag[i].tagColor + "'></i>&nbsp;&nbsp;"
 									+ tag[i].tagName
@@ -88,6 +89,51 @@
 				})
 				
 			}
+			
+			// 메일에 태그 삽입하는 함수
+			$(document).on("click", "#tag", function(){
+				
+				let tagNo = $(this).children("input[name=tagNo]").val();
+				console.log(tagNo);
+				
+				let checkArr = [];
+				
+				$(".mail-select").each(function(){
+					if($(this).prop("checked")){
+						checkArr.push( $(this).val() );
+					}
+				})
+				//console.log(checkArr.length);
+				
+				if(checkArr.length < 1){
+					alert("태그를 추가할 메일을 선택해주세요.");					
+				} else {
+					
+					const mailNo = checkArr.toString();
+					console.log(mailNo);
+					
+					$.ajax({
+						url : "insertMailTag.ma",
+						data : {
+							tagNo : tagNo,
+							memNo : ${loginUser.memNo},
+							mailNo : mailNo,
+							receiveMail : '${loginUser.memEmail}',
+						},
+						success : function(result){
+							console.log(result);
+							if(result == 'success'){
+								location.reload();
+							}
+						},
+						error : function(){
+							console.log("메일에 태그 추가 실패");
+						}
+					})	
+
+				}
+
+			})
 			
 		</script>
 		
@@ -134,6 +180,16 @@
 							</c:otherwise>
 						</c:choose>
 					</td>
+					<td>	
+						<c:choose>
+							<c:when test="${m.tagNo == '' }">
+								
+							</c:when>
+							<c:otherwise>
+								<i class='fas fa-bookmark' style="color:${m.tag.tagColor};" ></i>
+							</c:otherwise>
+						</c:choose>
+					</td>		
 					<td class="mail-title">
 						<c:if test="${m.mailType == 1}"><span style="color:red;">[중요!]</span></c:if>
 						${m.mailTitle }

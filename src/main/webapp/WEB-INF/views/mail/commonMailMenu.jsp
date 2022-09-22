@@ -41,6 +41,12 @@
 				<div id="plus-tag" data-toggle="modal" data-target="#addTags">+
 					태그추가</div>
 			</div>
+			
+			<form id="postTagMail" action="tagMailList.ma" method="post">
+				<input type="hidden" name="receiveMail" value="${loginUser.memEmail }">
+				<input type="hidden" name="sendMail" value="${loginUser.memEmail }">
+				<input type="hidden" name="tagNo" id="tagNo">
+			</form>
 
 			<div class="insider">
 				<h4>메일함</h4>
@@ -186,17 +192,17 @@
 				})
 				
 			}
-			
+
 			$(function(){
 				selectTagList();
 			})
 
 			
 			// 해당 태그 페이지로 이동하는 함수
-			
 			function tagPage(tagNo){
 				
-				console.log(tagNo);
+				$("#postTagMail").children("#tagNo").val(tagNo);
+				$("#postTagMail").submit();
 
 			}
 
@@ -313,7 +319,7 @@
 							<div class="setup-tag">
 
 								<div>태그 이름</div>
-								<input type="text" name="tagName"> <br>
+								<input type="text" name="tagName" id="tagName"> <br>
 
 								<div class="tag-color">
 									<div>태그 색상</div>
