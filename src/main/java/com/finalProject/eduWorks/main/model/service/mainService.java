@@ -1,11 +1,13 @@
 package com.finalProject.eduWorks.main.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.finalProject.eduWorks.board.model.vo.Board;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.mail.model.vo.Mail;
 import com.finalProject.eduWorks.member.model.vo.Member;
+import com.finalProject.eduWorks.schedule.model.vo.Schedule;
 
 public interface mainService {
 	
@@ -27,7 +29,10 @@ public interface mainService {
 	int selectAddressListCount(); // 재직중인 사원수 조회
 	ArrayList<Member> selectMainAddressList(PageInfo pi);
 	
-	
+	ArrayList<Mail> searchMail(HashMap map);
+	ArrayList<Board> searchBoard(String key);
+	ArrayList<Board> searchNotice(String key);
+	ArrayList<Schedule> searchSchedule(String key);
 	
 	
 }

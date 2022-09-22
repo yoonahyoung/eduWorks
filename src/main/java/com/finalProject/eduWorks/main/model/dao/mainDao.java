@@ -1,6 +1,7 @@
 package com.finalProject.eduWorks.main.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
@@ -11,6 +12,7 @@ import com.finalProject.eduWorks.board.model.vo.Board;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.mail.model.vo.Mail;
 import com.finalProject.eduWorks.member.model.vo.Member;
+import com.finalProject.eduWorks.schedule.model.vo.Schedule;
 
 @Repository
 public class mainDao {
@@ -99,4 +101,42 @@ public class mainDao {
 		return (ArrayList)sqlSession.selectList("addressMapper.selectAddressList", null, rowBounds);
 
 	}
+	
+	public ArrayList<Mail> searchMail(SqlSessionTemplate sqlSession, HashMap map){
+		return (ArrayList)sqlSession.selectList("mailMapper.searchMail", map);
+	}
+	
+	public ArrayList<Board> searchBoard(SqlSessionTemplate sqlSession, String key){
+		return (ArrayList)sqlSession.selectList("deptBoardMapper.searchBoard", key);
+	}
+	
+	public ArrayList<Board> searchNotice(SqlSessionTemplate sqlSession, String key){
+		return (ArrayList)sqlSession.selectList("noticeMapper.searchNotice", key);
+	}
+	
+	public ArrayList<Schedule> searchSchedule(SqlSessionTemplate sqlSession, String key){
+		return (ArrayList)sqlSession.selectList("scheduleMapper.searchSchedule", key);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

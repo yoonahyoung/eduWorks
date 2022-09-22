@@ -1,6 +1,7 @@
 package com.finalProject.eduWorks.main.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.mail.model.vo.Mail;
 import com.finalProject.eduWorks.main.model.dao.mainDao;
 import com.finalProject.eduWorks.member.model.vo.Member;
+import com.finalProject.eduWorks.schedule.model.vo.Schedule;
 
 @Service
 public class mainServiceImpl implements mainService{
@@ -81,5 +83,25 @@ public class mainServiceImpl implements mainService{
 	@Override
 	public ArrayList<Member> selectMainAddressList(PageInfo pi) {
 		return mDao.selectMainAddressList(sqlSession, pi);
+	}
+
+	@Override
+	public ArrayList<Mail> searchMail(HashMap map) {
+		return mDao.searchMail(sqlSession, map);
+	}
+
+	@Override
+	public ArrayList<Board> searchBoard(String key) {
+		return mDao.searchBoard(sqlSession, key);
+	}
+
+	@Override
+	public ArrayList<Board> searchNotice(String key) {
+		return mDao.searchNotice(sqlSession, key);
+	}
+
+	@Override
+	public ArrayList<Schedule> searchSchedule(String key) {
+		return mDao.searchSchedule(sqlSession, key);
 	}
 }

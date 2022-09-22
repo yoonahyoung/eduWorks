@@ -13,14 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 //import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.ModelAndView;
 
-import com.finalProject.eduWorks.addressBook.model.vo.Address;
 import com.finalProject.eduWorks.board.model.vo.Board;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.template.Pagination;
 import com.finalProject.eduWorks.mail.model.vo.Mail;
 import com.finalProject.eduWorks.main.model.service.mainService;
 import com.finalProject.eduWorks.member.model.vo.Member;
+import com.finalProject.eduWorks.schedule.model.vo.Schedule;
 import com.google.gson.Gson;
 
 @Controller
@@ -121,6 +122,36 @@ public class mainController {
 		return new Gson().toJson(map);
 	}
 	
+	@RequestMapping("allSearch.ma")
+	public ModelAndView allSearchForm(ModelAndView mv, String key, HttpSession session) {
+		String memNo = ( (Member)session.getAttribute("loginUser") ).getMemNo();
+		// 로그인한 회원 이메일
+		String memEmail = ( (Member)session.getAttribute("loginUser") ).getMemEmail();
+		
+		Mail ma = new Mail();
+		ma.setMemNo(memNo);
+		ma.setReceiverMem(memEmail);
+		
+		HashMap map = new HashMap();
+		
+		map.put("key", key);
+		map.put("ma", ma);
+		
+		ArrayList<Mail> m = mService.searchMail(map);
+		ArrayList<Board> b = mService.searchBoard(key);
+		ArrayList<Board> n = mService.searchNotice(key);
+		ArrayList<Schedule> s = mService.searchSchedule(key);
+		
+		
+		
+		mv.addObject("mail", m)
+		  .addObject("board", b)
+		  .addObject("notice", n)
+		  .addObject("schedule", s)
+		  .setViewName("common/allSearchForm");
+		
+		return mv;
+	}
 	
 	
 	

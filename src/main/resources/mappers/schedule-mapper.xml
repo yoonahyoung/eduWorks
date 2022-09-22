@@ -418,4 +418,25 @@
 		  )
 	</insert>
 	
+	<!-- 전체검색 스케줄 -->
+	<select id="searchSchedule" resultMap="scheduleResult">
+		select sche_no
+			 , sche_title
+			 , sche_writer
+			 , sche_start_date
+			 , sche_end_date
+			 , sche_all
+			 , sche_cmpy
+			 , sche_open
+			 , mycal_no
+			 , sche_atnd_no
+			 , sche_atnd_list
+			 , sche_place
+			 , sche_content
+		  from tb_schedule
+		 where sche_status = 'Y'
+		   and (sche_content like '%' || #{key} || '%'
+  		    or sche_title like '%' || #{key} || '%')	
+	</select>
+	
 </mapper>
