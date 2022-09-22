@@ -26,6 +26,14 @@
 		<result column="reg_date" property="regDate" />
 		<result column="reg_return" property="regReturn" />
 	</resultMap>
+	
+	<resultMap id="cnslnResult" type="Cnsln">
+		<result column="cnsln_no" property="cnslnNo" />
+		<result column="cnsln_modify_date" property="cnslnModifyDate" />
+		<result column="cnsln_topic" property="cnslnTopic" />
+		<result column="cnsln_real" property="cnslnReal" />
+		<result column="student_no" property="studentNo" />
+	</resultMap>
 
 	<!-- 학생 주소록 페이징 처리 (전체) -->
 	<select id="selectListStCount" resultType="_int">
@@ -163,8 +171,21 @@
 		 where reg_no = #{regNo}
 	</update>
 	
-	
-	
+	<!-- 학생 상담 이력 조회 -->
+	<select id="selectCnslnA" resultMap="cnslnResult">
+		select
+			   cnsln_no
+		     , cnsln_modify_date
+		     , cnsln_topic
+		     , mem_name || ' ' || job_name as "cnsln_real"
+		     , student_no
+		  from tb_cnsln c
+		  join tb_member m on(c.cnsln_real = m.mem_no)
+  		  join tb_job j using(job_code)
+		 where cnsln_status = 'Y'
+		   and cnsln_content is not null
+		   and student_no = #{studentNo}
+	</select>
 	
 	
 </mapper>

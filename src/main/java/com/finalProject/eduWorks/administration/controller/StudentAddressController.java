@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.finalProject.eduWorks.administration.model.service.StudentAddressService;
 import com.finalProject.eduWorks.administration.model.vo.RegClass;
 import com.finalProject.eduWorks.administration.model.vo.Student;
+import com.finalProject.eduWorks.cnsln.model.vo.Cnsln;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.template.Pagination;
 import com.finalProject.eduWorks.member.model.vo.Member;
@@ -78,12 +79,14 @@ public class StudentAddressController {
 	public String detailStudent(int no, Model model) {
 		// 학생 기본 정보 조회
 		Student s = sService.selectStudent(no);
-		
 		// 신청 강의 조회
 		ArrayList<RegClass> list = sService.selectListRegClass(no);
+		// 상담 이력 조회
+		ArrayList<Cnsln> cList = sService.selectCnsln(no);
 		
 		model.addAttribute("s", s);
 		model.addAttribute("list", list);
+		model.addAttribute("cList", cList);
 		return "addressBook/adStudentAdBookDetail";
 	}
 	
@@ -119,6 +122,7 @@ public class StudentAddressController {
 		int result = sService.updateStudent(s);
 		return new Gson().toJson(result);
 	}
+	
 	
 	
 //	@RequestMapping("searchStudentAdd.te") 검색 기능 보류

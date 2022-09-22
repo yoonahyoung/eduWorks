@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.finalProject.eduWorks.administration.model.vo.RegClass;
 import com.finalProject.eduWorks.administration.model.vo.Student;
+import com.finalProject.eduWorks.cnsln.model.vo.Cnsln;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 
 @Repository
@@ -60,11 +61,10 @@ public class StudentAddressDao {
 		
 		return (ArrayList)sqlSession.selectList("administrationMapper.selectTeAddressList", map, rowBounds);
 	}
-	
-	
-	
-	
-	
-	
+
+	// 상담 이력 조회
+	public ArrayList<Cnsln> selectCnsln(SqlSessionTemplate sqlSession, int studentNo) {
+		return (ArrayList)sqlSession.selectList("administrationMapper.selectCnslnA", studentNo);
+	}
 	
 }

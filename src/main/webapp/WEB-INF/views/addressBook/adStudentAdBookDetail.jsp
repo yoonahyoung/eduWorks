@@ -174,84 +174,42 @@
 
                     <!-- 댓글 영역 -->
                     <div class="info-title">◆ 활동 이력</div>
-                    <div class="su_board_reply">
+                    <div class="su_board_reply" style="margin-left:40px; border:1px solid">
                         <!-- 댓글 하나의 영역 -->
-                        <div class="su_reply_Barea">
-                            <div class="su_reply">
-                                <div>
-                                    <img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">
-                                </div>
-
-                                <div>
-                                    <div class="su_reply_writer">
-                                        <span class="font-weight-bold">김미영 팀장</span>
-                                        <span style="margin-right:10px">2022-08-19 (금) 10:51</span>
-                                    </div>
-                                    
-                                    <div class="su_reply_Bcontent">
-                                        <p>전화 상담 완료</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="su_reply_btn">
-                                <!-- 본인이 작성한 댓글에만 보임 -->
-                                <button type="button" class="btn btn-sm su_btn_border" style="border:0px">수정</button>|
-                                <button type="button" class="btn btn-sm su_btn_border" style="border:0px">삭제</button>
-                            </div>
-                        </div>
-
-                        <div class="su_reply_Barea">
-                            <div class="su_reply">
-                                <div>
-                                    <img src="resources/defaultProfile.png" alt="">
-                                </div>
-
-                                <div>
-                                    <div class="su_reply_writer">
-                                        <span class="font-weight-bold">김미영 팀장</span>
-                                        <span style="margin-right:10px">2022-08-19 (금) 10:51</span>
-                                    </div>
-                                    
-                                    <div class="su_reply_Bcontent">
-                                        <p>추가 상담 완료</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 댓글 작성 영역 -->
-                        <div class="su_reply_Barea">
-                            <div class="su_reply" style="width: 100%;">
-                                <div>
-                                    <img src="resources/defaultProfile.png" alt="">
-                                </div>
-                                
-                                <div style="width: 100%">
-                                    <input style="width: 100%;" type="text" placeholder="댓글 입력">
-                                </div>
-
-                            </div>
-                            <c:choose>
-	                            <c:when test="${ loginUser.jobName eq '강사' }">
-	                            	<div class="su_reply_btn">
-		                                <button type="button" class="n-btn su_btn_border btn-sm" id="writeReplyBtn" disabled style="background:grey">등록</button>
-		                            </div>
-	                            </c:when>
-	                            <c:otherwise>
-		                            <div class="su_reply_btn">
-		                                <button type="button" class="n-btn su_btn_border btn-sm" id="writeReplyBtn">등록</button>
-		                            </div>
-	                            </c:otherwise>
-							</c:choose>
-                            
-                        </div>
+                        <c:choose>
+                        	<c:when test="${ empty cList }">
+                        		<div class="su_reply_Barea">
+                        			<div class="su_reply">
+                        				현재 상담 이력이 없습니다
+                        			</div>
+                        		</div>
+                        	</c:when>
+                        	<c:otherwise>
+                        		<c:forEach var="c" items="${ cList }">
+                        			<div class="su_reply_Barea">
+			                            <div class="su_reply">
+			                                <div>
+			                                    <img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">
+			                                </div>
+			
+			                                <div>
+			                                    <div class="su_reply_writer">
+			                                        <span class="font-weight-bold">${ c.cnslnReal }</span>
+			                                        <span style="margin-right:10px">${ c.cnslnModifyDate }</span>
+			                                    </div>
+			                                    
+			                                    <div class="su_reply_Bcontent">
+			                                        <p>[${ c.cnslnTopic }] 에 대한 상담건 완료</p>
+			                                    </div>
+			                                </div>
+			                            </div>
+			                        </div>
+                        		</c:forEach>
+                        	</c:otherwise>
+                        </c:choose>
                     </div>
-                    
                 </div>
-                
             </div>
-
     </div>
     
     <script>

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.finalProject.eduWorks.administration.model.dao.StudentAddressDao;
 import com.finalProject.eduWorks.administration.model.vo.RegClass;
 import com.finalProject.eduWorks.administration.model.vo.Student;
+import com.finalProject.eduWorks.cnsln.model.vo.Cnsln;
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 
 @Service
@@ -59,6 +60,12 @@ public class StudentAddressServiceImpl implements StudentAddressService{
 	@Override
 	public ArrayList<Student> selectTeAddressList(PageInfo pi, int memNo, String range) {
 		return sDao.selectTeAddressList(sqlSession, pi, memNo, range);
+	}
+
+	// 상담 이력 조회
+	@Override
+	public ArrayList<Cnsln> selectCnsln(int no) {
+		return sDao.selectCnsln(sqlSession, no);
 	}
 
 	
