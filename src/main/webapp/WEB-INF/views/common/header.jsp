@@ -433,37 +433,6 @@
 	                            </div>
 	                        </li>
 	
-	                        <!-- Nav Item - Messages -->
-	                        <li class="nav-item dropdown no-arrow mx-1">
-	                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-	                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	                                <i class="fas fa-envelope fa-fw"></i>
-	                                <!-- Counter - Messages -->
-	                                <span class="badge badge-danger badge-counter">7</span>
-	                            </a>
-	                            <!-- Dropdown - Messages  반복문 써서 메세지 select-->
-	                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-	                                aria-labelledby="messagesDropdown">
-	                                <h6 class="dropdown-header">
-	                                    Message Center
-	                                </h6>
-	
-	                                <a class="dropdown-item d-flex align-items-center" href="#">
-	                                    <div class="dropdown-list-image mr-3">
-	                                        <img class="rounded-circle" src=""
-	                                            alt="">
-	                                        <div class="status-indicator bg-success"></div>
-	                                    </div>
-	                                    <div class="font-weight-bold">
-	                                        <div class="text-truncate">Hi there! I am wondering if you can help me with a
-	                                            problem I've been having.</div>
-	                                        <div class="small text-gray-500">Emily Fowler · 58m</div>
-	                                    </div>
-	                                </a>
-	                                
-	                                <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
-	                            </div>
-	                        </li>
 	
 	                        <div class="topbar-divider d-none d-sm-block"></div>
 	
@@ -471,24 +440,16 @@
 	                        <li class="nav-item dropdown no-arrow">
 	                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
 	                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">${ loginUser.memName }</span>
-	                                <img class=""
-	                                    src="${ loginUser.memProfile }">
-	                            </a>
+	                                <img class="" src="${ loginUser.memProfile }" style="width:30px; height:30px;">&nbsp;&nbsp;
+	                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" style="font-size:17px;">${ loginUser.memName }</span>
+	                            </a> 
+	                            
 	                            <!-- Dropdown - User Information -->
 	                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
 	                                aria-labelledby="userDropdown">
-	                                <a class="dropdown-item" href="#">
+	                                <a class="dropdown-item" href="info.me">
 	                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
 	                                    Profile
-	                                </a>
-	                                <a class="dropdown-item" href="#">
-	                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-	                                    Settings
-	                                </a>
-	                                <a class="dropdown-item" href="#">
-	                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-	                                    Activity Log
 	                                </a>
 	                                <div class="dropdown-divider"></div>
 	                                <a class="dropdown-item"  data-toggle="modal" data-target="#logoutModal">
