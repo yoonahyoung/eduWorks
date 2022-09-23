@@ -1454,6 +1454,7 @@
 		       job_name,
 		       LEAVE_START_DATE,
 		       LEAVE_END_DATE,
+		       REQUEST_PERIOD,
 		       S_HALF_DAY_LEAVE,
 		       F_HALF_DAY_LEAVE,
 		       leave_type,

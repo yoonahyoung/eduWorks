@@ -74,7 +74,7 @@ select {
         .detailInfo{
             background-color: whitesmoke;
             width: 500px;
-            height: 400px;
+            height: 500px;
             left: 35%;
             z-index: 10;
            
@@ -272,20 +272,30 @@ select {
                                     
                                     <br>
                                     <form action="">
-                                    	<input type="hidden" id="memNo" name="memNo">
+                                    	<input type="hidden" id="memNo1" name="memNo">
                                     	
                                         <table style="width: 100%;" class="tb6" >
                                             <tr>
                                                 <th style="padding-top: 20px; width:40% ">사원명</th>
-                                                <td style="width:60%;padding-top: 20px;" >&nbsp;<input type="text" class="divall" style="width:80%;" id="memName2" name="memName" readonly></td>
+                                                <td style="width:60%;padding-top: 20px;" >&nbsp;<input type="text" class="divall" style="width:80%;" id="memName1" name="memName" readonly></td>
                                             </tr>
                                             <tr>
                                                 <th style="padding-top: 20px;">연차시작날짜</th>
-                                                <td style="padding-top: 20px;">&nbsp;<input type="text" style="width:80%;" class="divall" id="attDate2" name="attDate" readonly></td>
+                                                <td style="padding-top: 20px;">&nbsp;<input type="text" style="width:80%;" class="divall" id="startDate1" name="startDate" readonly></td>
                                             </tr>
                                             <tr>
                                                 <th style="padding-top: 20px;">연차종료날짜</th>
-                                                <td style="padding-top: 20px;">&nbsp;<input type="text" style="width:80%;" class="divall" id="attDate2" name="attDate" readonly></td>
+                                                <td style="padding-top: 20px;">&nbsp;<input type="text" style="width:80%;" class="divall" id="endDate1" name="endDate" readonly></td>
+                                            </tr>
+                                            
+                                            <tr>
+                                            	<th class="checks2" colspan="2">
+                                            		 <input type="checkbox" id="ck1" name="check1" > 
+	                                    			 <label for="ck1">연차시작일 반차여부</label>
+	                                    			 <br>
+	                                    			 <input type="checkbox" id="ck2" name="check2" > 
+	                                    			 <label for="ck2">연차종료일 반차여부</label>
+                                            	</th>
                                             </tr>
                                          </table>
                                          <br><br>
@@ -346,6 +356,7 @@ select {
                                     	<th>직급</th>
                                         <th>연차시작날짜</th>
                                         <th>연차종료날짜</th>
+                                        <th>연차사용일</th>
                                         <th>연차종류</th>
                                        
                                     </tr>
@@ -356,7 +367,7 @@ select {
                                     	<c:otherwise>
                                     		<c:forEach var="l1" items="${ list1 }">
                                     		<tr class="list1">
-		                                    	<td align="center">${ l1.memName }</td>
+		                                    	<td id="name1" align="center">${ l1.memName }</td>
 		                                    	<td align="center">${ l1.deptName }</td>
 		                                    	<td align="center">${ l1.jobName }</td>
 		                                        <td align="center">
@@ -367,9 +378,12 @@ select {
 		                                        </td>
 		                                        <td align="center">
 		                                        	${ l1.leaveEndDate }
-		                                        	<c:if test="${ l1.leaveType eq 1 and l1.aa eq 1 }">
+		                                        	<c:if test="${ l1.leaveType eq 1 and l1.bb eq 1 }">
 		                                        	(오전종료)
 		                                        	</c:if>
+		                                        </td>
+		                                        <td align="center">
+		                                        	${ l1.requestPeriod }
 		                                        </td>
 		                                        <td align="center">
 		                                        	<c:if test="${ l1.leaveType eq 1 }">
@@ -384,6 +398,11 @@ select {
 		                                        </td>
 		                                        <td id="sel0" style="display: none;">${ l1.leave }</td>
 		                                        <td id="sel1" style="display: none;">${ l1.leaveType }</td>
+		                                        <td id="sel2" style="display: none;">${ l1.memNo }</td>
+		                                        <td id="sel3" style="display: none;">${ l1.leaveStartDate }</td>
+		                                        <td id="sel4" style="display: none;">${ l1.leaveEndDate }</td>
+		                                        <td id="sel5" style="display: none;">${ l1.aa }</td>
+		                                        <td id="sel6" style="display: none;">${ l1.bb }</td>
 		                                   </tr>
 		                                   </c:forEach>
                                     	</c:otherwise>
@@ -397,6 +416,19 @@ select {
                             			alert('이미 연차등록이 완료된 건입니다.')
                             		}else{
                             			if($(this).children('#sel1').text()=='1'){
+                            				$('#memNo1').val($(this).children('#sel2').text())
+                            				$('#memName1').val($(this).children('#name1').text())
+                            				$('#startDate1').val($(this).children('#sel3').text())
+                            				$('#endDate1').val($(this).children('#sel4').text())
+                            				if($(this).children('#sel5').text()==2){
+                            					$('#ck1').attr('checked',true)
+                            				}
+                            				if($(this).children('#sel5').text()==2){
+                            					$('#ck1').attr('checked',true)
+                            				}
+                            				if($(this).children('#sel6').text()==1){
+                            					$('#ck2').attr('checked',true)
+                            				}
                             				$('#div1').css('display','')
                             				$('#div2').css('display','none')
                             			}else{
@@ -410,6 +442,8 @@ select {
 	            		        		$('#div1').css('display','none');
 	            		        		$('#div2').css('display','none');
 	            		        		$('.divall').val('')
+	            		        		$('#ck1').attr('checked',false)
+	            		        		$('#ck2').attr('checked',false)
 	            		        })
                             </script>
                             
