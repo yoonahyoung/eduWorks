@@ -834,7 +834,6 @@
 		left join tb_tag t on (ms.tag_no = t.tag_no)
 		where ms.mail_no = #{mailNo}
 		  and mail_folder = #{mailFolder}
-		  and mail_delete = 'N'
 	</select>
 	
 	<!-- 메일 상세 조회(첨부파일) -->

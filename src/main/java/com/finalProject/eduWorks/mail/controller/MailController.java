@@ -726,7 +726,6 @@ public class MailController {
 		
 		// 태그 이름 조회
 		Tag tInfo = mService.selectTagInfo(t);
-		System.out.println(tInfo);
 		
 		// ========= 첨부파일 목록 조회 ===========
 		ArrayList<Attachment> atList = mService.selectAttachment(ms);
@@ -772,6 +771,10 @@ public class MailController {
 				   count = mService.deleteListCount(m);
 				   unread = mService.deleteUnReadCount(m); break;
 		}
+		System.out.println(ms);
+		System.out.println(detail);
+		System.out.println(update);
+		System.out.println(count);
 
 		// 메일 조회 성공시
 		if(update > 0) {
