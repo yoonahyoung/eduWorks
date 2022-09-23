@@ -274,26 +274,29 @@
 				});
 				
 				const mailNo = checkArr.toString();
-				console.log(mailNo);
-				
-				$.ajax({
-					url : "deleteMail.ma",
-					data : {
-						sendMail : '${loginUser.memEmail}',
-						mailNo : mailNo,
-						mailFolder : 1
-					},
-					success : function(result){
-						console.log(result);
-						if(result == 'success'){
-							location.reload();				
-						}		
-					},
-					error : function(){
-						console.log("메일 삭제 실패");
-					}
+
+				if(mailNo.length < 1){
+					alert("삭제할 메일을 선택해주세요.");
+				} else {
+					
+					$.ajax({
+						url : "deleteMail.ma",
+						data : {
+							sendMail : '${loginUser.memEmail}',
+							mailNo : mailNo,
+							mailFolder : 1
+						},
+						success : function(result){
+							console.log(result);
+							if(result == 'success'){
+								location.reload();				
+							}		
+						},
+						error : function(){
+							console.log("메일 삭제 실패");
+						}
 				})
-				
+				}
 			}
 
 		</script>

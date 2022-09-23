@@ -97,7 +97,7 @@
 				<!-- 반복문 사용 시작 -->
 				<c:forEach var="m" items="${list}">
 					<tr>
-						<td><input type="checkbox" class="mail-select"></td>
+						<td><input type="checkbox" class="mail-select" name="mailNo" value="${m.mailNo }"></td>
 						<td>
 							<c:choose>
 								<c:when test="${m.mailStatus.mailImportant == 'N' }">
