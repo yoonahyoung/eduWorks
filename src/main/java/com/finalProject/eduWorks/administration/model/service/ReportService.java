@@ -9,8 +9,8 @@ import com.finalProject.eduWorks.common.model.vo.PageInfo;
 
 public interface ReportService {
 	// 1. 신고 목록 페이지 조회 서비스 (페이징)
-	int selectListCount();
-	ArrayList<Report> selectReportList(PageInfo pi);
+	int selectListCount(String rCount, String rStatus);
+	ArrayList<Report> selectReportList(PageInfo pi, String rCount, String rStatus);
 	// 댓글이 등록된 게시글 번호 조회
 	int checkReBoardNo(int no);
 	
@@ -28,5 +28,6 @@ public interface ReportService {
 	
 	// (신고알람용) 신고자 리스트
 	ArrayList<Report> selectTargets(String rptNoStr, int rptRefCat);
+	
 	
 }

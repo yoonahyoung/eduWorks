@@ -352,8 +352,11 @@
 				     , rpt_status
 				     , LISTAGG(rpt_no, ',') WITHIN GROUP(ORDER BY rpt_status desc) as rpt_no
 				  from tb_report r
+				 <if test="rStatus != null and rStatus neq ''">
+		         	where rpt_status = #{rStatus}
+		         </if>
 				 group by rpt_ref_cat, rpt_board_no, rpt_status
-				 order by 3 desc
+				 order by 3 ${rCount}
 		  )
 	</select>
 	
@@ -366,8 +369,11 @@
 		     , rpt_status
 		     , LISTAGG(rpt_no, ',') WITHIN GROUP(ORDER BY rpt_status desc) as rpt_no
 		  from tb_report r
+		 <if test="rStatus != null and rStatus neq ''">
+         where rpt_status = #{rStatus}
+         </if>
 		 group by rpt_ref_cat, rpt_board_no, rpt_status
-		 order by 3 desc
+		 order by 3 ${rCount}
 	</select>
 	
 	<!-- 댓글이 등록된 게시글 번호 조회 -->

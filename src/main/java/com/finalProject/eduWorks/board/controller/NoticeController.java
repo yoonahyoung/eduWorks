@@ -137,27 +137,45 @@ public class NoticeController {
 		String alarmContent = "[" + b.getBoardTitle() + "] 게시글에 " + ( r.getReplyDepth() == 0 ? "댓글이 달렸습니다." : "대댓글이 달렸습니다." ) ;
 		alarm.setAlarmContent(alarmContent);
 		
-		aService.insertAlarm(alarm);
-		
 		WebSocketSession targetClient = userSessions.get(b.getBoardWriter()+""); // 타겟 : 게시글작성자 
 		System.out.println("게시글작성자 : " + targetClient);
-		if(targetClient != null) {
-			targetClient.sendMessage(new TextMessage(alarmContent));
-		}
 		
-		if(r.getReplyDepth() == 1) {
-			System.out.println("대댓글작성");
-			String rWriter = String.valueOf(aService.selectRWriter(r.getReplyParent()+""));
-			alarm.setBoardWriter(rWriter);
+		if(r.getReplyDepth() == 0 && !(((Member)session.getAttribute("loginUser")).getMemNo().equals(String.valueOf(b.getBoardWriter())))) {
+			// 일반 댓글이면서 내 글이 아닐 때 (글 작성자한테만 알람 한개)
 			aService.insertAlarm(alarm);
-			
-			targetClient = userSessions.get(rWriter); // 타겟 : 원댓글작성자
-			System.out.println("원댓글작성자 : " + targetClient);
+			targetClient = userSessions.get(alarm.getBoardWriter()); // 타겟 : 글 작성자
+			System.out.println("일반댓글 달았을때 게시글 작성자에게 가는 알람");
 			if(targetClient != null) {
 				targetClient.sendMessage(new TextMessage(alarmContent));
 			}
 		}
 		
+		// 만약 대댓글 작성일 시
+		if(r.getReplyDepth() == 1) {
+			if(!(((Member)session.getAttribute("loginUser")).getMemNo().equals(String.valueOf(b.getBoardWriter())))) {
+				// 내가 쓴 글이 아닐 경우
+				// 1. 글쓴이한테 대댓글 알람
+				aService.insertAlarm(alarm);
+				System.out.println("1. 대댓글( 글쓴이한테 알람)");
+				targetClient = userSessions.get(alarm.getBoardWriter()); // 타겟 : 글 작성자
+				if(targetClient != null) {
+					targetClient.sendMessage(new TextMessage(alarmContent));
+				}
+			}
+			
+			// 내가 쓴 글이든, 아니든 원댓글 작성자한테 알람
+			// 2. 원댓글 작성자한테 알람
+			String rWriter = String.valueOf(aService.selectRWriter(r.getReplyParent()+""));
+			alarm.setBoardWriter(rWriter); // 글작성자 -> 댓글 작성자로 바꿔치기
+			aService.insertAlarm(alarm);
+			targetClient = userSessions.get(rWriter); // 타겟 : 원댓글작성자
+			System.out.println("2. 대댓글( 원댓글 작성자한테 알람)");
+			
+			if(targetClient != null) { // 알람 대상이 접속되어 있을 시
+				targetClient.sendMessage(new TextMessage(alarmContent));
+			}
+		}
+			
 		return result > 0 ? "success" : "fail";
 	}
 	

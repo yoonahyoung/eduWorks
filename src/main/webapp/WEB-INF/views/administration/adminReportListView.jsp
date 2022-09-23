@@ -28,13 +28,14 @@
 				
 	            <div class="tableOption" style="display:flex; flex-direction: row-reverse; margin-right:10px">
 	                <div class="selectOption" style="margin-bottom:10px">
-	                    <select>
-	                        <option value="">신고많은순</option>
-	                        <option value="">신고적은순</option> 
+	                    <select id="rCount" onchange="goCategory(1);">
+	                        <option value="desc" selected>신고많은순</option>
+	                        <option value="asc">신고적은순</option> 
 	                    </select>
-	                    <select>
-	                        <option value="">미처리</option>
-	                        <option value="">처리</option> 
+	                    <select id="rStatus" onchange="goCategory(1);">
+	                    	<option value="" selected>전체</option>
+	                        <option value="N">미처리</option>
+	                        <option value="Y">처리</option> 
 	                    </select>
 	                </div>
 	            </div>
@@ -61,9 +62,17 @@
 	                        	<c:otherwise>
 	                        		<c:forEach var="r" items="${list}" varStatus="status">
 				                        <tr>
-	                        			
 				                            <td class="no">${ r.rptBoardNo }</td>
-				                            <td class="rptRefCat">${ r.rptRefCat }</td>
+				                            <td>
+					                            <c:if test="${ r.rptRefCat eq 1 }">
+					                            	게시글
+					                            	<input type="hidden" value="1" class="rptRefCat">
+					                            </c:if>
+					                            <c:if test="${ r.rptRefCat eq 2 }">
+					                            	댓글
+					                            	<input type="hidden" value="2" class="rptRefCat">
+					                            </c:if>
+				                            </td>
 				                            <td>${ r.rptCount }</td>
 				                            <td>${ r.rptStatus }</td>
 				                            <td onclick="event.stopPropagation()">
@@ -79,20 +88,20 @@
                         </tbody>
                     </table>
                     <script>
-			           	$(function(){ // 상세화면
+			           	 // 상세화면
 			           		let rptBoardNo = "";
 			           		let rptRefCat = "";
 			           		let rptNoStr = "";
-			           		$("#reportList>tbody>tr").click(function(){
+			           		$(document).on("click", "#reportList>tbody>tr", function(){
 			           			rptBoardNo = $(this).children(".no").text();
-			           			rptRefCat = $(this).children(".rptRefCat").text();
+			           			rptRefCat = $(this).find(".rptRefCat").val();
 			           			console.log(rptRefCat);
 			           			rptNoStr = $(this).find("div").html();
 			           			console.log(rptNoStr);
 		           				// 선택된 tr의 자식요소 중에서 no라는 클래스를 가진 자식의 text값
 		           				location.href = "reportDetail.bl?no=" + rptBoardNo + "&rptRefCat=" + rptRefCat + "&rptNoStr=" + rptNoStr; 
 			           		})
-			          	})
+			          	
 			          	
 			          	function goStatus(rptNo, rptRefCat, rptBoardNo){ // 블라인드 처리가 필요 없다고 느낄시 처리 완료 버튼
 			           		
@@ -116,13 +125,88 @@
 			           		 
 			           	}
 			           	
-			          	
+			           	function goCategory(page){
+			           		// 분류 값에 따른 리스트 ajax로 뿌려주기
+			           		$.ajax({
+			           			url:"option.re",
+			           			data:{
+			           				rCount:$("#rCount").val(),
+					           		rStatus:$("#rStatus").val(),
+					           		page:page
+			           			},
+			           			success(map){
+			           				let list = map.list;
+			           				let pi = map.pi;
+			           				value = "";
+			           				pValue ="";
+			           				if(list == null){
+			           					value += '<tr>'
+			           								+ '<td colspan="6">등록된 신고가 없습니다.</td>'
+		           							  + '</tr>';
+			           				}else{
+			           					for(let i=0; i<list.length; i++){
+			           						value += '<tr>'
+			           									+ '<td class="no">' + list[i].rptBoardNo + '</td>'
+			           									+ '<td class="rptRefCat">' + list[i].rptRefCat + '</td>'
+			           									+ '<td>' + list[i].rptCount + '</td>'
+			           									+ '<td>' + list[i].rptStatus + '</td>'
+			           									+ '<td onclick="event.stopPropagation()">';
+			           									if(list[i].rptStatus == 'N'){
+			           										value += '<button type="button" class="n-btn su_btn_border btn-sm reportStatus" onclick="goStatus(&quot;' + list[i].rptNo + '&quot;, &quot;' + list[i].rptRefCat + '&quot;, &quot;' + list[i].rptBoardNo + '&quot;);">Y 처리</button>';
+			           									}
+	           									value += '</td>';
+	           												+ '<td class="no' + i + '"><div id="rptNoStr" style="display:none;">' + list[i].rptNo + '</div></td>';
+	           									 		+ '</tr>';
+			           					}
+			           					
+			           					// 페이징바 처리
+			           					if(pi.currentPage == 1){
+			           						pValue += '<li class="page-item">'
+			           									+ '<a class="page-link disabled" aria-label="Previous">'
+			           										+ '<span aria-hidden="true">&laquo;</span>'
+			           									+ '</a>'
+			           								+ '</li>';
+			           					}else{
+			           						pValue += '<li class="page-item">'
+			           									+ '<a class="page-link" onclick="goCategory(' + (pi.currentPage-1) + ')" aria-label="Previous">'
+			           										+ '<span aria-hidden="true">&laquo;</span>'
+			           									+ '</a>'
+			           								+ '</li>';
+			           					}
+			           					
+			           					for(let p=pi.startPage; p<= pi.endPage; p++){
+			           						pValue += '<li class="page-item"><a class="page-link" onclick="goCategory(' +  p  + ')">' +  p + '</a></li>';
+			           					}
+			              	
+			           					if(pi.currentPage == pi.maxPage){
+			           						pValue += '<li class="page-item">'
+			           									+ '<a class="page-link disabled"  aria-label="Next">'
+			           										+ '<span aria-hidden="true">&raquo;</span>'
+			           									+ '</a>'
+			           								+ '</li>';
+			           					}else{
+			           						pValue += '<li class="page-item">'
+			           									+ '<a class="page-link" onclick="goCategory(' + (pi.currentPage+1) + ')" aria-label="Next">'
+			           										+ '<span aria-hidden="true">&raquo;</span>'
+			           									+ '</a>'
+			           								+ '</li>';
+			           					}
+			           					$(".board-tbody").empty();
+			           					$(".board-tbody").html(value);
+			           					$("#n-pagingBar ul").empty();
+			           					$("#n-pagingBar ul").html(pValue);
+			           				}
+			           				
+				                            
+			           			},error(){
+			           				console.log("ajax통신 실패");
+			           			}
+			           		})
+			           	}
 			           	
 			        </script>
                     <br><br>
                 </div>
-                
-	             <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!리스트 화면 검색기능, 여러개 클릭기능 구현(하다말았음) -->
 	            
 	            <div id="n-pagingBar">
 	                <nav aria-label="Page navigation example">
@@ -137,7 +221,7 @@
 	                    		</c:when>
 	                    		<c:otherwise>
 				                    <li class="page-item">
-				                        <a class="page-link" href="reportList.ad?cpage=${ pi.currentPage-1 }" aria-label="Previous">
+				                        <a class="page-link"  onclick="goCategory(${ pi.currentPage-1 })" aria-label="Previous">
 				                        	<span aria-hidden="true">&laquo;</span>
 				                        </a>
 				                    </li>
@@ -145,7 +229,7 @@
 			            	</c:choose>
 			            	
 			            	<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-			            		<li class="page-item"><a class="page-link" href="reportList.ad?cpage=${ p }">${ p }</a></li>
+			            		<li class="page-item"><a class="page-link"  onclick="goCategory(${ p })">${ p }</a></li>
 			            	</c:forEach>
 			            	
 			            	<c:choose>
@@ -158,7 +242,7 @@
 	                    		</c:when>
 	                    		<c:otherwise>
 				                    <li class="page-item">
-				                        <a class="page-link" href="list.no?cpage=${ pi.currentPage+1 }" aria-label="Next">
+				                        <a class="page-link"  onclick="goCategory(${ pi.currentPage+1 })" aria-label="Next">
 				                        	<span aria-hidden="true">&raquo;</span>
 				                        </a>
 				                    </li>
@@ -168,9 +252,7 @@
 	                </nav>
 	            </div>
 	        </div>
-	
 	    </div>
-	   
 	</div>
 	
 	<jsp:include page="../common/footer.jsp" />

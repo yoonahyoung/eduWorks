@@ -23,14 +23,14 @@ public class ReportServiceImpl implements ReportService{
 
 	// 페이징 처리
 	@Override
-	public int selectListCount() {
-		return rDao.selectListCount(sqlSession);
+	public int selectListCount(String rCount, String rStatus) {
+		return rDao.selectListCount(sqlSession, rCount, rStatus);
 	}
 
 	// 신고 리스트 조회
 	@Override
-	public ArrayList<Report> selectReportList(PageInfo pi) {
-		return rDao.selectReportList(sqlSession, pi);
+	public ArrayList<Report> selectReportList(PageInfo pi, String rCount, String rStatus) {
+		return rDao.selectReportList(sqlSession, pi, rCount, rStatus);
 	}
 	
 	// 댓글이 등록된 게시글 번호 조회

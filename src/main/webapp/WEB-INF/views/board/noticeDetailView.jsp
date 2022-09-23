@@ -326,6 +326,7 @@
 								replyParent:replyParentNo,
 								replyContent:$("#replyContent").val(),
 								replyWriter:"${loginUser.memName}",
+								replyJob:"${loginUser.jobName}",
 								replyWno:${loginUser.memNo}
 							},
 							success(result){

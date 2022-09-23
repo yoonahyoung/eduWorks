@@ -2,6 +2,7 @@ package com.finalProject.eduWorks.administration.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -49,15 +50,16 @@ public class ReportController {
 	 */
 	@RequestMapping("reportList.ad")
 	public ModelAndView reportList(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv, HttpSession session) {
-		
-		int listCount = rService.selectListCount();
+		String rCount = "desc"; // 신고 많은순
+		String rStatus = ""; 	// 미처리
+		int listCount = rService.selectListCount(rCount, rStatus);
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
 		
 		// 신고 리스트 조회
-		ArrayList<Report> list = rService.selectReportList(pi);
+		ArrayList<Report> list = rService.selectReportList(pi, rCount, rStatus);
 		
 		mv.addObject("pi", pi).addObject("list", list);
-		
+		System.out.println(list);
 		mv.setViewName("administration/adminReportListView");
 		return mv;
 	}
@@ -250,6 +252,24 @@ public class ReportController {
 		 return new Gson().toJson(result); 
 	 }
 	 
-	 
-	 
+	 /**
+	  * 신고 분류에 따른 리스트
+	  * @param page		현재 페이지
+	  * @param rCount	신고 많은 순/적은 순
+	  * @param rStatus	신고 처리 여부
+	  * @return 
+	  */
+	 @ResponseBody
+	 @RequestMapping(value="option.re", produces="application/json; chatset=utf-8")
+	 public String optionReport(int page, String rCount, String rStatus) {
+		 int listCount = rService.selectListCount(rCount, rStatus);
+		 PageInfo pi = Pagination.getInfo(listCount, page, 10, 10);
+		 
+		 ArrayList<Report> list = rService.selectReportList(pi, rCount, rStatus);
+		 
+		 HashMap<String, Object> map = new HashMap<>();
+		 map.put("pi", pi);
+		 map.put("list", list);
+		 return new Gson().toJson(map);
+	 }
 }

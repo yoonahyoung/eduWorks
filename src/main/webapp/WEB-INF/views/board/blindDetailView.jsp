@@ -86,11 +86,11 @@
 				                                <span class="font-weight-bold">블라인드 처리</span>
 				                            </a>
 				                        </c:when>
-				                        <c:otherwise>
+				                        <c:when test="${ b.boardStatus eq 'B' }">
 				                            <a class="dropdown-item d-flex align-items-center" onclick="goBlind(2);" data-toggle="modal" style="cursor:pointer">
 				                                <span class="font-weight-bold">블라인드 해제</span>
 				                            </a>
-		                            	</c:otherwise>
+		                            	</c:when>
 		                            </c:choose>
 	                        	</div>
 		                    </li>
@@ -796,9 +796,11 @@
                    				if(result > 0){
                    					$("#modalContent").html("블라인드 처리/해제 되었습니다");
     	                			$("#moContent").modal("show");
+    	                			$("#resultUrl").attr("onclick", "location.reload();");
                    				}else{
                    					$("#modalContent").html("블라인드 처리/해제에 실패하였습니다.");
     	                			$("#moContent").modal("show");
+    	                			$("#resultUrl").attr("onclick", "location.reload();");
                    				}
                    				
                    			},error(){

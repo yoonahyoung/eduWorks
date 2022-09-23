@@ -15,17 +15,23 @@ public class ReportDao {
 	// 신고는 blind-mapper.xml로 처리
 	
 	// 페이징처리
-	public int selectListCount(SqlSessionTemplate sqlSession) {
-		return sqlSession.selectOne("blindMapper.selectListCountR");
+	public int selectListCount(SqlSessionTemplate sqlSession, String rCount, String rStatus) {
+		HashMap<String, String> map = new HashMap<>();
+		map.put("rCount", rCount);
+		map.put("rStatus", rStatus);
+		return sqlSession.selectOne("blindMapper.selectListCountR", map);
 	}
 	
 	// 신고 게시판 리스트 조회
-	public ArrayList<Report> selectReportList(SqlSessionTemplate sqlSession, PageInfo pi) {
+	public ArrayList<Report> selectReportList(SqlSessionTemplate sqlSession, PageInfo pi, String rCount, String rStatus) {
 		int limit = pi.getBoardLimit();
 		int offset = (pi.getCurrentPage()-1) * limit;
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		
-		return (ArrayList)sqlSession.selectList("blindMapper.selectReportList", null, rowBounds);
+		HashMap<String, String> map = new HashMap<>();
+		map.put("rCount", rCount);
+		map.put("rStatus", rStatus);
+		return (ArrayList)sqlSession.selectList("blindMapper.selectReportList", map, rowBounds);
 	}
 	
 	// 댓글이 등록된 게시글 번호 조회
