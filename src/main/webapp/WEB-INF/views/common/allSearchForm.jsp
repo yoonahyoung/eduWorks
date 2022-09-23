@@ -31,8 +31,8 @@
 				<c:forEach var="m" items="${ mail }">
 				<div class="searchForm">
 					<div id="mailView">
-						<span id="target" style="color:black;">${ m.sendName }</span>
-						<a href="">${ m.mailContent }</a>
+						<span id="target" style="color:black; font-size:large;">${ m.sendName }</span>&nbsp;
+						<a id="mailGo" href="#">${ m.mailTitle }<input type="hidden" value="${m.mailNo }"></a>&nbsp;
 						<span>${ m.sendDate }</span>
 					</div>
 				</div>
@@ -48,8 +48,8 @@
 				<c:forEach var="n" items="${ notice }">
 				<div class="searchForm">
 					<div id="noticeView">
-						<div style="color:black;">${ n.boardTitle }</div>
-						<a href="">${ n.boardContent }</a>
+						<div style="color:black; font-size:large;">${ n.boardTitle }</div>
+						<a href="detail.no?no=${ n.boardNo }">${ n.boardContent }</a>
 					</div>
 				</div>
 				<br><br>
@@ -62,9 +62,9 @@
 				<c:forEach var="b" items="${ board }">
 					<div class="searchForm">
 						<div id="BoardView">
-							<div style="color:black;">${ b.boardTitle }</div>
+							<div style="color:black; font-size:large;">${ b.boardTitle }</div>
 							<br>
-							<a href="">${ b.boardContent }</a>
+							<a href="detail.de?no=${ b.boardNo }">${ b.boardContent }</a>
 						</div>
 					</div>
 					<br><br>
@@ -77,8 +77,8 @@
 				<c:forEach var="s" items="${ schedule }">
 				<div class="searchForm">
 					<div id="calendarView">
-						<span style="color:black;">${ s.scheStartDate } / ${ s.scheEndDate }</span>
-						<a href="">${ s.scheTitle }</a>
+						<span style="color:black; font-size:large;">${ s.scheStartDate } / ${ s.scheEndDate }</span>
+						<a href="detail.ca?sNo=${ s.scheNo }&memNo=${loginUser.memNo}">${ s.scheTitle }</a>
 						<br>
 						<span>참석자 </span>&nbsp;
 						<span> | </span>&nbsp;
@@ -108,11 +108,29 @@
 			</div>
 			<br><br>
 		</div>
+		<form id="postMailDetail" action="mailDetail.ma" method="post">
+			<input type="hidden" name="mailFolder" value="2">
+			<input type="hidden" name="mailNo" id="detailNo">
+			<input type="hidden" name="flag" value="B">
+		</form>
 	</div>
 	<jsp:include page="footer.jsp" />
 
 
 	<script type="text/javascript">   
+		$(function(){
+			$("#mailGo").click(function(){
+				
+				let mailNo = $(this).children('input[type=hidden]').val();
+				console.log(mailNo);
+				$("#detailNo").val(mailNo);
+				$("#postMailDetail").submit();
+	
+			})
+		})
+	
+	
+	
 		$(function(){
 			if(${empty mail}){
 				$(".mailResult").css("display", "none");
@@ -136,6 +154,7 @@
 				$(".calendarResult").css("display", "none");
 			}
 		})
+		
 		
 		
 	</script>
