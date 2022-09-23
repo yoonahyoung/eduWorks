@@ -25,10 +25,10 @@
 		<div class="second-title">
 
  		<div>
-			<c:if test="${m.tagNo != '' }">
+			<c:if test="${flag == 'F' }">
 				<i class='fas fa-bookmark' style="color:${m.tag.tagColor};" ></i>
 			</c:if>
- 			${text }
+ 				${text }
  			<span class="mail-count">전체메일 ${count } / 안읽은 메일 ${unread }</span>
  		</div>
 

@@ -771,14 +771,11 @@ public class MailController {
 				   count = mService.deleteListCount(m);
 				   unread = mService.deleteUnReadCount(m); break;
 		}
-		System.out.println(ms);
-		System.out.println(detail);
-		System.out.println(update);
-		System.out.println(count);
 
 		// 메일 조회 성공시
 		if(update > 0) {
-				
+			
+		mv.addObject("flag", flag);
 		mv.addObject("text", text);
 		mv.addObject("color", color);
 		mv.addObject("count", count);
