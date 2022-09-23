@@ -236,7 +236,7 @@
 	                        <c:if test="${ loginUser.deptCode eq 'D2' || loginUser.deptCode eq 'DN'}">
 	                        	<a class="collapse-item" href="listSt.ad">학생 주소록</a>
 	                        </c:if>
-	                        <c:if test="${ loginUser.deptCode eq 'D0' || loginUser.deptCode eq 'DN'}">
+	                        <c:if test="${ loginUser.deptCode eq 'D0'}">
 	                        	<a class="collapse-item" href="listSt.te">학생 주소록</a>
 	                        </c:if>
 	                    </div>
