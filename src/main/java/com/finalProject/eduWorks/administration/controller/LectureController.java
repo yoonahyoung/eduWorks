@@ -32,12 +32,11 @@ public class LectureController {
 		
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 5);
 		ArrayList<Teacher> list = lService.adminLectureList(pi);
-		
 		for(int i=0; i<list.size(); i++) {
 			switch(list.get(i).getClassApproval()){
 			case "1": list.get(i).setClassApproval("대기중"); break;
 			case "2": list.get(i).setClassApproval("승인"); break;
-			case "3": list.get(i).setClassApproval("보류"); break;
+			case "3": list.get(i).setClassApproval("반려"); break;
 			}
 		}
 		

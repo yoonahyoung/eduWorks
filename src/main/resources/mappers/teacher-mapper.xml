@@ -253,9 +253,9 @@
 		 	<when test="condition == 'classTitle'">
            	   and class_title 
          	</when>  
-	         <when test="condition == 'memName'">
+	        <when test="condition == 'memName'">
 	           and mem_name
-	         </when>  
+	        </when>  
          </choose>
                like '%' || #{keyword} || '%'
 		 order
@@ -296,7 +296,7 @@
 		  from tb_class c
 		  join tb_member m on(c.mem_no = m.mem_no)
 		 where class_status = 'N'
-		   and class_approval = 1 or class_approval = 3
+		   and (class_approval = 1 or class_approval = 3)
 		 <choose>
 		 	<when test="condition == 'classTitle'">
            	   and class_title 
@@ -350,7 +350,8 @@
 	<select id="searchAppListCount" resultType="_int">
   		select
   		       count(*)
-		  from tb_class
+		  from tb_class c
+		  join tb_member m on(c.mem_no = m.mem_no)
 		 where 
   		 <if test="condition == 'classTitle'">
   		   class_title
@@ -377,7 +378,7 @@
 		     , class_signup_date
 		     , mem_name
 		  from tb_class c
-		  join tb_member m on(c.mem_no = m.mem_no)
+		  join tb_member m on (c.mem_no = m.mem_no)
          where
 		 <choose>
 		 	<when test="condition == 'classTitle'">

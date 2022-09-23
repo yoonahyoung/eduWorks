@@ -13,11 +13,11 @@ public interface mainService {
 	
 	// 메인페이지 공지사항 리스트조회, 페이징
 	int selectListCount();
-	ArrayList<Board> selectMainDeptList(PageInfo pi);
+	ArrayList<Board> selectMainList(PageInfo pi);
 	
 	// 메인페이지 부서게시판 리스트조회, 페이징
 	int selectDeptListCount();
-	ArrayList<Board> selectMainList(PageInfo pi);
+	ArrayList<Board> selectMainDeptList(PageInfo pi, String deptcode);
 	
 	
 	// 4. 받은 메일 조회

@@ -62,11 +62,13 @@ public class mainController {
 	 */
 	@ResponseBody
 	@RequestMapping(value="mainDeptList.ma", produces="application/json; charset=utf-8")
-	public String selectMainDeptList(@RequestParam(value="cpage", defaultValue="1") int currentPage) {
+	public String selectMainDeptList(@RequestParam(value="cpage", defaultValue="1") int currentPage, HttpSession session) {
 		int listCount = mService.selectDeptListCount();
 		
+		String deptCode = ((Member)session.getAttribute("loginUser")).getDeptCode();
+	
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 5);
-		ArrayList<Board> list = mService.selectMainDeptList(pi);
+		ArrayList<Board> list = mService.selectMainDeptList(pi, deptCode);
 		
 		HashMap<String, Object> map = new HashMap<>();
         map.put("list", list);

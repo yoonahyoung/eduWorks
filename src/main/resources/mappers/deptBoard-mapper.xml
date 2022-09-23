@@ -307,8 +307,7 @@
 		  join tb_member m on(b.board_writer = m.mem_no)
 		 where board_category = 2
 		   and board_status = 'Y'
-		   and (board_content like '%' || #{key} || '%'
-  		    or board_title like '%' || #{key} || '%')
+		   and b.dept_code = #{deptCode}
 	</select>
   	
   	

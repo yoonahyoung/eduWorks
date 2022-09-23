@@ -194,7 +194,7 @@ public class TeacherController {
 	public ModelAndView appLectureSearchList(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv, String condition, String keyword, HttpSession session) {
 		
 		int listCount = tService.searchAppListCount(condition, keyword);
-		
+		System.out.println(keyword);
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 5);
 		
 		ArrayList<Teacher> list = tService.appLectureSearchList(pi, condition, keyword);

@@ -38,13 +38,13 @@ public class mainDao {
 	}
 	
 	// 메인페이지 부서게시판 리스트 조회
-	public ArrayList<Board> selectMainDeptList(SqlSession sqlSession, PageInfo pi){
+	public ArrayList<Board> selectMainDeptList(SqlSession sqlSession, PageInfo pi, String deptCode){
 		
 		int limit = pi.getBoardLimit();
 		int offset = (pi.getCurrentPage()-1) * limit;
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		
-		return (ArrayList)sqlSession.selectList("deptBoardMapper.selectListD", null, rowBounds);
+		return (ArrayList)sqlSession.selectList("deptBoardMapper.searchBoard", deptCode, rowBounds);
 	}
 	
 	/**

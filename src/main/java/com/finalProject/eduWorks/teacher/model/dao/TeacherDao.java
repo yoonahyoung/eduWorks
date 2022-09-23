@@ -94,7 +94,7 @@ public class TeacherDao {
 	}
 	
 	public ArrayList<Teacher> appLectureSearchList(SqlSessionTemplate sqlSession, PageInfo pi, String condition, String keyword){
-		
+		System.out.println(keyword);
 		HashMap<String, String> map = new HashMap<>();
 		map.put("condition", condition);
 		map.put("keyword", keyword);

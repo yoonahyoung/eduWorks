@@ -41,8 +41,8 @@ public class mainServiceImpl implements mainService{
 	
 	// 메인페이지 부서게시판 리스트 조회
 	@Override
-	public ArrayList<Board> selectMainDeptList(PageInfo pi) {
-		return mDao.selectMainDeptList(sqlSession, pi);
+	public ArrayList<Board> selectMainDeptList(PageInfo pi, String deptCode) {
+		return mDao.selectMainDeptList(sqlSession, pi, deptCode);
 	}
 
 	/**
