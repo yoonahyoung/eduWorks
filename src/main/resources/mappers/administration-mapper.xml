@@ -39,7 +39,23 @@
 	<select id="selectListStCount" resultType="_int">
 		select
 			   count(*)
-		  from tb_student
+		  from (
+			  	select
+					   student_no
+					 , student_name
+					 , student_phone
+					 , student_email
+					 , student_birth
+					 , student_gender
+					 , to_char(student_en_date, 'YYYY-MM-DD') as "student_en_date"
+				  from tb_student 
+				 <if test="keyword != null and keyword neq ''">
+				 where student_name || student_phone || student_email like ('%${keyword}%')
+				 </if>
+				 <if test="chkDate != null and chkDate neq ''">
+				 order by student_en_date ${chkDate}
+				 </if>
+		  )
 	</select>
 	
 	<!-- 학생 주소록 리스트 조회 (전체) -->
@@ -51,10 +67,14 @@
 			 , student_email
 			 , student_birth
 			 , student_gender
-			 , student_en_date
+			 , to_char(student_en_date, 'YYYY-MM-DD') as "student_en_date"
 		  from tb_student 
-		<!--  order
-		 	by student_en_date desc -->
+		 <if test="keyword != null and keyword neq ''">
+		 where student_name || student_phone || student_email like ('%${keyword}%')
+		 </if>
+		 <if test="chkDate != null and chkDate neq ''">
+		 order by student_en_date ${chkDate}
+		 </if>
 	</select>
 	
 	<!-- 학생 주소록 상세 조회 (전체) -->
@@ -84,6 +104,7 @@
 		  from tb_reg_class r
 		  join tb_class c using(class_no)
 		 where student_no = #{studentNo}
+		   and reg_status = 2
 	</select>
 	
 	<!-- 학생 정보 수정 -->
@@ -100,11 +121,24 @@
 	<select id="selectListTeCount" resultType="_int">
 		select
 		       count(*)
-		  from tb_student s
-		  join tb_reg_class rc using(student_no)
-		  join tb_class c using(class_no)
-		 where c.mem_no = #{memNo}
-		   and rc.reg_status = 2
+		  from (
+		  		select
+				       student_no
+				     , student_name
+				     , class_title
+				     , student_email
+				  from tb_student s
+				  join tb_reg_class rc using(student_no)
+				  join tb_class c using(class_no)
+				 where c.mem_no = #{memNo}
+				   and reg_status = 2
+				 <if test="keyword != null and keyword neq ''">
+				   and student_name || class_title || student_email like ('%${keyword}%')
+				 </if>
+				 <if test="chkDate != null and chkDate neq ''">
+				 order by reg_date ${chkDate}
+				 </if>
+		  		)
 	</select>
 	
 	<!-- 학생 주소록 리스트 조회 (강사) -->
@@ -119,16 +153,12 @@
 		  join tb_class c using(class_no)
 		 where c.mem_no = #{memNo}
 		   and reg_status = 2
-		<choose>
-			<when test="range == 'desc'">
-			order 
-				by reg_date desc
-			</when>
-			<otherwise>
-			order 
-				by reg_date
-			</otherwise>
-		</choose>
+		 <if test="keyword != null and keyword neq ''">
+		   and student_name || class_title || student_email like ('%${keyword}%')
+		 </if>
+		 <if test="chkDate != null and chkDate neq ''">
+		 order by reg_date ${chkDate}
+		 </if>
 	</select>
 	
 	<!-- 수강 신청 목록 페이징 처리 -->

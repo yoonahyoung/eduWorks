@@ -22,14 +22,14 @@ public class StudentAddressServiceImpl implements StudentAddressService{
 	
 	// 학생 주소록 페이징 처리 (전체)
 	@Override
-	public int selectListStCount() {
-		return sDao.selectListStCount(sqlSession);
+	public int selectListStCount(String keyword, String chkDate) {
+		return sDao.selectListStCount(sqlSession, keyword, chkDate);
 	}
 
 	// 학생 주소록 조회 (전체)
 	@Override
-	public ArrayList<Student> selectStAddressList(PageInfo pi) {
-		return sDao.selectStAddressList(sqlSession, pi);
+	public ArrayList<Student> selectStAddressList(PageInfo pi, String keyword, String chkDate) {
+		return sDao.selectStAddressList(sqlSession, pi, keyword, chkDate);
 	}
 
 	// 학생 주소록 상세 조회 (전체)
@@ -52,14 +52,14 @@ public class StudentAddressServiceImpl implements StudentAddressService{
 	
 	// 학생 주소록 페이징 처리 (강사)
 	@Override
-	public int selectListTeCount(int memNo) {
-		return sDao.selectListTeCount(sqlSession, memNo);
+	public int selectListTeCount(String memNo, String keyword, String chkDate) {
+		return sDao.selectListTeCount(sqlSession, memNo, keyword, chkDate);
 	}
 
 	// 학생 주소록 조회 (강사)
 	@Override
-	public ArrayList<Student> selectTeAddressList(PageInfo pi, int memNo, String range) {
-		return sDao.selectTeAddressList(sqlSession, pi, memNo, range);
+	public ArrayList<Student> selectTeAddressList(PageInfo pi, String memNo, String keyword, String chkDate) {
+		return sDao.selectTeAddressList(sqlSession, pi, memNo, keyword, chkDate);
 	}
 
 	// 상담 이력 조회

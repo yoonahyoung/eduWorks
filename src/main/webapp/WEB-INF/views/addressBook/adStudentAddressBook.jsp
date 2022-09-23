@@ -28,55 +28,20 @@
 			<br><br>
 			
 			<div class="tableOption">
-				<!-- ==================== 연락처 검색 =================== -->
-				<form action="searchStudentAdd.te" method="post">
-					<div class="searchbar" align="center">
-						<input type="text" name="keyword" placeholder="검색">
-						<button type="submit" class="address-search">
-							<i class="fas fa-search fa-lg"></i>
-						</button>
-					</div>
-				</form>
+				<div class="searchbar" align="center">
+					<input type="text" id="teAdKeyword" placeholder="검색">
+					<button type="submit" class="address-search" onclick="goCategory(1)">
+						<i class="fas fa-search fa-lg"></i>
+					</button>
+				</div>
 				
-			<c:choose>
-				<c:when test="${empty keyword }">
-					<div class="selectOption" style="margin-bottom: 10px">
-					<!-- =============== 주소록 정렬 ================== -->
-					<form action="publicAddress.ad" id="rangeForm" method="post">
-						<select name="range">
-							<option value="oldest">오래된순</option>
-							<option value="newest">최신순</option>
-						</select>
-					</form>
-					</div>
-				</c:when>
-				<c:otherwise>
-					<div class="selectOption" style="margin-bottom: 10px">
-					<!-- =============== 주소록 정렬 ================== -->
-					<form action="searchPublicAdd.ad" id="rangeSearchForm" method="post">
-						<input type="hidden" name="keyword" value="${keyword }">
-						<select name="range">
-							<option value="oldest">오래된순</option>
-							<option value="newest">최신순</option>
-						</select>
-					</form>
-					</div>
-				</c:otherwise>
-			</c:choose>
+				<div class="selectOption" style="margin-bottom: 10px">
+					<select id="teAdDate" onchange="goCategory(1)">
+						<option value="desc">최신순</option>
+						<option value="asc" selected>오래된순</option>
+					</select>
+				</div>
 			</div>
-
-			<script>
-				
-				// 주소록 정렬시 실행하는 함수
-				$(function(){
-					$("select[name=range]").change(function(){
-						$("#rangeForm").submit(); // 검색하지 않은 경우
-						$("#rangeSearchForm").submit(); // 검색한 경우
-					})
-					
-				})
-				
-			</script>
 			
 			<div class="main-list">
 				<table class="board-content table" align="center">
@@ -89,7 +54,7 @@
 							<th width="10%">등록일</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody class="board-tbody">
 						<c:choose>
 							<c:when test="${empty list }">
 								<td colspan="6">현재 주소록이 없습니다.</td>
@@ -111,88 +76,134 @@
 				<br> <br>
 			</div>
 
-			<!-- ============== 페이지 이동 ================== -->
-			<div style="margin: 30px 0 30px 0">
-				<c:choose>
-					<c:when test="${empty list }">
-						<!-- 연락처 목록 없는 경우 -->
-						<nav aria-label="Page navigation example">
-							<ul class="pagination justify-content-center">
-							</ul>
-						</nav>
-					</c:when>
-					<c:otherwise>
-					<!-- 연락처 목록 있는 경우 -->
-					<div id="n-pagingBar">
-	                <nav aria-label="Page navigation example">
-	                    <ul class="pagination justify-content-center"> 
-	                    	<c:choose>
-	                    		<c:when test="${ pi.currentPage eq 1 }">
-	                    			<li class="page-item">
-				                        <a class="page-link disabled" aria-label="Previous">
-				                        	<span aria-hidden="true">&laquo;</span>
-				                        </a>
-			                    	</li>
-	                    		</c:when>
-	                    		<c:otherwise>
-				                    <li class="page-item">
-				                        <a class="page-link" href="listSt.ad?cpage=${ pi.currentPage-1 }" aria-label="Previous">
-				                        	<span aria-hidden="true">&laquo;</span>
-				                        </a>
-				                    </li>
-			                    </c:otherwise>
-			            	</c:choose>
-			            	
-			            	<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-			            		<li class="page-item"><a class="page-link" href="listSt.ad?cpage=${ p }">${ p }</a></li>
-			            	</c:forEach>
-			            	
-			            	<c:choose>
-	                    		<c:when test="${ pi.currentPage eq maxPage }">
-	                    			<li class="page-item">
-				                        <a class="page-link disabled" aria-label="Next">
-				                        	<span aria-hidden="true">&raquo;</span>
-				                        </a>
-			                    	</li>
-	                    		</c:when>
-	                    		<c:otherwise>
-				                    <li class="page-item">
-				                        <a class="page-link" href="listSt.ad?cpage=${ pi.currentPage+1 }" aria-label="Next">
-				                        	<span aria-hidden="true">&raquo;</span>
-				                        </a>
-				                    </li>
-			                    </c:otherwise>
-			            	</c:choose>
-	                    </ul>
-	                </nav>
-	            	</div>
-					</c:otherwise>
-				</c:choose>
-			</div>
+			<div id="n-pagingBar">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center"> 
+                    	<c:choose>
+                    		<c:when test="${ pi.currentPage eq 1 }">
+                    			<li class="page-item">
+			                        <a class="page-link disabled" aria-label="Previous">
+			                        	<span aria-hidden="true">&laquo;</span>
+			                        </a>
+		                    	</li>
+                    		</c:when>
+                    		<c:otherwise>
+			                    <li class="page-item">
+			                        <a class="page-link" onclick="goCategory(${ pi.currentPage-1 })" aria-label="Previous">
+			                        	<span aria-hidden="true">&laquo;</span>
+			                        </a>
+			                    </li>
+		                    </c:otherwise>
+		            	</c:choose>
+		            	
+		            	<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+		            		<li class="page-item"><a class="page-link" onclick="goCategory(${ p })">${ p }</a></li>
+		            	</c:forEach>
+		            	
+		            	<c:choose>
+                    		<c:when test="${ pi.currentPage eq maxPage }">
+                    			<li class="page-item">
+			                        <a class="page-link disabled" aria-label="Next">
+			                        	<span aria-hidden="true">&raquo;</span>
+			                        </a>
+		                    	</li>
+                    		</c:when>
+                    		<c:otherwise>
+			                    <li class="page-item">
+			                        <a class="page-link" onclick="goCategory(${ pi.currentPage+1 })" aria-label="Next">
+			                        	<span aria-hidden="true">&raquo;</span>
+			                        </a>
+			                    </li>
+		                    </c:otherwise>
+		            	</c:choose>
+                    </ul>
+                </nav>
+            </div>
 		</div>
 	</div>
-	
-	<!-- ================== 페이지 이동 ====================== -->
-	<form id="moveForm" action="" method="post">
-		<input type="hidden" name="page" id="page">
-		<input type="hidden" name="keyword" id="keyword">
-		<input type="hidden" name="range" id="pRange">
-	</form>
 
 	<script>
 		$(function(){
-			$(".board-content>tbody>tr").click(function(){
+			$(".main-list").on("click", ".board-content>tbody>tr", function(){
        			// 선택된 tr의 자식요소 중에서 no라는 클래스를 가진 자식의 text값
        			location.href = "detailSt.ad?no=" + $(this).children(".no").text(); 
        		})
 		})
 		
-		<!--================== 해당 페이지로 이동처리하는 함수 ================== -->
-		function movePage(url, page, keyword, range){
-			$("#moveForm").children("#page").val(page);
-			$("#moveForm").children("#keyword").val(keyword);
-			$("#moveForm").children("#pRange").val(range);
-			$("#moveForm").attr("action", url).submit();
+		function goCategory(page){
+			// 분류 및 검색에 따른 리스트 ajax로 뿌려주기
+			$.ajax({
+				url:"option.st",
+				data:{
+					keyword:$("#teAdKeyword").val(),
+					chkDate:$("#teAdDate").val(),
+					page:page,
+					memNo:${loginUser.memNo},
+					isTeacher:0
+				},
+				success(map){
+					let list = map.list;
+					let pi = map.pi;
+					value = "";
+					pValue ="";
+
+					if(list == null){
+						value += '<tr>'
+								+ '<td colspan="6">검색된 결과가 없습니다.</td>'
+						  	  + '</tr>';
+					}else{
+						for(let i=0; i<list.length; i++){
+							value += '<tr>'
+										+ '<td class="no">' + list[i].studentNo + '</td>'
+										+ '<td>' + list[i].studentName + '</td>'
+										+ '<td>' + list[i].studentPhone + '</td>'
+										+ '<td>' + list[i].studentEmail + '</td>'
+										+ '<td>' + list[i].studentEnDate + '</td>'
+								   + '</tr>';
+						}
+						
+						// 페이징바 처리
+       					if(pi.currentPage == 1){
+       						pValue += '<li class="page-item">'
+       									+ '<a class="page-link disabled" aria-label="Previous">'
+       										+ '<span aria-hidden="true">&laquo;</span>'
+       									+ '</a>'
+       								+ '</li>';
+       					}else{
+       						pValue += '<li class="page-item">'
+       									+ '<a class="page-link" onclick="goCategory(' + (pi.currentPage-1) + ')" aria-label="Previous">'
+       										+ '<span aria-hidden="true">&laquo;</span>'
+       									+ '</a>'
+       								+ '</li>';
+       					}
+       					
+       					for(let p=pi.startPage; p<= pi.endPage; p++){
+       						pValue += '<li class="page-item"><a class="page-link" onclick="goCategory(' +  p  + ')">' +  p + '</a></li>';
+       					}
+          	
+       					if(pi.currentPage == pi.maxPage){
+       						pValue += '<li class="page-item">'
+       									+ '<a class="page-link disabled"  aria-label="Next">'
+       										+ '<span aria-hidden="true">&raquo;</span>'
+       									+ '</a>'
+       								+ '</li>';
+       					}else{
+       						pValue += '<li class="page-item">'
+       									+ '<a class="page-link" onclick="goCategory(' + (pi.currentPage+1) + ')" aria-label="Next">'
+       										+ '<span aria-hidden="true">&raquo;</span>'
+       									+ '</a>'
+       								+ '</li>';
+       					}
+       					$(".board-tbody").empty();
+       					$(".board-tbody").html(value);
+       					$("#n-pagingBar ul").empty();
+       					$("#n-pagingBar ul").html(pValue);
+					}
+				},
+				error(){
+					console.log("ajax통신 실패");
+				}
+			})
 		}
 	</script>
 	

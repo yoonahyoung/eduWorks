@@ -9,8 +9,8 @@ import com.finalProject.eduWorks.common.model.vo.PageInfo;
 
 public interface StudentAddressService {
 	// 1. 운영팀 학생 주소록 조회 (페이징)
-	int selectListStCount(); 
-	ArrayList<Student> selectStAddressList(PageInfo pi);
+	int selectListStCount(String keyword, String chkDate); 
+	ArrayList<Student> selectStAddressList(PageInfo pi, String keyword, String chkDate);
 	
 	// 1-1) 운영팀 학생 주소록 상세 조회
 	Student selectStudent(int no); // 학생 기본 정보
@@ -20,8 +20,8 @@ public interface StudentAddressService {
 	int updateStudent(Student s);
 	
 	// 2. 강사 학생 주소록 조회 (페이징)
-	int selectListTeCount(int memNo); 
-	ArrayList<Student> selectTeAddressList(PageInfo pi, int memNo, String range);
+	int selectListTeCount(String memNo, String keyword, String chkDate); 
+	ArrayList<Student> selectTeAddressList(PageInfo pi, String memNo, String keyword, String chkDate);
 	
 	// 3. 상담 이력 조회
 	ArrayList<Cnsln> selectCnsln(int no);

@@ -89,18 +89,18 @@
                     </table>
                     <script>
 			           	 // 상세화면
-			           		let rptBoardNo = "";
-			           		let rptRefCat = "";
-			           		let rptNoStr = "";
-			           		$(document).on("click", "#reportList>tbody>tr", function(){
-			           			rptBoardNo = $(this).children(".no").text();
-			           			rptRefCat = $(this).find(".rptRefCat").val();
-			           			console.log(rptRefCat);
-			           			rptNoStr = $(this).find("div").html();
-			           			console.log(rptNoStr);
-		           				// 선택된 tr의 자식요소 중에서 no라는 클래스를 가진 자식의 text값
-		           				location.href = "reportDetail.bl?no=" + rptBoardNo + "&rptRefCat=" + rptRefCat + "&rptNoStr=" + rptNoStr; 
-			           		})
+		           		let rptBoardNo = "";
+		           		let rptRefCat = "";
+		           		let rptNoStr = "";
+		           		$(document).on("click", "#reportList>tbody>tr", function(){
+		           			rptBoardNo = $(this).children(".no").text();
+		           			rptRefCat = $(this).find(".rptRefCat").val();
+		           			console.log(rptRefCat);
+		           			rptNoStr = $(this).find("div").html();
+		           			console.log(rptNoStr);
+	           				// 선택된 tr의 자식요소 중에서 no라는 클래스를 가진 자식의 text값
+	           				location.href = "reportDetail.bl?no=" + rptBoardNo + "&rptRefCat=" + rptRefCat + "&rptNoStr=" + rptNoStr; 
+		           		})
 			          	
 			          	
 			          	function goStatus(rptNo, rptRefCat, rptBoardNo){ // 블라인드 처리가 필요 없다고 느낄시 처리 완료 버튼

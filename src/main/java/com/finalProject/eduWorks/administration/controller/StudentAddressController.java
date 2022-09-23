@@ -1,6 +1,7 @@
 package com.finalProject.eduWorks.administration.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
 
@@ -36,11 +37,13 @@ public class StudentAddressController {
 	 */
 	@RequestMapping("listSt.ad") // 강사는 listSt.te
 	public ModelAndView selectStAddressList(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv, HttpSession session) {
-		int listCount = sService.selectListStCount();
+		String keyword = "";
+		String chkDate = "";
+		int listCount = sService.selectListStCount(keyword, chkDate);
 		
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
 		// 학생 조회
-		ArrayList<Student> list = sService.selectStAddressList(pi);
+		ArrayList<Student> list = sService.selectStAddressList(pi, keyword, chkDate);
 		mv.addObject("pi", pi).addObject("list", list).setViewName("addressBook/adStudentAddressBook");
 		
 		return mv;
@@ -54,16 +57,17 @@ public class StudentAddressController {
 	 * @return 학생 주소록 리스트, 주소록 리스트 화면
 	 */
 	@RequestMapping("listSt.te")
-	public ModelAndView selectTeAddressList(@RequestParam(value="cpage", defaultValue="1") int currentPage, 
-											@RequestParam(value="range", defaultValue="desc") String range, ModelAndView mv, HttpSession session) {
-		int memNo = Integer.parseInt(((Member)session.getAttribute("loginUser")).getMemNo());		
+	public ModelAndView selectTeAddressList(@RequestParam(value="cpage", defaultValue="1") int currentPage,  ModelAndView mv, HttpSession session) {
+		String keyword = "";
+		String chkDate = "";
+		String memNo = ((Member)session.getAttribute("loginUser")).getMemNo();		
 		// 페이징 처리
-		int listCount = sService.selectListTeCount(memNo);
+		int listCount = sService.selectListTeCount(memNo, keyword, chkDate);
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
 		
 		// 학생 조회
-		ArrayList<Student> list = sService.selectTeAddressList(pi, memNo, range);
-		mv.addObject("pi", pi).addObject("list", list).addObject("range", range).setViewName("teacher/studentAddressBookView");
+		ArrayList<Student> list = sService.selectTeAddressList(pi, memNo, keyword, chkDate);
+		mv.addObject("pi", pi).addObject("list", list).setViewName("teacher/studentAddressBookView");
 		
 		return mv;
 	}
@@ -123,37 +127,42 @@ public class StudentAddressController {
 		return new Gson().toJson(result);
 	}
 	
+	/**
+	 * 학생 주소록 검색/분류 (전체, 강사 통합 처리)
+	 * @param keyword	검색값
+	 * @param chkDate	최신순/오래된순
+	 * @param page		현재 페이지
+	 * @param memNo		강사 번호
+	 * @param isTeacher	0 = 전체 / 1 = 강사
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="option.st", produces="application/json; charset=utf-8")
+	public String teAdOptionList(String keyword, String chkDate, int page, String memNo, int isTeacher) {
+		ArrayList<Student> list = new ArrayList<>();
+		HashMap<String, Object> map = new HashMap<>();
+		PageInfo pi = null;
+		
+		if(isTeacher == 1) { // 강사 학생 주소록 검색 및 옵션 처리
+			// 페이징 처리
+			int listCount = sService.selectListTeCount(memNo, keyword, chkDate);
+			pi = Pagination.getInfo(listCount, page, 10, 10);
+			
+			// 학생 조회
+			list = sService.selectTeAddressList(pi, memNo, keyword, chkDate);
+		}else { // 전체 학생 주소록 검색 및 옵션 처리
+			int listCount = sService.selectListStCount(keyword, chkDate);
+			pi = Pagination.getInfo(listCount, page, 10, 10);
+			
+			// 학생 조회
+			list = sService.selectStAddressList(pi, keyword, chkDate);
+		}
+		map.put("pi", pi);
+		map.put("list", list);
+		
+		return new Gson().toJson(map);
+		
+	}
 	
-	
-//	@RequestMapping("searchStudentAdd.te") 검색 기능 보류
-//	public ModelAndView ajaxSeacrhIndivAdd(@RequestParam(value="page", defaultValue="1") int currentPage, @RequestParam(value="range", defaultValue="oldest") String range, ModelAndView mv, String kind, String keyword, Address a) {
-//
-//		// 연락처 조회시 나오는 연락처 수 조회
-//		int searchCount = sService.searchIndivCount(keyword, a);
-//		
-//		// 페이징
-//		PageInfo pi = Pagination.getInfo(searchCount, currentPage, 10, 10);
-//		
-//		// 연락처 조회시 나오는 연락처 목록 조회
-//		ArrayList<Address> search = sService.searchIndivAdd(pi, keyword, a, range);
-//		
-//		// 개인 주소록 카테고리 목록 조회
-//		ArrayList<AddressOut> category = sService.selectAddCategory(a);
-//		
-//		mv.addObject("pi", pi);
-//		mv.addObject("list", search);
-//		mv.addObject("addNo", a.getAddNo());
-//		mv.addObject("category", category);
-//		mv.addObject("keyword", keyword);
-//		
-//		if(kind == "basic") {
-//			mv.setViewName("addressBook/indivAddressBook");
-//		} else {
-//			mv.setViewName("addressBook/indivAddressBookDetail");
-//		}
-//		
-//		return mv;
-//		
-//	}
 
 }

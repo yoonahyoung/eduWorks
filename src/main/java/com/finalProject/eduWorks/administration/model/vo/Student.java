@@ -1,11 +1,13 @@
 package com.finalProject.eduWorks.administration.model.vo;
 
-import java.sql.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
 
 @NoArgsConstructor
 @Getter
@@ -19,6 +21,6 @@ public class Student {
 	private String studentEmail;
 	private String studentBirth;
 	private String studentGender;
-	private Date studentEnDate;
+	private String studentEnDate;
 	private String classTitle;
 }
