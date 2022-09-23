@@ -26,8 +26,8 @@
 
 	<jsp:include page="common/header.jsp" />
 	<div style="background-color:whitesmoke; height:auto;">
-	<div style="width:100%; height:auto; ">
-		<div style="float: left; width:15%; height:100%; background-color:whitesmoke;" class="divBox">
+	<div style="width:100%; height:1000px;">
+		<div style="float: left; width:17%;  background-color:whitesmoke;" class="divBox">
 			<div id="profileE" style="height:380px; width:100%; text-align:center; padding-top:10px; margin: 10% 5% 5% 4%; border-radius:5px; background-color: white;">
 				<div style="margin-top:7%; height:80px">
 				<c:choose>
@@ -35,7 +35,7 @@
               			<img id="Profile" name="Profile" src="resources/profile_images/defaultProfile.png" width="35%" height="100%" onclick="$('#profileImgFile').click();">
               		</c:when>
               		<c:otherwise>
-              			<img id="Profile" name="Profile" src="${ m.memProfile }" width="30%" height="100% " onclick="$('#profileImgFile').click();">
+              			<img id="Profile" name="Profile" src="${ m.memProfile }" width="25%" height="100% " onclick="$('#profileImgFile').click();">
               		</c:otherwise>
               	</c:choose>
               	</div> <br>
@@ -140,12 +140,245 @@
 			
 			
 			
-			<div></div>
-			<div></div>
-			<div></div>
+			<div style="background-color:white; height:auto; padding-bottom: 30px;
+}">
+            	<div >
+	            	<table class="bestTable" style="width:250px;">
+		                <thead>
+		                	<tr><td></td></tr><tr><td></td></tr>
+		                    <tr>
+		                        <th colspan="2">추천게시판 <i class="fa fa-thumbs-up fa-regular"></i></th>
+		                        <tr><td></td></tr><tr><td></td></tr>
+		                    </tr>
+		                </thead>
+		                <tbody id="thumbsHotArea">
+		                    
+		                </tbody>
+		              </table>
+		              
+		              <br><hr class="hr_line">
+		              
+		              <table class="bestTable">
+		                <thead>
+		                	<tr><td></td></tr>
+		                    <tr>
+		                        <th colspan="2">핫게시판 <i class="fa fa-comments fa-regular"></i></th>
+		                        <tr><td></td></tr><tr><td></td></tr>
+		                    </tr>
+		                </thead>
+		                <tbody id="replyHotArea">
+		                    
+		                </tbody>
+	               </table>
+	            </div>
+              </div>
 		</div>
+		
+		<script>
+		$(function(){ 
+       		// 상세화면
+       		$(".row").on("click", ".boardTable>tbody>tr", function(){
+       			// 선택된 tr의 자식요소 중에서 no라는 클래스를 가진 자식의 text값
+       			location.href = "detail.bl?no=" + $(this).children(".no").text(); 
+       		})
+       		
+       		selectBest("");
+       		selectReList("");
+       	})
+           	
+       	// 추천 수 조회 및 추천 게시판 리스트 뿌려주기
+   		function selectBest(reBoardNoStr){
+       		$.ajax({ // 추천 수 조회
+       			url:"likeCount.bl",
+       			data:{reBoardNoStr:reBoardNoStr},
+       			success(map){
+       				// 메인 게시판에 갯수 뿌려주기
+       				for(let i=0; i<map.like.length; i++){
+       					
+	           			if($("#no"+map.like[i].boardNo).text() == map.like[i].boardNo){
+	           				$(".likeCountSpan"+map.like[i].boardNo).html("[" + map.like[i].likeCount + "]");
+	           			}
+       				}
+       				
+       				// 추천 게시판에 리스트 뿌려주기
+       				let value="";
+       				let count = 0;
+							for(let i=0; i<map.list.length; i++){ // 상위 다섯개 게시판만 불러오도록
+								if(count==5){
+									break;
+								}else
+								if(map.like[i] == undefined || map.like[i] == null || map.like[i] == ""){
+									value += '<tr>'
+   				                      + '<td align="center"><a>-</a></td>'
+   				                      + '<td align="right"></td>'
+   				                   + '</tr>';
+  				                count++;
+								}else {
+								for(let j=0; j<map.list.length; j++){
+									if(count==5){
+										break;
+									}else
+									if(map.like[i].boardNo == map.list[j].boardNo){
+   									value += '<tr>'
+           				                      + '<td><a href="detail.bl?no=' + map.list[j].boardNo + '">' + map.list[j].boardTitle + '</a></td>'
+           				                      + '<td align="right">' + (map.list[j].boardEnDate).substr(5) + '</td>'
+           				                   + '</tr>';
+   									count++;
+   								}
+								}
+								}
+							}
+							
+							$("#thumbsHotArea").html(value);
+   					selectReList(reBoardNoStr);
+   					selectBest(reBoardNoStr);
+       			},
+       			error(){
+       				console.log("ajax통신 실패");
+       			}
+       		})
+   		}
+           	
+       	// 댓글 수 조회 및 핫 게시판 리스트 뿌려주기
+   		function selectReList(reBoardNoStr){
+       		$.ajax({ // 댓글 수 조회
+       			url:"replyCount.bl",
+       			data:{reBoardNoStr:reBoardNoStr},
+       			success(map){
+       				
+       				// 핫 게시판에 리스트 뿌려주기
+       				let value="";
+       				let count = 0;
+       				for(let i=0; i<map.list.length; i++){ // 상위 다섯개 게시판만 불러오도록
+       					if(count == 5){
+       						break;
+       					}else
+								if(map.reply[i] == undefined || map.reply[i] == null || map.reply[i] == ""){
+									value += '<tr>'
+   				                      + '<td colspan="2" align="center"><a>-</a></td>'
+   				                   + '</tr>';
+  				                count++;
+								}else {
+								for(let j=0; j<map.list.length; j++){
+									if(count == 5){
+	           						break;
+	           					}else
+									if(map.reply[i].reBoardNo == map.list[j].boardNo){
+   									value += '<tr>'
+           				                      + '<td><a href="detail.bl?no=' + map.list[j].boardNo + '">' + map.list[j].boardTitle + '</a></td>'
+           				                      + '<td align="right">' + (map.list[j].boardEnDate).substr(5) + '</td>'
+           				                   + '</tr>';
+   									count++;
+   								}
+								}
+								}
+							}
+							
+							$("#replyHotArea").html(value);
+       			},
+       			error(){
+       				console.log("ajax통신 실패");
+       			}
+       		})
+   		}
+           	
+    // 검색시 뿌려주는 리스트
+   	function searchBar(page){
+   		$.ajax({
+   			url:"search.bl",
+   			data:{
+   				keyword:$("#blindKeyword").val(),
+   				page:page
+   			},
+   			success(map){
+   				// 리스트
+   				let list = map.list;
+   				let sValue = "";
+   				// 페이징
+   				let pi = map.pi;
+   				let pValue = "";
+   				// 댓글수, 조회수 불러오기용
+   				let reBoardNoStr = "";
+   				
+   				if(list == null){
+   					sValue += '<tr>'
+           						+ '<td>검색 결과가 없습니다</td>'
+   							+ '</tr>';
+   				}else{
+   					for(let i=0; i<list.length; i++){
+   						reBoardNoStr += list[i].boardNo;
+   						sValue += '<tr>'
+	                            	+ '<td class="no" width="5%" align="center" id="no' + list[i].boardNo + '">' + list[i].boardNo + '</td>'
+	                                + '<td id="fContent0">'
+	                                    + '<p>'
+	                                        + '<div class="side_side">'
+	                                            + '<span id="boardTitle">' + list[i].boardTitle + '</span>'
+	                                            + '<div id="likeReply">'
+	                                                + '<div id="reply">'
+	                                                    + '&nbsp;&nbsp;<i class="fas fa-comments"></i><br>'
+	                                                    + '<span class="replyCountSpan' + list[i].boardNo + '">[0]</span>'
+	                                                + '</div>'
+	                                                + '<div id="like">'
+	                                                    + '&nbsp;<i class="fas fa-thumbs-up"></i><br>'
+	                                                    + '<span class="likeCountSpan' + list[i].boardNo + '">[0]</span>'
+	                                                + '</div>'
+	                                            + '</div>'
+	                                        + '</div>' 
+	                                        + '<span id="w-day">작성일 </span><span>' + list[i].boardEnDate + '</span>'
+	                                    + '</p>'
+	                                + '</td>'
+	                            + '</tr>';
+   					}
+   					
+            	
+   					
+   				}
+   				
+   			},error(){
+   				console.log("ajax통신 실패");
+   			}
+   		})
+   	}
+        
+    // 검색 후 뿌려주는 게시판 추천수, 댓글수
+    function selectBoardCount(reBoardNoStr){
+    	$.ajax({ // 댓글 수 조회
+   			url:"replyCount.bl",
+   			data:{reBoardNoStr:reBoardNoStr},
+   			success(map){
+   				// 메인 게시판 댓글 수 뿌려주기
+   				for(let i=0; i<map.reply.length; i++){
+   					var id="";
+   					id = "no" + map.reply[i].reBoardNo;
+           			if($("#"+id).text() == map.reply[i].reBoardNo){
+           				$(".replyCountSpan"+id).html("[" + map.reply[i].replyCount + "]");
+           			}
+           		}
+   			},error(){
+   				console.log("ajax 통신 실패");
+   			}
+   			
+    	})
+        	
+        	 
+		$.ajax({ // 추천 수 조회
+   			url:"likeCount.bl",
+   			data:{reBoardNoStr:reBoardNoStr},
+   			success(map){
+   				// 메인 게시판에 갯수 뿌려주기
+   				for(let i=0; i<map.like.length; i++){
+   					
+           			if($("#no"+map.like[i].boardNo).text() == map.like[i].boardNo){
+           				$(".likeCountSpan"+map.like[i].boardNo).html("[" + map.like[i].likeCount + "]");
+           			}
+   				}
+   			}
+    	})
+    }
+		</script>
+		
 	
-		<div style="float: left; width:52%; height:100%;"  class="divBox">
+		<div style="float: left; width:50%; "  class="divBox">
 			<div style="text-align:center; margin:1%; border-radius:5px; background-color: white;">
 				<div style="margin:0px 10px 0px 10px;">
 					<div class="d-sm-flex align-items-center mb-4" id="boardHeader">
@@ -308,6 +541,7 @@
 	            <form id="postMailDetail" action="mailDetail.ma" method="post">
 					<input type="hidden" name="mailFolder" value="2">
 					<input type="hidden" name="mailNo" id="detailNo">
+					<input type="hidden" name="flag" value="B">
 				</form>
 				</div>
 			</div>
@@ -330,13 +564,24 @@
 					
 					//$(상위요소).on("이벤트명","이벤트걸고자하는요소", function(){})
 					// 동적으로 만들어진 요소에 이벤트 부여 방법!!!!
-					$(document).on("click","#mailList>tbody>tr", function(){
-						location.href = "mailDetail.ma?no=" + $(this).children().eq(0).text();
-					})
+					//$(document).on("click","#mailList>tbody>tr", function(){
+					//	location.href = "mailDetail.ma?no=" + $(this).children().eq(0).text();
+					//})
 					
 					
 						
 					})
+					
+				$(function(){
+					$(".mail-title").click(function(){
+						
+						let mailNo = $(this).children('input[type=hidden]').val();
+						console.log(mailNo);
+						$("#detailNo").val(mailNo);
+						$("#postMailDetail").submit();
+	
+					})
+				})
 				
 				function mainMailList(page){
 					$.ajax({
@@ -355,7 +600,7 @@
 							if(map.list.length != 0){ // 조회된 데이터가 있을경우
 								for(let i in map.list){
 									value += "<tr>"
-									        +	"<td>" + map.list[i].mailNo + "</td>"
+									        +	"<td style='display:none'>" + map.list[i].mailNo + "</td>"
 									        +   "<td>";
 									if(map.list[i].mailStatus.mailRead == 'N'){
 										value += "<i style='margin-left: 10px;' class='icon fas fa-envelope'></i>"
@@ -455,143 +700,12 @@
 				
 			</script>
 			
-			<div class="main-list" style="text-align:center; margin:1%; border-radius:5px; background-color: white;">
-				<div style="font-size:20px; margin:1%; font-size: 20px; margin: 1%; font-weight: 600; text-align: left; margin: 15px 10px 5px 10px; padding: 5px;">
-						전사 주소록 <span id="mail-count" class="mail-count"></span>
-				</div>
-					<div >
-						<table class="board-content table" align="center" id="mainAddressList">
-							<thead>
-								<tr class="table_thead_border">
-									<th width="10%">이름</th>
-									<th width="10%">부서명</th>
-									<th width="10%">직급명</th>
-									<th width="15%">내선번호</th>
-									<th width="18%">이메일</th>
-									<th width="15%">전화번호</th>
-								</tr>
-							</thead>
-							<tbody>
-							
-							</tbody>
-						</table>
-				
-			<hr style="margin:0;">
-	        	
-	        	 <div id="n-pagingBar" style="padding:5px; margin:0px;">
-	                <nav aria-label="Page navigation example">
-	                    <ul id="ajaxAddressPaging" class="pagination justify-content-center" style="margin:5px;"> 
-	                    	
-	                    </ul>
-	                </nav>
-	            </div>
-			</div>
-		</div>
 			
-			<script>
-				$(function(){
-					
-					mainAddressList(1);
-					
-					setInterval(mainAddressList,3600000); // 1000 => 1초 마다 새로고침
-					
-					// => 이 방법으로는 동적으로 만들어진 요소에 이벤트 부여 불가
-					/*
-					$("#boardList>tbody>tr").click(function(){
-						location.href = "detail.bo?no=" + $(this).children().eq(0).text();
-					})
-					*/
-					
-					//$(상위요소).on("이벤트명","이벤트걸고자하는요소", function(){})
-					// 동적으로 만들어진 요소에 이벤트 부여 방법!!!!
-					$(document).on("click","#mainDeptList>tbody>tr", function(){
-						location.href = "detail.de?no=" + $(this).children().eq(0).text();
-					})
-					
-				})
-				
-				function mainAddressList(page){
-					$.ajax({
-						url:"mainAddressList.ma",
-						data:{cpage:page}, 
-						success:function(map){
-							
-							console.log(map); // { pi:{currentPage:x, listCount:x, ..}, list:[{}, {}] };
-							
-							//map.pi => {currentPage:x, listCount:x, ..}
-							//map.list => [{}, {}]
-							
-							
-							let value = "";
-							
-							if(map.list.length != 0){
-								for(let i in map.list){
-									value += "<tr>"
-									        +	"<td>" + map.list[i].memName + "</td>"
-									        +	"<td>" + map.list[i].deptCode + "</td>"
-									        +	"<td>" + map.list[i].jobCode + "</td>"
-									        +	"<td>" + map.list[i].memBusinessnum + "</td>"
-									        +   "<td>" + map.list[i].memEmail + "</td>"
-									        +	"<td>" + map.list[i].memPhone + "</td>"
-									       + "</tr>";
-								}
-							}else{
-								value += "<tr>"
-                			 	    + "<td id='nullMail' colspan='6'>등록된 주소록이 없습니다.</td>" + "</tr>"
-							}
-							$("#mainAddressList tbody").html(value);
-							
-							let paging = "";
-							
-                    		
-                    		if(map.pi.currentPage == 1){
-                    			paging = "<li class='page-item'>"
-                    				   	+ "<a class='page-link disabled' style='color:slategray' aria-label='Previous'>"
-                    				   	 + "<span aria-hidden='true'> &laquo; </span>"
-                    				   	+ "</a>"
-                    				   + "</li>"
-                    				   	 
-                    		}else{
-                    			paging = "<li class='page-item'>"
-                				   	+ "<a class='page-link disabled' style='color:slategray' onclick='mainAddressList(" + (map.pi.currentPage-1) + ");' aria-label='Previous'>"
-                				   	 + "<span aria-hidden='true'> &laquo; </span>"
-                				   	+ "</a>"
-                				   + "</li>"
-                    		}
-							
-                    		for(let p=map.pi.startPage; p<=map.pi.endPage; p++){
-                    			paging += "<li class='page-item'><a class='page-link' style='color:slategray' onclick='mainAddressList(" + p + ");'>" + p + "</a></li>"
-                    		}
-		            		
-                    		if(map.pi.currentPage == map.pi.maxPage){
-                    			paging += "<li class='page-item'>"
-                    				   	+ "<a class='page-link disabled' style='color:slategray' aria-label='Next'>"
-                    				   	 + "<span aria-hidden='true'> &raquo; </span>"
-                    				   	+ "</a>"
-                    				   + "</li>"
-                    				   	 
-                    		}else{
-                    			paging += "<li class='page-item'>"
-                				   	+ "<a class='page-link disabled' style='color:slategray' onclick='mainAddressList(" + (map.pi.currentPage+1) + ");' aria-label='Next'>"
-                				   	 + "<span aria-hidden='true'> &raquo; </span>"
-                				   	+ "</a>"
-                				   + "</li>"
-                    		}
-                    		
-                    		$("#ajaxAddressPaging").html(paging);
-							
-						},error:function(){
-							console.log("조회수 top5 게시글 조회용 ajax 통신 실패");
-						}
-					})
-				}
-				
-			</script>
 			<div></div>
 			<div></div>
 		</div>
-		<div style="float: left; width:33%; height:100%; " class="divBox">
-			<div style="text-align:center; margin:3%; border-radius:5px; height:450px; background-color: white;">
+		<div style="float: left; width:33%;  " class="divBox">
+			<div style="text-align:center; margin:3%; border-radius:5px; height:500px; background-color: white;">
 					<br>
 						<div id='calendar' class="su_calendar_size" ></div>
 				</div>
@@ -1013,7 +1127,7 @@
 		                    });
 		                </script>
 		
-			<div style="text-align:center; margin:1%; border-radius:5px; background-color: white; height: 100%;">
+			<div style="text-align:center; margin:1%; border-radius:5px; background-color: white;">
 				<div style="margin:0px 10px 0px 10px;">
 					<div class="d-sm-flex align-items-center mb-4" id="boardHeader">
 		                <div id="deptBoard" style="font-size:23px; padding-top: 5px;">부서 게시판 | ${deptName}</div>
@@ -1147,13 +1261,144 @@
 				}
 				
 			</script>
-			
-			
-			<div></div>
-			<div></div>
-		</div>
 		
-	</div>
+			</div>
+		</div>
+		<div class="main-list" style="text-align:center; margin:1%; border-radius:5px; background-color: white;">
+				<div style="font-size:20px; margin:1%; font-size: 20px; margin: 1%; font-weight: 600; text-align: left; margin: 15px 10px 5px 10px; padding: 5px; ">
+					<div>
+						<h2 style="margin:15px; font-weight: 600;">전사 주소록</h2> <span id="mail-count" class="mail-count"></span>
+					</div>
+					
+						<table class="board-content table" align="center" id="mainAddressList">
+							<thead>
+								<tr class="table_thead_border">
+									<th width="10%">이름</th>
+									<th width="10%">부서명</th>
+									<th width="10%">직급명</th>
+									<th width="15%">내선번호</th>
+									<th width="18%">이메일</th>
+									<th width="15%">전화번호</th>
+								</tr>
+							</thead>
+							<tbody>
+							
+							</tbody>
+						</table>
+				
+			<hr style="margin:0;">
+	        	
+	        	 <div id="n-pagingBar" style="padding:5px; margin:0px;">
+	                <nav aria-label="Page navigation example">
+	                    <ul id="ajaxAddressPaging" class="pagination justify-content-center" style="margin:5px;"> 
+	                    	
+	                    </ul>
+	                </nav>
+	            </div>
+			
+		</div>
+		</div>
+			
+			<script>
+				$(function(){
+					
+					mainAddressList(1);
+					
+					setInterval(mainAddressList,3600000); // 1000 => 1초 마다 새로고침
+					
+					// => 이 방법으로는 동적으로 만들어진 요소에 이벤트 부여 불가
+					/*
+					$("#boardList>tbody>tr").click(function(){
+						location.href = "detail.bo?no=" + $(this).children().eq(0).text();
+					})
+					*/
+					
+					//$(상위요소).on("이벤트명","이벤트걸고자하는요소", function(){})
+					// 동적으로 만들어진 요소에 이벤트 부여 방법!!!!
+					$(document).on("click","#mainDeptList>tbody>tr", function(){
+						location.href = "detail.de?no=" + $(this).children().eq(0).text();
+					})
+					
+				})
+				
+				function mainAddressList(page){
+					$.ajax({
+						url:"mainAddressList.ma",
+						data:{cpage:page}, 
+						success:function(map){
+							
+							console.log(map); // { pi:{currentPage:x, listCount:x, ..}, list:[{}, {}] };
+							
+							//map.pi => {currentPage:x, listCount:x, ..}
+							//map.list => [{}, {}]
+							
+							
+							let value = "";
+							
+							if(map.list.length != 0){
+								for(let i in map.list){
+									value += "<tr>"
+									        +	"<td>" + map.list[i].memName + "</td>"
+									        +	"<td>" + map.list[i].deptCode + "</td>"
+									        +	"<td>" + map.list[i].jobCode + "</td>"
+									        +	"<td>" + map.list[i].memBusinessnum + "</td>"
+									        +   "<td>" + map.list[i].memEmail + "</td>"
+									        +	"<td>" + map.list[i].memPhone + "</td>"
+									       + "</tr>";
+								}
+							}else{
+								value += "<tr>"
+                			 	    + "<td id='nullMail' colspan='6'>등록된 주소록이 없습니다.</td>" + "</tr>"
+							}
+							$("#mainAddressList tbody").html(value);
+							
+							let paging = "";
+							
+                    		
+                    		if(map.pi.currentPage == 1){
+                    			paging = "<li class='page-item'>"
+                    				   	+ "<a class='page-link disabled' style='color:slategray' aria-label='Previous'>"
+                    				   	 + "<span aria-hidden='true'> &laquo; </span>"
+                    				   	+ "</a>"
+                    				   + "</li>"
+                    				   	 
+                    		}else{
+                    			paging = "<li class='page-item'>"
+                				   	+ "<a class='page-link disabled' style='color:slategray' onclick='mainAddressList(" + (map.pi.currentPage-1) + ");' aria-label='Previous'>"
+                				   	 + "<span aria-hidden='true'> &laquo; </span>"
+                				   	+ "</a>"
+                				   + "</li>"
+                    		}
+							
+                    		for(let p=map.pi.startPage; p<=map.pi.endPage; p++){
+                    			paging += "<li class='page-item'><a class='page-link' style='color:slategray' onclick='mainAddressList(" + p + ");'>" + p + "</a></li>"
+                    		}
+		            		
+                    		if(map.pi.currentPage == map.pi.maxPage){
+                    			paging += "<li class='page-item'>"
+                    				   	+ "<a class='page-link disabled' style='color:slategray' aria-label='Next'>"
+                    				   	 + "<span aria-hidden='true'> &raquo; </span>"
+                    				   	+ "</a>"
+                    				   + "</li>"
+                    				   	 
+                    		}else{
+                    			paging += "<li class='page-item'>"
+                				   	+ "<a class='page-link disabled' style='color:slategray' onclick='mainAddressList(" + (map.pi.currentPage+1) + ");' aria-label='Next'>"
+                				   	 + "<span aria-hidden='true'> &raquo; </span>"
+                				   	+ "</a>"
+                				   + "</li>"
+                    		}
+                    		
+                    		$("#ajaxAddressPaging").html(paging);
+							
+						},error:function(){
+							console.log("조회수 top5 게시글 조회용 ajax 통신 실패");
+						}
+					})
+				}
+				
+			</script>
+	
 </div>
 	<jsp:include page="common/footer.jsp" />
 
