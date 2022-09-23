@@ -305,6 +305,10 @@
 	                    </ul>
 	                </nav>
 	            </div>
+	            <form id="postMailDetail" action="mailDetail.ma" method="post">
+					<input type="hidden" name="mailFolder" value="2">
+					<input type="hidden" name="mailNo" id="detailNo">
+				</form>
 				</div>
 			</div>
 				
@@ -330,7 +334,9 @@
 						location.href = "mailDetail.ma?no=" + $(this).children().eq(0).text();
 					})
 					
-				})
+					
+						
+					})
 				
 				function mainMailList(page){
 					$.ajax({
@@ -349,7 +355,8 @@
 							if(map.list.length != 0){ // 조회된 데이터가 있을경우
 								for(let i in map.list){
 									value += "<tr>"
-									        +	"<td>";
+									        +	"<td>" + map.list[i].mailNo + "</td>"
+									        +   "<td>";
 									if(map.list[i].mailStatus.mailRead == 'N'){
 										value += "<i style='margin-left: 10px;' class='icon fas fa-envelope'></i>"
 									}else{
@@ -364,7 +371,8 @@
 										value += "<td class='mail-person' width='15%''><div class='person'>" + map.list[i].sendName + "</div></td>"
 									}
 									
-									value += "<td class='mail-title'>";
+									value += "<td class='mail-title'>"
+									         +"<input type='hidden' name='mailNo' value='" + map.list[i].mailNo + "'>";
 									
 									if(map.list[i].mailType == 1){
 										value += "<span style='color:red;''>&nbsp;[중요!]</span>";
@@ -381,6 +389,17 @@
 								
 								
 							}
+							
+							$(function(){
+								$(".mail-title").click(function(){
+									
+									let mailNo = $(this).children('input[type=hidden]').val();
+									console.log(mailNo);
+									$("#detailNo").val(mailNo);
+									$("#postMailDetail").submit();
+				
+								})
+							})
 								
 
 							$("#mainMailList").html(value);
@@ -512,6 +531,7 @@
 									        +	"<td>" + map.list[i].deptCode + "</td>"
 									        +	"<td>" + map.list[i].jobCode + "</td>"
 									        +	"<td>" + map.list[i].memBusinessnum + "</td>"
+									        +   "<td>" + map.list[i].memEmail + "</td>"
 									        +	"<td>" + map.list[i].memPhone + "</td>"
 									       + "</tr>";
 								}

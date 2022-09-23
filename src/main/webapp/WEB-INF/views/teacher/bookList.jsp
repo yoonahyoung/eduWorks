@@ -118,7 +118,7 @@
 						    </c:when>
 						    <c:when test="${ not empty condition }">
 						    	<li class="page-item">
-						            <a class="page-link" style="color:slategray" href="bookList.bk?cpage=${ pi.currentPage-1 }&condition=${condition}&keyword=${keyword}" aria-label="Previous">
+						            <a class="page-link" style="color:slategray" href="bookSearchForm.bk?cpage=${ pi.currentPage-1 }&condition=${condition}&keyword=${keyword}" aria-label="Previous">
 						            <span aria-hidden="true">&laquo;</span>
 						            </a>
 						        </li>
@@ -157,7 +157,7 @@
 						    </c:when>
 						     <c:when test="${ not empty condition }">
 						    	<li class="page-item">
-						            <a class="page-link" style="color:slategray" href="bookList.bk?cpage=${ pi.currentPage+1 }&condition=${condition}&keyword=${keyword}" aria-label="Next">
+						            <a class="page-link" style="color:slategray" href="bookSearchForm.bk?cpage=${ pi.currentPage+1 }&condition=${condition}&keyword=${keyword}" aria-label="Next">
 						            <span aria-hidden="true">&raquo;</span>
 						            </a>
 						        </li>

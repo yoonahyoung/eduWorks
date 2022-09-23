@@ -11,6 +11,7 @@
 	.wrapSearch h1, .wrapSearch h3{
 		color:black;
 	}
+	
 </style>
 </head>
 <body>
@@ -30,14 +31,14 @@
 				<c:forEach var="m" items="${ mail }">
 				<div class="searchForm">
 					<div id="mailView">
-							<span id="target" style="color:black;">${ m.sendName }</span>
-							<a href="#">${ m.mailContent }</a>
-							<span>${ m.sendDate }</span>
+						<span id="target" style="color:black;">${ m.sendName }</span>
+						<a href="">${ m.mailContent }</a>
+						<span>${ m.sendDate }</span>
 					</div>
 				</div>
 				<br><br>
 				</c:forEach>
-				<hr>
+				<br><hr>
 			</div>
 			
 			
@@ -53,7 +54,7 @@
 				</div>
 				<br><br>
 				</c:forEach>
-					<hr>
+				<br><hr>
 			</div>
 
 			<div class="deptBoardResult">
@@ -68,24 +69,24 @@
 					</div>
 					<br><br>
 				</c:forEach>
-				<hr>
+				<br><hr>
 			</div>
 				
 			<div class="calendarResult">
 					<h3>캘린더</h3><br>
 				<c:forEach var="s" items="${ schedule }">
-					<div class="searchForm">
-						<div id="calendarView">
-							<span style="color:black;">${ s.scheStartDate } / ${ s.scheEndDate }</span>
-							<a href="">${ s.scheTitle }</a>
-							<br>
-							<span>참석자 </span>&nbsp;
-							<span> | </span>&nbsp;
-							<span style="color:black;"> ${ s.scheAtndList } </span>
-						</div>
+				<div class="searchForm">
+					<div id="calendarView">
+						<span style="color:black;">${ s.scheStartDate } / ${ s.scheEndDate }</span>
+						<a href="">${ s.scheTitle }</a>
+						<br>
+						<span>참석자 </span>&nbsp;
+						<span> | </span>&nbsp;
+						<span style="color:black;"> ${ s.scheAtndList } </span>
 					</div>
+				</div>
 				</c:forEach>
-				<hr>
+				<br><hr>
 			</div>
 
 		</div>
@@ -135,6 +136,8 @@
 				$(".calendarResult").css("display", "none");
 			}
 		})
+		
+		
 	</script>
 </body>
 </html>
