@@ -415,6 +415,11 @@ public class MailServiceImpl implements MailService {
 	 * @return : 태그 삭제 성공 여부가 담긴 int형 변수(성공 : 1 | 실패 : 0)
 	 */
 	@Override
+	public int updateTagNull(Tag t) {
+		return mDao.updateTagNull(sqlSession, t);
+	}
+
+	@Override
 	public int deleteTag(Tag t) {
 		return mDao.deleteTag(sqlSession, t);
 	}
@@ -468,7 +473,7 @@ public class MailServiceImpl implements MailService {
 	public Tag selectTagInfo(Tag t) {
 		return mDao.selectTagInfo(sqlSession, t);
 	}
-	
+
 	
 
 

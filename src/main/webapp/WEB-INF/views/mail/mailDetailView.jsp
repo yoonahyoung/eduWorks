@@ -23,29 +23,20 @@
 	<!-- 메인 콘텐츠 영역 -->
 	<div class="main-content">
 		<div class="second-title">
-			<c:choose>
-				<c:when test="${m.mailStatus.sendMail == loginUser.memEmail && m.mailStatus.receiveMail != loginUser.memEmail}">
-					<div>
-						보낸 메일함 
-						<span class="mail-count">전체메일 ${count } / 안읽은 메일 ${unread }</span>
-					</div>
-				</c:when>
-				<c:when test="${m.mailStatus.sendMail != loginUser.memEmail && m.mailStatus.receiveMail == loginUser.memEmail}">
-					<div>
-						받은 메일함 
-						<span class="mail-count">전체메일 ${count } / 안읽은 메일 ${unread }</span>
-					</div>
-				</c:when>
-				<c:otherwise>
-					<div>
-						내게쓴 메일함 
-						<span class="mail-count">전체메일 ${countMe } / 안읽은 메일 ${unreadMe }</span>
-					</div>
-				</c:otherwise>
-			</c:choose>
+
+ 		<div>
+			<c:if test="${m.tagNo != '' }">
+				<i class='fas fa-bookmark' style="color:${m.tag.tagColor};" ></i>
+			</c:if>
+ 			${text }
+ 			<span class="mail-count">전체메일 ${count } / 안읽은 메일 ${unread }</span>
+ 		</div>
 
 			<ul class="navbar-nav ml-auto moDelte">
 				<li class="nav-item dropdown no-arrow mx-1">
+					<button type="button" class="reply-btn">
+						<i class="fas fa-location-arrow"></i>&nbsp;&nbsp;답장
+					</button>
 					<button type="button" class="sub-btn">
 						<i class="fas fa-arrow-right"></i>&nbsp;&nbsp;전달
 					</button>
@@ -107,7 +98,15 @@
 										</span>
 									</c:otherwise>
 								</c:choose>
-								<span>${m.mailTitle }</span>
+								<span>
+									<c:if test="${m.mailType == 1 }">
+										<span style="color:red;">[중요!]</span>
+									</c:if>
+									<c:if test="${m.tagNo != '' }">
+										<i class='fas fa-bookmark' style="color:${m.tag.tagColor};" ></i>
+									</c:if>
+									${m.mailTitle }
+								</span>
 							</h3>
 						</th>
 					</tr>

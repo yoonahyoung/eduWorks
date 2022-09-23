@@ -214,6 +214,8 @@
 						<c:if test="${m.mailType == 1}"><span style="color:red;">[중요!]</span></c:if>
 						${m.mailTitle }
 						<input type="hidden" name="mailNo" value="${m.mailNo }">
+						<input type="hidden" name="mailFolder" value="${m.mailStatus.mailFolder }" id="selectTagFolder">
+						<input type="hidden" name="tagNo" value="${m.tagNo }" id="selectTagNo">
 					</td>
 					<td class="mail-sendtime">${m.sendDate }</td>
 				</tr>
@@ -226,8 +228,10 @@
 		</div>
 		
 		<form id="postMailDetail" action="mailDetail.ma" method="post">
-			<input type="hidden" name="mailFolder" value="1">
+			<input type="hidden" name="mailFolder" id="detailTagFolder">
+			<input type="hidden" name="tagNo" value="" id="detailTagNo">
 			<input type="hidden" name="mailNo" id="detailNo">
+			<input type="hidden" name="flag" value="F">
 		</form>
 		
 		<script>
@@ -274,8 +278,12 @@
 				$(".mail-title").click(function(){
 					
 					let mailNo = $(this).children('input[type=hidden]').val();
+					let mailFolder = $(this).children("#selectTagFolder").val();
+					let tagNo = $(this).children("#selectTagNo").val();
 					console.log(mailNo);
 					$("#detailNo").val(mailNo);
+					$("#detailTagFolder").val(mailFolder);
+					$("#detailTagNo").val(tagNo);
 					$("#postMailDetail").submit();
 
 				})

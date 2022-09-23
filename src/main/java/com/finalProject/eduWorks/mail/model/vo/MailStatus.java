@@ -37,5 +37,8 @@ public class MailStatus {
 	private String mailSpam;
 	private String mailImportant;
 	private String mailChangeDate;
+	
+	// ========== 추가 ==========
+	private String flag;
 
 }

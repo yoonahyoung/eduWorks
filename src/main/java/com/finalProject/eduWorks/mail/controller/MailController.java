@@ -690,7 +690,7 @@ public class MailController {
 	/**
 	 * 15. 메일 상세 조회
 	 * @param ms : 메일 번호, 메일 폴더(보낸/받은/참조), 로그인한 회원 사번 및 이메일
-	 * @return : 메일 상세 조회 페이지
+	 * @return : 메일 상세 조회 페이지	
 	 */
 	@RequestMapping("mailDetail.ma")
 	public ModelAndView mailDetail(MailStatus ms, ModelAndView mv, HttpSession session) {
@@ -698,53 +698,88 @@ public class MailController {
 		String memNo = ( (Member)session.getAttribute("loginUser") ).getMemNo();
 		String memEmail = ( (Member)session.getAttribute("loginUser") ).getMemEmail();
 		
-		// 메일 상세조회
-		Mail detail = mService.selectMailDetail(ms);
+		String flag = ms.getFlag();
+		String text ="";
+		String color ="";
+		
+		Mail detail = new Mail(); // 메일 상세조회
 		
 		// 메일 읽음 표시로 변경
 		ms.setSendMail(memEmail);
 		ms.setReceiveMail(memEmail);
 		
-		int update = mService.updateReadMail(ms);
+		int update = 0;
 		
 		// ======== 보낸 / 받은메일 수량 조회 ========
 		Mail m = new Mail();
 		
 		m.setMemNo(memNo);
 		m.setReceiverMem(memEmail);
-
-		// ===== 남에게 쓴 메일 =====
+		
 		int count = 0;
 		int unread = 0;
-		// ===== 니에게 쓴 메일 =====
-		int countMe = 0;
-		int unreadMe = 0;
 		
-		// ========== 보낸 메일 ============
-		if(ms.getMailFolder() == 1) {
-
-			count = mService.sendListCount(m);
-			countMe = mService.sendToMeListCount(m);
-			unreadMe = mService.sendMeUnReadCount(m);
-			
-		// ========== 받은 메일 ============
-		} else {
-
-			count = mService.receiveListCount(m);
-			unread = mService.receiveUnReadCount(m);
-			
-		}
+		// ========= 태그 처리된 메일 이름/색상 조회 =========
+		Tag t = new Tag();
+		t.setMemNo(memNo);
+		t.setTagNo(ms.getTagNo());
 		
-		// 첨부파일 목록 조회
+		// 태그 이름 조회
+		Tag tInfo = mService.selectTagInfo(t);
+		System.out.println(tInfo);
+		
+		// ========= 첨부파일 목록 조회 ===========
 		ArrayList<Attachment> atList = mService.selectAttachment(ms);
 		
+		switch(flag) {
+		case "A" : text = "보낸 메일함";
+				   detail = mService.selectMailDetail(ms);
+				   update = mService.updateReadMail(ms);
+				   count = mService.sendListCount(m); break;
+		case "B" : text = "받은 메일함";
+				   detail = mService.selectMailDetail(ms);
+				   update = mService.updateReadMail(ms);
+				   count = mService.receiveListCount(m);
+				   unread = mService.receiveUnReadCount(m); break;
+		case "C" : text = "내게쓴 메일함";
+				   detail = mService.selectMailDetail(ms);
+				   update = mService.updateReadMail(ms);
+				   count = mService.sendToMeListCount(m);
+				   unread = mService.sendMeUnReadCount(m); break;
+		case "D" : text = "읽은 메일함";
+				   detail = mService.selectMailDetail(ms);
+				   update = mService.updateReadMail(ms);
+				   count = mService.readListCount(m); break;
+		case "E" : text = "안읽은 메일함";
+				   detail = mService.selectMailDetail(ms);
+				   update = mService.updateReadMail(ms);
+				   count = mService.unReadListCount(m);
+				   unread = mService.unReadListCount(m); break;
+		case "F" : text = tInfo.getTagName();
+				   color = tInfo.getTagColor();
+				   detail = mService.selectMailDetail(ms);	
+				   update = mService.updateReadMail(ms);
+				   count = mService.readListCount(m);
+				   unread = mService.tagUnReadCount(ms); break;
+		case "G" : text = "중요 메일함";
+				   detail = mService.selectMailDetail(ms);	
+				   update = mService.updateReadMail(ms);
+				   count = mService.importantListCount(m);
+				   unread = mService.importantUnReadCount(m); break;
+		case "H" : text = "휴지통";
+				   detail = mService.selectMailDetail(ms);	
+				   update = mService.updateReadMail(ms);
+				   count = mService.deleteListCount(m);
+				   unread = mService.deleteUnReadCount(m); break;
+		}
+
 		// 메일 조회 성공시
 		if(update > 0) {
 				
+		mv.addObject("text", text);
+		mv.addObject("color", color);
 		mv.addObject("count", count);
 		mv.addObject("unread", unread);
-		mv.addObject("countMe", countMe);
-		mv.addObject("unreadMe", unreadMe);
 		mv.addObject("m", detail);
 		mv.addObject("at", atList);
 		mv.setViewName("mail/mailDetailView");	
@@ -809,7 +844,14 @@ public class MailController {
 	@RequestMapping("deleteTag.ma")
 	public String ajaxDeleteTag(Tag t) {
 		
-		int result = mService.deleteTag(t);
+		int updateTag = mService.updateTagNull(t);
+		int delete = 0;
+		
+		if(updateTag > 0) {
+			delete = mService.deleteTag(t);			
+		}
+		
+		int result = updateTag * delete;
 		
 		return result > 0 ? "success" : "fail";
 	}
@@ -900,13 +942,13 @@ public class MailController {
 		// 태그 이름 조회
 		Tag tInfo = mService.selectTagInfo(t);
 		
-		// 중요 메일 개수 조회
+		// 태그 메일 개수 조회
 		int listCount = mService.tagListCount(ms);
 
 		// 페이징
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
 				
-		// 중요 메일 목록 조회
+		// 태그 메일 목록 조회
 		ArrayList<Mail> list = mService.selectTagMailList(pi, ms);
 				
 		// 안읽은 메일 조회

@@ -208,6 +208,7 @@
 		<form id="postMailDetail" action="mailDetail.ma" method="post">
 			<input type="hidden" name="mailFolder" id="detailFolder">
 			<input type="hidden" name="mailNo" id="detailNo">
+			<input type="hidden" name="flag" value="G">
 		</form>
 
 		<script>
@@ -254,11 +255,13 @@
 					
 					let mailNo = $(this).children('input[type=hidden]').val();
 					let mailFolder = $(this).children('input[name=mailFolder]').val();
-
+					
 					$("#detailNo").val(mailNo);
 					$("#detailFolder").val(mailFolder);
 					$("#postMailDetail").submit();
 
+					console.log( $("#detailNo").val() );
+					console.log( $("#detailFolder").val() );
 				})
 			})
 			

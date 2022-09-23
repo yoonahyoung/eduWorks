@@ -253,6 +253,7 @@
 						console.log($("#newTagName").val());
 						if(result == 'success'){
 							selectTagList();
+							location.reload();
 						}
 					},
 					error : function(){
@@ -277,12 +278,14 @@
 						url : "deleteTag.ma",
 						data : {
 							memNo : ${loginUser.memNo},
-							tagNo : no
+							tagNo : no,
+							mailFolder : 1
 						},
 						success : function(result){
 							console.log(result);
 							if(result == 'success'){
 								selectTagList();
+								location.reload();
 							}
 						},
 						error : function(){

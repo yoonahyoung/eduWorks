@@ -221,6 +221,7 @@
 		<form id="postMailDetail" action="mailDetail.ma" method="post">
 			<input type="hidden" name="mailFolder" value="2">
 			<input type="hidden" name="mailNo" id="detailNo">
+			<input type="hidden" name="flag" value="B">
 		</form>
 
 		<script>

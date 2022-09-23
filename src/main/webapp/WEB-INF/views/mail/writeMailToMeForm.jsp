@@ -24,7 +24,8 @@
 				<button type="submit" class="reply-btn">
 					<i class="fas fa-location-arrow"></i>&nbsp;&nbsp;전송
 				</button>
-				<button type="button" class="sub-btn" onclick="preView();">
+				<button type="button" class="sub-btn"  data-toggle="modal" 
+						id="preview" data-target="#mail-preview">
 					<i class="far fa-eye"></i>&nbsp;&nbsp;미리보기
 				</button>
 				<button type="button" class="sub-btn">
@@ -71,7 +72,7 @@
 				</div>
 
 			</div>
-
+	
 			<script>
 			
 				// '파일 추가' 누를 때 실행하는 함수
@@ -195,8 +196,82 @@
 						    $('#upfile')[0].files = dataTransfer.files;	//제거 처리된 FileList를 돌려줌
 						}
 						
+						// 메일 '미리보기'클릭시 실행하는 함수
+						$("#preview").click(
+								function() {
+
+									let file = $('#upfile')[0].files.length;
+
+									$(".title").html($("#title").val());
+									$("#preview-form").html($("#summernote").val());
+									if (file > 0) {
+										// 첨부파일이 있는 경우
+										$(".file-name").html(
+												"<i class='icon fas fa-paperclip'></i>일반 첨부파일 "
+														+ file + "개");
+									} else {
+										// 첨부파일이 없는 경우
+										$(".file-name").html("첨부파일이 없습니다.");
+									}
+
+						})
+						
 		    </script>
 		</form>
+		
+	<!-- =================== 메일 미리보기 모달 ======================= -->
+	<div class="modal" id="mail-preview">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content" style="height: 830px">
+
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">
+						<b>미리보기</b>
+					</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					
+				</div>
+
+				<!-- Modal body -->
+				<form action="updateIndivAdd.ad" method="post">
+
+					<div class="modal-body" align="center">
+					
+					<div class="form-group">
+						<div class="send-title">
+							<span>제목 <span class="border-line">:</span></span>
+						</div>
+						<div class="title"></div>
+					</div>
+					
+					<div class="form-group">
+						<div class="send-title">
+							<span>첨부파일 <span class="border-line">:</span></span>
+						</div>
+						<div class="file-name"></div>
+					</div>
+					
+					<div>
+						<p id="preview-form" readonly>
+
+						</p>
+					</div>
+
+						<div style="margin-top: 10px;">
+							<button type="submit" class="addBtn"
+								style="background-color: slategray; color: white; border: none;">전송</button>
+							<button type="button" data-dismiss="modal" class="class addBtn">닫기</button>
+						</div>
+
+					</div>
+				</form>
+
+			</div>
+		</div>
+	</div>
+		
+		
 	</div>
 </div>
 

@@ -155,6 +155,7 @@
 								<span style="color: red;">[중요!]</span>
 							</c:if> ${m.mailTitle } 
 							<input type="hidden" name="mailNo" value="${m.mailNo }">
+							<input type="hidden" name="mailFolder" value="${m.mailStatus.mailFolder }">
 						</td>
 						<td class="mail-sendtime">${m.sendDate }</td>
 					</tr>
@@ -167,9 +168,9 @@
 		</div>
 
 		<form id="postMailDetail" action="mailDetail.ma" method="post">
-			<input type="hidden" name="memEmail" value="${loginUser.memEmail }">
-			<input type="hidden" name="mailFolder" value="1"> <input
-				type="hidden" name="mailNo" id="detailNo">
+			<input type="hidden" name="mailFolder" id="detailFolder">
+			<input type="hidden" name="mailNo" id="detailNo">
+			<input type="hidden" name="flag" value="H">
 		</form>
 
 		<script>
@@ -187,13 +188,16 @@
 	           });
 	        }
 
-			// '메일 상세 조회'시 실행하는 함수
+			
+			// '메일 조회'시 실행하는 함수
 			$(function(){
 				$(".mail-title").click(function(){
 					
 					let mailNo = $(this).children('input[type=hidden]').val();
-					console.log(mailNo);
+					let mailFolder = $(this).children('input[name=mailFolder]').val();
+
 					$("#detailNo").val(mailNo);
+					$("#detailFolder").val(mailFolder);
 					$("#postMailDetail").submit();
 
 				})
