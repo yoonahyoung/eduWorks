@@ -147,6 +147,15 @@ select {
         border-radius: 100%;
         box-shadow: inset 0px 0px 10px rgba(0,0,0,0.3);
         }
+        #pagebar a>span{
+        	text-decoration: none;
+        	color:black;
+        }
+        
+        #pagebar2 a>span{
+        	text-decoration: none;
+        	color:black;
+        }
 </style>
 </head>
 <body>
@@ -165,7 +174,7 @@ select {
                             
                             <br>
                             <div style="width: 1000px;" >
-                                <form action="search.at">
+                                <form action="selectManage.ho">
                                 <table width="100%" class="tb3">
                                     
                                     <tr>
@@ -213,10 +222,11 @@ select {
                                 </div>
                                 </form>
                                 
-                                <c:if test="${ not empty condition }">
+                                <c:if test="${ not empty condition.jobCode }">
                                 	<script>
                                 		$(function(){
                                 			$("option[value='${condition.deptCode}']").attr("selected", true);
+                                			
                                 			$('#select2').val('${condition.jobCode}')
                                 			
                                 			$('#keyword').val('${condition.keyword}')
@@ -224,8 +234,8 @@ select {
                                 	</script>
                                 </c:if>
                                 
-                                
-                                 <c:if test="${ empty condition }">
+                                <!--  
+                                 <c:if test="${ not empty condition }">
 	                                <script>
 	                                	$(function(){
 	                                		
@@ -245,7 +255,7 @@ select {
 	                                	
 	                                </script>
 	                            </c:if>
-                                
+                                -->
                                 
                                 
 
@@ -258,7 +268,7 @@ select {
                                     <div class="close close2"></div>
                                     
                                     
-                                    <div  align="left" style="font-size: 25px; font-weight: bold; color: black;">승인연차 등록하기</div>
+                                    <div   align="left" style="font-size: 25px; font-weight: bold; color: black;">승인연차 등록하기</div>
                                     
                                     <br>
                                     <form action="">
@@ -267,15 +277,15 @@ select {
                                         <table style="width: 100%;" class="tb6" >
                                             <tr>
                                                 <th style="padding-top: 20px; width:40% ">사원명</th>
-                                                <td style="width:60%;padding-top: 20px;" >&nbsp;<input type="text" style="width:80%;" id="memName2" name="memName" readonly></td>
+                                                <td style="width:60%;padding-top: 20px;" >&nbsp;<input type="text" class="divall" style="width:80%;" id="memName2" name="memName" readonly></td>
                                             </tr>
                                             <tr>
                                                 <th style="padding-top: 20px;">연차시작날짜</th>
-                                                <td style="padding-top: 20px;">&nbsp;<input type="text" style="width:80%;" id="attDate2" name="attDate" readonly></td>
+                                                <td style="padding-top: 20px;">&nbsp;<input type="text" style="width:80%;" class="divall" id="attDate2" name="attDate" readonly></td>
                                             </tr>
                                             <tr>
                                                 <th style="padding-top: 20px;">연차종료날짜</th>
-                                                <td style="padding-top: 20px;">&nbsp;<input type="text" style="width:80%;" id="attDate2" name="attDate" readonly></td>
+                                                <td style="padding-top: 20px;">&nbsp;<input type="text" style="width:80%;" class="divall" id="attDate2" name="attDate" readonly></td>
                                             </tr>
                                          </table>
                                          <br><br>
@@ -285,7 +295,7 @@ select {
                                      </form>
                             	</div>
                             	
-                            	<div class="detailInfo positionab" id="div1" style="display:none ;">
+                            	<div class="detailInfo positionab" id="div2" style="display:none ;">
                                     
                                             
                                     <div class="close close2"></div>
@@ -300,20 +310,20 @@ select {
                                         <table style="width: 100%;" class="tb6" >
                                             <tr>
                                                 <th style="padding-top: 20px; width:40% ">사원명</th>
-                                                <td style="width:60%;padding-top: 20px;" >&nbsp;<input type="text" style="width:80%;" id="memName2" name="memName" readonly></td>
+                                                <td style="width:60%;padding-top: 20px;" >&nbsp;<input type="text" class="divall" style="width:80%;" id="memName2" name="memName" readonly></td>
                                             </tr>
                                             <tr>
                                                 <th style="padding-top: 20px;">반차날짜</th>
-                                                <td style="padding-top: 20px;">&nbsp;<input type="text" style="width:80%;" id="attDate2" name="attDate" readonly></td>
+                                                <td style="padding-top: 20px;">&nbsp;<input type="text"  class="divall" style="width:80%;" id="attDate2" name="attDate" readonly></td>
                                             </tr>
                                             <tr>
                                                 <th style="padding-top: 20px;">반차종류</th>
                                                 <td style="padding-top: 20px;">&nbsp;
                                                 <div class="checks2">
-                                                		<input type="radio" class="rr1" id="radio1" value="H1" name="attHStatus"> 
+                                                		<input type="radio" class="rr1" class="divall" id="radio1" value="H1" name="attHStatus"> 
                                                         <label for="radio1">오전반차</label>
                                                         &nbsp;&nbsp;
-                                                        <input type="radio" class="rr1" id="radio2" value="H2" name="attHStatus"> 
+                                                        <input type="radio" class="rr1" class="divall" id="radio2" value="H2" name="attHStatus"> 
                                                         <label for="radio2">오후반차</label> 
                                                 </div>
                                                 </td>
@@ -336,63 +346,133 @@ select {
                                     	<th>직급</th>
                                         <th>연차시작날짜</th>
                                         <th>연차종료날짜</th>
-                                        <th>시작반차여부</th>
-                                        <th>종료반차여부</th>
                                         <th>연차종류</th>
                                        
                                     </tr>
-                                    <tr>
-                                    	<td align="center">xx</td>
-                                    	<td align="center">xx</td>
-                                    	<td align="center">xx</td>
-                                        <td align="center">2022-07-20</td>
-                                        <td align="center">2022-07-20</td>
-                                        <td align="center">xx</td>
-                                        <td align="center">xx</td>
-                                        <td align="center">xx</td>
-                                        <td id="sel0" style="display: none;"><input type="hidden" id="inputCk" name="leave"></td>
-                                   </tr>
-                                   </table>
+                                    <c:choose>
+                                    	<c:when test="${ empty list1 }">
+                                    		<tr><th colspan="6">조회된 목록 없음</th></tr>
+                                    	</c:when>
+                                    	<c:otherwise>
+                                    		<c:forEach var="l1" items="${ list1 }">
+                                    		<tr class="list1">
+		                                    	<td align="center">${ l1.memName }</td>
+		                                    	<td align="center">${ l1.deptName }</td>
+		                                    	<td align="center">${ l1.jobName }</td>
+		                                        <td align="center">
+		                                        	${ l1.leaveStartDate }
+		                                        	<c:if test="${ l1.leaveType eq 1 and l1.aa eq 2 }">
+		                                        	(오후시작)
+		                                        	</c:if>
+		                                        </td>
+		                                        <td align="center">
+		                                        	${ l1.leaveEndDate }
+		                                        	<c:if test="${ l1.leaveType eq 1 and l1.aa eq 1 }">
+		                                        	(오전종료)
+		                                        	</c:if>
+		                                        </td>
+		                                        <td align="center">
+		                                        	<c:if test="${ l1.leaveType eq 1 }">
+		                                        		연차
+		                                        	</c:if>
+		                                        	<c:if test="${ l1.leaveType eq 2 and l1.aa eq 1 }">
+		                                        		오전반차
+		                                        	</c:if>
+		                                        	<c:if test="${ l1.leaveType eq 2 and l1.aa eq 2 }">
+		                                        		오후반차
+		                                        	</c:if>
+		                                        </td>
+		                                        <td id="sel0" style="display: none;">${ l1.leave }</td>
+		                                        <td id="sel1" style="display: none;">${ l1.leaveType }</td>
+		                                   </tr>
+		                                   </c:forEach>
+                                    	</c:otherwise>
+                                    </c:choose>
+                                </table>
                             </div>
+                            
+                            <script type="text/javascript">
+                            	$('.list1').on('click',function(){
+                            		if($(this).children('#sel0').text()!=''){
+                            			alert('이미 연차등록이 완료된 건입니다.')
+                            		}else{
+                            			if($(this).children('#sel1').text()=='1'){
+                            				$('#div1').css('display','')
+                            				$('#div2').css('display','none')
+                            			}else{
+                            				$('#div1').css('display','none')
+                            				$('#div2').css('display','')
+                            			}
+                            		}
+                            	})
+                            	
+                            	$(".close").on('click',function(){
+	            		        		$('#div1').css('display','none');
+	            		        		$('#div2').css('display','none');
+	            		        		$('.divall').val('')
+	            		        })
+                            </script>
+                            
                             <br>
-                            <div style="margin-top: 10px; width: 1000px; height: 40px;" align="center">
-                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
-                                    &lt;
-                                </span>
-                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
-                                    1
-                                </span>
-                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
-                                    2
-                                </span>
-                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
-                                    3
-                                </span>
-                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
-                                    &gt;
-                                </span>
-                            </div>
+                            <c:if test="${ not empty list1 }">
+                            	<div style="margin-top: 10px; width: 1000px; height: 40px;" align="center" id="pagebar">
+                               		<c:if test="${ pi1.currentPage ne 1 }">
+                               					<a href="selectManage.ho?p1=${ pi1.currentPage-1 }&p2=${ pi2.currentPage }&keyword=${ condition.keyword }&deptCode=${ condition.deptCode }&jobCode=${ condition.jobCode }&startDate=${ condition.startDate }&endDate=${ condition.endDate }">
+						                              <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
+						                                    &lt;
+						                              </span>
+					                            </a>
+				                     </c:if>
+				                     
+				                     <c:forEach var="p" begin="${ pi1.startPage }" end="${ pi1.endPage }">
+					                            	<c:if test="${ p eq pi1.currentPage }">
+					                            		<a href="selectManage.ho?p1=${ p }&p2=${ pi2.currentPage }&keyword=${ condition.keyword }&deptCode=${ condition.deptCode }&jobCode=${ condition.jobCode }&startDate=${ condition.startDate }&endDate=${ condition.endDate }">
+							                                <span style="width: 40px; height: 40px; background-color: #5e7e9b; display: inline-block; border-radius: 15%;padding-top: 5px;">
+							                                    ${ p }
+							                                </span>
+					                                	</a>
+					                            	</c:if>
+					                            	<c:if test="${ p ne pi1.currentPage }">
+					                            		<a href="selectManage.ho?p1=${ p }&p2=${ pi2.currentPage }&keyword=${ condition.keyword }&deptCode=${ condition.deptCode }&jobCode=${ condition.jobCode }&startDate=${ condition.startDate }&endDate=${ condition.endDate }">
+							                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
+							                                    ${ p }
+							                                </span>
+					                                	</a>
+					                            	</c:if>
+							                    	
+							        </c:forEach>
+				                    
+				                    <c:if test="${ pi1.currentPage ne pi1.maxPage }">
+                               					<a href="selectManage.ho?p1=${ pi1.currentPage+1 }&p2=${ pi2.currentPage }&keyword=${ condition.keyword }&deptCode=${ condition.deptCode }&jobCode=${ condition.jobCode }&startDate=${ condition.startDate }&endDate=${ condition.endDate }">
+						                              <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
+						                                    &gt;
+						                              </span>
+					                            </a>
+				                     </c:if>
+				                     
+                            	</div>
+                            </c:if>
 
                             <br><br>
                                 <h3 class="su_sub_menu_name">연차지급내역</h3>
                                 <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b;">
                             <div>    
                                 <br>
-                                 <table width="90%" class="tb4" style="display: ;">
+                                 <table width="90%" class="tb4" style="display:none ;">
                                     <tr>
                                         <th>연차지급일수</th>
                                         <th>연차사용일수</th>
                                         <th>남은연차일수</th>
                                     </tr>
                                     <tr>
-                                        <th>3</th>
-                                        <th>3</th>
-                                        <th>3</th>
+                                        <th>--</th>
+                                        <th>--</th>
+                                        <th>--</th>
                                     </tr>
                                     
                                 </table>
                                 <br>
-                                <table class="tb5" width="90%" style="border-collapse: separate; border-spacing: 0 10px; ">
+                                <table class="tb5" width="95%" style="border-collapse: separate; border-spacing: 0 10px; ">
                                     <tr>
                                         <th>사원명</th>
                                         <th>부서</th>
@@ -402,35 +482,81 @@ select {
                                         <th>지급갯수</th>
                                         <th>비고</th>
                                     </tr>
-                                    <tr>
-                                        <td align="center">2022-07-20</td>
-                                        <td align="center">xx</td>
-                                        <td align="center">xx</td>
-                                        <td align="center">xx</td>
-                                        <td align="center">xx</td>
-                                        <td align="center">xx</td>
-                                        <td align="center">xx</td>
-                                    </tr>
+                                    <c:choose>
+                                    	<c:when test="${ empty list2 }">
+                                    		<tr><th colspan="6">조회된 목록 없음</th></tr>
+                                    	</c:when>
+                                    	<c:otherwise>
+                                    		<c:forEach var="l2" items="${ list2 }">
+                                    		<tr class="list2" onclick="holidayDetail(${ l2.memNo })">
+		                                    	<td align="center">${ l2.memName }</td>
+		                                    	<td align="center">${ l2.deptName }</td>
+		                                    	<td align="center">${ l2.jobName }</td>
+		                                        <td align="center">${ l2.hoDate }</td>
+		                                        <td align="center">
+		                                        	<c:if test="${ l2.hoNum gt 0 }">
+		                                        		지급
+		                                        	</c:if>
+		                                        	<c:if test="${ l2.hoNum lt 0 }">
+		                                        		회수
+		                                        	</c:if>
+		                                        </td>
+		                                        <td align="center">
+		                                        	<c:if test="${ l2.hoNum gt 0 }">
+		                                        		${ l2.hoNum }
+		                                        	</c:if>
+		                                        	<c:if test="${ l2.hoNum lt 0 }">
+		                                        		${ l2.hoNum * -1 }
+		                                        	</c:if>
+		                                        </td>
+		                                        <td align="center">
+		                                        	<c:out value="${ l2.hoComment }" default="--"></c:out>
+		                                        </td>
+		                                   </tr>
+		                                   </c:forEach>
+                                    	</c:otherwise>
+                                    </c:choose>
                              	</table>
                             </div>
                             <br>
-                            <div style="margin-top: 10px; width: 1000px; height: 40px;" align="center">
-                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
-                                    &lt;
-                                </span>
-                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
-                                    1
-                                </span>
-                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
-                                    2
-                                </span>
-                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
-                                    3
-                                </span>
-                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
-                                    &gt;
-                                </span>
-                            </div>
+                            <c:if test="${ not empty list2 }">
+                            	<div style="margin-top: 10px; width: 1000px; height: 40px;" align="center" id="pagebar2">
+                               		<c:if test="${ pi2.currentPage ne 1 }">
+                               					<a href="holiday.me?p2=${ pi2.currentPage-1 }&p1=${ pi1.currentPage }&keyword=${ condition.keyword }&deptCode=${ condition.deptCode }&jobCode=${ condition.jobCode }&startDate=${ condition.startDate }&endDate=${ condition.endDate }">
+						                              <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
+						                                    &lt;
+						                              </span>
+					                            </a>
+				                     </c:if>
+				                     
+				                     <c:forEach var="p" begin="${ pi2.startPage }" end="${ pi2.endPage }">
+					                            	<c:if test="${ p eq pi2.currentPage }">
+					                            		<a href="holiday.me?p2=${ p }&p1=${ pi1.currentPage }&keyword=${ condition.keyword }&deptCode=${ condition.deptCode }&jobCode=${ condition.jobCode }&startDate=${ condition.startDate }&endDate=${ condition.endDate }">
+							                                <span style="width: 40px; height: 40px; background-color: #5e7e9b; display: inline-block; border-radius: 15%;padding-top: 5px;">
+							                                    ${ p }
+							                                </span>
+					                                	</a>
+					                            	</c:if>
+					                            	<c:if test="${ p ne pi2.currentPage }">
+					                            		<a href="holiday.me?p2=${ p }&p1=${ pi1.currentPage }&keyword=${ condition.keyword }&deptCode=${ condition.deptCode }&jobCode=${ condition.jobCode }&startDate=${ condition.startDate }&endDate=${ condition.endDate }">
+							                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
+							                                    ${ p }
+							                                </span>
+					                                	</a>
+					                            	</c:if>
+							                    	
+							        </c:forEach>
+				                    
+				                    <c:if test="${ pi2.currentPage ne pi2.maxPage }">
+                               					<a href="holiday.me?p2=${ pi2.currentPage+1 }&p1=${ pi1.currentPage }&keyword=${ condition.keyword }&deptCode=${ condition.deptCode }&jobCode=${ condition.jobCode }&startDate=${ condition.startDate }&endDate=${ condition.endDate }">
+						                              <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
+						                                    &gt;
+						                              </span>
+					                            </a>
+				                     </c:if>
+				                     
+                            	</div>
+                           		</c:if>
                             
                             
                         </div>
