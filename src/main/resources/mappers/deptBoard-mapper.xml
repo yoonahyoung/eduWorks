@@ -295,21 +295,22 @@
   	<!-- 전체검색 부서 게시판 -->
   	<select id="searchBoard"	resultMap="deptBoardResult">
 		select
-			   board_no
-			 , board_title
-			 , board_content
-			 , m.mem_name as "b_writer"
-			 , m.dept_code
-			 , to_char(board_en_date, 'YYYY-MM-DD') as "board_en_date"
-			 , board_count
-			 , board_top
-		  from tb_board b
-		  join tb_member m on(b.board_writer = m.mem_no)
-		 where board_category = 2
-		   and board_status = 'Y'
-		   and b.dept_code = #{deptCode}
-	</select>
-  	
+  			   board_no
+  			 , board_title
+  			 , board_content
+  			 , board_writer
+  			 , m.mem_name as "b_writer"
+  			 , board_count
+  			 , j.job_name
+  		  from tb_board b
+  		  join tb_member m on(b.board_writer = m.mem_no)
+  		  join tb_job j using(job_code)
+  		 where b.dept_code = #{deptCode}
+  		   and board_category = 2
+  		   and board_status = 'Y'	
+		   and (board_content like '%' || #{key} || '%'
+  		    or board_title like '%' || #{key} || '%')	
+  	</select>
   	
   	
   	

@@ -106,8 +106,10 @@ public class mainDao {
 		return (ArrayList)sqlSession.selectList("mailMapper.searchMail", map);
 	}
 	
-	public ArrayList<Board> searchBoard(SqlSessionTemplate sqlSession, String key){
-		return (ArrayList)sqlSession.selectList("deptBoardMapper.searchBoard", key);
+	public ArrayList<Board> searchBoard(SqlSessionTemplate sqlSession, HashMap bMap){
+		System.out.println(bMap.get("deptCode"));
+		
+		return (ArrayList)sqlSession.selectList("deptBoardMapper.searchBoard", bMap);
 	}
 	
 	public ArrayList<Board> searchNotice(SqlSessionTemplate sqlSession, String key){
