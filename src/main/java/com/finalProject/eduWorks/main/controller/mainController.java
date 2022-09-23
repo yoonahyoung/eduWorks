@@ -93,7 +93,7 @@ public class mainController {
 		int listCount = mService.receiveMainListCount(m);
 
 		// 페이징
-		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 7);
 		
 		// 받은 메일 조회
 		ArrayList<Mail> list = mService.selectReceiveMainMailList(pi, m);
