@@ -2,6 +2,7 @@ package com.finalProject.eduWorks.personnel.model.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
@@ -355,5 +356,27 @@ public class PersonnelDao {
 		int offset = (pi2.getCurrentPage()-1)*limit;
 		RowBounds rowBounds = new RowBounds(offset,limit);
 		return (ArrayList)sqlSession.selectList("personnelMapper.holidayAddList", s, rowBounds);
+	}
+	
+	public int addHoCalendar(SqlSessionTemplate sqlSession,SearchAt s,List enrollDate) {
+		int result = 1;
+		for(int i=1;i<=enrollDate.size();i++) {
+			s.setStartDate(enrollDate.get(i-1)+"");
+			if(i==1 && s.isCheck1()) {
+				int j = sqlSession.insert("personnelMapper.updatefixout",s);
+				result=result*j;
+			}else if(i==enrollDate.size() && s.isCheck2()){
+				int j = sqlSession.insert("personnelMapper.updatefixin",s);
+				result=result*j;
+			}else {
+				int j = sqlSession.insert("personnelMapper.insertho",s);
+				result=result*j;
+			}
+		}
+		if(result>0) {
+			return sqlSession.update("personnelMapper.updateannl", s);
+		}else {
+			return result;
+		}
 	}
 }

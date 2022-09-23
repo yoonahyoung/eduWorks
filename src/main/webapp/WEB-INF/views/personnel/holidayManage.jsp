@@ -156,6 +156,58 @@ select {
         	text-decoration: none;
         	color:black;
         }
+        .checks {position: relative;}
+
+        .checks input[type="checkbox"] {  
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip:rect(0,0,0,0);
+        border: 0
+        }
+        .checks input[type="checkbox"] + label {
+        display: inline-block;
+        position: relative;
+        cursor: pointer;
+        
+        }
+        .checks input[type="checkbox"] + label:before {  
+        content: ' ';
+        display: inline-block;
+        width: 21px; 
+        height: 21px;  
+        line-height: 21px; 
+        margin: -2px 8px 0 0;
+        text-align: center; 
+        vertical-align: middle;
+        background: #fafafa;
+        border: 1px solid #cacece;
+        border-radius : 3px;
+        box-shadow: 0px 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
+        }
+        .checks input[type="checkbox"] + label:active:before,
+        .checks input[type="checkbox"]:checked + label:active:before {
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .checks input[type="checkbox"]:checked + label:before {  
+        content: '\2714';  
+        color: #99a1a7;
+        text-shadow: 1px 1px #fff;
+        background: #e9ecee;
+        border-color: #adb8c0;
+        box-shadow: 0px 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05), inset 15px 10px -12px rgba(255,255,255,0.1);
+        }
+
+        .checks input[type="text"]{
+            background: #fafafa;
+            border: 1px solid #cacece;
+            border-radius : 5px;
+            box-shadow: 0px 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
+        }
 </style>
 </head>
 <body>
@@ -271,9 +323,9 @@ select {
                                     <div   align="left" style="font-size: 25px; font-weight: bold; color: black;">승인연차 등록하기</div>
                                     
                                     <br>
-                                    <form action="">
-                                    	<input type="hidden" id="memNo1" name="memNo">
-                                    	
+                                    <form action="addCal.ho">
+                                    	<input type="hidden" id="memNo1" name="userNo">
+                                    	<input type="hidden" id="aprvno" name="keyword">
                                         <table style="width: 100%;" class="tb6" >
                                             <tr>
                                                 <th style="padding-top: 20px; width:40% ">사원명</th>
@@ -287,12 +339,11 @@ select {
                                                 <th style="padding-top: 20px;">연차종료날짜</th>
                                                 <td style="padding-top: 20px;">&nbsp;<input type="text" style="width:80%;" class="divall" id="endDate1" name="endDate" readonly></td>
                                             </tr>
-                                            
-                                            <tr>
-                                            	<th class="checks2" colspan="2">
-                                            		 <input type="checkbox" id="ck1" name="check1" > 
-	                                    			 <label for="ck1">연차시작일 반차여부</label>
-	                                    			 <br>
+                                            <tr class="checks">
+                                            	<th colspan="2">
+                                            	<br>
+                                            		 <input  type="checkbox" id="ck1" name="check1" > 
+	                                    			 <label for="ck1">연차시작일 반차여부</label> &nbsp;&nbsp;&nbsp;
 	                                    			 <input type="checkbox" id="ck2" name="check2" > 
 	                                    			 <label for="ck2">연차종료일 반차여부</label>
                                             	</th>
@@ -403,6 +454,7 @@ select {
 		                                        <td id="sel4" style="display: none;">${ l1.leaveEndDate }</td>
 		                                        <td id="sel5" style="display: none;">${ l1.aa }</td>
 		                                        <td id="sel6" style="display: none;">${ l1.bb }</td>
+		                                        <td id="sel7" style="display: none;">${ l1.aprvNo }</td>
 		                                   </tr>
 		                                   </c:forEach>
                                     	</c:otherwise>
@@ -420,6 +472,7 @@ select {
                             				$('#memName1').val($(this).children('#name1').text())
                             				$('#startDate1').val($(this).children('#sel3').text())
                             				$('#endDate1').val($(this).children('#sel4').text())
+                            				$('#aprvno').val($(this).children('#sel7').text())
                             				if($(this).children('#sel5').text()==2){
                             					$('#ck1').attr('checked',true)
                             				}

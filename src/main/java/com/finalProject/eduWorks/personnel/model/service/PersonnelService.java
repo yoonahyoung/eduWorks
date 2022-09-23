@@ -2,6 +2,7 @@ package com.finalProject.eduWorks.personnel.model.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.mail.model.vo.MailStatus;
@@ -140,4 +141,5 @@ public interface PersonnelService {
 	ArrayList<HolidayForm> holidayMgList(PageInfo pi1,SearchAt s);
 	int holidayAddCount(SearchAt s);
 	ArrayList<Holiday> holidayAddList(PageInfo pi1,SearchAt s);
+	int addHoCalendar(SearchAt s,List enrollDate);
 }

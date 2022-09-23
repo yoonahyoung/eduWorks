@@ -373,7 +373,6 @@
                             			}
                                 		userNo.push($(this).val())
                                 	})
-                                	console.log(userEmail)
                                 	console.log(userNo)
                                 	if(result>0){
                                 		$.ajax({

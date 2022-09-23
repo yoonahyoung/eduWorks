@@ -1161,7 +1161,7 @@
 		       and m.dept_code = #{deptCode}
 		      </if>
 		      <if test="jobCode != 'all'">
-		       and m.job_code = #{deptCode}
+		       and m.job_code = #{jobCode}
 		      </if>
 		  order by m.mem_no
 	</select>
@@ -1449,6 +1449,7 @@
 	
 	<select id="holidayMgList" resultMap="resultHolidayForm">
 		select af.mem_no,
+			   af.aprv_no,
 			   mem_name,
 		       dept_name,
 		       job_name,
@@ -1521,4 +1522,68 @@
 		 </if>
 		 order by 4 desc
 	</select>
+	
+	<insert id="updatefixout">
+		insert
+		  into tb_attendance
+		     ( att_no
+		     , mem_no
+		     , att_date
+		     , att_fixedout
+		     , att_status
+		     , att_hstatus
+		     )
+	   values
+	        ( seq_atteno.nextval
+	        , #{userNo}
+	        , #{startDate}
+	        , '13:00'
+	        , 'H'
+	        , 'H2'
+	        ) 
+	</insert>
+	
+	<insert id="updatefixin">
+		insert
+		  into tb_attendance
+		     ( att_no
+		     , mem_no
+		     , att_date
+		     , att_fixedin
+		     , att_status
+		     , att_hstatus
+		     )
+	   values
+	        ( seq_atteno.nextval
+	        , #{userNo}
+	        , #{startDate}
+	        , '14:00'
+	        , 'H'
+	        , 'H1'
+	        ) 
+	</insert>
+	
+	<insert id="insertho">
+		insert
+		  into tb_attendance
+		     ( att_no
+		     , mem_no
+		     , att_date
+		     , att_status
+		     , att_hstatus
+		     )
+	   values
+	        ( seq_atteno.nextval
+	        , #{userNo}
+	        , #{startDate}
+	        , 'H'
+	        , 'H0'
+	        ) 
+	</insert>
+	
+	<update id="updateannl">
+		UPDATE TB_ANNUAL_LEAVE
+		   SET LEAVE_REASON = '등록완료'
+		 WHERE APRV_NO = #{keyword}
+	</update>
 </mapper>

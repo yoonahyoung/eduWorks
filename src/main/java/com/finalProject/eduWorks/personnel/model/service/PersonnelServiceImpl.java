@@ -2,6 +2,7 @@ package com.finalProject.eduWorks.personnel.model.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -368,6 +369,11 @@ public class PersonnelServiceImpl implements PersonnelService {
 	@Override
 	public ArrayList<Holiday> holidayAddList(PageInfo pi2, SearchAt s) {
 		return pDao.holidayAddList(sqlSession,pi2,s);
+	}
+
+	@Override
+	public int addHoCalendar(SearchAt s, List enrollDate) {
+		return pDao.addHoCalendar(sqlSession, s, enrollDate);
 	}
 
 	

@@ -5,9 +5,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
@@ -1156,7 +1159,7 @@ public class PersonnelController {
 	@RequestMapping("selectManage.ho")
 	public String selectManageHo(Model model,HttpSession session,@RequestParam(value="p1",defaultValue = "1")int currentPage1,
             					 @RequestParam(value="p2",defaultValue = "1")int currentPage2, SearchAt s) {
-		System.out.println(s);
+		
 		if(s.getStartDate()==null) {
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			LocalDateTime now = LocalDateTime.now();
@@ -1167,7 +1170,7 @@ public class PersonnelController {
 			s.setEndDate(end);
 		}
 		
-		System.out.println(s);
+		
 		
 		int listCount1 = pService.holidayMgCount(s);
 		PageInfo pi1 = Pagination.getInfo(listCount1, currentPage1, 3, 5);
@@ -1187,5 +1190,25 @@ public class PersonnelController {
 		model.addAttribute("jlist", jlist);
 		model.addAttribute("dlist", dlist);
 		return "personnel/holidayManage";
+	}
+	
+	@RequestMapping("addCal.ho")
+	public String addHoCalendar(SearchAt s,HttpSession session) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate startDate = LocalDate.parse(s.getStartDate(), formatter);
+		LocalDate endDate = LocalDate.parse(s.getEndDate(), formatter);
+		List enrollDate = startDate.datesUntil(endDate).collect(Collectors.toList());
+		enrollDate.add(endDate);
+		int result = pService.addHoCalendar(s,enrollDate);
+		if(result>0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "등록성공");
+			session.setAttribute("alertMsg", "등록에 성공했습니다.");
+		}else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "등록실패");
+			session.setAttribute("alertMsg", "등록실패");
+		}
+		return "redirect:selectManage.ho";
 	}
 }
