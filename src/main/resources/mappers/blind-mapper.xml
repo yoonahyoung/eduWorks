@@ -348,15 +348,33 @@
 		  from (select
 				       rpt_ref_cat
 				     , rpt_board_no
+				     , b.board_title
 				     , count(*) as rpt_count
 				     , rpt_status
 				     , LISTAGG(rpt_no, ',') WITHIN GROUP(ORDER BY rpt_status desc) as rpt_no
 				  from tb_report r
+				  join tb_board b on (r.rpt_board_no = b.board_no)
+				 where rpt_ref_cat = 1
 				 <if test="rStatus != null and rStatus neq ''">
-		         	where rpt_status = #{rStatus}
-		         </if>
-				 group by rpt_ref_cat, rpt_board_no, rpt_status
-				 order by 3 ${rCount}
+				   and rpt_status = #{rStatus}
+				 </if>
+				 group by rpt_ref_cat, rpt_board_no, rpt_status, b.board_title
+				union all
+				select
+				       rpt_ref_cat
+				     , rpt_board_no
+				     , rp.reply_content
+				     , count(*) as rpt_count
+				     , rpt_status
+				     , LISTAGG(rpt_no, ',') WITHIN GROUP(ORDER BY rpt_status desc) as rpt_no
+				  from tb_report r
+				  join tb_reply rp on (r.rpt_board_no = rp.reply_no)
+				 where rpt_ref_cat = 2
+				 <if test="rStatus != null and rStatus neq ''">
+				   and rpt_status = #{rStatus}
+				 </if>
+				 group by rpt_ref_cat, rpt_board_no, rpt_status, rp.reply_content
+				 order by 4 ${rCount}
 		  )
 	</select>
 	
@@ -365,15 +383,33 @@
 		select
 		       rpt_ref_cat
 		     , rpt_board_no
+		     , b.board_title as "board_title"
 		     , count(*) as rpt_count
 		     , rpt_status
 		     , LISTAGG(rpt_no, ',') WITHIN GROUP(ORDER BY rpt_status desc) as rpt_no
 		  from tb_report r
+		  join tb_board b on (r.rpt_board_no = b.board_no)
+		 where rpt_ref_cat = 1
 		 <if test="rStatus != null and rStatus neq ''">
-         where rpt_status = #{rStatus}
-         </if>
-		 group by rpt_ref_cat, rpt_board_no, rpt_status
-		 order by 3 ${rCount}
+		   and rpt_status = #{rStatus}
+		 </if>
+		 group by rpt_ref_cat, rpt_board_no, rpt_status, b.board_title
+		union all
+		select
+		       rpt_ref_cat
+		     , rpt_board_no
+		     , rp.reply_content
+		     , count(*) as rpt_count
+		     , rpt_status
+		     , LISTAGG(rpt_no, ',') WITHIN GROUP(ORDER BY rpt_status desc) as rpt_no
+		  from tb_report r
+		  join tb_reply rp on (r.rpt_board_no = rp.reply_no)
+		 where rpt_ref_cat = 2
+		 <if test="rStatus != null and rStatus neq ''">
+		   and rpt_status = #{rStatus}
+		 </if>
+		 group by rpt_ref_cat, rpt_board_no, rpt_status, rp.reply_content
+		 order by 4 ${rCount}
 	</select>
 	
 	<!-- 댓글이 등록된 게시글 번호 조회 -->

@@ -46,6 +46,7 @@
                             <tr class="table_thead_border">
                                 <th width="5%">번호</th>
                                 <th width="5%">분류</th>
+                                <th width="15%">제목/내용</th>
                                 <th width="5%">신고수</th>
                                 <th width="5%">처리 여부</th>
                                 <th width="5%">상태 변경</th>
@@ -73,6 +74,7 @@
 					                            	<input type="hidden" value="2" class="rptRefCat">
 					                            </c:if>
 				                            </td>
+				                            <td>${ r.boardTitle }</td>
 				                            <td>${ r.rptCount }</td>
 				                            <td>${ r.rptStatus }</td>
 				                            <td onclick="event.stopPropagation()">
@@ -148,6 +150,7 @@
 			           						value += '<tr>'
 			           									+ '<td class="no">' + list[i].rptBoardNo + '</td>'
 			           									+ '<td class="rptRefCat">' + list[i].rptRefCat + '</td>'
+			           									+ '<td>' + list[i].boardTitle + '</td>'
 			           									+ '<td>' + list[i].rptCount + '</td>'
 			           									+ '<td>' + list[i].rptStatus + '</td>'
 			           									+ '<td onclick="event.stopPropagation()">';
