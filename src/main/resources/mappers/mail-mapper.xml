@@ -916,6 +916,7 @@
 	</update>
 	
 	<!-- 메일 태그 삭제 -->
+	<!-- 
 	<update id="updateTagNull">
 		update
 		    tb_mail_status
@@ -933,7 +934,8 @@
 		    	</otherwise>
 		    </choose> 
 	</update>
-	
+	 -->
+	 
 	<delete id="deleteTag">
 		delete 
 		    from tb_tag

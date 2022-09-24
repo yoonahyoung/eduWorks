@@ -280,8 +280,7 @@
 						url : "deleteTag.ma",
 						data : {
 							memNo : ${loginUser.memNo},
-							tagNo : no,
-							mailFolder : 1
+							tagNo : no
 						},
 						success : function(result){
 							console.log(result);
