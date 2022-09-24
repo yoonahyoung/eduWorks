@@ -76,7 +76,11 @@ public class NoticeDao {
 		return sqlSession.insert("noticeMapper.insertNotice", b);
 	}
 
-
+	// 마지막 게시글 번호 구하기
+	public int lastBoNo(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("noticeMapper.lastBoNo");
+	}
+	
 	// 첨부파일 등록
 	public int insertAttachment(SqlSessionTemplate sqlSession, Attachment at) {
 		return sqlSession.insert("noticeMapper.insertAttachment", at);
@@ -107,5 +111,6 @@ public class NoticeDao {
 		map.put("isYN", isYN);
 		return sqlSession.update("noticeMapper.goTop", map);
 	}
+
 
 }

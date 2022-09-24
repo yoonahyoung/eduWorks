@@ -256,7 +256,8 @@ public class DeptBoardController {
 		}
 		
 		int	result = dService.insertDeptBoard(b);
-		
+		int no = dService.lastBoNo();
+		at.setAtRefBno(no);
 		
 		if(result > 0 && result1 > 0) {
 			result1 = dService.insertAttachment(at);
@@ -331,6 +332,7 @@ public class DeptBoardController {
 	@RequestMapping("update.de")
 	public String updateDeptBoard(Board b, Attachment at, MultipartFile reupfile , Model model, HttpSession session) {
 		int result1 = 0;
+		at.setAtRefBno(b.getBoardNo());
 		
 		// 새로 넘어온 첨부파일이 있을 경우
 		if(!reupfile.getOriginalFilename().equals("")) {
@@ -350,7 +352,6 @@ public class DeptBoardController {
 		}
 		
 		int result = dService.updateDeptBoard(b);
-		
 		if(result > 0 && result1 > 0) { // 게시글 완, 첨부파일 o
 			result1 = dService.insertAttachment(at);
 		}else { // 게시글 완, 첨부파일 x

@@ -16,6 +16,8 @@ public interface NoticeService {
 	
 	// 2. 공지사항 등록 서비스
 	int insertNotice(Board n);
+	// 2-1. 마지막 게시글 번호 구하기
+	int lastBoNo();
 	
 	// 3. 공지사항 상세 페이지 조회 서비스
 	// 조회수 증가

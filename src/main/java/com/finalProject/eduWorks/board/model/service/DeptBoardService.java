@@ -15,6 +15,8 @@ public interface DeptBoardService {
 		
 		// 2. 부서 게시판 등록 서비스
 		int insertDeptBoard(Board n);
+		// 게시글 마지막 번호 구하기
+		int lastBoNo();
 		
 		// 3. 부서 게시판 상세 페이지 조회 서비스
 		// 조회수 증가
