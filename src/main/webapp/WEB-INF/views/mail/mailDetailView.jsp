@@ -108,7 +108,7 @@
 						<th>받는사람</th>
 						<c:choose>
 							<c:when test="${m.receiverMem == null}">
-								<td>${m.receiverMem }</td>
+								<td>${m.mailStatus.receiveMail }</td>
 							</c:when>
 							<c:otherwise>
 								<td>${m.receiverMem }</td>
@@ -329,7 +329,6 @@
 
 			<div>
 				<div class="mail-content">
-					<input type="hidden" name="mailContent" value="${m.mailContent }">
 					<div>
 
 						<p>${m.mailContent }</p>
