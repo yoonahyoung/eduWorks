@@ -101,7 +101,7 @@ public class mainServiceImpl implements mainService{
 	}
 
 	@Override
-	public ArrayList<Schedule> searchSchedule(String key) {
-		return mDao.searchSchedule(sqlSession, key);
+	public ArrayList<Schedule> searchSchedule(HashMap map) {
+		return mDao.searchSchedule(sqlSession, map);
 	}
 }

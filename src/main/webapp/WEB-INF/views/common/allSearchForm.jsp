@@ -11,14 +11,16 @@
 	.wrapSearch h1, .wrapSearch h3{
 		color:black;
 	}
-	
+	.txt-hlight {
+	background:  lightgray;
+}
 </style>
 </head>
 <body>
 
 	<jsp:include page="header.jsp" />
 	
-	<div class="wrapSearch" style="margin:20px">
+	<div class="wrapSearch" style="margin:40px">
 
 		<h1>검색 결과</h1>
 		<br><br>
@@ -31,12 +33,12 @@
 				<c:forEach var="m" items="${ mail }">
 				<div class="searchForm">
 					<div id="mailView">
-						<span id="target" style="color:black; font-size:large;">${ m.sendName }</span>&nbsp;
-						<a id="mailGo" href="#">${ m.mailTitle }<input type="hidden" value="${m.mailNo }"></a>&nbsp;
+						<span id="target" style="color:black; font-size:large;" class="hara">${ m.sendName }</span>&nbsp;
+						<a href="#" class="hara mailGo">${ m.mailTitle }<input type="hidden" value="${m.mailNo }"></a>&nbsp;
 						<span>${ m.sendDate }</span>
 					</div>
 				</div>
-				<br><br>
+				<br>
 				</c:forEach>
 				<br><hr>
 			</div>
@@ -46,13 +48,14 @@
 			<div class="companyNoticeResult">
 					<h3>전사 공지</h3><br>
 				<c:forEach var="n" items="${ notice }">
+				<br>
 				<div class="searchForm">
 					<div id="noticeView">
-						<div style="color:black; font-size:large;">${ n.boardTitle }</div>
-						<a href="detail.no?no=${ n.boardNo }">${ n.boardContent }</a>
+						<div style="color:black; font-size:large; margin-bottom:10px;" class="hara">${ n.boardTitle }</div>
+						<a href="detail.no?no=${ n.boardNo }" class="hara">${ n.boardContent }</a>
 					</div>
 				</div>
-				<br><br>
+				<br>
 				</c:forEach>
 				<br><hr>
 			</div>
@@ -62,12 +65,11 @@
 				<c:forEach var="b" items="${ board }">
 					<div class="searchForm">
 						<div id="BoardView">
-							<div style="color:black; font-size:large;">${ b.boardTitle }</div>
-							<br>
-							<a href="detail.de?no=${ b.boardNo }">${ b.boardContent }</a>
+							<div style="color:black; font-size:large; margin-bottom:10px;" class="hara">${ b.boardTitle }</div>
+							<a href="detail.de?no=${ b.boardNo }" class="hara">${ b.boardContent }</a>
 						</div>
 					</div>
-					<br><br>
+					<br>
 				</c:forEach>
 				<br><hr>
 			</div>
@@ -75,14 +77,15 @@
 			<div class="calendarResult">
 					<h3>캘린더</h3><br>
 				<c:forEach var="s" items="${ schedule }">
+				<br>
 				<div class="searchForm">
 					<div id="calendarView">
 						<span style="color:black; font-size:large;">${ s.scheStartDate } / ${ s.scheEndDate }</span>
-						<a href="detail.ca?sNo=${ s.scheNo }&memNo=${loginUser.memNo}">${ s.scheTitle }</a>
+						<a href="detail.ca?sNo=${ s.scheNo }&memNo=${loginUser.memNo}" class="hara">${ s.scheTitle }</a>
 						<br>
 						<span>참석자 </span>&nbsp;
 						<span> | </span>&nbsp;
-						<span style="color:black;"> ${ s.scheAtndList } </span>
+						<span style="color:black;" class="hara"> ${ s.scheAtndList } </span>
 					</div>
 				</div>
 				</c:forEach>
@@ -92,6 +95,7 @@
 		</div>
 		<div>
 			<h4>다음 메뉴에 대해 일치하는 검색 결과가 없습니다.</h4>
+			<br>
 			<div>
 				<c:if test="${ empty mail }">
 					<span><i class="fa-solid fa-envelope"></i> 메일</span>&nbsp;&nbsp;
@@ -119,7 +123,7 @@
 
 	<script type="text/javascript">   
 		$(function(){
-			$("#mailGo").click(function(){
+			$(".mailGo").click(function(){
 				
 				let mailNo = $(this).children('input[type=hidden]').val();
 				console.log(mailNo);
@@ -155,8 +159,21 @@
 			}
 		})
 		
-		
-		
 	</script>
+	
+	
+	<div class="hara">이</div>
+ 
+	<script>
+		$(function () {
+		    var search = $('#searchI').val();
+		    $(".hara:contains('"+search+"')").each(function () {
+		        var regex = new RegExp(search,'gi');
+		        $(this).html( $(this).text().replace(regex, "<span class='txt-hlight'>"+search+"</span>") );
+		    });
+		});
+	</script>
+
+
 </body>
 </html>

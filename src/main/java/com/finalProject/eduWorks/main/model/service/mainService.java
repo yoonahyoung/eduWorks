@@ -32,7 +32,7 @@ public interface mainService {
 	ArrayList<Mail> searchMail(HashMap map);
 	ArrayList<Board> searchBoard(HashMap bMap);
 	ArrayList<Board> searchNotice(String key);
-	ArrayList<Schedule> searchSchedule(String key);
+	ArrayList<Schedule> searchSchedule(HashMap map);
 	
 	
 }

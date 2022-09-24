@@ -69,7 +69,6 @@ public class mainController {
 	
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 5);
 		ArrayList<Board> list = mService.selectMainDeptList(pi, deptCode);
-		
 		HashMap<String, Object> map = new HashMap<>();
         map.put("list", list);
         map.put("pi", pi);
@@ -134,20 +133,21 @@ public class mainController {
 		Mail ma = new Mail();
 		ma.setMemNo(memNo);
 		ma.setReceiverMem(memEmail);
-		
 		HashMap map = new HashMap();
 		map.put("key", key);
 		map.put("ma", ma);
+		
 		HashMap bMap = new HashMap();
 		bMap.put("key", key);
 		bMap.put("deptCode", deptCode);
 		
+		
 		ArrayList<Mail> m = mService.searchMail(map);
 		ArrayList<Board> b = mService.searchBoard(bMap);
 		ArrayList<Board> n = mService.searchNotice(key);
-		ArrayList<Schedule> s = mService.searchSchedule(key);
+		ArrayList<Schedule> s = mService.searchSchedule(map);
 		
-		System.out.println(b);
+		System.out.println(m);
 		
 		mv.addObject("mail", m)
 		  .addObject("board", b)
