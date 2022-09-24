@@ -26,7 +26,7 @@
 
 	<jsp:include page="common/header.jsp" />
 	<div style="background-color:whitesmoke; height:auto;">
-	<div style="width:100%; height:1140px;">
+	<div style="width:100%; height:1250px;">
 		<div style="float: left; width:17%;  background-color:whitesmoke;" class="divBox">
 			<div id="profileE" style="height:400px; width:100%; text-align:center; padding-top:10px; margin: 10% 5% 5% 4%; border-radius:5px; background-color: white;">
 				<div style="margin-top:7%; height:80px">
@@ -140,14 +140,14 @@
 			
 			
 			
-			<div style="background-color:white; height:700px; padding-bottom: 50px;">
+			<div style="background-color:white; height:800px; padding-bottom: 30px;">
             	<div >
-	            	<table class="bestTable" style="width:250px;">
+	            	<table class="bestTable" style="width:100%;">
 		                <thead>
 		                	<tr><td></td></tr><tr><td></td></tr>
 		                    <tr>
 		                        <th colspan="2">추천게시판 <i class="fa fa-thumbs-up fa-regular"></i></th>
-		                        <tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
+		                        <tr><td></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
 		                    </tr>
 		                </thead>
 		                <tbody id="thumbsHotArea">
@@ -157,12 +157,12 @@
 		              
 		              <br><br><hr class="hr_line">
 		              
-		              <table class="bestTable">
+		              <table class="bestTable" style="width:100%;">
 		                <thead>
 		                	<tr><td></td></tr>
 		                    <tr>
-		                        <th colspan="2">핫게시판 <i class="fa fa-comments fa-regular"></i></th>
-		                        <tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
+		                        <th colspan="2" >핫게시판 <i class="fa fa-comments fa-regular"></i></th>
+		                        <tr><td></td></tr><tr><td></td></tr>
 		                    </tr>
 		                </thead>
 		                <tbody id="replyHotArea">
@@ -209,7 +209,7 @@
 								if(map.like[i] == undefined || map.like[i] == null || map.like[i] == ""){
 									value += '<tr>'
    				                      + '<td align="center"><a>-</a></td>'
-   				                      + '<td align="right"></td>'
+   				                      + '<td align="right" style="width:100px"></td>'
    				                   + '</tr>';
   				                count++;
 								}else {
@@ -220,7 +220,7 @@
 									if(map.like[i].boardNo == map.list[j].boardNo){
    									value += '<tr>'
            				                      + '<td><a href="detail.bl?no=' + map.list[j].boardNo + '">' + map.list[j].boardTitle + '</a></td>'
-           				                      + '<td align="right">' + (map.list[j].boardEnDate).substr(5) + '</td>'
+           				                      + '<td align="right" style="width:130px">' + (map.list[j].boardEnDate).substr(5) + '</td>'
            				                   + '</tr>';
    									count++;
    								}
@@ -265,7 +265,7 @@
 									if(map.reply[i].reBoardNo == map.list[j].boardNo){
    									value += '<tr>'
            				                      + '<td><a href="detail.bl?no=' + map.list[j].boardNo + '">' + map.list[j].boardTitle + '</a></td>'
-           				                      + '<td align="right">' + (map.list[j].boardEnDate).substr(5) + '</td>'
+           				                      + '<td align="right" style="width:130px">' + (map.list[j].boardEnDate).substr(5) + '</td>'
            				                   + '</tr>';
    									count++;
    								}
