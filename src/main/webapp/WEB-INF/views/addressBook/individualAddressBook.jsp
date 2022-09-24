@@ -237,9 +237,11 @@
 			</div>
 
 			<div>
+				<!-- 
 				<button type="button" class="reply-btn">
 					<i class="fas fa-location-arrow"></i>&nbsp;&nbsp;메일 작성
 				</button>
+				 -->
 				<button type="button" class="sub-btn" onclick="return deleteAddNum();">
 					<i class="fas fa-trash-alt"></i>&nbsp;&nbsp;삭제
 				</button>
@@ -417,12 +419,14 @@
 						    } 
 						 }
 					 
+				<%--
 	             // 더블클릭시 해당 선택자에게 메일 보내는 함수 실행
 	             $(function() {
 	                 $(".board-content>tbody>tr").dblclick(function() {
 	                     location.href="sendMail.ma?mail=" + $(this).children().eq(6).text();
 	                 })
 	             })
+	             --%>
 
              </Script>
 
