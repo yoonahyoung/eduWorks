@@ -88,6 +88,12 @@ public class DeptBoardServiceImpl implements DeptBoardService{
 		return dDao.insertDeptBoard(sqlSession, b);
 	}
 	
+	// 게시글 마지막 번호 구하기
+	@Override
+	public int lastBoNo() {
+		return dDao.lastBoNo(sqlSession);
+	}
+	
 	// 첨부파일 등록
 	@Override
 	public int insertAttachment(Attachment at) {
@@ -111,4 +117,6 @@ public class DeptBoardServiceImpl implements DeptBoardService{
 	public int deleteDeptBoard(int boardNo) {
 		return dDao.deleteDeptBoard(sqlSession, boardNo);
 	}
+
+	
 }

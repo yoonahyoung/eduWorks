@@ -23,6 +23,16 @@
 		<result column="mem_profile" property="memProfile"/>
 	</resultMap>
 	
+	<resultMap type="com.finalProject.eduWorks.personnel.model.vo.AutoHo" id="resultAutoHo">
+		<result column="mem_no" property="memNo"/>
+		<result column="mem_name" property="memName"/>
+		<result column="mem_enroll_date" property="memEnrollDate"/>
+		<result column="mem_count" property="memCount"/>
+		<result column="year" property="year"/>
+		<result column="month" property="month"/>
+		<result column="day" property="day"/>
+	</resultMap>
+	
 	<resultMap type="Member" id="resultTeacherDetailList">
 		<result column="mem_no" property="memNo"/>
 		<result column="mem_id" property="memId"/>
@@ -1171,11 +1181,13 @@
 			  into tb_holiday
 			     (mem_no
 			    , ho_num
+			    , ho_comment
 			     )
 			values
 				(
 			     #{arr}
 			   , #{dateCount}
+			   , #{comment}
 				)
 		</foreach>
 	</insert>
@@ -1185,11 +1197,13 @@
 			  into tb_holiday
 			     (mem_no
 			    , ho_num
+			    , ho_comment
 			     )
 			values
 				(
 			     #{arr}
 			   , #{dateCount}
+			   , #{comment}
 				)
 		</foreach>
 	</insert>
@@ -1444,6 +1458,9 @@
 		 <if test="startDate != null">
 		 	and to_date(APRV_DOC_ENDATE) between to_date(#{startDate}) and to_date(#{endDate}) 
 		 </if>
+		 <if test="check3 == true">
+		 	and LEAVE_REASON = ''
+		 </if>
 		   and mem_name like '%'||#{keyword}||'%'
 	</select>
 	
@@ -1475,6 +1492,9 @@
 		 <if test="startDate != null">
 		 	and to_date(APRV_DOC_ENDATE) between to_date(#{startDate}) and to_date(#{endDate}) 
 		 </if>
+		 <if test="check3 == true">
+		 	and LEAVE_REASON = ''
+		 </if>
 		   and mem_name like '%'||#{keyword}||'%'
 		 order
 		    by 4 desc
@@ -1499,7 +1519,7 @@
 	</select>
 	
 	<select id="holidayAddList" resultMap="resultHoliday">
-		select h.mem_no
+		select h.mem_no,
 		       mem_name,
 		       dept_name,
 		       job_name,
@@ -1520,7 +1540,7 @@
 		 <if test="startDate != null">
 		 	and to_date(ho_date) between to_date(#{startDate}) and to_date(#{endDate}) 
 		 </if>
-		 order by 4 desc
+		 order by 5 desc
 	</select>
 	
 	<insert id="updatefixout">
@@ -1586,4 +1606,242 @@
 		   SET LEAVE_REASON = '등록완료'
 		 WHERE APRV_NO = #{keyword}
 	</update>
+	
+	<insert id="updateh1">
+		insert
+		  into tb_attendance
+		     ( att_no
+		     , mem_no
+		     , att_date
+		     , att_fixedin
+		     , att_status
+		     , att_hstatus
+		     )
+	   values
+	        ( seq_atteno.nextval
+	        , #{userNo}
+	        , #{startDate}
+	        , '14:00'
+	        , 'H'
+	        , 'H1'
+	        ) 
+	</insert>
+	
+	<insert id="updateh2">
+		insert
+		  into tb_attendance
+		     ( att_no
+		     , mem_no
+		     , att_date
+		     , att_fixedout
+		     , att_status
+		     , att_hstatus
+		     )
+	   values
+	        ( seq_atteno.nextval
+	        , #{userNo}
+	        , #{startDate}
+	        , '11:00'
+	        , 'H'
+	        , 'H2'
+	        ) 
+	</insert>
+	
+	<select id="countWorktime" resultType="string">
+		  SELECT SUM(att_worktime)
+			FROM tb_attendance
+			WHERE SUBSTR(ATT_DATE,0,7)=#{str}
+			  AND MEM_NO=#{userNo}
+	</select>
+	
+	<select id="AtListCount3" resultType="_double">
+	SELECT COUNT(*)
+	FROM(
+		SELECT *
+		FROM(
+			SELECT 
+			       A.ATT_NO 
+			     , C.MEM_NO
+			     , M.MEM_NAME
+			     , NVL(ATT_DATE, TO_CHAR(WORKING_DAY, 'YYYY-MM-DD')) att_date
+			     , ATT_FIXEDIN
+			     , ATT_FIXEDOUT
+			     , ATT_IN
+			     , ATT_OUT
+			     , ATT_WORKOFF
+			     , ATT_WORKTIME
+			     , NVL(ATT_STATUS, 'F') att_status
+			     , ATT_HSTATUS
+			FROM TB_ATTENDANCE A
+			right JOIN (
+			                SELECT WORKING_DAY, MEM_NO
+			                FROM (
+			                            SELECT TO_DATE(#{startDate}) + LEVEL - 1 working_day
+			                            FROM DUAL
+			                        CONNECT BY LEVEL &lt;= 1000
+			                    ), (SELECT * FROM TB_MEMBER)
+			            ) C ON (ATT_DATE = WORKING_DAY AND A.MEM_NO = C.MEM_NO)
+			JOIN TB_MEMBER M ON (C.MEM_NO=M.MEM_NO)
+			WHERE TO_CHAR(WORKING_DAY,'YYYY-MM') = #{endDate}
+			ORDER BY 4 DESC, 2)
+		WHERE 
+			<choose>
+			 	<when test="check1==true and check2==false and check3==false">
+			 		(ATT_STATUS = 'D' OR ATT_STATUS = 'H')
+			 	</when>
+			 	<when test="check1==false and check2==true and check3==false">
+			 		(ATT_STATUS = 'L' OR ATT_STATUS = 'E')
+			 	</when>
+			 	<when test="check1==false and check2==false and check3==true">
+			 		(ATT_STATUS = 'F')
+			 	</when>
+			 	<otherwise>
+			 		1=1
+			 	</otherwise>
+			 </choose>
+			 AND MEM_NO = #{userNo}
+			 <choose>
+			 	<when test="list == null">
+			 	
+			 	</when>
+			 	<otherwise>
+			 		<foreach collection="list" item="date">
+			 			AND ATT_DATE != #{date.reRestdate}
+			 		</foreach>
+			 	</otherwise>
+			 </choose>
+			 )
+	</select>
+	
+	<select id="searchRestdate2" resultMap="resultRestDate">
+		SELECT RE_RESTDATE
+		     , RE_DATENAME
+		  FROM TB_RESTDATE
+		 WHERE SUBSTR(RE_RESTDATE,0,7) = #{endDate}
+	</select>
+	
+	<select id="countWeekWorktime" resultType="string">
+		  SELECT SUM(att_worktime)
+			FROM tb_attendance
+			WHERE TO_DATE(att_date) BETWEEN TO_DATE(#{startDate}) AND TO_DATE(#{endDate})
+			  AND MEM_NO=#{userNo}
+	</select>
+	
+	<select id="atListWeekCount" resultType="_double">
+	SELECT COUNT(*)
+	FROM(
+		SELECT *
+		FROM(
+			SELECT 
+			       A.ATT_NO 
+			     , C.MEM_NO
+			     , M.MEM_NAME
+			     , NVL(ATT_DATE, TO_CHAR(WORKING_DAY, 'YYYY-MM-DD')) att_date
+			     , ATT_FIXEDIN
+			     , ATT_FIXEDOUT
+			     , ATT_IN
+			     , ATT_OUT
+			     , ATT_WORKOFF
+			     , ATT_WORKTIME
+			     , NVL(ATT_STATUS, 'F') att_status
+			     , ATT_HSTATUS
+			FROM TB_ATTENDANCE A
+			right JOIN (
+			                SELECT WORKING_DAY, MEM_NO
+			                FROM (
+			                            SELECT TO_DATE(#{startDate}) + LEVEL - 1 working_day
+			                            FROM DUAL
+			                        CONNECT BY LEVEL &lt;= 1000
+			                    ), (SELECT * FROM TB_MEMBER)
+			            ) C ON (ATT_DATE = WORKING_DAY AND A.MEM_NO = C.MEM_NO)
+			JOIN TB_MEMBER M ON (C.MEM_NO=M.MEM_NO)
+			WHERE WORKING_DAY &lt;= TO_DATE(#{endDate})
+			ORDER BY 4 DESC, 2)
+		WHERE 
+			<choose>
+			 	<when test="check1==true and check2==false and check3==false">
+			 		(ATT_STATUS = 'D' OR ATT_STATUS = 'H')
+			 	</when>
+			 	<when test="check1==false and check2==true and check3==false">
+			 		(ATT_STATUS = 'L' OR ATT_STATUS = 'E')
+			 	</when>
+			 	<when test="check1==false and check2==false and check3==true">
+			 		(ATT_STATUS = 'F')
+			 	</when>
+			 	<otherwise>
+			 		1=1
+			 	</otherwise>
+			 </choose>
+			 AND MEM_NO = #{userNo}
+			 <choose>
+			 	<when test="list == null">
+			 	
+			 	</when>
+			 	<otherwise>
+			 		<foreach collection="list" item="date">
+			 			AND ATT_DATE != #{date.reRestdate}
+			 		</foreach>
+			 	</otherwise>
+			 </choose>
+			 )
+	</select>
+	
+	<select id="memNolists" resultMap="resultAutoHo">
+		SELECT MEM_NO
+		     , MEM_NAME
+		     , MEM_ENROLL_DATE
+		     , mem_count
+		     , TRUNC(MONTHS_BETWEEN(SYSDATE, MEM_ENROLL_DATE) / 12) AS "year"
+		     , TRUNC(MOD(MONTHS_BETWEEN(SYSDATE, MEM_ENROLL_DATE) / 12, 1) * 12) AS "month"
+		     , TRUNC(MOD(MOD(MONTHS_BETWEEN(SYSDATE, MEM_ENROLL_DATE) / 12, 1) * 12, 1) * (365 / 12)) AS "day"
+		  FROM TB_MEMBER
+		 where MEM_RESIGN_STATUS = 'N'
+	</select>
+	
+	<insert id="sendAutoHo1">
+		insert 
+		  into tb_holiday (
+		  		mem_no
+		  	  , ho_num
+		  	  , ho_comment
+		  	   )
+		 values (
+		 	     #{no}
+		 	   , 1
+		 	   , '자동월차'
+		 		)
+	</insert>
+	
+	<update id="updateAutoHo1">
+		update tb_member
+		   set mem_count = mem_count+0.05
+		 where mem_no = #{no}
+	</update>
+	
+	<insert id="sendAutoHo15">
+		insert 
+		  into tb_holiday (
+		  		mem_no
+		  	  , ho_num
+		  	  , ho_comment
+		  	   )
+		 values (
+		 	     #{no}
+		 	   , 15
+		 	   , '자동연차'
+		 		)
+	</insert>
+	
+	<update id="updateAutoHo15">
+		update tb_member
+		   set mem_count = mem_count+1
+		 where mem_no = #{no}
+	</update>
+	
+	<update id="changePwd">
+		update tb_member
+		   set mem_pwd = #{memPwd}
+		 where mem_no = #{memNo}
+	</update>
+	
 </mapper>

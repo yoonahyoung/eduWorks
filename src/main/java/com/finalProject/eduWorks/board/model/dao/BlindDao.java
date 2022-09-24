@@ -16,7 +16,7 @@ import com.finalProject.eduWorks.common.model.vo.Reply;
 public class BlindDao {
 	// 페이징처리
 	public int selectListCount(SqlSessionTemplate sqlSession, String keyword) {
-		return sqlSession.selectOne("blindMapper.selectListCountB");
+		return sqlSession.selectOne("blindMapper.selectListCountB", keyword);
 	}
 
 	// 익명 게시판 리스트 조회

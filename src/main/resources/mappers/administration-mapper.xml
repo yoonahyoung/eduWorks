@@ -86,7 +86,7 @@
 			 , student_email
 			 , student_birth
 			 , student_gender
-			 , student_en_date
+			 , to_char(student_en_date, 'YYYY-MM-DD') as "student_en_date"
 		  from tb_student 
 		 where student_no = #{studentNo}
 	</select>

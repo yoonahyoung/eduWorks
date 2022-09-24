@@ -234,6 +234,7 @@
                                         		}else{
                                         			$('#rebtn').css('display','none')
                                         		}
+                                        		$('#adjFile').attr('href',$(this).children('#sel5').text())
                                         	})
                                         </script>
                                         

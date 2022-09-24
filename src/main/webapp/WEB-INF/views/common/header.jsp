@@ -178,9 +178,11 @@
 	                        <a class="collapse-item" href="AttManage.me">출퇴근/근무내역관리</a>
 	                        <a class="collapse-item" href="holiday.me">내 연차내역</a>
 	                        <a class="collapse-item" href="info.me">내 인사정보</a>
+	                        <c:if test="${ loginUser.deptCode eq 'D1' || loginUser.deptCode eq 'DN'}">
 	                        <a class="collapse-item" href="list.te">강사 관리</a>
 	                        <a class="collapse-item" href="list.em">직원 관리</a>
 	                        <a class="collapse-item" href="select.at">근태 관리</a>
+	                        </c:if>
 	                    </div>
 	                </div>
 	            </li>

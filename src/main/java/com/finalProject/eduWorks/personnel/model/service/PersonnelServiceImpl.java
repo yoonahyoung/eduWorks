@@ -376,6 +376,51 @@ public class PersonnelServiceImpl implements PersonnelService {
 		return pDao.addHoCalendar(sqlSession, s, enrollDate);
 	}
 
+	@Override
+	public int addHalfHoCalendar(SearchAt s, boolean radio1, boolean radio2) {
+		return pDao.addHalfHoCalendar(sqlSession, s, radio1, radio2);
+	}
+
+	@Override
+	public ArrayList<String> countWorktime(ArrayList<String> xlist, String userNo) {
+		return pDao.countWorktime(sqlSession, xlist, userNo);
+	}
+
+	@Override
+	public ArrayList<String> atListCount3(SearchAt s, ArrayList<String> xlist, ArrayList<String> xlist2) {
+		return pDao.atListCount3(sqlSession, s, xlist, xlist2);
+	}
+
+	@Override
+	public ArrayList<String> countWeekWorktime(ArrayList<String> xlist, ArrayList<String> xlist2, String userNo) {
+		return pDao.countWeekWorktime(sqlSession, xlist, xlist2, userNo);
+	}
+
+	@Override
+	public ArrayList<String> atListWeekCount(SearchAt s, ArrayList<String> xlist, ArrayList<String> xlist2) {
+		return pDao.atListWeekCount(sqlSession, s, xlist, xlist2);
+	}
+
+	@Override
+	public HashMap checkHo() {
+		return pDao.checkHo(sqlSession);
+	}
+
+	@Override
+	public int sendAutoHo1(String[] list1) {
+		return pDao.sendAutoHo1(sqlSession, list1);
+	}
+
+	@Override
+	public int sendAutoHo15(String[] list15) {
+		return pDao.sendAutoHo15(sqlSession, list15);
+	}
+
+	@Override
+	public int changePwd(Member mb) {
+		return pDao.changePwd(sqlSession, mb);
+	}
+
 	
 
 

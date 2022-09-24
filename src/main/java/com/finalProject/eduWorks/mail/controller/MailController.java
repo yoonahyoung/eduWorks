@@ -859,16 +859,9 @@ public class MailController {
 	@ResponseBody
 	@RequestMapping("deleteTag.ma")
 	public String ajaxDeleteTag(Tag t) {
-		
-		int updateTag = mService.updateTagNull(t);
-		int delete = 0;
-		
-		if(updateTag > 0) {
-			delete = mService.deleteTag(t);			
-		}
-		
-		int result = updateTag * delete;
-		
+
+		int result = mService.deleteTag(t);
+
 		return result > 0 ? "success" : "fail";
 	}
 	

@@ -167,8 +167,9 @@
 	           		
 	           		selectBest("");
 	           		selectReList("");
+	           		
 	           	})
-		           	
+		        let txt = "..."; 	
 	           	// 추천 수 조회 및 추천 게시판 리스트 뿌려주기
            		function selectBest(reBoardNoStr){
 	           		$.ajax({ // 추천 수 조회
@@ -203,8 +204,13 @@
        									}else
        									if(map.like[i].boardNo == map.list[j].boardNo){
 	       									value += '<tr>'
-		           				                      + '<td><a href="detail.bl?no=' + map.list[j].boardNo + '">' + map.list[j].boardTitle + '</a></td>'
-		           				                      + '<td align="right">' + (map.list[j].boardEnDate).substr(5) + '</td>'
+		           				                      + '<td><a href="detail.bl?no=' + map.list[j].boardNo + '">';
+		           				                      if(map.list[j].boardTitle.length > 12){
+		           				                    	value += (map.list[j].boardTitle).substr(0, 12) + txt + '</a></td>';
+		           				                      }else{
+		           				                    	value += map.list[j].boardTitle + '</a></td>';
+		           				                      }
+		           				               value += '<td align="right">' + (map.list[j].boardEnDate).substr(5) + '</td>'
 		           				                   + '</tr>';
 	       									count++;
 	       								}
@@ -254,8 +260,13 @@
     		           					}else
        									if(map.reply[i].reBoardNo == map.list[j].boardNo){
 	       									value += '<tr>'
-		           				                      + '<td><a href="detail.bl?no=' + map.list[j].boardNo + '">' + map.list[j].boardTitle + '</a></td>'
-		           				                      + '<td align="right">' + (map.list[j].boardEnDate).substr(5) + '</td>'
+		           				                      + '<td><a href="detail.bl?no=' + map.list[j].boardNo + '" class="limitTitle">';
+				       									if(map.list[j].boardTitle.length > 12){
+			           				                    	value += (map.list[j].boardTitle).substr(0, 12) + txt + '</a></td>';
+			           				                      }else{
+			           				                    	value += map.list[j].boardTitle + '</a></td>';
+			           				                      }
+				       							value += '<td align="right">' + (map.list[j].boardEnDate).substr(5) + '</td>'
 		           				                   + '</tr>';
 	       									count++;
 	       								}

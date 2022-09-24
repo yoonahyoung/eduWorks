@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -100,5 +101,10 @@ public class DeptBoardDao {
 	// 첨부파일 수정
 	public int updateAttachment(SqlSessionTemplate sqlSession, Attachment at) {
 		return sqlSession.update("deptBoardMapper.updateAttachmentD", at);
+	}
+
+	// 게시글 마지막 번호 구하기
+	public int lastBoNo(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("deptBoardMapper.lastBoNo");
 	}
 }

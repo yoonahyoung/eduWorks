@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.mybatis.spring.SqlSessionTemplate;
+
 import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.mail.model.vo.MailStatus;
 import com.finalProject.eduWorks.member.model.vo.Department;
@@ -142,4 +144,19 @@ public interface PersonnelService {
 	int holidayAddCount(SearchAt s);
 	ArrayList<Holiday> holidayAddList(PageInfo pi1,SearchAt s);
 	int addHoCalendar(SearchAt s,List enrollDate);
+	int addHalfHoCalendar(SearchAt s,boolean radio1,boolean radio2);
+	
+	//차트관련
+	ArrayList<String> countWorktime(ArrayList<String> xlist,String userNo);
+	ArrayList<String> atListCount3(SearchAt s,ArrayList<String> xlist,ArrayList<String> xlist2);
+	ArrayList<String> countWeekWorktime(ArrayList<String> xlist,ArrayList<String> xlist2, String userNo);
+	ArrayList<String> atListWeekCount(SearchAt s,ArrayList<String> xlist,ArrayList<String> xlist2);
+	
+	//연차자동지급
+	HashMap checkHo();
+	int sendAutoHo1(String[] list1);
+	int sendAutoHo15(String[] list15);
+	
+	//비밀번호변경
+	int changePwd(Member mb);
 }

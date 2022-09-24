@@ -38,12 +38,105 @@
                             <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b;">
                             <br>
                             <div>
-                                <h4 style="font-weight: bold;">연차일괄지급 대상자 : 전월에 지각,결근,조퇴가 없는직원</h4>
+                                <h4 style="font-weight: bold;">연차일괄지급 대상자 : 1년차미만인직원(매월 만근시 연차1일지급)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1년차이상직원(1년갱신마다 연차15일지급)</h4>
                             </div>
                             <br>
                             <div style="width: 1000px; padding-left: 250px;" >
-                                <button type="button" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent" style="width: 150px;">일괄지급</button>
+                                <button type="button" onclick='checksho()' class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent" style="width: 150px;">일괄지급</button>
                             </div>
+                            
+                            <script type="text/javascript">
+                            	function checksho(){
+                            		$.ajax({
+                            			url:'check.ho',
+                            			method:'POST',
+                            			success:function(result){
+                            				if(result){
+                            					console.log(result)
+                            					let count = (result.list1.length)-1
+                            					let count2 = (result.list15.length)-1
+                            					if(count==-1 && count2==-1){
+                            						alert('조건에 맞는 직원이 없습니다.')
+                            					}else{
+                            						
+                            						if(count==-1){
+                            							if(confirm('1년차이상 : '+result.namelist15[0]+'외 '+count2+'명\n지급하시겠습니까?')){
+                            								sendAutoho(result)
+                            							}
+                            						}else if(count2==-1){
+                            							if(confirm('1년차미만 : '+result.namelist1[0]+'외 '+count+'명\n지급하시겠습니까?')){
+                            								sendAutoho2(result)
+                            							}
+                            						}else{
+                            							if(confirm('1년차미만 : '+result.namelist1[0]+'외 '+count+'명\n1년차이상 : '+result.namelist15[0]+'외 '+count2+'명\n지급하시겠습니까?')){
+                            								sendAutoho1(result)
+                            							}
+                            						}
+                            					}
+                            				}else{
+                            					alert('실패')
+                            					console.log('실패')
+                            				}
+                            			},error:function(){
+                            				alert('애러')
+                            				console.log('애러')
+                            			}
+                            		})
+                            	}
+                            	
+                            	function sendAutoho1(result){
+                            		let list1 = result.list1
+                            		let list15 = result.list15
+                            		console.log(list1)
+                            		console.log(list15)
+                            		$.ajax({
+                            			url:'sendAuto1.ho',
+                            			method:'POST',
+                            			data:{list1:list1,
+                            				  list15:list15},
+                            			success:function(re){
+                            				location.href=location.href
+                            			},error:function(){
+                            				alert('애러')
+                            				console.log('애러')
+                            			}
+                            		})
+                            	}
+                            	
+                            	function sendAutoho2(result){
+                            		let list1 = result.list1
+                            		console.log(list1)
+                            		$.ajax({
+                            			url:'sendAuto2.ho',
+                            			method:'POST',
+                            			data:{list1:list1},
+                            			success:function(re){
+                            				location.href=location.href
+                            			},error:function(){
+                            				alert('애러')
+                            				console.log('애러')
+                            			}
+                            		})
+                            	}
+                            	
+                            	function sendAutoho3(result){
+                            		let list15 = result.list15
+                            		console.log(list15)
+                            		$.ajax({
+                            			url:'sendAuto3.ho',
+                            			method:'POST',
+                            			data:{list15:list15},
+                            			success:function(re){
+                            				location.href=location.href
+                            			},error:function(){
+                            				alert('애러')
+                            				console.log('애러')
+                            			}
+                            		})
+                            	}
+                            </script>
+                            
                             <br><br>
                             <h3 class="su_sub_menu_name">연차개별지급</h3>
                             <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b;">
@@ -145,6 +238,7 @@
                                             <option style="padding-left:30px ;" value="3">3일</option>
                                             <option style="padding-left:30px ;" value="15">15일</option>
                                         </select>  
+                                        <input type="text" id="comment" name="comment" style="height: 37px" placeholder="지급/회수 사유입력">
                                     </div>
                                     <br>  
                                     <button type="button" id="add1" class="button1">연차지금</button> 
@@ -246,22 +340,29 @@
                             			if($('#select1').val()=='all'){
                             				alert('지급일수를 선택해주세요')
                             			}else{
-                            				$('#forms').attr('action', 'add.ho');
-                                			$('#forms').submit()
+                            				if($('#comment').val()==''){
+                                				alert('지급 사유를 입력해주세요')
+                                			}else{
+	                            				$('#forms').attr('action', 'add.ho');
+	                                			$('#forms').submit()
+                                			}
                             			}
                             		}
                             	})
                             	
                             	$('#delete1').click(function(){
                             		if(rNo.length == 0){
-                            			alert('지급회원을 선택해주세요')
+                            			alert('회수할회원을 선택해주세요')
                             		}else{
                             			if($('#select1').val()=='all'){
-                            				alert('지급일수를 선택해주세요')
+                            				alert('회수일수를 선택해주세요')
                             			}else{
-                            				$('#forms').attr('action', 'delete.ho');
-                                			$('#forms').submit()
-
+                            				if($('#comment').val()==''){
+                                				alert('회수 사유를 입력해주세요')
+                                			}else{
+	                            				$('#forms').attr('action', 'delete.ho');
+	                                			$('#forms').submit()
+                                			}
                             			}
                             		}
                             	})

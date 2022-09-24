@@ -88,6 +88,10 @@ public class NoticeServiceImpl implements NoticeService{
 		return nDao.insertNotice(sqlSession, b);
 	}
 	
+	// 마지막 게시글 번호 구하기
+	public int lastBoNo() {
+		return nDao.lastBoNo(sqlSession);
+	}
 	// 첨부파일 등록
 	@Override
 	public int insertAttachment(Attachment at) {
@@ -118,6 +122,8 @@ public class NoticeServiceImpl implements NoticeService{
 	public int goTop(String checkList, int isYN) {
 		return nDao.goTop(sqlSession, checkList, isYN);
 	}
+
+	
 	
 
 }

@@ -232,7 +232,7 @@ select {
                                     <tr>
                                         <th>조회부서</th>
                                         <td>
-                                            <select name="deptCode" id="select1" name="select1">
+                                            <select name="deptCode" id="select1" >
                                             	<option value="all">전체</option>
                                             	<c:forEach var="d" items="${ dlist }">
                                             		<option value="${ d.deptCode }">${ d.deptName }</option>
@@ -243,7 +243,7 @@ select {
                                     <tr>
                                         <th>조회직급</th>
                                         <td>
-                                            <select name="jobCode" id="select2" name="select2">
+                                            <select name="jobCode" id="select2" >
                                             	<option value="all">전체</option>
                                             	<c:forEach var="j" items="${ jlist }">
                                             		<option value="${ j.jobCode }">${ j.jobName }</option>
@@ -272,19 +272,9 @@ select {
                                     <button type="submit" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">조회하기</button>
                                     
                                 </div>
-                                </form>
                                 
-                                <c:if test="${ not empty condition.jobCode }">
-                                	<script>
-                                		$(function(){
-                                			$("option[value='${condition.deptCode}']").attr("selected", true);
-                                			
-                                			$('#select2').val('${condition.jobCode}')
-                                			
-                                			$('#keyword').val('${condition.keyword}')
-                                		})
-                                	</script>
-                                </c:if>
+                                
+                                
                                 
                                 <!--  
                                  <c:if test="${ not empty condition }">
@@ -312,8 +302,45 @@ select {
                                 
 
                                 <br><br>
+                                <div>
+                                <div style="float: left;">
                                 <h3 class="su_sub_menu_name">연차승인내역</h3>
-                                <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b; position:relative">
+                                </div>
+                                <div align="right" class="checks" style="float: right;">
+                               		  <input  type="checkbox" id="ck3" name="check3" > 
+	                                  <label for="ck3">등록전 승인내역만 보기</label>
+                               	</div>
+                               	
+                               	<script type="text/javascript">
+                               		$('#ck3').on('change',function(){
+                               			if(${condition.check3}==true){
+                               				$('#ck3').val('off')
+                               				console.log($('#ck3').val())
+                               			}
+                               			location.href="selectManage.ho?deptCode="+$('#select1').val()+"&jobCode="+$('#select1').val()+"&startDate="+$('#startDate').val()+"&endDate="+$('#endDate').val()+"&keyword="+$('#keyword').val()+"&check3="+$('#ck3').val()
+                               		})
+                               	</script>
+                                
+                                </div>
+                                </form>
+                                
+                                <c:if test="${ not empty condition.jobCode }">
+                                	<script>
+                                		$(function(){
+                                			$("option[value='${condition.deptCode}']").attr("selected", true);
+                                			
+                                			$('#select2').val('${condition.jobCode}')
+                                			
+                                			$('#keyword').val('${condition.keyword}')
+                                			
+                                			if(${condition.check3}==true){
+                                				$('#ck3').attr("checked", true);
+                                			}
+                                		})
+                                	</script>
+                                </c:if>
+                                
+                                <hr class="hr_line" style="border: 0px; clear:both; height: 3px; width: 1000px; background-color: #5e7e9b; position:relative">
                                 <div class="detailInfo positionab" id="div1" style="display:none ;">
                                     
                                             
@@ -365,9 +392,9 @@ select {
                                     <div  align="left" style="font-size: 25px; font-weight: bold; color: black;">승인반차 등록하기</div>
                                     
                                     <br>
-                                    <form action="">
-                                    	<input type="hidden" id="memNo" name="memNo">
-                                    	
+                                    <form action="addHCal.ho">
+                                    	<input type="hidden" id="memNo2" name="userNo">
+                                    	<input type="hidden" id="aprvno2" name="keyword">
                                         <table style="width: 100%;" class="tb6" >
                                             <tr>
                                                 <th style="padding-top: 20px; width:40% ">사원명</th>
@@ -375,16 +402,16 @@ select {
                                             </tr>
                                             <tr>
                                                 <th style="padding-top: 20px;">반차날짜</th>
-                                                <td style="padding-top: 20px;">&nbsp;<input type="text"  class="divall" style="width:80%;" id="attDate2" name="attDate" readonly></td>
+                                                <td style="padding-top: 20px;">&nbsp;<input type="text"  class="divall" style="width:80%;" id="startDate2" name="startDate" readonly></td>
                                             </tr>
                                             <tr>
                                                 <th style="padding-top: 20px;">반차종류</th>
                                                 <td style="padding-top: 20px;">&nbsp;
                                                 <div class="checks2">
-                                                		<input type="radio" class="rr1" class="divall" id="radio1" value="H1" name="attHStatus"> 
+                                                		<input type="radio" class="rr1" class="divall" id="radio1" name="radio1"> 
                                                         <label for="radio1">오전반차</label>
                                                         &nbsp;&nbsp;
-                                                        <input type="radio" class="rr1" class="divall" id="radio2" value="H2" name="attHStatus"> 
+                                                        <input type="radio" class="rr1" class="divall" id="radio2" name="radio2"> 
                                                         <label for="radio2">오후반차</label> 
                                                 </div>
                                                 </td>
@@ -392,14 +419,13 @@ select {
                                          </table>
                                          <br><br>
                                          <div align="center">
-                                            <button type="submit" onclick="return test11();" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent" style="width: 180px;">반차등록하기</button>
+                                            <button type="submit" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent" style="width: 180px;">반차등록하기</button>
                                         </div>
                                      </form>
                             	</div>
                                 <br>
 
-                               
-
+	
                                 <table class="tb5" width="95%" style="border-collapse: separate; border-spacing: 0 10px; ">
                                     <tr>
                                     	<th>사원명</th>
@@ -413,7 +439,7 @@ select {
                                     </tr>
                                     <c:choose>
                                     	<c:when test="${ empty list1 }">
-                                    		<tr><th colspan="6">조회된 목록 없음</th></tr>
+                                    		<tr><th colspan="7">조회된 목록 없음</th></tr>
                                     	</c:when>
                                     	<c:otherwise>
                                     		<c:forEach var="l1" items="${ list1 }">
@@ -485,6 +511,16 @@ select {
                             				$('#div1').css('display','')
                             				$('#div2').css('display','none')
                             			}else{
+                            				$('#memNo2').val($(this).children('#sel2').text())
+                            				$('#memName2').val($(this).children('#name1').text())
+                            				$('#startDate2').val($(this).children('#sel3').text())
+                            				$('#aprvno2').val($(this).children('#sel7').text())
+                            				if($(this).children('#sel5').text()==1){
+                            					$('#radio1').attr('checked',true)
+                            				}
+                            				if($(this).children('#sel5').text()==2){
+                            					$('#radio2').attr('checked',true)
+                            				}
                             				$('#div1').css('display','none')
                             				$('#div2').css('display','')
                             			}
@@ -497,6 +533,8 @@ select {
 	            		        		$('.divall').val('')
 	            		        		$('#ck1').attr('checked',false)
 	            		        		$('#ck2').attr('checked',false)
+	            		        		$('#radio1').attr('checked',false)
+	            		        		$('#radio2').attr('checked',false)
 	            		        })
                             </script>
                             
@@ -545,16 +583,19 @@ select {
                                 <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b;">
                             <div>    
                                 <br>
-                                 <table width="90%" class="tb4" style="display:none ;">
+                                 <table width="90%" class="tb4" id="da" style="display:none ;">
+                                    <tr>
+                                    	<th class="d0" id="d4" colspan="3"></th>
+                                    </tr>
                                     <tr>
                                         <th>연차지급일수</th>
                                         <th>연차사용일수</th>
                                         <th>남은연차일수</th>
                                     </tr>
                                     <tr>
-                                        <th>--</th>
-                                        <th>--</th>
-                                        <th>--</th>
+                                        <th class="d0" id="d1">--</th>
+                                        <th class="d0" id="d2">--</th>
+                                        <th class="d0" id="d3">--</th>
                                     </tr>
                                     
                                 </table>
@@ -575,11 +616,11 @@ select {
                                     	</c:when>
                                     	<c:otherwise>
                                     		<c:forEach var="l2" items="${ list2 }">
-                                    		<tr class="list2" onclick="holidayDetail(${ l2.memNo })">
+                                    		<tr class="list2" onclick="holidayDetail('${ l2.memNo },${ l2.hoDate },${ l2.memName }')">
 		                                    	<td align="center">${ l2.memName }</td>
 		                                    	<td align="center">${ l2.deptName }</td>
 		                                    	<td align="center">${ l2.jobName }</td>
-		                                        <td align="center">${ l2.hoDate }</td>
+		                                        <td align="center" id="hoD">${ l2.hoDate }</td>
 		                                        <td align="center">
 		                                        	<c:if test="${ l2.hoNum gt 0 }">
 		                                        		지급
@@ -605,11 +646,44 @@ select {
                                     </c:choose>
                              	</table>
                             </div>
+                            
+                            <script type="text/javascript">
+                            	function holidayDetail(memNo){
+                            		console.log(memNo)
+                            		let arr = memNo.split(',')
+                            		$('.d0').text('--')
+                            		$.ajax({
+                            			url:'count.ho',
+                            			method:'POST',
+                            			data:{'userNo':arr},
+                            			success:function(result){
+                            				if(result){
+                            					console.log(result)
+                            					let arr2 = result.split(',')
+                            					console.log(arr2)
+                            					$('#d1').text(arr2[0])
+                            					$('#d2').text(arr2[1])
+                            					$('#d3').text(arr2[2])
+                            					$('#d4').text(arr[2]+'님의 연차현황')
+                            					$('#da').css('display','')
+                            				}else{
+                            					alert('실패')
+                            					console.log('실패')
+                            				}
+                            			},error:function(){
+                            				alert('애러')
+                            				console.log('애러')
+                            			}
+                            		})
+                            	}
+                            	
+                            </script>
+                            
                             <br>
                             <c:if test="${ not empty list2 }">
                             	<div style="margin-top: 10px; width: 1000px; height: 40px;" align="center" id="pagebar2">
                                		<c:if test="${ pi2.currentPage ne 1 }">
-                               					<a href="holiday.me?p2=${ pi2.currentPage-1 }&p1=${ pi1.currentPage }&keyword=${ condition.keyword }&deptCode=${ condition.deptCode }&jobCode=${ condition.jobCode }&startDate=${ condition.startDate }&endDate=${ condition.endDate }">
+                               					<a href="selectManage.ho?p2=${ pi2.currentPage-1 }&p1=${ pi1.currentPage }&keyword=${ condition.keyword }&deptCode=${ condition.deptCode }&jobCode=${ condition.jobCode }&startDate=${ condition.startDate }&endDate=${ condition.endDate }">
 						                              <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
 						                                    &lt;
 						                              </span>
@@ -618,14 +692,14 @@ select {
 				                     
 				                     <c:forEach var="p" begin="${ pi2.startPage }" end="${ pi2.endPage }">
 					                            	<c:if test="${ p eq pi2.currentPage }">
-					                            		<a href="holiday.me?p2=${ p }&p1=${ pi1.currentPage }&keyword=${ condition.keyword }&deptCode=${ condition.deptCode }&jobCode=${ condition.jobCode }&startDate=${ condition.startDate }&endDate=${ condition.endDate }">
+					                            		<a href="selectManage.ho?p2=${ p }&p1=${ pi1.currentPage }&keyword=${ condition.keyword }&deptCode=${ condition.deptCode }&jobCode=${ condition.jobCode }&startDate=${ condition.startDate }&endDate=${ condition.endDate }">
 							                                <span style="width: 40px; height: 40px; background-color: #5e7e9b; display: inline-block; border-radius: 15%;padding-top: 5px;">
 							                                    ${ p }
 							                                </span>
 					                                	</a>
 					                            	</c:if>
 					                            	<c:if test="${ p ne pi2.currentPage }">
-					                            		<a href="holiday.me?p2=${ p }&p1=${ pi1.currentPage }&keyword=${ condition.keyword }&deptCode=${ condition.deptCode }&jobCode=${ condition.jobCode }&startDate=${ condition.startDate }&endDate=${ condition.endDate }">
+					                            		<a href="selectManage.ho?p2=${ p }&p1=${ pi1.currentPage }&keyword=${ condition.keyword }&deptCode=${ condition.deptCode }&jobCode=${ condition.jobCode }&startDate=${ condition.startDate }&endDate=${ condition.endDate }">
 							                                <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%;padding-top: 5px;">
 							                                    ${ p }
 							                                </span>
@@ -635,7 +709,7 @@ select {
 							        </c:forEach>
 				                    
 				                    <c:if test="${ pi2.currentPage ne pi2.maxPage }">
-                               					<a href="holiday.me?p2=${ pi2.currentPage+1 }&p1=${ pi1.currentPage }&keyword=${ condition.keyword }&deptCode=${ condition.deptCode }&jobCode=${ condition.jobCode }&startDate=${ condition.startDate }&endDate=${ condition.endDate }">
+                               					<a href="selectManage.ho?p2=${ pi2.currentPage+1 }&p1=${ pi1.currentPage }&keyword=${ condition.keyword }&deptCode=${ condition.deptCode }&jobCode=${ condition.jobCode }&startDate=${ condition.startDate }&endDate=${ condition.endDate }">
 						                              <span style="width: 40px; height: 40px; background-color: #e6e9ec; display: inline-block; border-radius: 15%; padding-top: 5px;">
 						                                    &gt;
 						                              </span>

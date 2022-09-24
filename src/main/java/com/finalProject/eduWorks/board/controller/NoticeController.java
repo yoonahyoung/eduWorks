@@ -260,8 +260,8 @@ public class NoticeController {
 		}
 		
 		int	result = nService.insertNotice(b);
-		
-		
+		int no = nService.lastBoNo();
+		at.setAtRefBno(no);
 		if(result > 0 && result1 > 0) {
 			result1 = nService.insertAttachment(at);
 		}else {
@@ -335,6 +335,7 @@ public class NoticeController {
 	@RequestMapping("update.no")
 	public String updateNotice(Board b, Attachment at, MultipartFile reupfile , Model model, HttpSession session) {
 		int result1 = 0;
+		at.setAtRefBno(b.getBoardNo());
 		
 		// 새로 넘어온 첨부파일이 있을 경우
 		if(!reupfile.getOriginalFilename().equals("")) {
@@ -354,7 +355,6 @@ public class NoticeController {
 		}
 		
 		int result = nService.updateNotice(b);
-		
 		if(result > 0 && result1 > 0) { // 게시글 완, 첨부파일 o
 			result1 = nService.insertAttachment(at);
 		}else { // 게시글 완, 첨부파일 x

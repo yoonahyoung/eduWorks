@@ -303,7 +303,7 @@
                             
                             <div style="width: 650px; margin-left: 140px;">
                                 <button type="button" onclick="complete()" style="width: 120px; height: 40px; font-size: 14.5px;" type="button" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">수료완료처리</button>
-                                <button type="button" onclick="cancel()" style="width: 170px; height: 40px; font-size: 14.5px;" type="button" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">취소및취소메일보내기</button>
+                                <button type="button" onclick="cancel()" style="width: 170px; height: 40px; font-size: 14.5px;" type="button" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">취소 및 취소메일 보내기</button>
                             </div>
                             
                             <script>
@@ -492,7 +492,7 @@
                             
                             <br><br>
                             
-                            <h3 class="su_sub_menu_name" data-toggle="modal" data-target="#myModals">OJT 일정메일 보내기 및 일정등록</h3>
+                            <h3 class="su_sub_menu_name" data-toggle="modal" data-target="#myModals">OJT 일정메일 보내기 및 수료예정자 등록</h3>
                             <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b;">
                             <br>
                             <form action="sendOjt.oj">

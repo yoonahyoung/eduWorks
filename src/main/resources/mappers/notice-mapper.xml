@@ -242,6 +242,19 @@
   		  )
   	</insert>
   	
+  	<select id="lastBoNo" resultType="_int">
+	  	SELECT * 
+		  FROM (
+				select
+				       board_no
+				  from tb_board
+				 where board_category = 1
+				   and board_status = 'Y'
+				 ORDER BY ROWNUM DESC
+				)
+		 WHERE ROWNUM = 1
+  	</select>
+  	
   	<!-- 첨부파일 등록 -->
   	<insert id="insertAttachment">
   		insert
@@ -256,7 +269,7 @@
   		  values
   		  (
   		  	seq_atno.nextval
-  		  , seq_bono.currval
+  		  , #{atRefBno}
   		  , 3
   		  , #{atOriginName}
   		  , #{atChangeName}
