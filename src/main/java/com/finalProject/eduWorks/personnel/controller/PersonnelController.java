@@ -3,9 +3,13 @@ package com.finalProject.eduWorks.personnel.controller;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.IsoFields;
+import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,6 +18,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -602,10 +607,11 @@ public class PersonnelController {
 	}
 	
 	@RequestMapping("add.ho")
-	public String addHoliday(String[] memNos,String dateCount,HttpSession session) {
+	public String addHoliday(String[] memNos,String dateCount,String comment,HttpSession session) {
 		HashMap m = new HashMap();
 		m.put("memNos", memNos);
 		m.put("dateCount", dateCount);
+		m.put("comment", comment);
 		int result = pService.addHoliday(m);
 		if(result>0) {
 			session.setAttribute("alertIcon", "success");
@@ -620,12 +626,13 @@ public class PersonnelController {
 	}
 	
 	@RequestMapping("delete.ho")
-	public String deleteHoliday(String[] memNos,String dateCount,HttpSession session) {
+	public String deleteHoliday(String[] memNos,String dateCount,String comment,HttpSession session) {
 		Double a = Double.parseDouble(dateCount)*-1;
 		String dateCo = ""+a; 
 		HashMap m = new HashMap();
 		m.put("memNos", memNos);
 		m.put("dateCount", dateCo);
+		m.put("comment", comment);
 		int result = pService.deleteHoliday(m);
 		if(result>0) {
 			session.setAttribute("alertIcon", "success");
@@ -817,11 +824,21 @@ public class PersonnelController {
 					m.put("color", "green");
 				}else if(at.getAttStatus().equals("H") || at.getAttStatus().equals("D")) {
 					if(at.getAttHstatus().equals("H1")) {
-						m.put("title", at.getAttIn()+" 오전연차");
-						m.put("color", "blue");
+						if(at.getAttIn()==null) {
+							m.put("title", "오전연차");
+							m.put("color", "blue");
+						}else {
+							m.put("title", at.getAttIn()+" 오전연차");
+							m.put("color", "blue");
+						}
 					}else {
-						m.put("title", at.getAttIn()+" 출근");
-						m.put("color", "blue");
+						if(at.getAttIn()==null) {
+							m.put("title", "");
+							m.put("color", "white");
+						}else {
+							m.put("title", at.getAttIn()+" 출근");
+							m.put("color", "blue");
+						}
 					}
 				}else {
 					m.put("title", at.getAttIn()+" 무단지각/조퇴");
@@ -844,7 +861,8 @@ public class PersonnelController {
 							list.add(m2);
 						}
 					}else {
-						m2.put("title", at.getAttOut()+" 오후연차");
+						
+						m2.put("title", "오후연차");
 						m2.put("color", "blue");
 						list.add(m2);
 					}
@@ -1170,7 +1188,13 @@ public class PersonnelController {
 			s.setEndDate(end);
 		}
 		
+		if(s.getDeptCode()==null) {
+			s.setDeptCode("all");
+		}
 		
+		if(s.getJobCode()==null) {
+			s.setJobCode("all");
+		}
 		
 		int listCount1 = pService.holidayMgCount(s);
 		PageInfo pi1 = Pagination.getInfo(listCount1, currentPage1, 3, 5);
@@ -1211,4 +1235,237 @@ public class PersonnelController {
 		}
 		return "redirect:selectManage.ho";
 	}
+	
+	@RequestMapping("addHCal.ho")
+	public String addHalfHoCalendar(SearchAt s,boolean radio1,boolean radio2,HttpSession session) {
+		int result = pService.addHalfHoCalendar(s,radio1,radio2);
+		if(result>0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "등록성공");
+			session.setAttribute("alertMsg", "등록에 성공했습니다.");
+		}else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "등록실패");
+			session.setAttribute("alertMsg", "등록실패");
+		}
+		return "redirect:selectManage.ho";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="count.ho")
+	public String countHoli(@RequestParam(value="userNo[]")ArrayList<String> list) {
+		System.out.println(list);
+		SearchAt s = new SearchAt();
+//		s.setUserNo(list.get(0));
+//		s.setStartDate(list.get(1).substring(0, 4)+"-01-01");
+//		s.setEndDate(list.get(1).substring(0, 4)+"-12-31");
+		String totalho = pService.totalHo(list.get(0));
+		String useho = pService.useHo(list.get(0));
+		if(totalho==null) {
+			totalho="0";
+		}
+		if(useho==null) {
+			useho="0";
+		}
+		Double re = Double.parseDouble(totalho)-Double.parseDouble(useho);
+		return totalho+","+useho+","+re;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="chart.at",produces="application/json; charset=utf-8")
+	public String chart(String userNo) {
+		LocalDateTime now = LocalDateTime.now();
+		ArrayList<String> xlist = new ArrayList<>();
+		ArrayList<String> xlist2 = new ArrayList<>();
+		int y = now.getYear();
+		int m = now.getMonthValue()+1;
+		for(int i=0;i<12;i++) {
+			m = m-1;
+			if(m==0) {
+				m=12;
+				y=y-1;
+			}
+			String month;
+			if(m<10) {
+				month = 0+""+m;
+			}else {
+				month = m+"";
+			}
+			String date = y+"-"+month;
+			String date2 = y+"-"+month+"-01";
+			xlist.add(date);
+			xlist2.add(date2);
+		}
+		ArrayList<String> ylist = pService.countWorktime(xlist,userNo);
+		System.out.println(ylist);
+		
+		// ylist2 구하기
+		SearchAt s = new SearchAt();
+		
+		s.setUserNo(userNo);
+		
+		ArrayList<String> ylist2 = pService.atListCount3(s, xlist, xlist2);
+		System.out.println(ylist2);
+		HashMap hs = new HashMap();
+		Member mb = pService.detailTeacherInfo(userNo);
+		hs.put("memName", mb.getMemName());
+		hs.put("xlist", xlist); 
+		hs.put("ylist", ylist); 
+		hs.put("ylist2", ylist2);
+		return new Gson().toJson(hs);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="chart.at2",produces="application/json; charset=utf-8")
+	public String chart2(String userNo) {
+		System.out.println(userNo);
+		LocalDate currentDate = LocalDate.now();
+	    int weekOfYear = currentDate.get(WeekFields.ISO.weekOfYear());
+	    LocalDate dayStart = LocalDate.now()
+	            .with(IsoFields.WEEK_OF_WEEK_BASED_YEAR, weekOfYear)
+	            .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+	    ArrayList<String> xlist = new ArrayList<>();
+		ArrayList<String> xlist2 = new ArrayList<>();
+	    for(int i=0;i<12;i++) {
+	    	String start = dayStart.minusDays(7*i)+"";
+	    	String end = dayStart.plusDays(4).minusDays(7*i)+"";
+	    	xlist.add(start); xlist2.add(end);
+	    }
+	    ArrayList<String> ylist = pService.countWeekWorktime(xlist,xlist2,userNo);
+	    System.out.println(ylist);
+	    
+	    //ylist2구하기
+	    SearchAt s = new SearchAt();
+		s.setUserNo(userNo);
+		ArrayList<String> ylist2 = pService.atListWeekCount(s, xlist, xlist2);
+		System.out.println(ylist2);
+		HashMap hs = new HashMap();
+		Member mb = pService.detailTeacherInfo(userNo);
+		hs.put("memName", mb.getMemName());
+		hs.put("xlist", xlist); 
+		hs.put("xlist2", xlist2); 
+		hs.put("ylist", ylist); 
+		hs.put("ylist2", ylist2);
+		return new Gson().toJson(hs);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="check.ho",produces="application/json; charset=utf-8")
+	public String checkHo() {
+		HashMap hs = pService.checkHo();
+		
+		return new Gson().toJson(hs);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="sendAuto1.ho")
+	public String sendAuto1(@RequestParam(value="list1[]")String[] list1,@RequestParam(value="list15[]")String[] list15,HttpSession session) {
+		System.out.println(list1);
+		System.out.println(list15);
+		int result1 = pService.sendAutoHo1(list1);
+		int result2 = pService.sendAutoHo15(list15);
+		if(result1*result2>0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "등록성공");
+			session.setAttribute("alertMsg", "등록에 성공했습니다.");
+		}else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "등록실패");
+			session.setAttribute("alertMsg", "등록실패");
+		}
+		return "end";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="sendAuto2.ho")
+	public String sendAuto2(@RequestParam(value="list1[]")String[] list1,HttpSession session) {
+		System.out.println(list1);
+		int result1 = pService.sendAutoHo1(list1);
+		if(result1>0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "등록성공");
+			session.setAttribute("alertMsg", "등록에 성공했습니다.");
+		}else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "등록실패");
+			session.setAttribute("alertMsg", "등록실패");
+		}
+		return "end";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="sendAuto3.ho")
+	public String sendAuto3(@RequestParam(value="list15[]")String[] list15,HttpSession session) {
+		System.out.println(list15);
+		int result2 = pService.sendAutoHo15(list15);
+		if(result2>0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "등록성공");
+			session.setAttribute("alertMsg", "등록에 성공했습니다.");
+		}else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "등록실패");
+			session.setAttribute("alertMsg", "등록실패");
+		}
+		return "end";
+	}
+	
+	@RequestMapping("changePw.me")
+	public String changePwd(String pwd,HttpSession session,Model model) {
+		Member mb = (Member)session.getAttribute("loginUser");
+		mb.setMemPwd(pwd);
+		int result = pService.changePwd(mb);
+		if(result>0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "변경성공");
+			session.setAttribute("alertMsg", "비밀번호 변경에 성공했습니다.");
+			
+			Member loginUser = mService.loginMember((Member)session.getAttribute("loginUser"));
+			
+			if(loginUser != null /*&& bcryptPasswordEncoder.matches(m.getMemId(), loginUser.getMemPwd())*/) {
+				
+				switch(loginUser.getJobCode()){
+				case "J0": loginUser.setJobName("강사"); break;
+				case "J1": loginUser.setJobName("사원"); break;
+				case "J2": loginUser.setJobName("대리"); break;
+				case "J3": loginUser.setJobName("팀장"); break;
+				case "J4": loginUser.setJobName("대표"); break;
+				}
+				
+				switch(loginUser.getDeptCode()) {
+				case "D0" : session.setAttribute("deptName", "강사"); break;
+				case "D1" : session.setAttribute("deptName", "인사팀"); break;
+				case "D2" : session.setAttribute("deptName", "행정팀"); break;
+				case "D3" : session.setAttribute("deptName", "홍보팀"); break;
+				case "DN" : session.setAttribute("deptName", "대표"); break;
+				// 대표일 경우 게시판 고를 수 있도록 처리할 예정
+				}
+				session.setAttribute("loginUser", loginUser);;
+			}else {
+				
+			}
+			Member m = (Member) session.getAttribute("loginUser");
+			ArrayList<Department> dlist = pService.selectDept();
+			ArrayList<Job> jlist = pService.selectJob();
+			model.addAttribute("jlist", jlist);
+			model.addAttribute("dlist", dlist);
+			model.addAttribute("m", m);
+			return "personnel/myInfo";
+			
+		}else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "변경실패");
+			session.setAttribute("alertMsg", "변경실패");
+			
+			Member m = (Member) session.getAttribute("loginUser");
+			ArrayList<Department> dlist = pService.selectDept();
+			ArrayList<Job> jlist = pService.selectJob();
+			model.addAttribute("jlist", jlist);
+			model.addAttribute("dlist", dlist);
+			model.addAttribute("m", m);
+			return "personnel/myInfo";
+		}
+
+	}
+	
 }

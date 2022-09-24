@@ -209,18 +209,18 @@
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">우편번호</th>
-                                        <td>&nbsp;<input type="text" id="sample6_postcode" name="memPostalCode" value="${ m.memPostalCode }" style="width: 40%;">&nbsp;&nbsp;<button type="button" class="btn su_btn_border" style="height: 30px; padding-left: 12; padding-right: 12; padding-top: 0; padding-bottom: 0;" onclick=address();>우편번호검색</button></td>
+                                        <td>&nbsp;<input type="text" readonly id="sample6_postcode" name="memPostalCode" value="${ m.memPostalCode }" style="width: 40%;">&nbsp;&nbsp;<button type="button" class="btn su_btn_border" style="height: 30px; padding-left: 12; padding-right: 12; padding-top: 0; padding-bottom: 0;" onclick=address();>우편번호검색</button></td>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">주소</th>
                                         <td>
-                                        	&nbsp;<input type="text" id="sample6_address" name="memPostalAd" value="${ m.memPostalAd }" style="width: 70%;">
+                                        	&nbsp;<input type="text" readonly id="sample6_address" name="memPostalAd" value="${ m.memPostalAd }" style="width: 70%;">
                                         </td>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">상세주소</th>
                                         <td> 
-                                        	&nbsp;<input type="text" id="sample6_detailAddress" name="memPostalDetail" value="${ m.memPostalDetail }" style="width: 50%;">&nbsp;<input type="text" id="sample6_extraAddress" name="memPostalRefer" value="${ m.memPostalRefer }" style="width: 40%;">
+                                        	&nbsp;<input type="text" id="sample6_detailAddress" name="memPostalDetail" value="${ m.memPostalDetail }" style="width: 50%;">&nbsp;<input type="text" readonly id="sample6_extraAddress" name="memPostalRefer" value="${ m.memPostalRefer }" style="width: 40%;">
                                         </td>
                                     </tr>
                                 </table>

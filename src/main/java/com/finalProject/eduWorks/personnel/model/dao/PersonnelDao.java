@@ -16,6 +16,7 @@ import com.finalProject.eduWorks.member.model.vo.Job;
 import com.finalProject.eduWorks.member.model.vo.Member;
 import com.finalProject.eduWorks.personnel.model.vo.Adjust;
 import com.finalProject.eduWorks.personnel.model.vo.Attendance;
+import com.finalProject.eduWorks.personnel.model.vo.AutoHo;
 import com.finalProject.eduWorks.personnel.model.vo.Holiday;
 import com.finalProject.eduWorks.personnel.model.vo.HolidayForm;
 import com.finalProject.eduWorks.personnel.model.vo.Ojt;
@@ -378,5 +379,190 @@ public class PersonnelDao {
 		}else {
 			return result;
 		}
+	}
+	
+	public int addHalfHoCalendar(SqlSessionTemplate sqlSession,SearchAt s, boolean radio1, boolean radio2){
+		int i=0;
+		if(radio1==true) {
+			i = sqlSession.insert("personnelMapper.updateh1", s);
+		}else {
+			i = sqlSession.insert("personnelMapper.updateh2", s);
+		}
+		if(i>0) {
+			return sqlSession.update("personnelMapper.updateannl", s);
+		}else {
+			return i;
+		}
+	}
+	
+	public ArrayList<String> countWorktime(SqlSessionTemplate sqlSession,ArrayList<String> xlist,String userNo){
+		ArrayList<String> ylist = new ArrayList<>();
+		for(String str : xlist) {
+			HashMap m = new HashMap();
+			m.put("str", str); m.put("userNo", userNo);
+			String worktime = sqlSession.selectOne("personnelMapper.countWorktime", m);
+			if(worktime==null) {
+				worktime="0";
+			}
+			ylist.add(worktime);
+		}
+		return ylist;
+	}
+	
+	public ArrayList<String> countWeekWorktime(SqlSessionTemplate sqlSession,ArrayList<String> xlist,ArrayList<String> xlist2, String userNo){
+		ArrayList<String> ylist = new ArrayList<>();
+		for(int i=0;i<xlist.size();i++) {
+			SearchAt s = new SearchAt();
+			s.setStartDate(xlist.get(i));
+			s.setEndDate(xlist2.get(i));
+			s.setUserNo(userNo);
+			String worktime = sqlSession.selectOne("personnelMapper.countWeekWorktime", s);
+			if(worktime==null) {
+				worktime="0";
+			}
+			ylist.add(worktime);
+		}
+		return ylist;
+	}
+	
+	public ArrayList<String> atListCount3(SqlSessionTemplate sqlSession,SearchAt s,ArrayList<String> xlist,ArrayList<String> xlist2){
+		ArrayList<String> ylist2 = new ArrayList<>();
+		for(int i=0;i<xlist.size();i++) {
+			
+			s.setStartDate(xlist2.get(i));
+			s.setEndDate(xlist.get(i));
+			ArrayList restList = (ArrayList)sqlSession.selectList("personnelMapper.searchRestdate2", s);
+					if(!restList.isEmpty()) {
+						s.setList(restList);
+					}
+
+			s.setCheck1(true);
+			s.setCheck2(false);
+			s.setCheck3(false);
+			double normal = sqlSession.selectOne("personnelMapper.AtListCount3", s);
+			
+			s.setCheck1(false);
+			s.setCheck2(true);
+			s.setCheck3(false);
+			double leave = sqlSession.selectOne("personnelMapper.AtListCount3", s);
+			
+			s.setCheck1(false);
+			s.setCheck2(false);
+			s.setCheck3(true);
+			double absent = sqlSession.selectOne("personnelMapper.AtListCount3", s);
+			
+			double result;
+			if(normal==0) {
+				result = 0;
+			}else {
+				result = ((normal+(leave/2))/(normal+leave+absent))*100;
+				result = Math.round(result);
+			}
+			ylist2.add(result+"");
+		}
+		return ylist2;
+	}
+	
+	public ArrayList<String> atListWeekCount(SqlSessionTemplate sqlSession,SearchAt s,ArrayList<String> xlist,ArrayList<String> xlist2){
+		ArrayList<String> ylist2 = new ArrayList<>();	
+		for(int i=0;i<xlist.size();i++) {
+			
+			s.setStartDate(xlist.get(i));
+			s.setEndDate(xlist2.get(i));
+			ArrayList restList = (ArrayList)sqlSession.selectList("personnelMapper.searchRestdate", s);
+					if(!restList.isEmpty()) {
+						s.setList(restList);
+					}
+
+			s.setCheck1(true);
+			s.setCheck2(false);
+			s.setCheck3(false);
+			double normal = sqlSession.selectOne("personnelMapper.atListWeekCount", s);
+			
+			s.setCheck1(false);
+			s.setCheck2(true);
+			s.setCheck3(false);
+			double leave = sqlSession.selectOne("personnelMapper.atListWeekCount", s);
+			
+			s.setCheck1(false);
+			s.setCheck2(false);
+			s.setCheck3(true);
+			double absent = sqlSession.selectOne("personnelMapper.atListWeekCount", s);
+			
+			double result;
+			if(normal==0) {
+				result = 0;
+			}else {
+				result = ((normal+(leave/2))/(normal+leave+absent))*100;
+				result = Math.round(result);
+			}
+			ylist2.add(result+"");
+		}
+		return ylist2;
+	}
+	
+	public HashMap checkHo(SqlSessionTemplate sqlSession) {
+		ArrayList<AutoHo> memNos = (ArrayList)sqlSession.selectList("personnelMapper.memNolists");
+		ArrayList<String> list1 = new ArrayList<>();
+		ArrayList<String> namelist1 = new ArrayList<>();
+		ArrayList<String> list15 = new ArrayList<>();
+		ArrayList<String> namelist15 = new ArrayList<>();
+		for(AutoHo a : memNos) {
+			if(Double.parseDouble(a.getYear())<1) {
+				if(Double.parseDouble(a.getMonth())>Double.parseDouble(a.getMemCount())*20) {
+					list1.add(a.getMemNo()); 
+					namelist1.add(a.getMemName());
+				}
+			}else {
+				if(Double.parseDouble(a.getYear())>Double.parseDouble(a.getMemCount())) {
+					list15.add(a.getMemNo());
+					namelist15.add(a.getMemName());
+				}
+			}
+		}
+		HashMap hs = new HashMap();
+		hs.put("list1", list1);
+		hs.put("namelist1", namelist1);
+		hs.put("list15", list15);
+		hs.put("namelist15", namelist15);
+		return hs;
+	}
+	
+	public int sendAutoHo1(SqlSessionTemplate session, String[] list1) {
+		int result = 1;
+		for(String no : list1) {
+			int i = session.insert("personnelMapper.sendAutoHo1", no);
+			result = result*i;
+		}
+		if(result>0) {
+			for(String no : list1) {
+				int i = session.insert("personnelMapper.updateAutoHo1", no);
+				result = result*i;
+			}
+			return result;
+		}else {
+			return result;
+		}
+	}
+	
+	public int sendAutoHo15(SqlSessionTemplate session, String[] list15) {
+		int result = 1;
+		for(String no : list15) {
+			int i = session.insert("personnelMapper.sendAutoHo15", no);
+			result = result*i;
+		}
+		if(result>0) {
+			for(String no : list15) {
+				int i = session.insert("personnelMapper.updateAutoHo15", no);
+				result = result*i;
+			}
+			return result;
+		}else {
+			return result;
+		}
+	}
+	
+	public int changePwd(SqlSessionTemplate session,Member mb) {
+		return session.update("personnelMapper.changePwd", mb);
 	}
 }

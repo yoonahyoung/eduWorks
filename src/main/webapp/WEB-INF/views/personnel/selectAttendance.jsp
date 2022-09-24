@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 <style>
 	select {
             width: 200px; 
@@ -56,6 +57,22 @@
            
             box-shadow: 10px 10px 20px grey;
         }
+        
+        .positionab2{
+            position:absolute ;
+            top: 0;
+            padding: 30px;
+        }
+        .detailInfo2{
+            background-color: whitesmoke;
+            width: 1200px;
+            height: 900px;
+            left: 0%;
+            z-index: 20;
+           
+            box-shadow: 10px 10px 20px grey;
+        }
+        
 
         .checks2 {position: relative;}
         .checks2 input[type="radio"] {
@@ -148,6 +165,145 @@
                             
                             <br>
                             <div style="width: 850px; position:relative" >
+                            	<div class="detailInfo2 positionab2" id="div2" style="display: none;">
+                                    
+                                            
+                                    <div class="close close2"></div>
+                                    
+                                    
+                                    <div  align="left" style="font-size: 25px; font-weight: bold; color: black;"><h2 id="nametag">xxx님의 근무기록</h2><h2 id="notag" style="display: none;"></h2></div>
+                                    
+                                    <br>
+                                    
+                                    <div class="checks2">
+                                                        <input type="radio" class="choose1" id="ra1" value="M" name="choose"> 
+                                                        <label for="ra1">월별로보기</label>
+                                                        &nbsp;&nbsp;
+                                                        <input type="radio" class="choose1" id="ra2" value="W" name="choose"> 
+                                                        <label for="ra2">주별로보기</label> 
+                                                       	
+                                    </div>
+                                    <br>
+                                    <div style="width: 1000px; height: 800px;">
+								    	<canvas id="chart"></canvas>
+								    </div>
+                                </div>
+                                
+                                <script>
+                                		
+                                		$('.choose1').on('change',function(){
+                                			if($('#ra1').prop('checked')){
+                                				chart($('#notag').text())
+                                			}else{
+                                				chart2($('#notag').text())
+                                			}
+                                		})
+                                		
+                                		function chart(userNo){
+                                			alert('월')
+                                				$('#div1').css('display','none');
+                                				$.ajax({
+                                        			url:'chart.at',
+                                        			method:'POST',
+                                        			data:{'userNo':userNo},
+                                        			success:function(result){
+                                        				
+                                        					console.log(result)
+                                        					$('#nametag').text(result.memName+'님의 근무기록')
+                                        					$('#notag').text(userNo)
+                                        					$('#ra1').attr('checked',true)
+                                        					chart1(result)
+                                        			},error:function(){
+                                        				alert('애러')
+                                        				console.log('애러')
+                                        			}
+                                        		})
+                                			
+                                			
+                                		}
+                                		
+                                		function chart2(userNo){
+                                			    alert('주')
+                                				$('#div1').css('display','none');
+                                				$.ajax({
+                                        			url:'chart.at2',
+                                        			method:'POST',
+                                        			data:{'userNo':userNo},
+                                        			success:function(result){
+                                        				
+                                        					console.log(result)
+                                        					$('#nametag').text(result.memName+'님의 근무기록')
+                                        					$('#notag').text(userNo)
+                                        					$('#ra2').attr('checked',true)
+                                        					chart1(result)
+                                        			},error:function(){
+                                        				alert('애러')
+                                        				console.log('애러')
+                                        			}
+                                        		})
+                                			
+                                			
+                                		}
+                                		
+                                
+                                		function chart1(result){
+							            var ctx = document.getElementById('chart').getContext('2d');
+							            var chart = new Chart(ctx, {
+							            
+							            type: 'bar',
+							        
+							            data: {
+							                labels: [result.xlist[11],result.xlist[10],result.xlist[9],result.xlist[8],result.xlist[7],result.xlist[6],result.xlist[5],result.xlist[4],result.xlist[3],result.xlist[2],result.xlist[1],result.xlist[0]],
+							                datasets: [{
+							                    label: '근무시간',
+							                    type : 'line',         // 'line' type
+							                    fill : false,         // 채우기 없음
+							                    lineTension : 0.2,  // 0이면 꺾은선 그래프, 숫자가 높을수록 둥글해짐
+							                    pointRadius : 0,    // 각 지점에 포인트 주지 않음
+							                    backgroundColor: 'red',
+							                   
+							                    borderColor: 'red',
+							                    data: [result.ylist[11],result.ylist[10],result.ylist[9],result.ylist[8],result.ylist[7],result.ylist[6],result.ylist[5],result.ylist[4],result.ylist[3],result.ylist[2],result.ylist[1],result.ylist[0]]
+							                },{
+							                    label: '출근율',
+							                    type : 'bar', // 'bar' type, 전체 타입과 같다면 생략가능
+							                    backgroundColor: 'rgb(255, 204, 102)',
+							                    borderColor: 'rgb(255, 204, 102)',
+							                    data: [result.ylist2[11],result.ylist2[10],result.ylist2[9],result.ylist2[8],result.ylist2[7],result.ylist2[6],result.ylist2[5],result.ylist2[4],result.ylist2[3],result.ylist2[2],result.ylist2[1],result.ylist2[0]]
+							                },]
+							            },
+							        
+							            // Configuration options
+							            options: {
+							                legend: {
+							                     labels: {
+							                          fontColor: 'black' // label color
+							                         }
+							                      },
+							                scales: {
+							                    // y축
+							                    yAxes: [{
+							                        stacked: true,
+							                        ticks: {
+							                            fontColor:'black' // y축 폰트 color
+							                        }
+							                     }],
+							                     // x축
+							                     xAxes: [{
+							                         stacked: true,
+							                        ticks: {
+							                            fontColor:'black' // x축 폰트 color
+							                        }
+							                     }]
+							                }
+							            }
+							        })
+							            $('#div2').css('display','')
+                                 }
+                                		
+                                		
+							    </script>
+                                
                                 <div class="detailInfo positionab" id="div1" style="display: none;">
                                     
                                             
@@ -225,6 +381,7 @@
                                 <script>
 	                                $(".close").on('click',function(){
 	            		        		$('#div1').css('display','none');
+	            		        		$('#div2').css('display','none');
 	            		        		$('#memName2').val('')
 	            		        		$('#attDate2').val('')
 	            		        		$('#testCheck').val('')
@@ -232,6 +389,8 @@
 	            		        		$('#attOut2').val('')
 	            		        		$('#attWorktime').val('')
 	            		        		$('.rr1').prop('checked',false)
+	            		        		$('#ra2').prop('checked',false)
+	            		        		$('#ra1').prop('checked',true)
 	            		        	})
 	            		        	
 	            		        	$("#attIn2").on('change',function(){
@@ -382,9 +541,9 @@
 	                                        currentdate = date.toISOString().replace('T', ' ').substring(0, 10)
 	                                        var date2 = new Date()
 	                                	    console.log(date2)
+	                                	    date2.setDate(1)
 	                                	    date2.setHours(date2.getHours() + 9)
-	                                	    console.log(date2)
-	                                        date2.setDate(1)
+	                                        
 	                                        console.log(date2)
 	                                        lastdate = date2.toISOString().replace('T', ' ').substring(0, 10)
 	                                        console.log(lastdate)
@@ -452,7 +611,7 @@
                                     				<td class="sel0" style="display:none;">${ list.attNo }</td>
                                     				<td class="sel1" style="display:none;">${ list.memNo }</td>
 			                                        <td class="sel2" align="center">${ list.attDate }</td>
-			                                        <td class="sel3" align="center">${ list.memName }</td>
+			                                        <td class="sel3" align="center" onclick="chartpage(${ list.memNo })">${ list.memName }</td>
 			                                        <td  align="center">
 			                                        	<c:if test="${ list.attStatus eq 'D' }">정상출근</c:if>
 			                                        	<c:if test="${ list.attStatus eq 'E' }">무단조퇴</c:if>
@@ -546,8 +705,12 @@
                             			$('#div1').css('display','')
                             		})
                             		
-                            		
-                            	}) 
+                            	
+                            	})
+                            	
+                            	function chartpage(a){
+                            			chart(a)
+                            		}
                             </script>
                             
                             <br>
