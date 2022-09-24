@@ -77,7 +77,7 @@
 		  ,	#{classEndDate}
 		  , #{memNo}
 		  , default
-		  , default
+		  , 'N'
 		  ,	#{classFee}
 		  , sysdate
 		  )
@@ -141,8 +141,8 @@
 		  from tb_class c
 		  join tb_member m on(c.mem_no = m.mem_no)
 		 where class_status = 'N'
-		   and class_approval = 1 
-		    or class_approval = 3
+		   and (class_approval = 1 
+		    or class_approval = 3)
          order
             by class_no desc
 	</select>

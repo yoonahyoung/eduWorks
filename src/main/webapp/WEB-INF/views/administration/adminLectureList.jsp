@@ -119,17 +119,7 @@
 							<c:forEach var="l" items="${ list }">
 					            <tr id="result">
 					                <td class="no">${ l.classNo }</td>
-					                <c:choose>
-						                <c:when test="${ t.classApproval eq 1 }">
-						               		<td>대기중</td>
-						                </c:when>
-						                <c:when test="${ t.classApproval eq 2 }">
 						             		<td>승인</td>
-						                </c:when>
-						                <c:otherwise>
-						                	<td>반려</td>
-						                </c:otherwise>
-					                </c:choose>
 					                <td>${ l.classTitle }</td>
 					                <td>${ l.memName }</td>
 					                <td>${ l.classStartDate } / ${ l.classEndDate }</td>
