@@ -400,9 +400,11 @@
 								
 							</div>
 							<div class="add-person">
+								<!-- 
 								<div>
 									<input type="text" name="" placeholder="이름, 이메일, 회사 입력해서 찾기">
 								</div>
+								 -->
 
 								<div id="table-container">
 									<table id="add-table" class="addArea">
