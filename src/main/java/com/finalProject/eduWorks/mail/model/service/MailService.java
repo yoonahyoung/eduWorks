@@ -108,4 +108,6 @@ public interface MailService {
  	// 17_4. 해당 태그 조회
  	Tag selectTagInfo(Tag t);
 
+ 	// 18. 메일 답장 폼으로 이동
+ 	Mail replyMailForm(String mailNo);
 }

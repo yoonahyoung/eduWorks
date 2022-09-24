@@ -142,7 +142,11 @@
 					</tr>
 
 				</table>
-			
+							
+		<form id="postMailDetail" action="mailDetail.ma" method="post">
+			<input type="hidden" name="mailNo" id="detailNo">
+		</form>
+		
 		<script>
 		
 			// '중요메일' 설정시 실행하는 함수
@@ -169,6 +173,18 @@
 				})
 	
 			}
+			
+			$(function(){
+			
+				// 메일 '답장'시 실행하는 함수
+				$(".reply-btn").click(function(){
+
+					$("#detailNo").val( ${m.mailNo} );
+					$("#postMailDetail").attr("action", 'replyMail.ma').submit();
+					})
+					
+			})
+
 		
 		</script>
 

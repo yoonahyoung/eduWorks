@@ -112,6 +112,7 @@ public class MailController {
 	public String writeMailForm(Model model) {
 		return "mail/writeMailForm";
 	}
+	
 
 	/**
 	 * 4. 메일 작성(나에게) 페이지로 이동
@@ -971,7 +972,23 @@ public class MailController {
 		
 	}
 	
-
+	/**
+	 * 19. 메일 답장 페이지로 이동
+	 * @param mailNo : 답장할 메일 번호
+	 * @return : 메일 답장 페이지
+	 */
+	@RequestMapping("replyMail.ma")
+	public ModelAndView replayMail(String mailNo, ModelAndView mv) {
+		
+		Mail m = mService.replyMailForm(mailNo);
+		
+		mv.addObject("text", "R");
+		mv.addObject("m", m);
+		mv.setViewName("mail/replyMailForm");
+		
+		return mv;
+		
+	}
 
 	
 }

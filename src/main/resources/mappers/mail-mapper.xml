@@ -15,7 +15,7 @@
 		<result column="send_date" property="sendDate" />
 		<result column="send_name" property="sendName" />
 		<result column="cc_mail" property="ccMail" />
-		<result column="sned_mem" property="sendMem" />
+		<result column="send_mem" property="sendMem" />
 		<association property="mailStatus" resultMap="mailStatusResult" />
 		<association property="attachment" resultMap="attachmentResult" />
 		<association property="tag" resultMap="tagResult" />
@@ -1078,6 +1078,28 @@
 		from tb_tag
 		where mem_no = #{memNo}
 		  and tag_no = #{tagNo}
+	</select>
+	
+	<!-- 답장할 메일 상세 조회 -->
+	<select id="replyMailForm" resultMap="mailResult">
+		select 
+		    mail_no
+		  , mem_no
+		  , tag_no
+		  , (select
+		        mem_email
+		     from tb_member
+		     join tb_mail using (mem_no)
+		     where mail_no = #{mailNo}) "send_mem"
+		  , mail_temporary
+		  , receiver_mem
+		  , cc_mem
+		  , mail_title
+		  , mail_content
+		  , mail_type
+		  , to_char(send_date, 'YYYY-MM-DD(DY) HH24:MI:SS') "send_date"
+		from tb_mail
+		where mail_no = #{mailNo}
 	</select>
 
 </mapper>

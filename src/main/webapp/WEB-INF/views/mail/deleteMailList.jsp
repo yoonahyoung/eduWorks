@@ -195,15 +195,10 @@
 					
 					let mailNo = $(this).children('input[type=hidden]').val();
 					let mailFolder = $(this).children('input[name=mailFolder]').val();
-					
-					console.log(mailNo);
-					console.log(mailFolder);
 
 					$("#detailNo").val(mailNo);
 					$("#detailFolder").val(mailFolder);
 					
-					console.log($("#detailNo").val());
-					console.log($("#detailFolder").val());
 					$("#postMailDetail").submit();
 
 				})

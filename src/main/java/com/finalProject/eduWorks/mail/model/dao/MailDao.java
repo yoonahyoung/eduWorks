@@ -486,5 +486,13 @@ public class MailDao {
 		return sqlSession.selectOne("mailMapper.selectTagInfo", t);
 	}
 	
+	/**
+	 * 19_1. 답장할 메일 상세 조회
+	 * @param mailNo : 답장할 메일 번호 
+	 * @return : 답장할 메일 상세 내용
+	 */
+	public Mail replyMailForm(SqlSessionTemplate sqlSession, String mailNo) {
+		return sqlSession.selectOne("mailMapper.replyMailForm", mailNo);
+	}
 
 }

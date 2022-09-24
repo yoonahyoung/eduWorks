@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.finalProject.eduWorks.addressBook.model.vo.Address;
 import com.finalProject.eduWorks.addressBook.model.vo.AddressOut;
@@ -472,6 +471,16 @@ public class MailServiceImpl implements MailService {
 	@Override
 	public Tag selectTagInfo(Tag t) {
 		return mDao.selectTagInfo(sqlSession, t);
+	}
+	
+	/**
+	 * 19_1. 답장할 메일 상세 조회
+	 * @param mailNo : 답장할 메일 번호 
+	 * @return : 답장할 메일 상세 내용
+	 */
+	@Override
+	public Mail replyMailForm(String mailNo) {
+		return mDao.replyMailForm(sqlSession, mailNo);
 	}
 
 	

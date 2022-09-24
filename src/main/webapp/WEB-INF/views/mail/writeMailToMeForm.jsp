@@ -31,7 +31,7 @@
 				<button type="button" class="sub-btn">
 					<i class="far fa-save"></i>&nbsp;&nbsp;임시저장
 				</button>
-				<button type="button" class="sub-btn">
+				<button type="button" class="sub-btn" onclick="history.go(-1);">
 					<i class="fas fa-undo"></i>&nbsp;&nbsp;취소
 				</button>
 			</div>
@@ -74,7 +74,7 @@
 			</div>
 	
 			<script>
-			
+
 				// '파일 추가' 누를 때 실행하는 함수
 				$(function() {
 					$('#btn-upload').click(function(e) {

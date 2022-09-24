@@ -33,7 +33,7 @@
 					<button type="button" class="reply-btn">
 						<i class="fas fa-location-arrow"></i>&nbsp;&nbsp;답장
 					</button>
-					<button type="button" class="sub-btn">
+					<button type="button" class="sub-btn" onclick="forwardMail();">
 						<i class="fas fa-arrow-right"></i>&nbsp;&nbsp;전달
 					</button>
 					<button type="button" class="sub-btn" onclick="chooseDelete();">
@@ -49,7 +49,6 @@
 					</button>
 					<div class="dropdown-list dropdown-menu shadow" id="tagList"
 						aria-labelledby="dotDropdown" style="margin-top: -10px;">
-
 					</div>
 				</li>
 			</ul>
@@ -218,7 +217,7 @@
 
 		</div>
 		
-		<form id="postMailDetail" action="mailDetail.ma" method="post">
+		<form id="postMailDetail" action="" method="post">
 			<input type="hidden" name="mailFolder" value="2">
 			<input type="hidden" name="mailNo" id="detailNo">
 			<input type="hidden" name="flag" value="B">
@@ -270,10 +269,32 @@
 					let mailNo = $(this).children('input[type=hidden]').val();
 					console.log(mailNo);
 					$("#detailNo").val(mailNo);
-					$("#postMailDetail").submit();
+					$("#postMailDetail").attr("action", 'mailDetail.ma').submit();
 
 				})
+				
+				// 메일 '답장'시 실행하는 함수
+				$(".reply-btn").click(function(){
+					let checkArr = [];
+					let mailNo = "";
+
+					$("input[name=mailNo]").each(function(){
+						if( $(this).prop("checked") ){
+							checkArr.push( $(this).val() );
+							mailNo = $(this).val();
+						}
+					});
+					
+					if( checkArr.length > 1 || checkArr.length == 0){
+						alert("1개의 메일을 선택해주세요.");
+					} else {
+						$("#detailNo").val(mailNo);
+						$("#postMailDetail").attr("action", 'replyMail.ma').submit();
+					}
+					
+				})
 			})
+			
 			
 			// 메일 '삭제'시 실행하는 함수
 			function chooseDelete(){
@@ -312,6 +333,33 @@
 				}
 			}
 
+			// 메일 '전달'시 실행하는 함수
+			function forwardMail(){
+
+				let checkArr = [];
+				let mailNo = "";
+				
+				
+				$("input[name=mailNo]").each(function(){
+					if( $(this).prop("checked") ){
+						checkArr.push( $(this).val() );
+						mailNo = $(this).val();
+					}
+				});
+			
+				console.log(checkArr.length);
+				console.log(mailNo);
+				
+				if( checkArr.length > 1){
+					alert("전달은 한개의 메일만 가능합니다.");
+				} else if (checkArr.length == 0){
+					alert("전달할 메일을 선택해주세요!");
+				} else {
+					alert("전달완료!");
+				}
+
+
+			}
 		</script>
 
 		<!-- 페이지 바 -->

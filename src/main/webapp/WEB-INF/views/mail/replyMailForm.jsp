@@ -61,33 +61,7 @@
 						$("#mailForm").submit();
 					}
 				}
-				
-				// 메일 '임시저장'시 실행하는 함수
-				/*
-				$(function(){
-					$("#propertyMail").click(function(){
-						$.ajax({
-							url :"insertTemporaryMail.ma",
-							data : {
-								memNo : ${loginUser.memNo},
-								receiverMem : $("#receive").val(),
-								ccMem : $("#cc").val(),
-								mailType : $("#mailType").val(),
-								mailTitle : $("#title").val(),
-								upfile : $("#upfile").val(),
-								mailContent : $("#summernote").val()
-							},
-							success : function(result){
-								console.log("임시저장 성공");
-							},
-							error : function(){
-								console.log("임시저장 실패");
-							}
-						})
-					})
-				})
-				*/
-				
+
 			</script>
 
 			<div class="send-form" id="mailForm">
@@ -98,8 +72,10 @@
 
 					<tr>
 						<th>받는사람</th>
-						<td style="width: 75%;"><input type="text" name="receiverMem"
-							class="input-mail" id="receive"></td>
+						<td style="width: 75%;">
+							<input type="text" name="receiverMem" class="input-mail" 
+								   id="receive" value="${m.sendMem }">
+						</td>
 						<td><button type="button" class="address-btn"
 								onclick="publicAdd();" data-toggle="modal"
 								data-target="#findAdd">주소록에서 찾기
@@ -119,7 +95,16 @@
 							</span>
 						</th>
 						<td colspan="2">
-							<input type="text" name="mailTitle" class="input-mail" id="title">
+							<c:choose>
+								<c:when test="${m.mailType == 1 }">
+									<input type="text" name="mailTitle" class="input-mail" 
+								   			id="title" value="RE: [중요!]${m.mailTitle }" >
+								</c:when>
+								<c:otherwise>
+									<input type="text" name="mailTitle" class="input-mail" 
+								   			id="title" value="RE: ${m.mailTitle }" >
+								</c:otherwise>
+							</c:choose>
 						</td>
 					</tr>
 					<tr>
@@ -137,7 +122,17 @@
 				</div>
 
 				<div>
-					<textarea id="summernote" name="mailContent"></textarea>
+					<textarea id="summernote" name="mailContent">
+							<br><br><br><br><br><br><br>
+							- - - - - Original Message - - - - - <br>
+							<b>From : </b> ${m.sendMem } <br>
+							<b>To : </b> ${loginUser.memEmail } <br>
+							<b>Cc : </b> ${m.ccMem } <br>
+							<b>Sent : </b> ${m.sendDate } <br>
+							<b>Subject : </b> 
+								<c:if test="${m.mailType == 1}"><span style="color:red;">[중요!]</span></c:if>
+							${m.mailTitle }
+					</textarea>
 				</div>
 
 			</div>
@@ -164,7 +159,7 @@
 						$('#upfile').click();
 					});
 				});
-				
+
 				// 서머노트 에디터
 				$('#summernote')
 						.summernote(

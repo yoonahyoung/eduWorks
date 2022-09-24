@@ -236,6 +236,28 @@
 					$("#postMailDetail").submit();
 
 				})
+				
+								
+				// 메일 '답장'시 실행하는 함수
+				$(".reply-btn").click(function(){
+					let checkArr = [];
+					let mailNo = "";
+
+					$("input[name=mailNo]").each(function(){
+						if( $(this).prop("checked") ){
+							checkArr.push( $(this).val() );
+							mailNo = $(this).val();
+						}
+					});
+					
+					if( checkArr.length > 1 || checkArr.length == 0){
+						alert("1개의 메일을 선택해주세요.");
+					} else {
+						$("#detailNo").val(mailNo);
+						$("#postMailDetail").attr("action", 'replyMail.ma').submit();
+					}
+					
+				})
 			})
 					
 			// '중요메일' 설정시 실행하는 함수
