@@ -281,12 +281,24 @@
 	            </li>
 	
 	            <li class="nav-item">
-	                <a class="nav-link collapsed" href="reservation.re">
+	                <a class="nav-link collapsed" onclick="postFormSubmitH('reservationView.re')">
 	                    <i class="fa-solid fa-building-circle-check"></i>
 	                    <span>시설예약</span>
 	                </a>
 	                
 	            </li>
+	            
+	             <form id="postFormH" action="" method="post">
+	            	
+	            	<input type="hidden" name="memNo" value="${loginUser.memNo }">
+	            
+	            </form>
+	            
+	            <script>
+	            	function postFormSubmitH(url){
+	            		$("#postFormH").attr("action", url).submit();
+	            	}
+	            </script>
 	            
 	            <c:if test="${ loginUser.deptCode eq 'D0' || loginUser.deptCode eq 'DN'}" >
 		            <li class="nav-item">
