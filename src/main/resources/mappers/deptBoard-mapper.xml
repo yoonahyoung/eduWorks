@@ -51,7 +51,7 @@
 					   board_no
 					 , board_title
 					 , m.mem_name || ' ' || job_name as "b_writer"
-					 , m.dept_code
+					 , b.dept_code
 					 , to_char(board_en_date, 'YYYY-MM-DD') as "board_en_date"
 					 , board_count
 					 , board_top
@@ -60,7 +60,9 @@
 				  join tb_job j using(job_code)
 				 where board_category = 2
 				   and board_status = 'Y'
-		           and b.dept_code = #{deptCode}
+				   <if test="deptCode != null and !deptCode.equals('DN') and deptCode neq ''">
+		           		and b.dept_code = #{deptCode}
+		           </if>
 		           <if test="keyword != null and keyword neq ''">
 		           		and board_title || mem_name like ('%${keyword}%')
 		           </if>
@@ -69,13 +71,13 @@
 		  )
 	</select>
 	
-	<!-- 전사공지 리스트 조회 -->
+	<!-- 부서게시판 리스트 조회 -->
 	<select id="selectListD" resultMap="deptBoardResult">
 		select
 			   board_no
 			 , board_title
 			 , m.mem_name || ' ' || job_name as "b_writer"
-			 , m.dept_code
+			 , b.dept_code as "dept_code"
 			 , to_char(board_en_date, 'YYYY-MM-DD') as "board_en_date"
 			 , board_count
 			 , board_top
@@ -84,7 +86,9 @@
 		  join tb_job j using(job_code)
 		 where board_category = 2
 		   and board_status = 'Y'
-           and b.dept_code = #{deptCode}
+           <if test="deptCode != null and !deptCode.equals('DN') and deptCode neq ''">
+           		and b.dept_code = #{deptCode}
+           </if>
            <if test="keyword != null and keyword neq ''">
            		and board_title || mem_name like ('%${keyword}%')
            </if>
