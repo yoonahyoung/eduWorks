@@ -18,17 +18,24 @@
 	<div>
 	    <div class="row">
 	        <!-- 게시판 영역 -->
-	        <div class="col-12" >
+	        <div class="col-12">
 	            <!-- Page Heading -->
 	            <div class="d-sm-flex align-items-center mb-4" id="boardHeader">
-	                <h2>부서 게시판 | ${ deptName }</h2>  
+	            	<c:choose>
+		            	<c:when test="${ deptName eq '대표' }">
+		            		<h2>부서 게시판 | 전체</h2>  
+		            	</c:when>
+		            	<c:otherwise>
+		                	<h2>부서 게시판 | ${ deptName }</h2>  
+		                </c:otherwise>
+	                </c:choose>
 	            </div>
 	
 	            <br><br><br><br><br>
 	            
 	            <div style="text-align: center;">
 	                <input type="text" style="width: 300px;" id="dBoardKeyword" placeholder="제목/작성자 입력">
-	                <button type="button" class="su_btn_border btn-sm su_btn_search" onclick="searchBar(1)">검색</button>
+	                <button type="button" class="su_btn_border btn-sm su_btn_search" onclick="goCategory(1);">검색</button>
 	            </div>
 				
 				<br><br>
@@ -41,7 +48,18 @@
 		                    <button id="importantNotice" type="button" onclick="goTop(2);">공지해제</button><i class="fas fa-font-awesome"></i>
 	                    </c:if>
 	                </div>
-	                
+	                <!-- 대표일 시 부서 select 가능 -->
+	                <c:if test="${ deptName eq '대표' }">
+		                <div class="selectOption" style="margin-bottom:10px; margin-right:20px">
+		                    <select id="chkDept" onchange="goCategory(1);">
+		                    	<option value="" selected>전체</option>
+		                        <option value="D0">강사</option>
+		                        <option value="D1">인사팀</option> 
+		                        <option value="D2">행정팀</option> 
+		                        <option value="D3">홍보팀</option> 
+		                    </select>
+		                </div>
+	                </c:if>
 	            </div>
 	            
 	            <div class="main_width">
@@ -50,6 +68,9 @@
 	                        <tr class="table_thead_border">
 	                            <th width="2%"><input type="checkbox" id="checkAll"></th>
 	                            <th width="5%">번호</th>
+	                            <c:if test="${ deptName eq '대표'}">
+	                            <th width="7%">부서</th>
+	                            </c:if>
 	                            <th width="30%">제목</th>
 	                            <th width="7%">작성자</th>
 	                            <th width="7%">작성일</th>
@@ -67,7 +88,23 @@
 			                        <tr style="background:rgb(250, 232, 232)">
 			                            <td onclick="event.stopPropagation()"><input type="checkbox" id="checkNo${n.boardNo}" name="chkBoardNo" value="${n.boardNo}"></td>
 			                            <td class="no">${ n.boardNo }</td>
-			                            <td>${ n.boardTitle }</td>
+			                            <c:choose>
+			                            	<c:when test="${ deptName eq '대표'}">
+			                            		<c:if test="${ n.deptCode eq 'D0' }">
+			                            			<td>강사</td>
+			                            		</c:if>
+			                            		<c:if test="${ n.deptCode eq 'D1' }">
+			                            			<td>인사팀</td>
+			                            		</c:if>
+			                            		<c:if test="${ n.deptCode eq 'D2' }">
+			                            			<td>행정팀</td>
+			                            		</c:if>
+			                            		<c:if test="${ n.deptCode eq 'D3' }">
+			                            			<td>홍보팀</td>
+			                            		</c:if>
+			                            	</c:when>
+			                            </c:choose>
+	                            		<td>${ n.boardTitle }</td>
 			                            <td>${ n.boWriter }</td>
 			                            <td>${ n.boardEnDate }</td>
 			                            <td>${ n.boardCount }</td>
@@ -79,7 +116,23 @@
 				                        <tr>
 				                            <td onclick="event.stopPropagation()"><input type="checkbox" id="checkNo${n.boardNo}" name="chkBoardNo" value="${n.boardNo}"></td>
 				                            <td class="no">${ n.boardNo }</td>
-				                            <td>${ n.boardTitle }</td>
+				                            <c:choose>
+				                            	<c:when test="${ deptName eq '대표'}">
+				                            		<c:if test="${ n.deptCode eq 'D0' }">
+				                            			<td>강사</td>
+				                            		</c:if>
+				                            		<c:if test="${ n.deptCode eq 'D1' }">
+				                            			<td>인사팀</td>
+				                            		</c:if>
+				                            		<c:if test="${ n.deptCode eq 'D2' }">
+				                            			<td>행정팀</td>
+				                            		</c:if>
+				                            		<c:if test="${ n.deptCode eq 'D3' }">
+				                            			<td>홍보팀</td>
+				                            		</c:if>
+				                            	</c:when>
+				                            </c:choose>
+	                            			<td>${ n.boardTitle }</td>
 				                            <td>${ n.boWriter }</td>
 				                            <td>${ n.boardEnDate }</td>
 				                            <td>${ n.boardCount }</td>
@@ -151,12 +204,13 @@
        	})
        	
        	// 검색시 뿌려주는 리스트
-       	function searchBar(page){
+       	function goCategory(page){
        		console.log($("#dBoardKeyword").val());
        		$.ajax({
        			url:"search.de",
        			data:{
        				keyword:$("#dBoardKeyword").val(),
+       				chkDept:$("#chkDept").val(),
        				page:page
        			},
        			success(map){
@@ -178,6 +232,14 @@
        							sValue += '<tr style="background:rgb(250, 232, 232)">'
        										+ '<td onclick="event.stopPropagation()"><input type="checkbox" id="checkNo' + list[i].boardNo + '" name="chkBoardNo" value="${n.boardNo}"></td>'
        										+ '<td class="no">' + list[i].boardNo + '</td>'
+       										+ '<td>';
+       										switch(list[i].deptCode){
+       										case "D0" : sValue += '강사'; break;
+       										case "D1" : sValue += '인사팀'; break;
+       										case "D2" : sValue += '행정팀'; break;
+       										case "D3" : sValue += '홍보팀'; break;
+       										}
+       							    sValue += '</td>'
        										+ '<td>' + list[i].boardTitle + '</td>'
        										+ '<td>' + list[i].boWriter + '</td>'
        										+ '<td>' + list[i].boardEnDate + '</td>'
@@ -192,6 +254,14 @@
        							sValue += '<tr>'
        										+ '<td><input type="checkbox" id="checkNo' + list[i].boardNo + '" name="chkBoardNo" value="${n.boardNo}"></td>'
        										+ '<td class="no">' + list[i].boardNo + '</td>'
+       										+ '<td>';
+											switch(list[i].deptCode){
+											case "D0" : sValue += '강사'; break;
+											case "D1" : sValue += '인사팀'; break;
+											case "D2" : sValue += '행정팀'; break;
+											case "D3" : sValue += '홍보팀'; break;
+											}
+								    sValue += '</td>'
        										+ '<td>' + list[i].boardTitle + '</td>'
        										+ '<td>' + list[i].boWriter + '</td>'
        										+ '<td>' + list[i].boardEnDate + '</td>'

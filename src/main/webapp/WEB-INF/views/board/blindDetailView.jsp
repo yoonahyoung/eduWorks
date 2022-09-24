@@ -476,6 +476,8 @@
                     function insertReply(replyParentNo){ 
                  		if(!$("#blindId").val()){
                  			alert("닉네임을 먼저 입력하세요");
+                 		}else if(!$("#replyContent").val()){
+                 			alert("댓글 내용을 입력하세요");
                  		}else{
 	                 		let replyDepth = 0;
 	                 		if(replyParentNo != 0){ // 댓글 깊이
@@ -496,48 +498,6 @@
 								success(result){
 									$("#replyContent").val("");
 									selectReplyList();
-									
-									// 소켓
-									/*
-									if(${b.boardWriter} != ${loginUser.memNo}){
-										if(replyDepth == 0){ // 1. 원댓글 달 시
-											console.log("replyDepth는 0");
-											if(socket){
-												console.log("제일안쪽 if문")
-												let data = {
-													"cmd" : "reply",
-								                    "boardNo" : "${ b.boardNo }",
-								                    "boardTitle" : "${b.boardTitle}",
-								                 	"boardWriter" : "${b.boardWriter}",
-								                 	"replyParentNo" : "",
-								                 	"currentUser" : "${loginUser.memNo}",
-								                 	"alarmContent" : ""
-												};
-												
-												let jsonData = JSON.stringify(data);
-												console.log(jsonData);
-									            socket.send(jsonData);
-											}
-										}else if(replyDepth == 1){ // 2. 대댓글 달 시
-											if(socket){
-												let data = {
-													"cmd" : "reply",
-								                    "boardNo" : "${ b.boardNo }",
-								                    "boardTitle" : "${b.boardTitle}",
-								                 	"boardWriter" : "${b.boardWriter}",
-								                 	"replyParentNo" : replyParentNo+"",
-								                 	"currentUser" : "${loginUser.memNo}",
-								                 	"alarmContent" : ""
-												};
-												console.log(data);
-												let jsonData = JSON.stringify(data);
-												console.log(jsonData);
-									            socket.send(jsonData);
-											}
-										}
-										
-									}
-									*/
 								},
 								error(){
 									console.log("댓글 등록 실패");
@@ -545,7 +505,6 @@
 								
 							}) 
                  		}
-                 		
 					}
                  	
                     // 댓글 수정 div

@@ -29,6 +29,9 @@ import com.finalProject.eduWorks.common.model.vo.PageInfo;
 import com.finalProject.eduWorks.common.model.vo.Reply;
 import com.finalProject.eduWorks.common.template.FileUpload;
 import com.finalProject.eduWorks.common.template.Pagination;
+import com.finalProject.eduWorks.mail.model.service.MailServiceImpl;
+import com.finalProject.eduWorks.mail.model.vo.Mail;
+import com.finalProject.eduWorks.mail.model.vo.MailStatus;
 import com.finalProject.eduWorks.member.model.vo.Member;
 import com.google.gson.Gson;
 
@@ -43,6 +46,9 @@ public class NoticeController {
 	
 	@Autowired
 	private ReplyEchoHandler replyEcho;
+	
+	@Autowired
+	private MailServiceImpl mService;
 	
 	/**
 	 * 전사공지 리스트 조회
@@ -371,8 +377,120 @@ public class NoticeController {
 	 * @return	메일 작성 화면
 	 */
 	@RequestMapping("noticeMailForm.no")
-	public String noticeMailForm(Model model) {
+	public String noticeMailForm(int no, Model model) {
+		Board b = nService.selectNotice(no);
+		model.addAttribute("b", b);
 		return "board/noticeMailEnrollForm";
+	}
+	
+	/**
+	 * 메일 전송
+	 * @param m : 전송할 메일 정보
+	 * @param upfile : 전송할 파일 정보
+	 * @return : 보낸메일함 페이지
+	 */
+	@RequestMapping("insertMailBoard.ma")
+	public String insertMail(int no, Mail m, MultipartFile[] upfile, HttpSession session, Model model) {
+
+		// 보낸 사람 이메일
+		String memEmail = ((Member)session.getAttribute("loginUser")).getMemEmail();
+
+		// 메일 상태 (한명 또는 여러명에게 보낼 수 있음)
+		ArrayList<MailStatus> list = new ArrayList<>();	
+		
+		// 첨부파일 (한개 또는 여러개 보낼 수 있음)
+		ArrayList<Attachment> atList = new ArrayList<>();
+
+		// 메일 보내기
+		int result1 = mService.insertMail(m);
+		// 메일 상태(보낸사람, 받는사람)
+		int result2 = 0;
+		// 첨부파일
+		int result3 = 1; // (첨부파일 없으면 : 1 | 첨부파일 첨부시 => 성공 : 1 | 실패 : 0) 
+		
+		if(result1 > 0) {
+			// 메일 보내기 성공 => 메일 상태에 insert하기
+			
+			// ----------- 보낸 메일 ------------
+			MailStatus ms = new MailStatus();
+			ms.setSendMail(memEmail);
+			ms.setReceiveMail(m.getReceiverMem()); // 받는 사람 이메일(전체)
+			ms.setMailFolder(1);
+
+			list.add(ms); // ArrayList<MailStatus>에 추가
+			
+			// ------------- 받은 메일 ------------
+			String[] receiveArr = m.getReceiverMem().split(","); // ','를 구분지어서 배열로 넣기
+			
+			for(String r : receiveArr) {
+				
+				MailStatus ms2 = new MailStatus();
+				ms2.setSendMail(memEmail);
+				ms2.setReceiveMail(r); // 받는 사람 이메일(','로 구분지은것)
+				ms2.setMailFolder(2);
+				
+				list.add(ms2); // ArrayList<MailStatus>에 추가
+
+			}
+
+			// ------------ 참조 메일 ------------
+			if( !m.getCcMem().equals("") ) { // 참조 이메일이 있는 경우
+				
+				String[] ccArr = m.getCcMem().split(","); 
+
+				for(String c : ccArr) {
+
+					MailStatus ms3 = new MailStatus();
+					ms3.setSendMail(memEmail);
+					ms3.setReceiveMail(c); // 받는 사람 이메일(','로 구분지은것)
+					ms3.setMailFolder(3);
+					
+					list.add(ms3); // ArrayList<MailStatus>에 추가
+				}
+
+			}
+			// 메일 상태에 보내기 (성공 : 1 | 실패 : 0)
+			result2 = mService.insertMailStatus(list);
+		}
+
+		// 첨부파일 보내기 (한개 또는 여러개)
+		for (MultipartFile file : upfile) {
+
+			if ( !file.getOriginalFilename().equals("") ) { // 첨부파일이 있는 경우
+
+				// 저장 파일 경로!
+				String saveFilePath = FileUpload.saveFile(file, session, "resources/uploadFiles/mailFiles/");
+
+				// 첨부파일
+				Attachment at = new Attachment();
+
+				at.setAtOriginName(file.getOriginalFilename());
+				at.setAtChangeName(saveFilePath);
+
+				// at를 attachmentList에 담기
+				atList.add(at);
+			}
+			
+		}
+		
+		// 첨부파일 보내기
+		if(atList.size() > 0) { // 첨부파일이 추가된 경우
+			result3 = mService.insertAttachment(atList);
+		}
+
+		if(result1 > 0 && result2 > 0 && result3 > 0) {
+			session.setAttribute("alertIcon", "success");
+			session.setAttribute("alertTitle", "메일 전송 완료");
+			session.setAttribute("alertMsg","성공적으로 메일을 보냈습니다.");
+		} else {
+			session.setAttribute("alertIcon", "error");
+			session.setAttribute("alertTitle", "메일 전송 실패");
+			session.setAttribute("alertMsg","메일 전송을 실패했습니다.");
+		}
+			
+		model.addAttribute("isNoticeMail", 1);
+		return "redirect:noticeMailForm.no?no=" + no;
+		
 	}
 	
 	/**

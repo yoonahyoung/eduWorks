@@ -164,15 +164,9 @@
 	                        <span class="fas fa-eye"></span>
 	                        <span>조회수 ${ b.boardCount }회</span>
 	                    </div>
-	                    <!-- 
-	                    <div class="board-plus-box">
-	                        <span class="fas fa-thumbs-up"></span>
-	                        <span>추천수 0 </span>
-	                    </div>
-	                     -->
 	                </div>
 	                <div>
-	                    <a href="#" onclick="window.open('address','window_name','width=430,height=500,location=no,status=no,scrollbars=yes');" style="color:black; margin-top:0px">
+	                    <a href="#" onclick="window.open('noticeMailForm.de?no=${b.boardNo}','window_name','width=1116,height=885,location=writeMailForm.ma,status=no,scrollbars=yes');" style="color:black; margin-top:0px">
 	                        <i class="material-symbols-outlined" style="color:#5e7e9b; font-size: 20px; vertical-align:middle; margin:0 8px 5px 20px;">mail</i>
 	                        <span>메일발송</span>
 	                    </a>
@@ -318,67 +312,70 @@
 					
                  	// 댓글 insert 
                     function insertReply(replyParentNo){ 
-                 		let replyDepth = 0;
-                 		if(replyParentNo != 0){ // 댓글 깊이
-                 			replyDepth = 1;
-                 		}
-						 $.ajax({
-							url: "insertRe.de",
-							data:{
-								reBoardNo:${b.boardNo},
-								replyDepth:replyDepth,
-								replyParent:replyParentNo,
-								replyContent:$("#replyContent").val(),
-								replyWriter:"${loginUser.memName}",
-								replyJob:"${loginUser.jobName}",
-								replyWno:${loginUser.memNo}
-							},
-							success(result){
-								selectReplyList();
-								$("#replyContent").val("");
-								/*
-								// 소켓
-								// 1. 원댓글 달 시
-								if(${b.boardWriter != loginUser.memNo}){
-									if(socket){
-										let data = {
-											"cmd" : "reply",
-						                    "boardNo" : "${ b.boardNo }",
-						                    "boardTitle" : "${b.boardTitle}",
-						                 	"boardWriter" : "${b.boardWriter}",
-						                 	"replyParentNo" : "",
-						                 	"currentUser" : "${loginUser.memNo}",
-						                 	"alarmContent" : ""
-										};
-										
-										let jsonData = JSON.stringify(data);
-										console.log(jsonData);
-							            socket.send(jsonData);
+                    	if(!$("#replyContent").val()){
+                 			alert("댓글 내용을 입력하세요");
+                 		}else{
+                 			let replyDepth = 0;
+	                 		if(replyParentNo != 0){ // 댓글 깊이
+	                 			replyDepth = 1;
+	                 		}
+							 $.ajax({
+								url: "insertRe.de",
+								data:{
+									reBoardNo:${b.boardNo},
+									replyDepth:replyDepth,
+									replyParent:replyParentNo,
+									replyContent:$("#replyContent").val(),
+									replyWriter:"${loginUser.memName}",
+									replyJob:"${loginUser.jobName}",
+									replyWno:${loginUser.memNo}
+								},
+								success(result){
+									selectReplyList();
+									$("#replyContent").val("");
+									/*
+									// 소켓
+									// 1. 원댓글 달 시
+									if(${b.boardWriter != loginUser.memNo}){
+										if(socket){
+											let data = {
+												"cmd" : "reply",
+							                    "boardNo" : "${ b.boardNo }",
+							                    "boardTitle" : "${b.boardTitle}",
+							                 	"boardWriter" : "${b.boardWriter}",
+							                 	"replyParentNo" : "",
+							                 	"currentUser" : "${loginUser.memNo}",
+							                 	"alarmContent" : ""
+											};
+											
+											let jsonData = JSON.stringify(data);
+											console.log(jsonData);
+								            socket.send(jsonData);
+										}
+									}else if(replyDepth == 1){ // 2. 대댓글 달 시
+										if(socket){
+											let data = {
+												"cmd" : "reply",
+							                    "boardNo" : "${ b.boardNo }",
+							                    "boardTitle" : "${b.boardTitle}",
+							                 	"boardWriter" : "${b.boardWriter}",
+							                 	"replyParentNo" : replyParentNo,
+							                 	"currentUser" : "${loginUser.memNo}",
+							                 	"alarmContent" : ""
+											};
+											
+											let jsonData = JSON.stringify(data);
+											console.log(jsonData);
+								            socket.send(jsonData);
+										}
 									}
-								}else if(replyDepth == 1){ // 2. 대댓글 달 시
-									if(socket){
-										let data = {
-											"cmd" : "reply",
-						                    "boardNo" : "${ b.boardNo }",
-						                    "boardTitle" : "${b.boardTitle}",
-						                 	"boardWriter" : "${b.boardWriter}",
-						                 	"replyParentNo" : replyParentNo,
-						                 	"currentUser" : "${loginUser.memNo}",
-						                 	"alarmContent" : ""
-										};
-										
-										let jsonData = JSON.stringify(data);
-										console.log(jsonData);
-							            socket.send(jsonData);
-									}
+									*/
+								},
+								error(){
+									console.log("댓글 등록 실패");
 								}
-								*/
-							},
-							error(){
-								console.log("댓글 등록 실패");
-							}
-							
-						}) 
+							}) 
+						}
 					}
                     
                     // 댓글 수정 div

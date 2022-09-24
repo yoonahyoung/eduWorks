@@ -101,12 +101,47 @@
 </style>
 </head>
 <body>
-	<!-- 공통요소 모달 -->
-	<jsp:include page="../mail/commonMailModal.jsp" />
 
+	
+	<c:if test="${ not empty alertMsg }">
+		<script>
+             Swal.fire({
+                 icon: '${alertIcon}',
+                 title: '${alertTitle}',
+                 text: "${alertMsg}",
+                 allowOutsideClick: false,
+                 showConfirmButton: true,
+                 showCancelButton: false,
+                 closeOnConfirm: true,
+                 closeOnCancel: true,
+                 confirmButtonText: 'OK',
+                 confirmButtonColor: 'slategray',
+                 cancelButtonText: 'Cancel',
+                 imageUrl: null,
+                 imageSize: null,
+                 timer: null,
+                 customClass: '',
+                 html: false,
+                 animation: true,
+                 allowEscapeKey: true,
+                 inputType: 'text',
+                 inputPlaceholder: '',
+                 inputValue: '',
+                 showLoaderOnConfirm: false
+       		  })
+       		  .then(result => {
+       			if (result.isConfirmed){
+					  window.close();       				
+       			}
+       		  });
+		</script>
+		<c:remove var="alertMsg" scope="session" />
+		<c:remove var="alertTitle" scope="session" /> <!-- 일회성 메시지의 역할을 하기 위해 지워주기 -->
+	</c:if>
+	
 	<!-- 메인 콘텐츠 영역 -->
 	<div class="main-content" style="width:100%">
-		<form method="post" action="insertMail.ma" id="mailForm" enctype="multipart/form-data" style="margin-right:40px">
+		<form method="post" action="insertMailBoard.ma?no=${b.boardNo}" id="mailForm" enctype="multipart/form-data" style="margin-right:40px">
 
 			<div class="second-title">
 				<div style="font-weight: bold;">메일 작성</div>
@@ -117,9 +152,6 @@
 						data-target="#mail-preview">
 					<i class="fas fa-desktop"></i>&nbsp;&nbsp;미리보기
 				</button>
-				<button type="button" class="sub-btn" id="propertyMail">
-					<i class="far fa-save"></i>&nbsp;&nbsp;임시저장
-				</button>
 				<button type="button" class="sub-btn" onclick="location.href='sendMailForm.ma'">
 					<i class="fas fa-undo"></i>&nbsp;&nbsp;취소
 				</button>
@@ -127,8 +159,6 @@
 			<hr style="margin: 20px 0px 10px 0px;">
 
 			<script>
-				
-
 				// 메일 '전송'시 실행하는 함수
 				function sendMail() {
 					if ($("#receive").val() == "") {
@@ -151,37 +181,11 @@
 					}
 				}
 				
-				// 메일 '임시저장'시 실행하는 함수
-				/*
-				$(function(){
-					$("#propertyMail").click(function(){
-						$.ajax({
-							url :"insertTemporaryMail.ma",
-							data : {
-								memNo : ${loginUser.memNo},
-								receiverMem : $("#receive").val(),
-								ccMem : $("#cc").val(),
-								mailType : $("#mailType").val(),
-								mailTitle : $("#title").val(),
-								upfile : $("#upfile").val(),
-								mailContent : $("#summernote").val()
-							},
-							success : function(result){
-								console.log("임시저장 성공");
-							},
-							error : function(){
-								console.log("임시저장 실패");
-							}
-						})
-					})
-				})
-				*/
-				
 			</script>
 
 			<div class="send-form" id="mailForm">
 				<!-- 보내는 사람 -->
-				<input type="hidden" name="memNo" value="${loginUser.memNo }">
+				<input type="hidden" name="memNo" value="${ loginUser.memNo }">
 
 				<table>
 
@@ -189,8 +193,9 @@
 						<th>받는사람</th>
 						<td style="width: 75%;"><input type="text" name="receiverMem"
 							class="input-mail" id="receive"></td>
-						<td><button type="button" class="address-btn"
-								data-toggle="modal" data-target="#findAdd">주소록에서 찾기</button></td>
+						<td>
+							<button type="button" class="address-btn" onclick="publicAdd();" data-toggle="modal" data-target="#findAdd">주소록에서 찾기</button>
+						</td>
 					</tr>
 					<tr>
 						<th>참조</th>
@@ -198,19 +203,22 @@
 							class="input-mail" id="cc"></td>
 					</tr>
 					<tr>
-						<th><span>제목</span> <span class="send-check"> <input
-								type="checkbox" name="mailType" id="mailType" value="1"><label
-								for="mailType">&nbsp;&nbsp;중요!</label>
-						</span></th>
-						<td colspan="2"><input type="text" name="mailTitle"
-							class="input-mail" id="title"></td>
+						<th>
+							<span>제목</span> 
+							<span class="send-check"> 
+								<input type="checkbox" name="mailType" id="mailType" value="1">
+								<label for="mailType">&nbsp;&nbsp;중요!</label>
+							</span>
+						</th>
+						<td colspan="2">
+							<input type="text" name="mailTitle" value="${ b.boardTitle }" class="input-mail" id="title">
+						</td>
 					</tr>
 					<tr>
 						<th>첨부파일</th>
 						<td colspan="2">
 							<button id="btn-upload" type="button">파일 추가</button> 
-							<input type="file" name="upfile" class="input-mail" id="upfile"
-							onchange="addFile();" multiple>
+							<input type="file" name="upfile" class="input-mail" id="upfile" onchange="addFile();" multiple>
 						</td>
 					</tr>
 
@@ -221,7 +229,11 @@
 				</div>
 
 				<div>
-					<textarea id="summernote" name="mailContent"></textarea>
+					<textarea id="summernote" name="mailContent">
+					공지 : 
+					${ b.boardContent }
+					<hr><br><br>
+					</textarea>
 				</div>
 
 			</div>
@@ -447,7 +459,243 @@
 		</div>
 	</div>
 	
+	<!-- =================== 주소록에서 찾기 모달 ======================= -->
+
+	<div class="modal" id="findAdd">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<div class="modal-content" style="height: 800px">
+
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">
+						<b>주소록에서 찾기</b>
+					</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<!-- 해당 버튼 클릭시 모달과 연결해제 -->
+				</div>
+
+				<!-- Modal body -->
+
+					<div class="modal-body" align="center">
+
+						<input type="hidden" name="memNo" value="${loginUser.memNo }">
+
+						<div class="address-tag">
+
+							<span onclick="publicAdd();">공용 주소록</span> 
+							<span onclick="indivAdd();">개인 주소록</span>
+
+						</div>
+						<div class="add-choice">
+							<div class="add-title">
+								
+							</div>
+							<div class="add-person">
+								<div>
+									<input type="text" name="" placeholder="이름, 이메일, 회사 입력해서 찾기">
+								</div>
+
+								<div id="table-container">
+									<table id="add-table" class="addArea">
+
+										<thead>
+											<tr>
+												<th class="checkbox">
+												<input type="checkbox" name="addNo" onclick="allCheck(this);">
+												</th>
+												<th><span>이름</span></th>
+												<th><span>부서</span></th>
+												<th><span>직위</span></th>
+												<th><span>이메일</span></th>
+											</tr>
+										</thead>
+
+										<tbody>
+
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+
+						<div>
+							<button type="button" class="addBtn" onclick="addMail();" data-dismiss="modal"
+								style="background-color: slategray; color: white; border: none;">추가</button>
+							<button type="button" data-dismiss="modal" class="addBtn">취소</button>
+						</div>
+
+					</div>
+
+			</div>
+		</div>
+	</div>
+	
 	<script>
+		// '전체클릭'버튼 클릭시 실행하는 함수
+		function allCheck(allCheck){
+			
+			let checkboxes = document.getElementsByName("addNo");
+			  
+	        checkboxes.forEach((checkbox)=>{
+	    	   
+	        checkbox.checked = allCheck.checked; // 전체 클릭 클릭시 => 항목 전체 선택 실행
+		            
+	       });
+	    }
+		  
+			
+		// 주소록에서 이메일 추가시 실행하는 함수
+		function addMail(){
+			 
+			checkCnt = "";
+	
+			$("input[name='addNo']:checked").each(function(){
+				checkCnt += ( $(this).parent().siblings(".email").text() ) + ",";
+			});
+			
+			checkCnt = checkCnt.substring(0,checkCnt.lastIndexOf(",")); // 맨 뒤 콤마 삭제 "2,3,4"
+			
+			$("#receive").val(checkCnt);
+			
+		}
+		
+		$(document).on("change", "input[name=addNo]", function(){
+			addMail();
+			console.log( $("#receive").val() );
+			
+		})
+			
+		// '주소록 찾기' 클릭시 실행하는 함수(전사 주소록)
+		function publicAdd() {
+			$.ajax({
+				url : "publicMailAddress.ad",
+				success : function(address) {
+	
+					let value = "";
+					for (let i = 0; i < address.length; i++) {
+						value += "<tr>" 
+									+ "<td class='checkbox'>"
+									// + "<input type='checkbox' name='addNo' onchange=" + "addMail" + "('" + address[i].memEmail + "');" + ">"
+									+ "<input type='checkbox' name='addNo' >"
+									+ "</td>" 
+									+ "<td>" + address[i].memName + "</td>" 
+									+ "<td>" + address[i].deptCode + "</td>" 
+									+ "<td>" + address[i].jobCode + "</td>" 
+									+ "<td class='email'>" + address[i].memEmail + "</td>" 
+							  + "</tr>";
+					}
+	
+					let category = "<p>전사 주소록</p>";
+	
+					$(".add-title").html(category);
+					$(".addArea tbody").html(value);
+	
+				},
+				error : function() {
+					console.log("주소록 찾기 실패");
+				}
+			})
+		}
+	
+		// '주소록 찾기' 클릭시 실행하는 함수(개인 기본 주소록)
+		function indivAdd() {
+			$.ajax({
+				url : "indivMailAddress.ad",
+				data : {
+					memNo : ${loginUser.memNo}
+				},
+				success : function(address){
+					
+					let value = "";
+					if(address.iAdd.length == 0){
+						value += "<tr>"
+									+ "<td>" + "</td>" 
+									+ "<td>" + "</td>"
+									+ "<td>" + "</td>"
+									+ "<td>" + "</td>" 
+									+ "<td style='width:100%;'>" +"</td>"
+							  + "</tr>";
+					} else {
+						
+						for (let i = 0; i < address.iAdd.length; i++) {
+							value += "<tr>" + "<td class='checkbox'>"
+										+ "<input type='checkbox' name='addNo'>" + "</td>" 
+										+ "<td>" + address.iAdd[i].addName + "</td>" 
+										+ "<td>" + address.iAdd[i].addDept + "</td>" 
+										+ "<td>" + address.iAdd[i].addJob + "</td>" 
+										+ "<td style='width:100%;'>" + address.iAdd[i].addEmail + "</td>" 
+								  + "</tr>";
+						}
+					}
+					
+					let category = "";
+					for(let i = 0; i < address.c.length; i++){
+						category += "<p onclick='indivCategory(" + address.c[i].addNo + ");'>" 
+										+ address.c[i].addName
+								 + "</p>";
+					}
+					
+					$(".add-title").html(category);
+					$(".addArea tbody").html(value);
+				},
+				error : function(){
+					console.log("개인 주소록 찾기 실패");
+				}
+			})
+	
+		}
+	
+		// '주소록 찾기' 클릭시 실행하는 함수(개인 카테고리 주소록)
+		function indivCategory(num){
+			
+		 	$.ajax({
+		 		url : "indivMailAddressGroup.ad",
+		 		data : {
+		 			memNo : ${loginUser.memNo},
+		 			addNo : num
+		 		},
+		 		success : function(address){
+		 			
+					let value = "";
+					
+					if(address.iAdd.length == 0){
+						value += "<tr>"
+									+ "<td>" +"</td>" 
+									+ "<td>" + "</td>"
+									+ "<td>" +"</td>"
+									+ "<td>" + "</td>" 
+									+ "<td style='width:100%;'>" +"</td>"
+							  + "</tr>";
+					} else {
+						
+						for (let i = 0; i < address.iAdd.length; i++) {
+							value += "<tr>" + "<td class='checkbox'>"
+										+ "<input type='checkbox' name='addCheck'>" + "</td>" 
+										+ "<td>" + address.iAdd[i].addName + "</td>" 
+										+ "<td>" + address.iAdd[i].addDept + "</td>" 
+										+ "<td>" + address.iAdd[i].addJob + "</td>" 
+										+ "<td style='width:100%;'>" + address.iAdd[i].addEmail + "</td>" 
+								  + "</tr>";
+						}
+					}
+	
+					let category = "";
+					for(let i = 0; i < address.c.length; i++){
+						category += "<p onclick='indivCategory(" + address.c[i].addNo + ");'>" 
+										+ address.c[i].addName
+								 + "</p>";
+					}
+					
+					$(".add-title").html(category);
+					$(".addArea tbody").html(value);
+	
+		 		},
+		 		error : function(){
+		 			console.log("개인 주소록 그룹 찾기 실패");
+		 		}
+		 	})
+			
+		}
 		
 		// 메일 '미리보기'클릭시 실행하는 함수
 		$("#preview").click(function(){

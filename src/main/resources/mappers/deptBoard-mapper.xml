@@ -322,7 +322,7 @@
 			   board_no
 			 , board_title
 			 , m.mem_name || ' ' || job_name as "b_writer"
-			 , m.dept_code
+			 , b.dept_code as "dept_code"
 			 , to_char(board_en_date, 'YYYY-MM-DD') as "board_en_date"
 			 , board_count
 			 , board_top
@@ -331,7 +331,6 @@
 		  join tb_job j using(job_code)
 		 where board_category = 2
 		   and board_status = 'Y'
-           and b.dept_code = #{deptCode}
 		 order
 		 	by (CASE WHEN board_top = 'Y' THEN 1 ELSE 2 END) asc, 1 desc
 	</select>

@@ -56,6 +56,7 @@ public class DeptBoardController {
 	public ModelAndView dBoardList(@RequestParam(value="cpage", defaultValue="1") int currentPage, ModelAndView mv, HttpSession session) {
 		String keyword = "";
 		String deptCode = ((Member)session.getAttribute("loginUser")).getDeptCode();
+		
 		int listCount = dService.selectListCount(keyword, deptCode);
 		
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 10);
@@ -372,23 +373,25 @@ public class DeptBoardController {
 	 * @return	메일 작성 화면
 	 */
 	@RequestMapping("noticeMailForm.de")
-	public String dBoardMailForm(Model model) {
+	public String dBoardMailForm(int no, Model model) {
+		Board b = dService.selectDeptBoard(no);
+		model.addAttribute("b", b);
 		return "board/noticeMailEnrollForm";
 	}
 	
 	/**
-	 * 부서게시판 검색 기능
-	 * @param keyword	검색 키워드
+	 * 부서게시판 검색/분류 기능
+	 * @param keyword	검색/분류 키워드
 	 * @param page		현재 페이지
 	 * @return	페이징 리스트, 검색 리스트
 	 */
 	@ResponseBody
 	@RequestMapping(value="search.de", produces="application/json; charset=utf-8")
-	public String searchdBoard(String keyword, int page, HttpSession session) {
-		String deptCode = ((Member)session.getAttribute("loginUser")).getDeptCode();
-		int listCount = dService.selectListCount(keyword,  deptCode);
+	public String searchdBoard(String keyword, String chkDept, int page, HttpSession session) {
+		
+		int listCount = dService.selectListCount(keyword,  chkDept);
 		PageInfo pi = Pagination.getInfo(listCount, page, 10, 10);
-		ArrayList<Board> list = dService.selectList(pi, keyword, deptCode);
+		ArrayList<Board> list = dService.selectList(pi, keyword, chkDept);
 
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("pi", pi);

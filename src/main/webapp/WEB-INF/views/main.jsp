@@ -1130,7 +1130,16 @@
 			<div style="text-align:center; margin:1%; border-radius:5px; background-color: white;">
 				<div style="margin:0px 10px 0px 10px;">
 					<div class="d-sm-flex align-items-center mb-4" id="boardHeader">
-		                <div id="deptBoard" style="font-size:23px; padding-top: 5px;">부서 게시판 | ${deptName}</div>
+		                <div id="deptBoard" style="font-size:23px; padding-top: 5px;">
+			            <c:choose>
+			            	<c:when test="${ deptName eq '대표' }">
+			            		<h2>부서 게시판 | 전체</h2>  
+			            	</c:when>
+			            	<c:otherwise>
+			                	<h2>부서 게시판 | ${ deptName }</h2>  
+			                </c:otherwise>
+		                </c:choose>
+		                </div>
 		            </div>
 					<br>
 		            <div class="main_width">
