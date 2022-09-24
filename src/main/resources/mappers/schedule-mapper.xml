@@ -435,6 +435,7 @@
 			 , sche_content
 		  from tb_schedule
 		 where sche_status = 'Y'
+		   and sche_writer = #{ma.memNo}
 		   and (sche_content like '%' || #{key} || '%'
   		    or sche_title like '%' || #{key} || '%')	
 	</select>

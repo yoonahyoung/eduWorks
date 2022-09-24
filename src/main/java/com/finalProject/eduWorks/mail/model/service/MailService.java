@@ -73,7 +73,7 @@ public interface MailService {
 	int deleteSendMail(ArrayList<MailStatus> list);
 	int deleteReceiveMail(ArrayList<MailStatus> list);
 	int deleteSendToMeMail(ArrayList<MailStatus> list);
-	int deleteAllMail(MailStatus ms);
+	int deleteAllMail(ArrayList<MailStatus> list);
 
 	// 14. 메일 상세 조회
 	Mail selectMailDetail(MailStatus ms);
@@ -108,4 +108,6 @@ public interface MailService {
  	// 17_4. 해당 태그 조회
  	Tag selectTagInfo(Tag t);
 
+ 	// 18. 메일 답장 폼으로 이동
+ 	Mail replyMailForm(String mailNo);
 }

@@ -25,22 +25,24 @@
 		<div class="second-title">
 
  		<div>
-			<c:if test="${m.tagNo != '' }">
+			<c:if test="${flag == 'F' }">
 				<i class='fas fa-bookmark' style="color:${m.tag.tagColor};" ></i>
 			</c:if>
- 			${text }
+ 				${text }
  			<span class="mail-count">전체메일 ${count } / 안읽은 메일 ${unread }</span>
  		</div>
-
+		<input type="hidden" name="mailNo" id="detailFolder" value="${m.mailStatus.mailFolder }">
 			<ul class="navbar-nav ml-auto moDelte">
 				<li class="nav-item dropdown no-arrow mx-1">
 					<button type="button" class="reply-btn">
 						<i class="fas fa-location-arrow"></i>&nbsp;&nbsp;답장
 					</button>
+					<!-- 
 					<button type="button" class="sub-btn">
 						<i class="fas fa-arrow-right"></i>&nbsp;&nbsp;전달
 					</button>
-					<button type="button" class="sub-btn">
+					 -->
+					<button type="button" class="sub-btn" onclick="chooseDelete();">
 						<i class="fas fa-trash-alt"></i>&nbsp;&nbsp;삭제
 					</button>
 					<button class="nav-link dropdown-toggle sub-btn tag-btn" href="#"
@@ -48,26 +50,13 @@
 						aria-haspopup="true" aria-expanded="false">
 						<i class="fas fa-bookmark"></i>&nbsp;&nbsp;태그
 					</button>
+					<!--
 					<button type="button" class="sub-btn warning-btn">
 						<i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;스팸신고
 					</button>
+					-->
 					<div class="dropdown-list dropdown-menu shadow"
 						aria-labelledby="dotDropdown" style="margin-top: -10px;">
-
-						<!-- 태그없으면 안보임  -->
-						<a class="dropdown-item d-flex align-items-center" href="#"> <span
-							class="font-weight-bold">태그색성 + 태그명</span>
-						</a> <a class="dropdown-item d-flex align-items-center" href="#"
-							data-toggle="modal" data-target="#delete"> <span
-							class="font-weight-bold">태그색성 + 태그명</span>
-						</a>
-
-						<!-- 태그 생성유무 상관없이 보임-->
-						<a class="dropdown-item d-flex align-items-center"
-							data-toggle="modal" data-target="#addTags" href="#"> <span
-							class="font-weight-bold">+ 태그 추가</span>
-						</a>
-
 
 					</div>
 				</li>
@@ -142,7 +131,11 @@
 					</tr>
 
 				</table>
-			
+							
+		<form id="postMailDetail" action="mailDetail.ma" method="post">
+			<input type="hidden" name="mailNo" id="detailNo">
+		</form>
+		
 		<script>
 		
 			// '중요메일' 설정시 실행하는 함수
@@ -156,9 +149,6 @@
 					  , mailImportant : important
 					},
 					success : function(result){
-						console.log(mailNo);
-						console.log(important);
-						console.log(result);
 						if(result == 'success'){
 							location.reload();
 						}
@@ -169,6 +159,46 @@
 				})
 	
 			}
+			
+			$(function(){
+			
+				// 메일 '답장'시 실행하는 함수
+				$(".reply-btn").click(function(){
+
+					$("#detailNo").val( ${m.mailNo} );
+					$("#postMailDetail").attr("action", 'replyMail.ma').submit();
+					})
+					
+			})
+			
+			// 메일 '삭제'시 실행하는 함수
+			function chooseDelete(){
+
+				let mailNo = $("#detailNo").val( ${m.mailNo} );
+				let mailFolder = $("#detailFolder").val();
+				let flag = '${flag}';
+			
+				$.ajax({
+					url : "deleteMail.ma",
+					data : {
+						sendMail : '${loginUser.memEmail}',
+						receiveMail : '${loginUser.memEmail}',
+						mailNo : mailNo.val(),
+						mailFolder : mailFolder
+					},
+					success : function(result){
+						if(result == 'success'){
+							switch(flag){
+							case "A" : location.href="sendMailList.ma"; break; 
+							}
+						}	
+					},
+					error : function(){
+						console.log("메일 삭제 실패");
+					}
+				})
+			}
+
 		
 		</script>
 

@@ -450,6 +450,7 @@ img{
 	height: 500px;
 	resize: none;
 	text-align:left;
+	padding: 10px;
 }
 
 .send-title{

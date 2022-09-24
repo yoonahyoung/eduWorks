@@ -33,12 +33,14 @@
 				<li class="nav-item dropdown no-arrow navigation"><span
 					class="mailListCheck"><input type="checkbox" id="allCheck"
 						onclick="allCheck(this)"></span>
-					<button type="button" class="reply-btn">
+					<button type="button" class="reply-btn" onclick="replyMail();">
 						<i class="fas fa-location-arrow"></i>&nbsp;&nbsp;답장
 					</button>
+					<!-- 
 					<button type="button" class="sub-btn">
 						<i class="fas fa-arrow-right"></i>&nbsp;&nbsp;전달
 					</button>
+					 -->
 					<button type="button" class="sub-btn" onclick="chooseDelete();">
 						<i class="fas fa-trash-alt"></i>&nbsp;&nbsp;삭제
 					</button>
@@ -47,12 +49,13 @@
 						aria-haspopup="true" aria-expanded="false">
 						<i class="fas fa-bookmark"></i>&nbsp;&nbsp;태그
 					</button>
+					<!--
 					<button type="button" class="sub-btn warning-btn">
 						<i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;스팸신고
 					</button>
+					-->
 					<div class="dropdown-list dropdown-menu shadow" id="tagList"
 						aria-labelledby="dotDropdown" style="margin-top: -10px;">
-
 					</div>
 				</li>
 			</ul>
@@ -97,7 +100,7 @@
 				
 			}
 			
-			/*
+			
 			// 메일에 태그 삽입하는 함수
 			$(document).on("click", "#tag", function(){
 				
@@ -142,7 +145,7 @@
 				}
 
 			})
-			*/
+			
 			
 		</script>
 
@@ -159,7 +162,7 @@
 							<c:when test="${m.mailStatus.mailImportant == 'N' }">
 								<!-- 찜하기 전 --> 
 								<i class="icon far fa-star"
-									onclick="importantBtn(${m.mailNo}, '${m.mailStatus.mailImportant }');"></i> 
+									onclick="importantBtn(${m.mailNo}, '${m.mailStatus.mailImportant }', '${m.mailStatus.mailFolder }');"></i> 
 							</c:when>
 							<c:otherwise>
 								<!-- 찜하기 후 -->
@@ -227,7 +230,7 @@
 
 		</div>
 		
-		<form id="postMailDetail" action="mailDetail.ma" method="post">
+		<form id="postMailDetail" action="" method="post">
 			<input type="hidden" name="mailFolder" id="detailTagFolder">
 			<input type="hidden" name="tagNo" value="" id="detailTagNo">
 			<input type="hidden" name="mailNo" id="detailNo">
@@ -250,14 +253,14 @@
 	        }
 					
 			// '중요메일' 설정시 실행하는 함수
-			function importantBtn(mailNo, important){
+			function importantBtn(mailNo, important, folder){
 
 				$.ajax({
 					url : "updateImportant.ma",
 					data : {
 						mailNo : mailNo
 					  , sendMail : '${loginUser.memEmail}'
-					  , mailFolder : 1
+					  , mailFolder : folder
 					  , mailImportant : important
 					},
 					success : function(result){
@@ -277,6 +280,7 @@
 			$(function(){
 				$(".mail-title").click(function(){
 					
+					
 					let mailNo = $(this).children('input[type=hidden]').val();
 					let mailFolder = $(this).children("#selectTagFolder").val();
 					let tagNo = $(this).children("#selectTagNo").val();
@@ -284,11 +288,11 @@
 					$("#detailNo").val(mailNo);
 					$("#detailTagFolder").val(mailFolder);
 					$("#detailTagNo").val(tagNo);
-					$("#postMailDetail").submit();
+					
+					$("#postMailDetail").attr("action", 'mailDetail.ma').submit();
 
 				})
 			})
-			
 			
 			// 메일 '삭제'시 실행하는 함수
 			function chooseDelete(){
@@ -304,24 +308,28 @@
 				const mailNo = checkArr.toString();
 				console.log(mailNo);
 				
-				$.ajax({
-					url : "deleteMail.ma",
-					data : {
-						sendMail : '${loginUser.memEmail}',
-						mailNo : mailNo,
-						mailFolder : 1
-					},
-					success : function(result){
-						console.log(result);
-						if(result == 'success'){
-							location.reload();				
-						}		
-					},
-					error : function(){
-						console.log("메일 삭제 실패");
-					}
-				})
-				
+				if(mailNo.length < 1){
+					alert("삭제할 메일을 선택해주세요.");
+				} else {
+					
+					$.ajax({
+						url : "deleteMail.ma",
+						data : {
+							sendMail : '${loginUser.memEmail}',
+							mailNo : mailNo,
+							mailFolder : 1
+						},
+						success : function(result){
+							console.log(result);
+							if(result == 'success'){
+								location.reload();				
+							}		
+						},
+						error : function(){
+							console.log("메일 삭제 실패");
+						}
+					})
+				}
 			}
 			
 

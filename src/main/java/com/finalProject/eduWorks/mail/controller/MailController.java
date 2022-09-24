@@ -112,6 +112,7 @@ public class MailController {
 	public String writeMailForm(Model model) {
 		return "mail/writeMailForm";
 	}
+	
 
 	/**
 	 * 4. 메일 작성(나에게) 페이지로 이동
@@ -682,7 +683,16 @@ public class MailController {
 	@RequestMapping("deleteAllMail.ma")
 	public String deleteAllMail(MailStatus ms) {
 		
-		int result = mService.deleteAllMail(ms);
+		String[] mailNo = ms.getMailNo().split(",");
+		ArrayList<MailStatus> list = new ArrayList<>();
+		for(String m : mailNo) {
+			list.add(ms);
+		}
+		
+		System.out.println(list);
+		
+		int result = mService.deleteAllMail(list);
+		System.out.println(result);
 		return result > 0 ? "success" : "fail";
 		
 	}
@@ -771,14 +781,11 @@ public class MailController {
 				   count = mService.deleteListCount(m);
 				   unread = mService.deleteUnReadCount(m); break;
 		}
-		System.out.println(ms);
-		System.out.println(detail);
-		System.out.println(update);
-		System.out.println(count);
 
 		// 메일 조회 성공시
 		if(update > 0) {
-				
+			
+		mv.addObject("flag", flag);
 		mv.addObject("text", text);
 		mv.addObject("color", color);
 		mv.addObject("count", count);
@@ -974,7 +981,23 @@ public class MailController {
 		
 	}
 	
-
+	/**
+	 * 19. 메일 답장 페이지로 이동
+	 * @param mailNo : 답장할 메일 번호
+	 * @return : 메일 답장 페이지
+	 */
+	@RequestMapping("replyMail.ma")
+	public ModelAndView replayMail(String mailNo, ModelAndView mv) {
+		
+		Mail m = mService.replyMailForm(mailNo);
+		
+		mv.addObject("text", "R");
+		mv.addObject("m", m);
+		mv.setViewName("mail/replyMailForm");
+		
+		return mv;
+		
+	}
 
 	
 }

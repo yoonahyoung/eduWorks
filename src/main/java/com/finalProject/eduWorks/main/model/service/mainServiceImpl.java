@@ -91,8 +91,8 @@ public class mainServiceImpl implements mainService{
 	}
 
 	@Override
-	public ArrayList<Board> searchBoard(String key) {
-		return mDao.searchBoard(sqlSession, key);
+	public ArrayList<Board> searchBoard(HashMap bMap) {
+		return mDao.searchBoard(sqlSession, bMap);
 	}
 
 	@Override
@@ -101,7 +101,7 @@ public class mainServiceImpl implements mainService{
 	}
 
 	@Override
-	public ArrayList<Schedule> searchSchedule(String key) {
-		return mDao.searchSchedule(sqlSession, key);
+	public ArrayList<Schedule> searchSchedule(HashMap map) {
+		return mDao.searchSchedule(sqlSession, map);
 	}
 }

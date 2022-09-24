@@ -32,7 +32,7 @@ public class Mail {
 	private String mailNo;
 	private String memNo;
 	private int tagNo;
-	private String memTemporary;
+	private String mailTemporary;
 	private String receiverMem;
 	private String ccMem;
 	private String mailTitle;

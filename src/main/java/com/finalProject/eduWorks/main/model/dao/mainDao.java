@@ -44,7 +44,7 @@ public class mainDao {
 		int offset = (pi.getCurrentPage()-1) * limit;
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		
-		return (ArrayList)sqlSession.selectList("deptBoardMapper.searchBoard", deptCode, rowBounds);
+		return (ArrayList)sqlSession.selectList("deptBoardMapper.selectListH", deptCode, rowBounds);
 	}
 	
 	/**
@@ -106,16 +106,16 @@ public class mainDao {
 		return (ArrayList)sqlSession.selectList("mailMapper.searchMail", map);
 	}
 	
-	public ArrayList<Board> searchBoard(SqlSessionTemplate sqlSession, String key){
-		return (ArrayList)sqlSession.selectList("deptBoardMapper.searchBoard", key);
+	public ArrayList<Board> searchBoard(SqlSessionTemplate sqlSession, HashMap bMap){
+		return (ArrayList)sqlSession.selectList("deptBoardMapper.searchBoard", bMap);
 	}
 	
 	public ArrayList<Board> searchNotice(SqlSessionTemplate sqlSession, String key){
 		return (ArrayList)sqlSession.selectList("noticeMapper.searchNotice", key);
 	}
 	
-	public ArrayList<Schedule> searchSchedule(SqlSessionTemplate sqlSession, String key){
-		return (ArrayList)sqlSession.selectList("scheduleMapper.searchSchedule", key);
+	public ArrayList<Schedule> searchSchedule(SqlSessionTemplate sqlSession, HashMap map){
+		return (ArrayList)sqlSession.selectList("scheduleMapper.searchSchedule", map);
 	}
 	
 	

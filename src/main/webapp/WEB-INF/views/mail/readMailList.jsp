@@ -28,9 +28,11 @@
 					<button type="button" class="reply-btn">
 						<i class="fas fa-location-arrow"></i>&nbsp;&nbsp;답장
 					</button>
+					<!-- 
 					<button type="button" class="sub-btn">
 						<i class="fas fa-arrow-right"></i>&nbsp;&nbsp;전달
 					</button>
+					 -->
 					<button type="button" class="sub-btn" onclick="chooseDelete();">
 						<i class="fas fa-trash-alt"></i>&nbsp;&nbsp;삭제
 					</button>
@@ -39,9 +41,11 @@
 						aria-haspopup="true" aria-expanded="false">
 						<i class="fas fa-bookmark"></i>&nbsp;&nbsp;태그
 					</button>
+					<!--
 					<button type="button" class="sub-btn warning-btn">
 						<i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;스팸신고
 					</button>
+					-->
 					<div class="dropdown-list dropdown-menu shadow" id="tagList"
 						aria-labelledby="dotDropdown" style="margin-top: -10px;">
 
@@ -236,6 +240,27 @@
 					$("#postMailDetail").submit();
 
 				})
+												
+				// 메일 '답장'시 실행하는 함수
+				$(".reply-btn").click(function(){
+					let checkArr = [];
+					let mailNo = "";
+
+					$("input[name=mailNo]").each(function(){
+						if( $(this).prop("checked") ){
+							checkArr.push( $(this).val() );
+							mailNo = $(this).val();
+						}
+					});
+					
+					if( checkArr.length > 1 || checkArr.length == 0){
+						alert("1개의 메일을 선택해주세요.");
+					} else {
+						$("#detailNo").val(mailNo);
+						$("#postMailDetail").attr("action", 'replyMail.ma').submit();
+					}
+					
+				})
 			})
 					
 			// '중요메일' 설정시 실행하는 함수
@@ -276,23 +301,27 @@
 				const mailNo = checkArr.toString();
 				console.log(mailNo);
 				
-				$.ajax({
-					url : "deleteMail.ma",
-					data : {
-						receiveMail : '${loginUser.memEmail}',
-						mailNo : mailNo
-					},
-					success : function(result){
-						console.log(result);
-						if(result == 'success'){
-							location.reload();				
-						}		
-					},
-					error : function(){
-						console.log("메일 삭제 실패");
-					}
-				})
-				
+				if(mailNo.length < 1){
+					alert("삭제할 메일을 선택해주세요.");
+				} else {
+					
+					$.ajax({
+						url : "deleteMail.ma",
+						data : {
+							receiveMail : '${loginUser.memEmail}',
+							mailNo : mailNo
+						},
+						success : function(result){
+							console.log(result);
+							if(result == 'success'){
+								location.reload();				
+							}		
+						},
+						error : function(){
+							console.log("메일 삭제 실패");
+						}
+					})
+				}
 			}
 		</script>
 

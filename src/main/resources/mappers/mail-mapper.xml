@@ -15,7 +15,7 @@
 		<result column="send_date" property="sendDate" />
 		<result column="send_name" property="sendName" />
 		<result column="cc_mail" property="ccMail" />
-		<result column="sned_mem" property="sendMem" />
+		<result column="send_mem" property="sendMem" />
 		<association property="mailStatus" resultMap="mailStatusResult" />
 		<association property="attachment" resultMap="attachmentResult" />
 		<association property="tag" resultMap="tagResult" />
@@ -786,6 +786,7 @@
 		delete
 		    from tb_mail_status
 		where mail_delete = 'Y'
+		  and mail_no = #{mailNo}
 		  and ( send_mail = #{sendMail}
 		   or receive_mail = #{receiveMail} )
 	</delete>
@@ -960,44 +961,50 @@
 	
 	<!-- 전체검색 메일 -->
 	<select id="searchMail" resultMap="mailResult">
-		select
-		    mail_no
-		  , mem_no
-		  , m.tag_no
-		  , (
-                select
-                    mem_name
-                from tb_member
-                where mem_email = send_mail
-            ) "send_name"
-          , send_mail
-		  , receive_mail
-		  , cc_mem
-		  , to_char(send_date, 'YYYY-MM-DD(DY) HH24:MI:SS') "send_date"
-		  , mail_title
-		  , mail_content
-		  , mail_type
-		  , mail_folder
-		  , mail_read
-		  , mail_delete
-		  , mail_spam
-		  , mail_important
-		  , (
-		        select
-		            count(*)
-		        from tb_attachment
-		        where at_category = 2
-		          and at_ref_bno = mail_no
-		     ) "at_count"
-		from tb_mail m
-		join tb_mail_status ms using (mail_no)
-		where receive_mail = #{ma.receiverMem}
-		  and mem_no != #{ma.memNo}
-		  and mail_folder = 2
-		  and mail_delete = 'N'
-		  and mail_spam = 'N'
-  		  and (mail_content like '%' || #{key} || '%'
-  		   or mail_title like '%' || #{key} || '%')
+	  	select
+			    m.mail_no
+			  , m.mem_no
+			  , mem_name
+	          , ms.tag_no
+			  , tag_color
+			  , (
+	                select
+	                    mem_name
+	                from tb_member
+	                where mem_email = send_mail
+	            ) "send_name"
+	          , send_mail
+			  , receive_mail
+			  , cc_mem
+			  , to_char(send_date, 'YYYY-MM-DD(DY) HH24:MI:SS') "send_date"
+			  , mail_title
+			  , mail_content
+			  , mail_type
+			  , mail_folder
+			  , mail_read
+			  , mail_delete
+			  , mail_spam
+			  , mail_important
+			  , (
+			        select
+			            count(*)
+			        from tb_attachment
+			        where at_category = 2
+			          and at_ref_bno = m.mail_no
+			     ) "at_count"
+			from tb_mail m
+			join tb_mail_status ms on (ms.mail_no = m.mail_no)
+			join tb_member mb on (m.mem_no = mb.mem_no)
+			left join tb_tag t on (ms.tag_no = t.tag_no)
+			where receive_mail = #{ma.receiverMem}
+			  and m.mem_no != #{ma.memNo}
+			  and mail_delete = 'N'
+			  and mail_folder = 2
+			  and mail_spam = 'N'
+	  		  and (mem_name like '%' || #{key} || '%'
+	  		   or mail_title like '%' || #{key} || '%')
+			order 
+	    		by mail_type, mail_no
 	</select>
 	
 	<!-- 해당 태그가 첨부된 메일 개수 조회 -->
@@ -1079,5 +1086,29 @@
 		where mem_no = #{memNo}
 		  and tag_no = #{tagNo}
 	</select>
+	
+	<!-- 답장할 메일 상세 조회 -->
+	<select id="replyMailForm" resultMap="mailResult">
+		select 
+		    mail_no
+		  , mem_no
+		  , tag_no
+		  , (select
+		        mem_email
+		     from tb_member
+		     join tb_mail using (mem_no)
+		     where mail_no = #{mailNo}) "send_mem"
+		  , mail_temporary
+		  , receiver_mem
+		  , cc_mem
+		  , mail_title
+		  , mail_content
+		  , mail_type
+		  , to_char(send_date, 'YYYY-MM-DD(DY) HH24:MI:SS') "send_date"
+		from tb_mail
+		where mail_no = #{mailNo}
+	</select>
+
+	
 
 </mapper>

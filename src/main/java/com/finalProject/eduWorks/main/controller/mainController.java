@@ -69,7 +69,6 @@ public class mainController {
 	
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 5);
 		ArrayList<Board> list = mService.selectMainDeptList(pi, deptCode);
-		
 		HashMap<String, Object> map = new HashMap<>();
         map.put("list", list);
         map.put("pi", pi);
@@ -124,32 +123,37 @@ public class mainController {
 		return new Gson().toJson(map);
 	}
 	
+	// 전체 검색 페이지
 	@RequestMapping("allSearch.ma")
 	public ModelAndView allSearchForm(ModelAndView mv, String key, HttpSession session) {
 		String memNo = ( (Member)session.getAttribute("loginUser") ).getMemNo();
 		// 로그인한 회원 이메일
 		String memEmail = ( (Member)session.getAttribute("loginUser") ).getMemEmail();
-		
+		String deptCode = ((Member)session.getAttribute("loginUser")).getDeptCode();
 		Mail ma = new Mail();
 		ma.setMemNo(memNo);
 		ma.setReceiverMem(memEmail);
-		
 		HashMap map = new HashMap();
-		
 		map.put("key", key);
 		map.put("ma", ma);
 		
+		HashMap bMap = new HashMap();
+		bMap.put("key", key);
+		bMap.put("deptCode", deptCode);
+		
+		
 		ArrayList<Mail> m = mService.searchMail(map);
-		ArrayList<Board> b = mService.searchBoard(key);
+		ArrayList<Board> b = mService.searchBoard(bMap);
 		ArrayList<Board> n = mService.searchNotice(key);
-		ArrayList<Schedule> s = mService.searchSchedule(key);
+		ArrayList<Schedule> s = mService.searchSchedule(map);
 		
-		
+		System.out.println(m);
 		
 		mv.addObject("mail", m)
 		  .addObject("board", b)
 		  .addObject("notice", n)
 		  .addObject("schedule", s)
+		  .addObject("key", key)
 		  .setViewName("common/allSearchForm");
 		
 		return mv;

@@ -28,10 +28,12 @@
 					<button type="button" class="reply-btn">
 						<i class="fas fa-location-arrow"></i>&nbsp;&nbsp;답장
 					</button>
+					<!-- 
 					<button type="button" class="sub-btn">
 						<i class="fas fa-arrow-right"></i>&nbsp;&nbsp;전달
 					</button>
-					<button type="button" class="sub-btn">
+					 -->
+					<button type="button" class="sub-btn" onclick="chooseDelete();">
 						<i class="fas fa-trash-alt"></i>&nbsp;&nbsp;삭제
 					</button>
 					<button class="nav-link dropdown-toggle sub-btn tag-btn" href="#"
@@ -39,9 +41,11 @@
 						aria-haspopup="true" aria-expanded="false">
 						<i class="fas fa-bookmark"></i>&nbsp;&nbsp;태그
 					</button>
+					<!--
 					<button type="button" class="sub-btn warning-btn">
 						<i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;스팸신고
 					</button>
+					-->
 					<div class="dropdown-list dropdown-menu shadow" id="tagList"
 						aria-labelledby="dotDropdown" style="margin-top: -10px;">
 
@@ -88,6 +92,44 @@
 				
 			}
 			
+			// 메일 '삭제'시 실행하는 함수
+			function chooseDelete(){
+
+				let checkArr = [];
+				
+				$("input[name=mailNo]").each(function(){
+					if( $(this).prop("checked") ){
+						checkArr.push( $(this).val() );
+					}
+				});
+				
+				const mailNo = checkArr.toString();
+				console.log(mailNo);
+				
+				if(mailNo.length < 1){
+					alert("삭제할 메일을 선택해주세요.");
+				} else {
+							
+					$.ajax({
+						url : "deleteAllMail.ma",
+						data : {
+							sendMail : '${loginUser.memEmail}',
+							receiveMail : '${loginUser.memEmail}',
+							mailNo : mailNo
+						},
+						success : function(result){
+							console.log(result);
+							if(result == 'success'){
+								location.reload();				
+							}		
+						},
+						error : function(){
+							console.log("메일 삭제 실패");
+						}
+					})	
+				}
+			}
+			
 		</script>
 		
 		<hr style="margin: 20px 0px 15px 0px;">
@@ -97,7 +139,7 @@
 				<!-- 반복문 사용 시작 -->
 				<c:forEach var="m" items="${list}">
 					<tr>
-						<td><input type="checkbox" class="mail-select"></td>
+						<td><input type="checkbox" class="mail-select" name="mailNo" value="${m.mailNo }"></td>
 						<td>
 							<c:choose>
 								<c:when test="${m.mailStatus.mailImportant == 'N' }">
@@ -195,15 +237,10 @@
 					
 					let mailNo = $(this).children('input[type=hidden]').val();
 					let mailFolder = $(this).children('input[name=mailFolder]').val();
-					
-					console.log(mailNo);
-					console.log(mailFolder);
 
 					$("#detailNo").val(mailNo);
 					$("#detailFolder").val(mailFolder);
 					
-					console.log($("#detailNo").val());
-					console.log($("#detailFolder").val());
 					$("#postMailDetail").submit();
 
 				})
