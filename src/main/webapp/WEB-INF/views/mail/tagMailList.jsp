@@ -84,6 +84,7 @@
 	
 							value += "<a class='dropdown-item d-flex align-items-center' id='tag'>"
 									+ "<input type='hidden' name='tagNo' value='" + tag[i].tagNo + "'>"
+									+ "<input type='hidden' name='mailFolder' value='" + ${m.mailStatus.mailFolder} + "'>"
 									+ "<span class='font-weight-bold'>"
 									+ "<i class='fas fa-bookmark' style='color:" + tag[i].tagColor + "'></i>&nbsp;&nbsp;"
 									+ tag[i].tagName
@@ -130,6 +131,7 @@
 							memNo : ${loginUser.memNo},
 							mailNo : mailNo,
 							receiveMail : '${loginUser.memEmail}',
+							sendMail : '${loginUser.memEmail}'
 						},
 						success : function(result){
 							console.log(result);
