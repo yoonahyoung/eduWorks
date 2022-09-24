@@ -26,7 +26,7 @@
 				</button>
 				<button type="button" class="sub-btn"  data-toggle="modal" 
 						id="preview" data-target="#mail-preview">
-					<i class="far fa-eye"></i>&nbsp;&nbsp;미리보기
+					<i class="fas fa-desktop"></i>&nbsp;&nbsp;미리보기
 				</button>
 				<!-- 
 				<button type="button" class="sub-btn" id="propertyMail">

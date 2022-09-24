@@ -25,9 +25,6 @@
 			<ul class="navbar-nav ml-auto moDelte">
 				<li class="nav-item dropdown no-arrow navigation">
 					<span class="mailListCheck"><input type="checkbox" id="allCheck" onclick="allCheck(this)"></span>
-					<button type="button" class="reply-btn">
-						<i class="fas fa-location-arrow"></i>&nbsp;&nbsp;답장
-					</button>
 					<!-- 
 					<button type="button" class="sub-btn">
 						<i class="fas fa-arrow-right"></i>&nbsp;&nbsp;전달
@@ -35,11 +32,6 @@
 					 -->
 					<button type="button" class="sub-btn" onclick="chooseDelete();">
 						<i class="fas fa-trash-alt"></i>&nbsp;&nbsp;삭제
-					</button>
-					<button class="nav-link dropdown-toggle sub-btn tag-btn" href="#"
-						id="dotDropdown" role="button" data-toggle="dropdown"
-						aria-haspopup="true" aria-expanded="false">
-						<i class="fas fa-bookmark"></i>&nbsp;&nbsp;태그
 					</button>
 					<!--
 					<button type="button" class="sub-btn warning-btn">
@@ -111,7 +103,7 @@
 				} else {
 							
 					$.ajax({
-						url : "deleteAllMail.ma",
+						url : "deleteSelectMail.ma",
 						data : {
 							sendMail : '${loginUser.memEmail}',
 							receiveMail : '${loginUser.memEmail}',

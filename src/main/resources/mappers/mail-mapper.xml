@@ -786,7 +786,9 @@
 		delete
 		    from tb_mail_status
 		where mail_delete = 'Y'
-		  and mail_no = #{mailNo}
+		<if test="mailNo != null">
+		   and mail_no = #{mailNo}
+		</if>
 		  and ( send_mail = #{sendMail}
 		   or receive_mail = #{receiveMail} )
 	</delete>

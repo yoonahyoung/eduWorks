@@ -31,13 +31,13 @@ public class ReplyEchoHandler extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception{
 		
-		System.out.println("커넥션 연결 " + session);
+		//System.out.println("커넥션 연결 " + session);
 		sessions.add(session);
 		String senderId = getId(session);
 		
 		userSessions.put(senderId , session);
 		
-		System.out.println(userSessions);
+		//System.out.println(userSessions);
 		
 	}
 	
@@ -107,7 +107,7 @@ public class ReplyEchoHandler extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception{
 		
-		System.out.println("커넥션 닫힘 " + session + ", " + status);
+		//System.out.println("커넥션 닫힘 " + session + ", " + status);
 	}
 	
 	// 로그인 유저 번호 알아내기
