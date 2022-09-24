@@ -357,21 +357,13 @@ public class MailController {
 		if(result1 > 0) {
 			// 메일 보내기 성공 => 메일 상태에 insert하기
 			
-			// ----------- 보낸 메일 ------------
+			// ----------- 보낸 메일로만 처리 ------------
 			MailStatus ms = new MailStatus();
 			ms.setSendMail(memEmail);
 			ms.setReceiveMail(memEmail); // 받는 사람 이메일(전체)
 			ms.setMailFolder(1);
 
 			list.add(ms); // ArrayList<MailStatus>에 추가
-			
-			// ------------- 받은 메일 ------------
-			MailStatus ms2 = new MailStatus();
-			ms2.setSendMail(memEmail);
-			ms2.setReceiveMail(memEmail); // 받는 사람 이메일(전체)
-			ms2.setMailFolder(2);
-
-			list.add(ms2); // ArrayList<MailStatus>에 추가
 
 			// 메일 상태에 보내기 (성공 : 1 | 실패 : 0)
 			result2 = mService.insertMailStatus(list);
@@ -934,7 +926,7 @@ public class MailController {
 				ms4.setReceiveMail(ms.getReceiveMail());
 				ms4.setTagNo(ms.getTagNo());
 				ms4.setMailNo(m);
-				ms4.setMailFolder(ms.getMailFolder());
+				ms4.setMailFolder(1);
 				
 				list.add(ms4);
 
