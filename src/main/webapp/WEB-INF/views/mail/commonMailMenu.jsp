@@ -50,26 +50,28 @@
 
 			<div class="insider">
 				<h4>메일함</h4>
-				<a href="sendMailList.ma"><h6>보낸메일</h6></a> <a
-					href="receiveMailList.ma"><h6>받은메일</h6></a> <a
-					href="sendMailToMeList.ma"><h6>내게쓴메일</h6></a> <a
-					href="TemporaryMailList.ma"><h6>임시보관함</h6></a> <a
-					href="deleteMailList.ma" style="display: inline-block;"><h6>휴지통</h6></a>
+				<a href="sendMailList.ma"><h6>보낸메일</h6></a> 
+				<a href="receiveMailList.ma"><h6>받은메일</h6></a> 
+				<a href="sendMailToMeList.ma"><h6>내게쓴메일</h6></a> 
+				<!-- <a href="TemporaryMailList.ma"><h6>임시보관함</h6></a>  -->
+				<a href="deleteMailList.ma" style="display: inline-block;"><h6>휴지통</h6></a>
 				<button type="button" id="empty" onclick="emptyMail();">비우기</button>
 			</div>
 
 			<div class="insider">
 				<h4>빠른 검색</h4>
-				<a href="importantMailList.ma"><h6>중요메일함</h6></a> <a
-					href="readMailList.ma"><h6>읽은메일함</h6></a> <a
-					href="unReadMailList.ma"><h6>안읽은메일함</h6></a> <a
-					href="spamMailList.ma"><h6>스팸메일함</h6></a>
+				<a href="importantMailList.ma"><h6>중요메일함</h6></a> 
+				<a href="readMailList.ma"><h6>읽은메일함</h6></a>
+				<a href="unReadMailList.ma"><h6>안읽은메일함</h6></a> 
+				<!-- <a href="spamMailList.ma"><h6>스팸메일함</h6></a> -->
 			</div>
-
+			
+			<!-- 
 			<div class="insider">
 				<a class="setup"><i class="fas fa-cog"
 					style="color: gray; margin-right: 10px"></i>메일 환경설정</a>
 			</div>
+			 -->
 		</nav>
 
 		<script>

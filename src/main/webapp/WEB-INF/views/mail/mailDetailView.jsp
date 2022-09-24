@@ -34,9 +34,11 @@
 		<input type="hidden" name="mailNo" id="detailFolder" value="${m.mailStatus.mailFolder }">
 			<ul class="navbar-nav ml-auto moDelte">
 				<li class="nav-item dropdown no-arrow mx-1">
-					<button type="button" class="reply-btn">
-						<i class="fas fa-location-arrow"></i>&nbsp;&nbsp;답장
-					</button>
+					<c:if test="${flag != 'H' }">
+						<button type="button" class="reply-btn">
+							<i class="fas fa-location-arrow"></i>&nbsp;&nbsp;답장
+						</button>
+					</c:if>
 					<!-- 
 					<button type="button" class="sub-btn">
 						<i class="fas fa-arrow-right"></i>&nbsp;&nbsp;전달
@@ -45,11 +47,13 @@
 					<button type="button" class="sub-btn" onclick="chooseDelete();">
 						<i class="fas fa-trash-alt"></i>&nbsp;&nbsp;삭제
 					</button>
-					<button class="nav-link dropdown-toggle sub-btn tag-btn" href="#"
-						id="dotDropdown" role="button" data-toggle="dropdown"
-						aria-haspopup="true" aria-expanded="false">
-						<i class="fas fa-bookmark"></i>&nbsp;&nbsp;태그
-					</button>
+					<c:if test="${flag != 'H' }">
+						<button class="nav-link dropdown-toggle sub-btn tag-btn" href="#"
+							id="dotDropdown" role="button" data-toggle="dropdown"
+							aria-haspopup="true" aria-expanded="false">
+							<i class="fas fa-bookmark"></i>&nbsp;&nbsp;태그
+						</button>
+					</c:if>
 					<!--
 					<button type="button" class="sub-btn warning-btn">
 						<i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;스팸신고
