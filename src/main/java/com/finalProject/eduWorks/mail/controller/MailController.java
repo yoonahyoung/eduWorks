@@ -624,50 +624,50 @@ public class MailController {
 
 		// 결과값
 		int result = 0;
-		
+				
 		String[] mailNo = ms.getMailNo().split(",");
 		for(String m : mailNo) {
-			
+					
 			// =========== 보낸 메일 ===========
-			if(ms.getReceiveMail() == null) {
-				
+			if(ms.getReceiveMail() == null || ms.getMailFolder() == 1) {
+							
 				MailStatus ms2 = new MailStatus();
-				
+							
 				ms2.setSendMail(ms.getSendMail());
 				ms2.setMailNo(m);
-
+	
 				list.add(ms2);
-				
+							
 				result = mService.deleteSendMail(list);
-				
+							
 			// =========== 받은/참조 메일 ===========
-			} else if (ms.getSendMail() == null){
-				
+			} else if (ms.getSendMail() == null || ms.getMailFolder() == 2 || ms.getMailFolder() == 3){
+							
 				MailStatus ms3 = new MailStatus();
-				
+							
 				ms3.setReceiveMail(ms.getReceiveMail());
 				ms3.setMailNo(m);
 				ms3.setMailFolder(ms.getMailFolder());
-				
+							
 				list.add(ms3);
-
+	
 				result = mService.deleteReceiveMail(list);
-			
-			// ============= 나에게 쓴 메일 =============
+						
+			// ============= 나에게 보낸 메일 =============
 			} else {
-				
+							
 				MailStatus ms4 = new MailStatus();
-				
+							
 				ms4.setSendMail(ms.getSendMail());
 				ms4.setReceiveMail(ms.getReceiveMail());
 				ms4.setMailNo(m);
 				ms4.setMailFolder(ms.getMailFolder());
-				
+							
 				list.add(ms4);
-
+	
 				result = mService.deleteSendToMeMail(list);
 			}
-			
+					
 		}
 
 		return result > 0 ? "success" : "fail";
@@ -682,19 +682,33 @@ public class MailController {
 	@ResponseBody
 	@RequestMapping("deleteAllMail.ma")
 	public String deleteAllMail(MailStatus ms) {
+
+		int result = mService.deleteAllMail(ms);
+		return result > 0 ? "success" : "fail";
+
+	}
+	
+	/**
+	 * 14_3. 메일 선택 삭제(메일함 비우기)
+	 * @param ms : 로그인한 회원 이메일, 선택한 메일 번호
+	 * @return : 메일함 선택 비우기 성공여부
+	 */
+	@ResponseBody
+	@RequestMapping("deleteSelectMail.ma")
+	public String deleteSelectMail(MailStatus ms) {
 		
 		String[] mailNo = ms.getMailNo().split(",");
+		System.out.println(ms.getMailNo());
 		ArrayList<MailStatus> list = new ArrayList<>();
 		for(String m : mailNo) {
+			
+			ms.setMailNo(m);
+			
 			list.add(ms);
 		}
-		
 		System.out.println(list);
-		
-		int result = mService.deleteAllMail(list);
-		System.out.println(result);
+		int result = mService.deleteSelectMail(list);
 		return result > 0 ? "success" : "fail";
-		
 	}
 	
 	/**
@@ -884,7 +898,7 @@ public class MailController {
 		for(String m : mailNo) {
 			
 			// =========== 보낸 메일 ===========
-			if(ms.getReceiveMail() == null) {
+			if(ms.getReceiveMail() == null || ms.getMailFolder() == 1) {
 				
 				MailStatus ms2 = new MailStatus();
 				
@@ -898,7 +912,7 @@ public class MailController {
 				result = mService.insertMailTag(list);
 				
 			// =========== 받은/참조 메일 ===========
-			} else if (ms.getSendMail() == null){
+			} else if (ms.getSendMail() == null || ms.getMailFolder() == 2 || ms.getMailFolder() == 3){
 				
 				MailStatus ms3 = new MailStatus();
 				

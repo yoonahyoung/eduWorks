@@ -359,11 +359,19 @@ public class MailDao {
 	 * @param ms : 로그인한 회원 이메일 
 	 * @return : 삭제 성공 여부가 담긴 int형 변수 (성공 : 1 | 실패 : 0)
 	 */
-	public int deleteAllMail(SqlSessionTemplate sqlSession, ArrayList<MailStatus> list) {
-		
+	public int deleteAllMail(SqlSessionTemplate sqlSession, MailStatus ms) {
+		return sqlSession.delete("mailMapper.deleteAllMail", ms);
+	}
+	
+	/**
+	 * 14_3. 메일함 비우기 (메일 선택 삭제)
+	 * @param list : 로그인한 회원 이메일, 선택한 메일 번호
+	 * @return : 삭제 성공 여부가 담긴 int형 변수
+	 */
+	public int deleteSelectMail(SqlSessionTemplate sqlSession, ArrayList<MailStatus> list ) {
 		int result = 0;
 		for(MailStatus ms : list) {
-			result = sqlSession.delete("mailMapper.deleteAllMail", ms);
+			result += sqlSession.delete("mailMapper.deleteAllMail", ms);
 		}
 		
 		return result;

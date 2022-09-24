@@ -73,7 +73,8 @@ public interface MailService {
 	int deleteSendMail(ArrayList<MailStatus> list);
 	int deleteReceiveMail(ArrayList<MailStatus> list);
 	int deleteSendToMeMail(ArrayList<MailStatus> list);
-	int deleteAllMail(ArrayList<MailStatus> list);
+	int deleteAllMail(MailStatus ms);
+	int deleteSelectMail(ArrayList<MailStatus> list);
 
 	// 14. 메일 상세 조회
 	Mail selectMailDetail(MailStatus ms);
