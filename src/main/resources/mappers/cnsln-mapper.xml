@@ -218,7 +218,7 @@
 			 , cnsln_topic
 			 , cnsln_content
 			 , cnsln_real
-			 , cnsln_create_date
+			 , to_char(cnsln_create_date, 'YYYY-MM-DD (DY)') as "cnsln_create_date"
 			 , cnsln_count
 			 , student_no
 		  	 , cnsln_ec
