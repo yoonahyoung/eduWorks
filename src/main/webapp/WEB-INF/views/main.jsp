@@ -26,19 +26,19 @@
 
 	<jsp:include page="common/header.jsp" />
 	<div style="background-color:whitesmoke; height:auto;">
-	<div style="width:100%; height:1000px;">
+	<div style="width:100%; height:1140px;">
 		<div style="float: left; width:17%;  background-color:whitesmoke;" class="divBox">
-			<div id="profileE" style="height:380px; width:100%; text-align:center; padding-top:10px; margin: 10% 5% 5% 4%; border-radius:5px; background-color: white;">
+			<div id="profileE" style="height:400px; width:100%; text-align:center; padding-top:10px; margin: 10% 5% 5% 4%; border-radius:5px; background-color: white;">
 				<div style="margin-top:7%; height:80px">
 				<c:choose>
               		<c:when test="${ empty m.memProfile }">
-              			<img id="Profile" name="Profile" src="resources/profile_images/defaultProfile.png" width="35%" height="100%" onclick="$('#profileImgFile').click();">
+              			<img id="Profile" name="Profile" src="resources/profile_images/defaultProfile.png" width="35%" height="120%" onclick="$('#profileImgFile').click();">
               		</c:when>
               		<c:otherwise>
               			<img id="Profile" name="Profile" src="${ m.memProfile }" width="25%" height="100% " onclick="$('#profileImgFile').click();">
               		</c:otherwise>
               	</c:choose>
-              	</div> <br>
+              	</div> <br><br>
               	<h4>${ loginUser.memName } ${loginUser.jobName }님</h4> <br>
 				<h5 class="date1"></h5> 
                 <h5 class="clock"></h5> <br>
@@ -140,15 +140,14 @@
 			
 			
 			
-			<div style="background-color:white; height:auto; padding-bottom: 30px;
-}">
+			<div style="background-color:white; height:700px; padding-bottom: 50px;">
             	<div >
 	            	<table class="bestTable" style="width:250px;">
 		                <thead>
 		                	<tr><td></td></tr><tr><td></td></tr>
 		                    <tr>
 		                        <th colspan="2">추천게시판 <i class="fa fa-thumbs-up fa-regular"></i></th>
-		                        <tr><td></td></tr><tr><td></td></tr>
+		                        <tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
 		                    </tr>
 		                </thead>
 		                <tbody id="thumbsHotArea">
@@ -156,14 +155,14 @@
 		                </tbody>
 		              </table>
 		              
-		              <br><hr class="hr_line">
+		              <br><br><hr class="hr_line">
 		              
 		              <table class="bestTable">
 		                <thead>
 		                	<tr><td></td></tr>
 		                    <tr>
 		                        <th colspan="2">핫게시판 <i class="fa fa-comments fa-regular"></i></th>
-		                        <tr><td></td></tr><tr><td></td></tr>
+		                        <tr><td></td></tr><tr><td></td></tr><tr><td></td></tr>
 		                    </tr>
 		                </thead>
 		                <tbody id="replyHotArea">
@@ -1264,11 +1263,9 @@
 		
 			</div>
 		</div>
-		<div class="main-list" style="text-align:center; margin:1%; border-radius:5px; background-color: white;">
-				<div style="font-size:20px; margin:1%; font-size: 20px; margin: 1%; font-weight: 600; text-align: left; margin: 15px 10px 5px 10px; padding: 5px; ">
-					<div>
-						<h2 style="margin:15px; font-weight: 600;">전사 주소록</h2> <span id="mail-count" class="mail-count"></span>
-					</div>
+		<div class="main-list" style="text-align:center; margin:1%; border-radius:5px; background-color: white; height:10%;">
+						<h2 style="padding:20px; font-weight: 600; ">전사 주소록</h2> 
+
 					
 						<table class="board-content table" align="center" id="mainAddressList">
 							<thead>
@@ -1296,7 +1293,6 @@
 	                </nav>
 	            </div>
 			
-		</div>
 		</div>
 			
 			<script>
