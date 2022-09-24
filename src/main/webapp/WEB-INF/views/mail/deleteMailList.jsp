@@ -111,7 +111,7 @@
 				} else {
 							
 					$.ajax({
-						url : "deleteAllMail.ma",
+						url : "deleteSelectMail.ma",
 						data : {
 							sendMail : '${loginUser.memEmail}',
 							receiveMail : '${loginUser.memEmail}',

@@ -312,7 +312,8 @@
 						url : "deleteMail.ma",
 						data : {
 							receiveMail : '${loginUser.memEmail}',
-							mailNo : mailNo
+							mailNo : mailNo,
+							mailFolder : 2
 						},
 						success : function(result){
 							console.log(result);

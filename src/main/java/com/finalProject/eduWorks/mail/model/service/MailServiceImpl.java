@@ -343,8 +343,16 @@ public class MailServiceImpl implements MailService {
 	 * 14_4. 메일함 비우기 (메일 전체 삭제)
 	 */
 	@Override
-	public int deleteAllMail(ArrayList<MailStatus> list) {
-		return mDao.deleteAllMail(sqlSession, list);
+	public int deleteAllMail(MailStatus ms) {
+		return mDao.deleteAllMail(sqlSession, ms);
+	}
+	
+	/**
+	 * 14_5. 메일함 비우기 (메일 선택 삭제)
+	 */
+	@Override
+	public int deleteSelectMail(ArrayList<MailStatus> list) {
+		return mDao.deleteSelectMail(sqlSession, list);
 	}
 	
 	/**
@@ -482,6 +490,7 @@ public class MailServiceImpl implements MailService {
 	public Mail replyMailForm(String mailNo) {
 		return mDao.replyMailForm(sqlSession, mailNo);
 	}
+
 
 	
 
