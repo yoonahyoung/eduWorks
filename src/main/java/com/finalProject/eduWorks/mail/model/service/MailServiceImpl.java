@@ -343,8 +343,8 @@ public class MailServiceImpl implements MailService {
 	 * 14_4. 메일함 비우기 (메일 전체 삭제)
 	 */
 	@Override
-	public int deleteAllMail(MailStatus ms) {
-		return mDao.deleteAllMail(sqlSession, ms);
+	public int deleteAllMail(ArrayList<MailStatus> list) {
+		return mDao.deleteAllMail(sqlSession, list);
 	}
 	
 	/**

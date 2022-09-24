@@ -683,7 +683,16 @@ public class MailController {
 	@RequestMapping("deleteAllMail.ma")
 	public String deleteAllMail(MailStatus ms) {
 		
-		int result = mService.deleteAllMail(ms);
+		String[] mailNo = ms.getMailNo().split(",");
+		ArrayList<MailStatus> list = new ArrayList<>();
+		for(String m : mailNo) {
+			list.add(ms);
+		}
+		
+		System.out.println(list);
+		
+		int result = mService.deleteAllMail(list);
+		System.out.println(result);
 		return result > 0 ? "success" : "fail";
 		
 	}

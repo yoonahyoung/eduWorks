@@ -31,7 +31,7 @@
 					<button type="button" class="sub-btn">
 						<i class="fas fa-arrow-right"></i>&nbsp;&nbsp;전달
 					</button>
-					<button type="button" class="sub-btn">
+					<button type="button" class="sub-btn" onclick="chooseDelete();">
 						<i class="fas fa-trash-alt"></i>&nbsp;&nbsp;삭제
 					</button>
 					<button class="nav-link dropdown-toggle sub-btn tag-btn" href="#"
@@ -86,6 +86,44 @@
 					}
 				})
 				
+			}
+			
+			// 메일 '삭제'시 실행하는 함수
+			function chooseDelete(){
+
+				let checkArr = [];
+				
+				$("input[name=mailNo]").each(function(){
+					if( $(this).prop("checked") ){
+						checkArr.push( $(this).val() );
+					}
+				});
+				
+				const mailNo = checkArr.toString();
+				console.log(mailNo);
+				
+				if(mailNo.length < 1){
+					alert("삭제할 메일을 선택해주세요.");
+				} else {
+							
+					$.ajax({
+						url : "deleteAllMail.ma",
+						data : {
+							sendMail : '${loginUser.memEmail}',
+							receiveMail : '${loginUser.memEmail}',
+							mailNo : mailNo
+						},
+						success : function(result){
+							console.log(result);
+							if(result == 'success'){
+								location.reload();				
+							}		
+						},
+						error : function(){
+							console.log("메일 삭제 실패");
+						}
+					})	
+				}
 			}
 			
 		</script>
