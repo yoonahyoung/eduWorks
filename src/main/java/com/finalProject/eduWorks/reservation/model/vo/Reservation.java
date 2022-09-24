@@ -18,8 +18,8 @@ public class Reservation {
 	private int resNo; // 예약번호
 	private String memNo; // 사원번호
 	private String resDate; // 예약날짜
-	private String resStartDate; // 시작시간
-	private String resEndDate; // 종료시간
+	private String resStartTime; // 시작시간
+	private String resEndTime; // 종료시간
 	private String resTitle; // 예약제목
 	private String resContent; // 예약 내용
 	private String resFacilities; // 예약 시설

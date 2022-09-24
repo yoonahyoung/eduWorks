@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="reservationMapper">
+
+	
+	<resultMap id="reservationResult" type="Reservation">
+		<result column="res_no" property="resNo" />
+		<result column="mem_no" property="memNo" />
+		<result column="res_start_time" property="resStartTime" />
+		<result column="res_end_time" property="resEndTime" />
+		<result column="res_title" property="resTitle" />
+		<result column="res_content" property="resContent" />
+		<result column="res_facilities" property="resFacilities" />
+		<result column="res_insert_date" property="resInsertDate" />
+		<result column="res_color" property="resColor" />
+	</resultMap>
+
+
+	<select id="reservationView" resultMap="reservationResult">
+		select
+		       res_no
+		     , mem_no
+		     , res_start_time
+		     , res_end_time
+		     , res_title
+		     , res_content
+		     , res_facilities
+		     , res_insert_date
+		     , res_color
+		  from tb_reservation
+		 where mem_no = #{memNo}
+	</select>
+
+	<insert id="reservationInsert">
+		insert
+		  into tb_reservation
+		  (
+		    res_no
+	      , mem_no
+	      , res_start_time
+	      , res_end_time
+	      , res_title
+	      , res_content
+	      , res_facilities
+	      , res_insert_date
+	      , res_color
+		  )
+		  values
+		  (
+		    seq_resno.nextval
+		  , #{memNo}
+		  , #{resStartTime}
+		  , #{resEndTime}
+		  , #{resTitle}
+		  , #{resContent}
+		  , #{resFacilities}
+		  , sysdate
+		  , #{resColor}		    
+		  )
+	</insert>
+	
+	<select id="reservationUpdateForm" resultMap="reservationResult">
+		select
+		       res_no
+		     , mem_no
+		     , res_start_time
+		     , res_end_time
+		     , res_title
+		     , res_content
+		     , res_facilities
+		     , res_insert_date
+		     , res_color
+		  from tb_reservation
+		 where res_no = #{resNo}
+	</select>
+	
+	<update id="reservationUpdate">
+		update tb_reservation
+		   set res_title = #{resTitle}
+		     , res_start_time = #{resStartTime}
+		     , res_end_time = #{resEndTime}
+		     , res_content = #{resContent}
+		     , res_color = #{resColor}
+		 where res_no = #{resNo}
+	</update>
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>

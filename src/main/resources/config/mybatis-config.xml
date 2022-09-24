@@ -31,6 +31,7 @@
 		<typeAlias type="com.finalProject.eduWorks.mail.model.vo.Tag" alias="Tag" />
 		<typeAlias type="com.finalProject.eduWorks.teacher.model.vo.Teacher" alias="Teacher"/>
 		<typeAlias type="com.finalProject.eduWorks.teacher.model.vo.Book" alias="Book" />
+		<typeAlias type="com.finalProject.eduWorks.reservation.model.vo.Reservation" alias="Reservation" />
 	</typeAliases>
 	<!-- 유의사항 : 미리등록해두려면 해당 클래스가 진짜 존재해야 함 -->
 	
@@ -54,6 +55,7 @@
 	 	<mapper resource="/mappers/teacher-mapper.xml" />
 	 	<mapper resource="/mappers/book-mapper.xml" />
 	 	<mapper resource="/mappers/alarm-mapper.xml" />
+	 	<mapper resource="/mappers/reservation-mapper.xml" />
 	 </mappers>
 	 <!-- 유의사항 : 미리등록해두려면 해당 mapper 파일이 진짜 존재해야 함 (뿐만 아니라 namespace까지도 지정되어있어야 함) -->
 	
