@@ -28,9 +28,11 @@
 					<button type="button" class="reply-btn">
 						<i class="fas fa-location-arrow"></i>&nbsp;&nbsp;답장
 					</button>
+					<!-- 
 					<button type="button" class="sub-btn">
 						<i class="fas fa-arrow-right"></i>&nbsp;&nbsp;전달
 					</button>
+					 -->
 					<button type="button" class="sub-btn" onclick="chooseDelete();">
 						<i class="fas fa-trash-alt"></i>&nbsp;&nbsp;삭제
 					</button>
@@ -39,9 +41,11 @@
 						aria-haspopup="true" aria-expanded="false">
 						<i class="fas fa-bookmark"></i>&nbsp;&nbsp;태그
 					</button>
+					<!--
 					<button type="button" class="sub-btn warning-btn">
 						<i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;스팸신고
 					</button>
+					-->
 					<div class="dropdown-list dropdown-menu shadow" id="tagList"
 						aria-labelledby="dotDropdown" style="margin-top: -10px;">
 

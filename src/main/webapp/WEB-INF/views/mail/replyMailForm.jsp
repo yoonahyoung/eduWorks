@@ -28,9 +28,11 @@
 						data-target="#mail-preview">
 					<i class="fas fa-desktop"></i>&nbsp;&nbsp;미리보기
 				</button>
+				<!-- 
 				<button type="button" class="sub-btn" id="propertyMail">
 					<i class="far fa-save"></i>&nbsp;&nbsp;임시저장
 				</button>
+				 -->
 				<button type="button" class="sub-btn" onclick="history.go(-1);">
 					<i class="fas fa-undo"></i>&nbsp;&nbsp;취소
 				</button>
@@ -346,8 +348,10 @@
 					</div>
 
 						<div style="margin-top: 10px;">
+							<!-- 
 							<button type="submit" class="addBtn"
 								style="background-color: slategray; color: white; border: none;">전송</button>
+							 -->
 							<button type="button" data-dismiss="modal" class="class addBtn">닫기</button>
 						</div>
 
