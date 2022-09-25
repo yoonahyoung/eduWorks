@@ -302,7 +302,7 @@
 	<!-- =================== 메일 미리보기 모달 ======================= -->
 	<div class="modal" id="mail-preview">
 		<div class="modal-dialog modal-lg">
-			<div class="modal-content" style="height: 830px">
+			<div class="modal-content" style="height: 900px">
 
 				<!-- Modal Header -->
 				<div class="modal-header">
