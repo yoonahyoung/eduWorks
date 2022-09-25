@@ -98,7 +98,7 @@
 		           			rptBoardNo = $(this).children(".no").text();
 		           			rptRefCat = $(this).find(".rptRefCat").val();
 		           			console.log(rptRefCat);
-		           			rptNoStr = $(this).find("div").html();
+		           			rptNoStr = $(this).find("#rptNoStr").val();
 		           			console.log(rptNoStr);
 	           				// 선택된 tr의 자식요소 중에서 no라는 클래스를 가진 자식의 text값
 	           				location.href = "reportDetail.bl?no=" + rptBoardNo + "&rptRefCat=" + rptRefCat + "&rptNoStr=" + rptNoStr; 
