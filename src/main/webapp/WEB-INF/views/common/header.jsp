@@ -265,22 +265,7 @@
 	                
 	            </li>
 	
-	            <li class="nav-item">
-	                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsesix"
-	                    aria-expanded="true" aria-controls="collapseUtilities">
-	                    <i class="fa-solid fa-pen-to-square"></i>
-	                    <span>전자결재</span>
-	                </a>
-	                <div id="collapsesix" class="collapse" aria-labelledby="headingUtilities"
-	                    data-parent="#accordionSidebar">
-	                    <div class="bg-white py-2 collapse-inner rounded">
-	                        <h6 class="collapse-header">전자결재</h6>
-	                        <a class="collapse-item" href="">새 결재 진행</a>
-	                        <a class="collapse-item" href="">결재하기</a>
-	                        <a class="collapse-item" href="">개인 문서함</a>
-	                    </div>
-	                </div>
-	            </li>
+	            
 	
 	            <li class="nav-item">
 	                <a class="nav-link collapsed" onclick="postFormSubmitH('reservationView.re')">
