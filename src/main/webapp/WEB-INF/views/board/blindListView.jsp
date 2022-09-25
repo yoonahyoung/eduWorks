@@ -206,11 +206,11 @@
 	       									value += '<tr>'
 		           				                      + '<td><a href="detail.bl?no=' + map.list[j].boardNo + '">';
 		           				                      if(map.list[j].boardTitle.length > 12){
-		           				                    	value += (map.list[j].boardTitle).substr(0, 12) + txt + '</a></td>';
+		           				                    	value += (map.list[j].boardTitle).substr(0, 12) + txt;
 		           				                      }else{
-		           				                    	value += map.list[j].boardTitle + '</a></td>';
+		           				                    	value += map.list[j].boardTitle;
 		           				                      }
-		           				               value += '<td align="right">' + (map.list[j].boardEnDate).substr(5) + '</td>'
+		           				               value += '</a></td><td align="right">' + (map.list[j].boardEnDate).substr(5) + '</td>'
 		           				                   + '</tr>';
 	       									count++;
 	       								}
@@ -219,8 +219,6 @@
       							}
       							
       							$("#thumbsHotArea").html(value);
-           					selectReList(reBoardNoStr);
-           					selectBest(reBoardNoStr);
 	           			},
 	           			error(){
 	           				console.log("ajax통신 실패");

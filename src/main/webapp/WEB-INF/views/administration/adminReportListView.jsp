@@ -82,7 +82,7 @@
 				                            		<button type="button" class="n-btn su_btn_border btn-sm reportStatus" onclick='goStatus("${r.rptNo}", "${ r.rptRefCat }", "${ r.rptBoardNo }");'>Y 처리</button>
 				                            	</c:if>
 				                            </td>
-				                            <td class="no${ status.count }"><div id="rptNoStr" style="display:none;">${ r.rptNo }</div></td>
+				                            <td class="no${ status.count }"><input type="hidden" id="rptNoStr" value="${ r.rptNo }"></td>
 				                        </tr>
 				                    </c:forEach>
 			                    </c:otherwise>
@@ -148,9 +148,13 @@
 			           				}else{
 			           					for(let i=0; i<list.length; i++){
 			           						value += '<tr>'
-			           									+ '<td class="no">' + list[i].rptBoardNo + '</td>'
-			           									+ '<td class="rptRefCat">' + list[i].rptRefCat + '</td>'
-			           									+ '<td>' + list[i].boardTitle + '</td>'
+			           									+ '<td class="no">' + list[i].rptBoardNo + '</td>';
+				                            if(list[i].rptRefCat == 1){
+				                            	value += '<td class="rptRefCat">게시글<input type="hidden" value="1" class="rptRefCat"></td>'
+				                            }else{
+				                            	value += '<td class="rptRefCat">댓글<input type="hidden" value="2" class="rptRefCat"></td>'
+				                            }
+						                         value += '<td>' + list[i].boardTitle + '</td>'
 			           									+ '<td>' + list[i].rptCount + '</td>'
 			           									+ '<td>' + list[i].rptStatus + '</td>'
 			           									+ '<td onclick="event.stopPropagation()">';
@@ -158,7 +162,7 @@
 			           										value += '<button type="button" class="n-btn su_btn_border btn-sm reportStatus" onclick="goStatus(&quot;' + list[i].rptNo + '&quot;, &quot;' + list[i].rptRefCat + '&quot;, &quot;' + list[i].rptBoardNo + '&quot;);">Y 처리</button>';
 			           									}
 	           									value += '</td>';
-	           												+ '<td class="no' + i + '"><div id="rptNoStr" style="display:none;">' + list[i].rptNo + '</div></td>';
+	           												+ '<td class="no' + i + '"><input type="hidden" id="rptNoStr" value="' + list[i].rptNo + '"></td>';
 	           									 		+ '</tr>';
 			           					}
 			           					
@@ -236,7 +240,7 @@
 			            	</c:forEach>
 			            	
 			            	<c:choose>
-	                    		<c:when test="${ pi.currentPage eq maxPage }">
+	                    		<c:when test="${ pi.currentPage eq pi.maxPage }">
 	                    			<li class="page-item">
 				                        <a class="page-link disabled" aria-label="Next">
 				                        	<span aria-hidden="true">&raquo;</span>
