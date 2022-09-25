@@ -1141,10 +1141,10 @@
 		                <div id="deptBoard" style="font-size:23px; padding-top: 5px;">
 			            <c:choose>
 			            	<c:when test="${ deptName eq '대표' }">
-			            		<h2>부서 게시판 | 전체</h2>  
+			            		<h3>부서 게시판 | 전체</h3>  
 			            	</c:when>
 			            	<c:otherwise>
-			                	<h2>부서 게시판 | ${ deptName }</h2>  
+			                	<h3>부서 게시판 | ${ deptName }</h3>  
 			                </c:otherwise>
 		                </c:choose>
 		                </div>
