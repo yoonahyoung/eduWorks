@@ -225,7 +225,7 @@
 		  from tb_cnsln
 		  join tb_member m on (cnsln_writer = m.mem_no)
 		  join tb_job j on (j.job_code = m.job_code)
-		 where cnsln_status = 'Y'
+		 where cnsln_status in ('Y' ,'N')
 		   and cnsln_no = #{cNo}
 	</select>
 	
