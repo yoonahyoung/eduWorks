@@ -380,7 +380,7 @@
 							 
 						// 선택하지 않은 경우
 						if( $checked.length < 1){
-							alert("삭제할 데이터를 선택해주세요.");
+							alert("삭제할 연락처를 선택해주세요.");
 							return false;
 								 
 						} else { // 선택한 경우

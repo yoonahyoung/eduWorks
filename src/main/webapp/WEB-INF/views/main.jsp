@@ -184,7 +184,7 @@
        		selectBest("");
        		selectReList("");
        	})
-           	
+           	let txt = "..."; 
        	// 추천 수 조회 및 추천 게시판 리스트 뿌려주기
    		function selectBest(reBoardNoStr){
        		$.ajax({ // 추천 수 조회
@@ -218,11 +218,16 @@
 										break;
 									}else
 									if(map.like[i].boardNo == map.list[j].boardNo){
-   									value += '<tr>'
-           				                      + '<td><a href="detail.bl?no=' + map.list[j].boardNo + '">' + map.list[j].boardTitle + '</a></td>'
-           				                      + '<td align="right" style="width:130px">' + (map.list[j].boardEnDate).substr(5) + '</td>'
-           				                   + '</tr>';
-   									count++;
+										value += '<tr>'
+         				                      + '<td><a href="detail.bl?no=' + map.list[j].boardNo + '">';
+         				                      if(map.list[j].boardTitle.length > 8){
+         				                    	value += (map.list[j].boardTitle).substr(0, 8) + txt + '</a></td>';
+         				                      }else{
+         				                    	value += map.list[j].boardTitle + '</a></td>';
+         				                      }
+         				               value += '<td align="right">' + (map.list[j].boardEnDate).substr(5) + '</td>'
+         				                   + '</tr>';
+ 									count++;
    								}
 								}
 								}
@@ -261,16 +266,20 @@
 	           						break;
 	           					}else
 									if(map.reply[i].reBoardNo == map.list[j].boardNo){
-   									value += '<tr>'
-           				                      + '<td><a href="detail.bl?no=' + map.list[j].boardNo + '">' + map.list[j].boardTitle + '</a></td>'
-           				                      + '<td align="right" style="width:130px">' + (map.list[j].boardEnDate).substr(5) + '</td>'
-           				                   + '</tr>';
-   									count++;
-   								}
+										value += '<tr>'
+         				                      + '<td><a href="detail.bl?no=' + map.list[j].boardNo + '" class="limitTitle">';
+		       									if(map.list[j].boardTitle.length > 8){
+	           				                    	value += (map.list[j].boardTitle).substr(0, 8) + txt + '</a></td>';
+	           				                      }else{
+	           				                    	value += map.list[j].boardTitle + '</a></td>';
+	           				                      }
+		       							value += '<td align="right">' + (map.list[j].boardEnDate).substr(5) + '</td>'
+         				                   + '</tr>';
+ 									count++;
 								}
 								}
 							}
-							
+       				}
 							$("#replyHotArea").html(value);
        			},
        			error(){
@@ -520,7 +529,7 @@
 				
 				<div class="mail-list">
 
-					<table class="mail" id="mailList">
+					<table class="mail" id="mailList" > 
 						<tbody id="mainMailList">
 							
 						</tbody>
@@ -1130,10 +1139,10 @@
 		                <div id="deptBoard" style="font-size:23px; padding-top: 5px;">
 			            <c:choose>
 			            	<c:when test="${ deptName eq '대표' }">
-			            		<h2>부서 게시판 | 전체</h2>  
+			            		<h3>부서 게시판 | 전체</h3>  
 			            	</c:when>
 			            	<c:otherwise>
-			                	<h2>부서 게시판 | ${ deptName }</h2>  
+			                	<h3>부서 게시판 | ${ deptName }</h3>  
 			                </c:otherwise>
 		                </c:choose>
 		                </div>
