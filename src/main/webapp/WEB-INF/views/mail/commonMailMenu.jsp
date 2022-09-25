@@ -286,7 +286,7 @@
 							console.log(result);
 							if(result == 'success'){
 								selectTagList();
-								location.reload();
+								location.href="sendMailList.ma";
 							}
 						},
 						error : function(){
