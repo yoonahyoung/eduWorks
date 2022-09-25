@@ -254,6 +254,9 @@
 					  , mailImportant : important
 					},
 					success : function(result){
+						
+						console.log(mailNo);
+						console.log(important);
 						console.log(result);
 						if(result == 'success'){
 							location.reload();
