@@ -79,7 +79,7 @@
 				                            <td>${ r.rptStatus }</td>
 				                            <td onclick="event.stopPropagation()">
 				                            	<c:if test="${ r.rptStatus eq 'N' }">
-				                            		<button type="button" class="n-btn su_btn_border btn-sm reportStatus" onclick='goStatus("${r.rptNo}", "${ r.rptRefCat }", "${ r.rptBoardNo }");'>Y 처리</button>
+				                            		<button type="button" class="n-btn su_btn_border btn-sm reportStatus" onclick='goStatus("${r.rptNo}", "${ r.rptRefCat }", "${ r.rptBoardNo }");'>처리완료</button>
 				                            	</c:if>
 				                            </td>
 				                            <td class="no${ status.count }"><input type="hidden" id="rptNoStr" value="${ r.rptNo }"></td>
@@ -159,7 +159,7 @@
 			           									+ '<td>' + list[i].rptStatus + '</td>'
 			           									+ '<td onclick="event.stopPropagation()">';
 			           									if(list[i].rptStatus == 'N'){
-			           										value += '<button type="button" class="n-btn su_btn_border btn-sm reportStatus" onclick="goStatus(&quot;' + list[i].rptNo + '&quot;, &quot;' + list[i].rptRefCat + '&quot;, &quot;' + list[i].rptBoardNo + '&quot;);">Y 처리</button>';
+			           										value += '<button type="button" class="n-btn su_btn_border btn-sm reportStatus" onclick="goStatus(&quot;' + list[i].rptNo + '&quot;, &quot;' + list[i].rptRefCat + '&quot;, &quot;' + list[i].rptBoardNo + '&quot;);">처리완료</button>';
 			           									}
 	           									value += '</td>';
 	           												+ '<td class="no' + i + '"><input type="hidden" id="rptNoStr" value="' + list[i].rptNo + '"></td>';

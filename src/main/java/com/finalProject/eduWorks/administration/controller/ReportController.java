@@ -73,22 +73,23 @@ public class ReportController {
 	 * @return 익명 게시글 상세 페이지
 	 */
 	@RequestMapping("reportDetail.bl")
-	public ModelAndView reportDetail(int no, int rptRefCat, String rptNoStr, ModelAndView mv) {
+	public ModelAndView reportDetail(String no, String rptRefCat, String rptNoStr, ModelAndView mv) {
 		//rptNoList = rptNoStr;
-		System.out.println(rptNoStr);
+		//System.out.println(rptNoStr);
+		int bno = Integer.parseInt(no);
 		// 신고 게시판에서 확인용으로 넘어가기 때문에 조회수 증가 x
-		if(rptRefCat == 2) {
+		if(Integer.parseInt(rptRefCat) == 2) {
 			mv.addObject("rNo", no); // 댓글 번호 담아두기
 			// 댓글이 등록된 게시글 번호 조회
-			no = rService.checkReBoardNo(no);
-			System.out.println(no);
+			bno = rService.checkReBoardNo(bno);
+			//System.out.println(bno);
 		}
-		System.out.println(no);
+		//System.out.println(no);
 		// 게시글 상세 조회
-		Board b = bService.selectBlind(no);
+		Board b = bService.selectBlind(bno);
 		
 		mv.addObject("b", b);
-		System.out.println(b);
+		//System.out.println(b);
 		mv.addObject("isReport", 1); // 1이면 true
 		mv.addObject("rptNoStr", rptNoStr); // 신고자 목록 불러오기 위해서 뿌려줌
 		mv.setViewName("board/blindDetailView");
