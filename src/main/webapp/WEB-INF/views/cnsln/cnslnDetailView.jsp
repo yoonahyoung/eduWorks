@@ -87,7 +87,7 @@
 	                                <br>
 	                                <div class="text-center mt-4"> 
 	                                    <button type="button" id="realDelete" class="btn su_btn_all su_btn_medium" 
-	                                    onclick="location.href='delete.tcn?no=${ c.cnslnNo }';">확인</button>
+	                                    onclick="location.href='delete.tcn?cNo=${ c.cnslnNo }';">확인</button>
 	                                    <button type="button" id="next" class="btn su_btn_border su_btn_medium" data-dismiss="modal">취소</button>
 	                                </div>
 	                            </div>
