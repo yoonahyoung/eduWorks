@@ -67,7 +67,7 @@ public class mainController {
 		
 		String deptCode = ((Member)session.getAttribute("loginUser")).getDeptCode();
 	
-		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 5);
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 10, 6);
 		ArrayList<Board> list = mService.selectMainDeptList(pi, deptCode);
 		HashMap<String, Object> map = new HashMap<>();
         map.put("list", list);
