@@ -117,34 +117,43 @@
                             	
                             	function submitOut(){
                             		let c = new Date();
-  	                              	c.setHours(c.getHours() + 9)
-  	                              	let c1 = c.toISOString();
-	  	                            let date2 = c1.slice(0,10);
-		                            let time2 = c1.slice(11,16);
-		                            
-		                            $.ajax({
-		                            	url: 'submitOut.me',
-                           				type: 'POST',
-                           				data: {
-                           					outDate : date2,
-                           					outTime : time2
-                           				},
-                           				success: function(result) {
-                           					console.log(result)
-                           					if(result=='success'){
-                           						alert('퇴근처리완료')
-                           						location.reload();
-                           					}else if(result=='none'){
-                           						alert('아직출근전입니다.')
-                           					}else if(result=='zzz'){
-                           						alert('이미퇴근하였습니다.')
-                           					}else{
-                           						alert('퇴근처리실패')
-                           					}
-                           				},error:function(){
-                           					console.log('error')
-                           				}
-		                            })
+                            		console.log(c.getHours())
+                            		let re;
+                            		if(c.getHours()<18){
+                            			re = confirm('아직 퇴근시간(18시)전입니다.\n정말퇴근하시겠습니까?')
+                            		}
+                            		if(re){
+	                            		c.setHours(c.getHours() + 9)
+	  	                              	let c1 = c.toISOString();
+		  	                            let date2 = c1.slice(0,10);
+			                            let time2 = c1.slice(11,16);
+			                            
+			                            $.ajax({
+			                            	url: 'submitOut.me',
+	                           				type: 'POST',
+	                           				data: {
+	                           					outDate : date2,
+	                           					outTime : time2
+	                           				},
+	                           				success: function(result) {
+	                           					console.log(result)
+	                           					if(result=='success'){
+	                           						alert('퇴근처리완료')
+	                           						location.reload();
+	                           					}else if(result=='none'){
+	                           						alert('아직출근전입니다.')
+	                           					}else if(result=='zzz'){
+	                           						alert('이미퇴근하였습니다.')
+	                           					}else{
+	                           						alert('퇴근처리실패')
+	                           					}
+	                           				},error:function(){
+	                           					console.log('error')
+	                           				}
+			                            })
+                            		}else{
+                            			alert('퇴근취소')
+                            		}
                             	}
                             </script>
                             
@@ -380,31 +389,31 @@
                             	var date = calendar.getDate();
                                 date.setHours(date.getHours() + 9)
                                 var month = date.toISOString().replace('T', ' ').substring(0, 10)
-                                alert(month)
+                                
                             });
                             $(".fc-next-button").click(function() {
                             	var date = calendar.getDate();
                                 date.setHours(date.getHours() + 9)
                                 var month = date.toISOString().replace('T', ' ').substring(0, 10)
-                                alert(month)
+                                
                             });
                             $(".fc-prevYear-button").click(function() {
                             	var date = calendar.getDate();
                                 date.setHours(date.getHours() + 9)
                                 var month = date.toISOString().replace('T', ' ').substring(0, 10)
-                                alert(month)
+                    
                             });
                             $(".fc-nextYear-button").click(function() {
                             	var date = calendar.getDate();
                                 date.setHours(date.getHours() + 9)
                                 var month = date.toISOString().replace('T', ' ').substring(0, 10)
-                                alert(month)
+                           
                             });
                             $(".fc-today-button").click(function() {
                             	var date = calendar.getDate();
                                 date.setHours(date.getHours() + 9)
                                 var month = date.toISOString().replace('T', ' ').substring(0, 10)
-                                alert(month)
+                              
                             });
                         });
                      
