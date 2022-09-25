@@ -86,8 +86,10 @@
 	<select id="selectAdminListCount" resultType="_int">
 		select
 		       count(*)
-		  from tb_class
+		  from tb_class c
+		  join tb_member m on(c.mem_no = m.mem_no)
 		 where class_status = 'Y'
+		   and mem_resign_status = 'N' 
 		   and class_approval = 2
 	</select>
 	
@@ -110,6 +112,7 @@
 		  join tb_member m on(c.mem_no = m.mem_no)
 		 where class_status = 'Y'
 		   and class_approval = 2
+		   and mem_resign_status = 'N' 
          order
             by class_no desc
 	</select>
@@ -117,8 +120,10 @@
 	<select id="selectAppListCount" resultType="_int">
 		select
 		       count(*)
-		  from tb_class
+		  from tb_class c
+		  join tb_member m on(c.mem_no = m.mem_no)
 		 where class_status = 'N'
+		   and mem_resign_status = 'N' 
 		   and class_approval = 1 
 		    or class_approval = 3
 	</select>
@@ -141,6 +146,7 @@
 		  from tb_class c
 		  join tb_member m on(c.mem_no = m.mem_no)
 		 where class_status = 'N'
+		   and mem_resign_status = 'N' 
 		   and (class_approval = 1 
 		    or class_approval = 3)
          order
@@ -164,7 +170,8 @@
 		     , mem_name
 		  from tb_class c
 		  join tb_member m on(c.mem_no = m.mem_no)
-		 where class_no = #{classNo}    
+		 where class_no = #{classNo} 
+		   and mem_resign_status = 'N'   
 	</select>
 	
 	<update id="adminLectureUpdate">
@@ -178,6 +185,7 @@
 		     , class_signup_date = sysdate
 		     , class_content = #{classContent}
 		 where class_no = #{classNo}  
+		   
 	</update>
 	
 	<delete id="adminLectureDelete">
