@@ -229,8 +229,6 @@
 							}
 							
 							$("#thumbsHotArea").html(value);
-   					selectReList(reBoardNoStr);
-   					selectBest(reBoardNoStr);
        			},
        			error(){
        				console.log("ajax통신 실패");
