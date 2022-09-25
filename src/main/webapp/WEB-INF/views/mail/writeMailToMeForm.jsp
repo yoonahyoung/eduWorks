@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8">F
 <title>Insert title here</title>
 </head>
 <body>
@@ -224,7 +224,7 @@
 	<!-- =================== 메일 미리보기 모달 ======================= -->
 	<div class="modal" id="mail-preview">
 		<div class="modal-dialog modal-lg">
-			<div class="modal-content" style="height: 750px">
+			<div class="modal-content" style="height: 850px">
 
 				<!-- Modal Header -->
 				<div class="modal-header">
