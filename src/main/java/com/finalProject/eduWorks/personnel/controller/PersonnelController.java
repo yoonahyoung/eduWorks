@@ -1164,6 +1164,12 @@ public class PersonnelController {
 		
 		String totalHo = pService.totalHo(memNo);
 		String useHo = pService.useHo(memNo);
+		if(totalHo==null) {
+			totalHo="0";
+		}
+		if(useHo==null) {
+			useHo="0";
+		}
 		double remain = Double.parseDouble(totalHo)-Double.parseDouble(useHo);
 		model.addAttribute("totalHo", totalHo);
 		model.addAttribute("useHo", useHo);

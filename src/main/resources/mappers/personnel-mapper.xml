@@ -1524,6 +1524,7 @@
 		       dept_name,
 		       job_name,
 		       to_char(ho_date,'YYYY-MM-DD') ho_date,
+		       ho_date AS "HO",
 		       ho_num,
 		       ho_comment
 		  from tb_holiday h
@@ -1540,7 +1541,7 @@
 		 <if test="startDate != null">
 		 	and to_date(ho_date) between to_date(#{startDate}) and to_date(#{endDate}) 
 		 </if>
-		 order by 5 desc
+		 order by 6 desc
 	</select>
 	
 	<insert id="updatefixout">
