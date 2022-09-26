@@ -59,7 +59,7 @@ public class ReportController {
 		ArrayList<Report> list = rService.selectReportList(pi, rCount, rStatus);
 		
 		mv.addObject("pi", pi).addObject("list", list);
-		System.out.println(list);
+		//System.out.println(list);
 		mv.setViewName("administration/adminReportListView");
 		return mv;
 	}
@@ -73,20 +73,19 @@ public class ReportController {
 	 * @return 익명 게시글 상세 페이지
 	 */
 	@RequestMapping("reportDetail.bl")
-	public ModelAndView reportDetail(String no, String rptRefCat, String rptNoStr, ModelAndView mv) {
+	public ModelAndView reportDetail(int no, int rptRefCat, String rptNoStr, ModelAndView mv) {
 		//rptNoList = rptNoStr;
 		//System.out.println(rptNoStr);
-		int bno = Integer.parseInt(no);
 		// 신고 게시판에서 확인용으로 넘어가기 때문에 조회수 증가 x
-		if(Integer.parseInt(rptRefCat) == 2) {
+		if(rptRefCat == 2) {
 			mv.addObject("rNo", no); // 댓글 번호 담아두기
 			// 댓글이 등록된 게시글 번호 조회
-			bno = rService.checkReBoardNo(bno);
-			//System.out.println(bno);
+			no = rService.checkReBoardNo(no);
+			//System.out.println(no);
 		}
 		//System.out.println(no);
 		// 게시글 상세 조회
-		Board b = bService.selectBlind(bno);
+		Board b = bService.selectBlind(no);
 		
 		mv.addObject("b", b);
 		//System.out.println(b);
@@ -119,18 +118,18 @@ public class ReportController {
 		
 		// 신고 처리 여부 Y로 변경
 		if(result > 0) {
-			System.out.println("신고처리 if문 들어옴");
+			//System.out.println("신고처리 if문 들어옴");
 			
 			// 신고자 리스트 구하기
 			ArrayList<Report> list = rService.selectTargets(rptNoStr, rptRefCat); 
-			System.out.println(rptNoStr);
-			System.out.println(list);
+			//System.out.println(rptNoStr);
+			//System.out.println(list);
 			// 신고처리 여부 Y로 변경
 			rService.reportStatus(rptNoStr); 
 			
 			// websocket을 이용해서 알람 전송 (즉, target한테 sendMessage())
 			for(Report r : list) {
-				System.out.println("for문들어옴");
+				//System.out.println("for문들어옴");
 				Map<String, WebSocketSession> userSessions = replyEcho.getUserSessions();
 				
 				AlarmData alarm = new AlarmData();
@@ -140,7 +139,7 @@ public class ReportController {
 				
 				String alarmContent = "[" + r.getBoardTitle() + "] " + (r.getRptRefCat() == 1 ? "게시글" : "댓글") + "에 대한 신고 제재가 완료되었습니다.";
 				alarm.setAlarmContent(alarmContent);
-				System.out.println("알람 인설트");
+				//System.out.println("알람 인설트");
 				result1 *= aService.insertAlarm(alarm);
 				
 				WebSocketSession targetClient = userSessions.get(r.getRptMemNo());
@@ -149,7 +148,7 @@ public class ReportController {
 					targetClient.sendMessage(new TextMessage(alarmContent));
 				}
 			}
-			System.out.println(result1);
+			//System.out.println(result1);
 		}
 		
 		return new Gson().toJson(result1);
@@ -172,12 +171,12 @@ public class ReportController {
 		
 		// 신고 처리 여부 Y로 변경
 		if(result > 0) {
-			System.out.println("신고처리 if문 들어옴");
+			//System.out.println("신고처리 if문 들어옴");
 			
 			// 신고자 리스트 구하기
 			ArrayList<Report> list = rService.selectTargets(rptNoStr, rptRefCat); 
-			System.out.println(rptNoStr);
-			System.out.println(list);
+			//System.out.println(rptNoStr);
+			//System.out.println(list);
 			// 신고처리 여부 Y로 변경
 			rService.reportStatus(rptNoStr); 
 			
@@ -202,7 +201,7 @@ public class ReportController {
 					targetClient.sendMessage(new TextMessage(alarmContent));
 				}
 			}
-			System.out.println(result1);
+			//System.out.println(result1);
 		}
 		return new Gson().toJson(result1);
 	}
@@ -219,8 +218,8 @@ public class ReportController {
 	 public String ajaxReportList(String rptNoStr, int rptBoardNo, int rptRefCat) throws IOException {
 		// 신고자 리스트 구하기
 		ArrayList<Report> list = rService.selectTargets(rptNoStr, rptRefCat); 
-		System.out.println(rptNoStr);
-		System.out.println(list);
+		//System.out.println(rptNoStr);
+		//System.out.println(list);
 		// 신고처리 여부 Y로 변경
 		int result = rService.reportStatus(rptNoStr); 
 		int result1 = 0;
@@ -246,7 +245,7 @@ public class ReportController {
 				if(targetClient != null) {
 					targetClient.sendMessage(new TextMessage(alarmContent));
 				}
-				System.out.println(result1);
+				//System.out.println(result1);
 			}
 		}
 		
