@@ -82,7 +82,7 @@
 				                            		<button type="button" class="n-btn su_btn_border btn-sm reportStatus" onclick='goStatus("${r.rptNo}", "${ r.rptRefCat }", "${ r.rptBoardNo }");'>처리완료</button>
 				                            	</c:if>
 				                            </td>
-				                            <td class="no${ status.count }"><input type="hidden" class="rptNoStr" value="${ r.rptNo }"></td>
+				                            <td class="no${ status.count }"><input type="hidden" id="rptNoStr" value="${ r.rptNo }"></td>
 				                        </tr>
 				                    </c:forEach>
 			                    </c:otherwise>
@@ -98,7 +98,7 @@
 		           			rptBoardNo = $(this).children(".no").text();
 		           			rptRefCat = $(this).find(".rptRefCat").val();
 		           			console.log(rptRefCat);
-		           			rptNoStr = $(this).find(".rptNoStr").val() + "";
+		           			rptNoStr = $(this).find("#rptNoStr").val() + "";
 		           			console.log(rptNoStr);
 	           				// 선택된 tr의 자식요소 중에서 no라는 클래스를 가진 자식의 text값
 	           				location.href = "reportDetail.bl?no=" + rptBoardNo + "&rptRefCat=" + rptRefCat + "&rptNoStr=" + rptNoStr; 
@@ -162,7 +162,7 @@
 			           										value += '<button type="button" class="n-btn su_btn_border btn-sm reportStatus" onclick="goStatus(&quot;' + list[i].rptNo + '&quot;, &quot;' + list[i].rptRefCat + '&quot;, &quot;' + list[i].rptBoardNo + '&quot;);">처리완료</button>';
 			           									}
 	           									value += '</td>';
-	           												+ '<td class="no' + i + '"><input type="hidden" class="rptNoStr" value="' + list[i].rptNo + '"></td>';
+	           												+ '<td class="no' + i + '"><input type="hidden" id="rptNoStr" value="' + list[i].rptNo + '"></td>';
 	           									 		+ '</tr>';
 			           					}
 			           					
@@ -198,7 +198,7 @@
 			           									+ '</a>'
 			           								+ '</li>';
 			           					}
-			           					console.log((".rptNoStr").val());
+			           					//console.log(("#rptNoStr").val());
 			           					$(".board-tbody").empty();
 			           					$(".board-tbody").html(value);
 			           					$("#n-pagingBar ul").empty();
