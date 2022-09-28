@@ -292,6 +292,10 @@ public class PersonnelDao {
 		return sqlSession.selectOne("personnelMapper.checkedCountIn", s);
 	}
 	
+	public String chechOutTime(SqlSessionTemplate sqlSession,HashMap<String,String> h) {
+		return sqlSession.selectOne("personnelMapper.chechOutTime", h);
+	}
+	
 	public int updateOut(SqlSessionTemplate sqlSession,Attendance at) {
 		return sqlSession.update("personnelMapper.updateOut", at);
 	}

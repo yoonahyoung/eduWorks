@@ -122,6 +122,7 @@ public interface PersonnelService {
 	Attendance checkedIn(SearchAt at);
 	int updateAttIn(Attendance at);
 	int insertAttIn(Attendance at);
+	String chechOutTime(HashMap<String,String> h);
 	int updateOut(Attendance at);
 	
 	//개인 조정신청내역

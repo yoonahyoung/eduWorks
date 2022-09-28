@@ -1282,6 +1282,13 @@
 		   and att_date = #{startDate} 
 	</select>
 	
+	<select id="chechOutTime" resultType="string">
+		select att_fixedout
+		  from tb_attendance
+		 where mem_no = #{userNo}
+		   and att_date = #{startDate} 
+	</select>
+	
 	<insert id="insertAttIn">
 		insert
 		  into tb_attendance

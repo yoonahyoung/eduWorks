@@ -1061,6 +1061,20 @@ public class PersonnelController {
 	}
 	
 	@ResponseBody
+	@RequestMapping(value = "checkOutTime.me")
+	public String chechOutTime(String outDate,HttpSession session) {
+		String memNo = ((Member)session.getAttribute("loginUser")).getMemNo();
+		HashMap<String,String> h = new HashMap<>();
+		h.put("userNo", memNo);
+		h.put("startDate", outDate);
+		String time = pService.chechOutTime(h);
+		if(time==null) {
+			time = "notIn";
+		}
+		return time;
+	}
+	
+	@ResponseBody
 	@RequestMapping(value = "submitOut.me")
 	public String submitOut(String outDate,String outTime,HttpSession session) throws ParseException{
 		String memNo = ((Member)session.getAttribute("loginUser")).getMemNo();
@@ -1105,7 +1119,7 @@ public class PersonnelController {
 				}
 			}else {
 				//이미퇴근처리함
-				return "zzz";
+				return "done";
 			}
 		}
 	}

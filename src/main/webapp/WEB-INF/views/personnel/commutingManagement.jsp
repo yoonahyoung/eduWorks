@@ -116,44 +116,72 @@
                             	}
                             	
                             	function submitOut(){
-                            		let c = new Date();
-                            		console.log(c.getHours())
-                            		let re;
-                            		if(c.getHours()<18){
-                            			re = confirm('아직 퇴근시간(18시)전입니다.\n정말퇴근하시겠습니까?')
-                            		}
-                            		if(re){
-	                            		c.setHours(c.getHours() + 9)
-	  	                              	let c1 = c.toISOString();
-		  	                            let date2 = c1.slice(0,10);
-			                            let time2 = c1.slice(11,16);
-			                            
-			                            $.ajax({
-			                            	url: 'submitOut.me',
+                            		let b = new Date();
+                            		b.setHours(b.getHours() + 9)
+  	                              	let b1 = b.toISOString();
+	  	                            let date1 = b1.slice(0,10);
+	  	                          	let time1 = b1.slice(11,16);
+                            		console.log(b1)
+                            		$.ajax({
+			                            	url: 'checkOutTime.me',
 	                           				type: 'POST',
 	                           				data: {
-	                           					outDate : date2,
-	                           					outTime : time2
+	                           					outDate : date1
 	                           				},
-	                           				success: function(result) {
-	                           					console.log(result)
-	                           					if(result=='success'){
-	                           						alert('퇴근처리완료')
-	                           						location.reload();
-	                           					}else if(result=='none'){
+	                           				success: function(time) {
+	                           					console.log('time:'+time)
+	                           					if(time == 'notIn'){
 	                           						alert('아직출근전입니다.')
-	                           					}else if(result=='zzz'){
-	                           						alert('이미퇴근하였습니다.')
 	                           					}else{
-	                           						alert('퇴근처리실패')
+	                           						let re;
+	                           						alert(time>time1)
+	                           						re=true
+	                           						if(time>time1){
+	                           							re = confirm('아직 퇴근시간('+time+')전입니다.\n정말퇴근하시겠습니까?')
+	                           						}
+		                                    		
+		                                    		if(re){
+		                                    			let c = new Date();
+		        	                            		c.setHours(c.getHours() + 9)
+		        	  	                              	let c1 = c.toISOString();
+		        		  	                            let date2 = c1.slice(0,10);
+		        			                            let time2 = c1.slice(11,16);
+		        			                            
+		        			                            $.ajax({
+		        			                            	url: 'submitOut.me',
+		        	                           				type: 'POST',
+		        	                           				data: {
+		        	                           					outDate : date2,
+		        	                           					outTime : time2
+		        	                           				},
+		        	                           				success: function(result) {
+		        	                           					console.log(result)
+		        	                           					if(result=='success'){
+		        	                           						alert('퇴근처리완료')
+		        	                           						location.reload();
+		        	                           					}else if(result=='none'){
+		        	                           						alert('아직출근전입니다.')
+		        	                           					}else if(result=='done'){
+		        	                           						alert('이미퇴근하였습니다.')
+		        	                           					}else{
+		        	                           						alert('퇴근처리실패')
+		        	                           					}
+		        	                           				},error:function(){
+		        	                           					console.log('error')
+		        	                           				}
+		        			                            })
+		                                    		}else{
+		                                    			alert('퇴근취소')
+		                                    		}
 	                           					}
+	                           					
 	                           				},error:function(){
 	                           					console.log('error')
 	                           				}
 			                            })
-                            		}else{
-                            			alert('퇴근취소')
-                            		}
+                            		
+                            		
+                            		
                             	}
                             </script>
                             

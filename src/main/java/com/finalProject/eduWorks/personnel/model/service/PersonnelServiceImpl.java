@@ -295,6 +295,11 @@ public class PersonnelServiceImpl implements PersonnelService {
 	public int checkedCountIn(SearchAt s) {
 		return pDao.checkedCountIn(sqlSession, s);
 	}
+	
+	@Override
+	public String chechOutTime(HashMap<String,String> h) {
+		return pDao.chechOutTime(sqlSession,h);
+	}
 
 	@Override
 	public int updateOut(Attendance at) {
