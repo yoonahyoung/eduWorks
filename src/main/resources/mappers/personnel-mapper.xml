@@ -1265,7 +1265,7 @@
 		   and att_date = #{startDate} 
 	</select>
 	
-	<select id="checkedCountIn2" resultType="_string">
+	<select id="checkedCountIn2" resultType="string">
 		select att_in
 		  from tb_attendance
 		 where mem_no = #{userNo}
