@@ -930,7 +930,7 @@
 			                    ), (SELECT * FROM TB_MEMBER)
 			            ) C ON (ATT_DATE = WORKING_DAY AND A.MEM_NO = C.MEM_NO)
 			JOIN TB_MEMBER M ON (C.MEM_NO=M.MEM_NO)
-			WHERE WORKING_DAY &lt;= TO_DATE(#{endDate}) <!-- sysdate -->
+			WHERE WORKING_DAY &lt;= TO_DATE(#{endDate}) 
 			 
 			ORDER BY 4 DESC, 2)
 	  WHERE MEM_NO = #{userNo}
@@ -1260,6 +1260,13 @@
 	
 	<select id="checkedCountIn" resultType="_int">
 		select count(*)
+		  from tb_attendance
+		 where mem_no = #{userNo}
+		   and att_date = #{startDate} 
+	</select>
+	
+	<select id="checkedCountIn2" resultType="_string">
+		select att_in
 		  from tb_attendance
 		 where mem_no = #{userNo}
 		   and att_date = #{startDate} 

@@ -86,6 +86,7 @@
                             
                             <script type="text/javascript">
                             	function submitIn(){
+                            		//출근하기 눌렀을때의 날짜,시간
                             		let c = new Date();
   	                              	c.setHours(c.getHours() + 9)
   	                              	let c1 = c.toISOString();
@@ -119,9 +120,10 @@
                             		let b = new Date();
                             		b.setHours(b.getHours() + 9)
   	                              	let b1 = b.toISOString();
-	  	                            let date1 = b1.slice(0,10);
-	  	                          	let time1 = b1.slice(11,16);
-                            		console.log(b1)
+	  	                            let date1 = b1.slice(0,10); // 날짜
+	  	                          	let time1 = b1.slice(11,16); // 시간
+	  	                          	
+	  	                          	// 사용자의 오늘 퇴근시간을 가져옴
                             		$.ajax({
 			                            	url: 'checkOutTime.me',
 	                           				type: 'POST',
@@ -129,23 +131,23 @@
 	                           					outDate : date1
 	                           				},
 	                           				success: function(time) {
-	                           					console.log('time:'+time)
 	                           					if(time == 'notIn'){
 	                           						alert('아직출근전입니다.')
 	                           					}else{
-	                           						let re;
-	                           						alert(time>time1)
-	                           						re=true
+	                           						let test = true;
+	                           						
+	                           						// 퇴근시간보다 빨리 퇴근처리를 할때 경고문구
 	                           						if(time>time1){
-	                           							re = confirm('아직 퇴근시간('+time+')전입니다.\n정말퇴근하시겠습니까?')
+	                           							test = confirm('아직 퇴근시간('+time+')전입니다.\n정말퇴근하시겠습니까?')
 	                           						}
 		                                    		
+	                           						// 퇴근처리 ajax
 		                                    		if(re){
 		                                    			let c = new Date();
 		        	                            		c.setHours(c.getHours() + 9)
 		        	  	                              	let c1 = c.toISOString();
-		        		  	                            let date2 = c1.slice(0,10);
-		        			                            let time2 = c1.slice(11,16);
+		        		  	                            let date2 = c1.slice(0,10); //퇴근날짜
+		        			                            let time2 = c1.slice(11,16); //퇴근시간
 		        			                            
 		        			                            $.ajax({
 		        			                            	url: 'submitOut.me',
@@ -194,7 +196,7 @@
     	                              let d2 = new Date();
     	                              d2.setHours(d2.getHours() + 9)
     	                              let d3 = d2.toISOString();
-    	                              //console.log(d3) //2022-09-18T20:48:07.964Z
+    	                              //console.log(d3) //2022-09-20T20:48:07.964Z
     	                              let date1 = d3.slice(0,10);
     	                              let time = d3.slice(11,19);
     	                              let week = new Array('일', '월', '화', '수', '목', '금', '토');
@@ -239,7 +241,6 @@
                                     
                                     
                                     <div  align="left" style="font-size: 25px; font-weight: bold; color: black;">근태조정신청</div>
-                                    
                                     <br>
                                     <form action="adjForm.in" method="post" enctype="multipart/form-data"> 
                                     	<input type="hidden" name="deptCode" id="attNo" value="">
@@ -285,35 +286,33 @@
 
                         <script>
 
-                        function test1(date){
-                        	console.log(date)
+                        function apply(date){
                         	$.ajax({
-                           				url: 'searchDetailAt.me',
-                           				type: 'POST',
-                           				dataType: 'json',
-                           				data: {
-                           					day : date
-                           				},
-                           				success: function(list) {
-                           					console.log(list)
-                           					if(list.attDate<list.memEnrollDate){
-                           						alert('입사전 날짜입니다.')
-                           					}else{
-                           						$('#div1').css('display','')
-                                				$('#date1').val(list.attDate)
-                                				$('#in').val(list.attIn)
-                                				$('#out').val(list.attOut)
-                                				$('#attNo').val(list.attNo)
-                           					}
-                           					
-                           				},error: function(){
-                           					alert('휴일 또는 공휴일입니다.')
-                           				}
-                           			});	
-                        	
-           					
-                        }
-
+                           		url: 'searchDetailAt.me',
+                           		type: 'POST',
+                           		dataType: 'json',
+                           		data: {
+                           			day : date
+                           		},
+                           		success: function(list) {
+                           			console.log(list)
+                           			if(list.attDate<list.memEnrollDate){
+                           				alert('입사전 날짜입니다.')
+                           			}else{
+                           				$('#div1').css('display','') // 조정신청창
+                               			$('#date1').val(list.attDate)
+                               			$('#in').val(list.attIn)
+                               			$('#out').val(list.attOut)
+                               			$('#attNo').val(list.attNo)
+                           			}
+                           			
+                           		},error: function(){
+                           			alert('휴일 또는 공휴일입니다.')
+                           		}
+                           	});	
+                       	}
+						
+                        // x버튼클릭시 창 닫힘
                         $('.close').click(function(){
                             $('#div1').css('display','none')
                             $('#date1').val('')
@@ -335,73 +334,75 @@
                                 headerToolbar: {         
                                     left: 'prevYear,prev,today',          
                                     center: 'title',          
-                                    right: 'dayGridMonth,next,nextYear' //timeGridWeek,timeGridDay,        
+                                    right: 'dayGridMonth,next,nextYear'      
                                 },
                                 
+                                // 해당날짜 클릭시 근태조정신청창이 뜸
                                 dateClick: function(info) {
                                     let clickDate = new Date(info.dateStr)
                                     clickDate.setHours(clickDate.getHours() - 9)
                                     let currentDate = new Date()
-                                    console.log(clickDate)
-                                    console.log(currentDate)
+                                    //
                                     if(clickDate<=currentDate){
-                                    	test1(info.dateStr);
+                                    	apply(info.dateStr); // 근태조정신청창 띄우는 함수호출
                                     }else{
                                     	alert('유효한날짜를 선택하세요.')
                                     }
                                 },
-	
-                                navLinks: false,
+                               navLinks: false,
                                	
                                eventSources: [{
-                           		events: function(info, successCallback, failureCallback) {
-                           			
-                           			let h1 = new Date(info.startStr).toISOString().slice(0,10);
-                           			let h2 = new Date(info.endStr).toISOString().slice(0,10);
-                           			let h3 = new Date(info.startStr)
-                           			let h4 = new Date(h3.setMonth(h3.getMonth()+1))
-                           			let month = new Date(h4).getMonth()+1
-                           			let year = new Date(h4).getFullYear();
-                           			let date = new Date(year,month,0).getDate()
-                           			let startdate = ''
-                           			let enddate = ''
-                           			if(month<10){
-                           				startdate=year+'-0'+month+'-01'
-                           				enddate=year+'-0'+month+'-'+date
-                           			}else{
-                           				startdate=year+'-'+month+'-01'
-                           				enddate=year+'-'+month+'-'+date
-                           			}
-                           			$.ajax({
-                           				url: 'count.cl',
-                           				type: 'POST',
-                           				dataType: 'json',
-                           				data: {
-                           					start : startdate,
-                           					end : enddate
-                           				},
-                           				success: function(data) {
-                           					console.log(data)
-                           					$('#d').text(data.normal)
-                           					$('#l').text(data.leave)
-                           					$('#f').text(data.absent)
-                           				}
-                           			});
-                           			
-                           			$.ajax({
-                           				url: 'test.cl',
-                           				type: 'POST',
-                           				dataType: 'json',
-                           				data: {
-                           					start : h1,
-                           					end : h2
-                           				},
-                           				success: function(data) {
-                           					successCallback(data);
-                           				}
-                           			});
-                           		}
-                           	}]
+                            		// 각월에 맞는 데이터를 가져오는 콜백함수
+	                           		events: function(info, successCallback, failureCallback) {
+	                           			let h1 = new Date(info.startStr).toISOString().slice(0,10);
+	                           			let h2 = new Date(info.endStr).toISOString().slice(0,10);
+	                           			let h3 = new Date(info.startStr)
+	                           			let h4 = new Date(h3.setMonth(h3.getMonth()+1))
+	                           			let month = new Date(h4).getMonth()+1
+	                           			let year = new Date(h4).getFullYear();
+	                           			let date = new Date(year,month,0).getDate()
+	                           			let startdate = ''
+	                           			let enddate = ''
+	                           			if(month<10){
+	                           				startdate=year+'-0'+month+'-01'
+	                           				enddate=year+'-0'+month+'-'+date
+	                           			}else{
+	                           				startdate=year+'-'+month+'-01'
+	                           				enddate=year+'-'+month+'-'+date
+	                           			}
+	                           			
+	                           			// 각월의 정상, 무단지각/결근, 결근날수를 카운트
+	                           			$.ajax({
+	                           				url: 'count.cl',
+	                           				type: 'POST',
+	                           				dataType: 'json',
+	                           				data: {
+	                           					start : startdate,
+	                           					end : enddate
+	                           				},
+	                           				success: function(data) {
+	                           					console.log(data)
+	                           					$('#d').text(data.normal)
+	                           					$('#l').text(data.leave)
+	                           					$('#f').text(data.absent)
+	                           				}
+	                           			});
+	                           			
+	                           			// 각 날짜에 해당하는 근태내역조회
+	                           			$.ajax({
+	                           				url: 'list.cl',
+	                           				type: 'POST',
+	                           				dataType: 'json',
+	                           				data: {
+	                           					start : h1,
+	                           					end : h2
+	                           				},
+	                           				success: function(data) {
+	                           					successCallback(data);
+	                           				}
+	                           			});
+	                           		}
+                           		}]
                             });
                             calendar.render();
                             

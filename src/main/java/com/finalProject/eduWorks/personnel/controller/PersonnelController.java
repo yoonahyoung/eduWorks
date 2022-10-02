@@ -778,16 +778,17 @@ public class PersonnelController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "test.cl",produces="application/json; charset=utf-8")
+	@RequestMapping(value = "list.cl",produces="application/json; charset=utf-8")
 	public String testCal(String start,String end,HttpSession session) throws ParseException {
-		Member member = (Member) session.getAttribute("loginUser");
+		Member member = (Member) session.getAttribute("loginUser"); // 현재로그인한 사원정보
 		String memNo = member.getMemNo();
-		String memEnrollDate = member.getMemEnrollDate();
+		String memEnrollDate = member.getMemEnrollDate(); // 로그인한 사원의 입사일
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date date1 = null;
         Date date2 = null;
         String StartDate = null;
         
+        // 조회시작일이 사원의 입사일보다 전이면 조회시작일을 사원의 입사일로 하기
         try {
             date1 = format.parse(start);
             date2 = format.parse(memEnrollDate);
@@ -802,22 +803,25 @@ public class PersonnelController {
             e.printStackTrace();
         }
         
-        SearchAt s = new SearchAt();
+        SearchAt s = new SearchAt(); // Mapper.xml문에서 쓸 여러변수를 담는객체
         s.setStartDate(StartDate);
         s.setEndDate(end);
         s.setUserNo(memNo);
-		ArrayList<Restdate> restList = pService.searchRestdate(s);
+		ArrayList<Restdate> restList = pService.searchRestdate(s); // 공휴일 주말을 조회
 		if(!restList.isEmpty()) {
 			s.setList(restList);
 		}
 		
-		ArrayList<Attendance> atlist = pService.searchMyAt(s);
+		ArrayList<Attendance> atlist = pService.searchMyAt(s); // 조건에맞는 근태정보 조회
 		
-		ArrayList list = new ArrayList();
+		// 각날짜에 해당하는 정보들을 HashMap에 저장후 하나의 ArrayList에 다담아서 데이터 전달
+		ArrayList<HashMap<String,String>> list = new ArrayList<>(); 
 		
+		// 캘린더에 나타날 색상과 문구관려 조건처리
 		for(Attendance at : atlist) {
+			// 캘린더에서 두줄로 나타나는 건수들 정리
 			if(!at.getAttStatus().equals("F") && !at.getAttHstatus().equals("H0")) {
-				HashMap m = new HashMap();
+				HashMap<String,String> m = new HashMap<>();
 				m.put("start", at.getAttDate());
 				if(at.getAttStatus().equals("D")&&at.getAttHstatus().equals("N")) {
 					m.put("title", at.getAttIn()+" 출근");
@@ -844,8 +848,7 @@ public class PersonnelController {
 					m.put("title", at.getAttIn()+" 무단지각/조퇴");
 					m.put("color", "orange");
 				}
-
-				HashMap m2 = new HashMap();
+				HashMap<String,String> m2 = new HashMap<>();
 				m2.put("start", at.getAttDate());
 				if(at.getAttStatus().equals("D")) {
 					if(at.getAttOut()!=null) {
@@ -873,9 +876,9 @@ public class PersonnelController {
 						list.add(m2);
 					}
 				}
-				
 				list.add(m);
 				
+			// 캘린더에서 한줄로 나타나는 건수들 정리
 			}else if(at.getAttStatus().equals("F")) {
 				
 				Date current = new Date();
@@ -884,14 +887,14 @@ public class PersonnelController {
 				Date now = format.parse(now1);
 				Date atdate = format.parse(atdate1);
 				if(now.getTime()-atdate.getTime()>0) {
-					HashMap m = new HashMap();
+					HashMap<String,String> m = new HashMap<>();
 					m.put("start", at.getAttDate());
 					m.put("title", "무단결근");
 					m.put("color", "red");
 					list.add(m);
 				}
 			}else {
-				HashMap m = new HashMap();
+				HashMap<String,String> m = new HashMap<>();
 				m.put("start", at.getAttDate());
 				m.put("title", "종일연차");
 				m.put("color", "blue");
@@ -899,9 +902,10 @@ public class PersonnelController {
 			}
 		}
 		
+		// 공휴일 데이터 처리
 		for(Restdate r : restList) {
 			if(!r.getReDatename().equals("토") && !r.getReDatename().equals("일")) {
-			HashMap m = new HashMap();
+			HashMap<String,String> m = new HashMap<>();
 			m.put("start", r.getReRestdate());
 			m.put("title", r.getReDatename());
 			m.put("color", "red");
@@ -916,7 +920,7 @@ public class PersonnelController {
 	@RequestMapping(value = "searchDetailAt.me",produces="application/json; charset=utf-8")
 	public String searchDetailAt(String day,HttpSession session) {
 		String memNo = ((Member)session.getAttribute("loginUser")).getMemNo();
-		SearchAt s = new SearchAt();
+		SearchAt s = new SearchAt(); // Mapper.xml문에서 쓸 여러변수를 담는객체													
 		s.setUserNo(memNo);
 		s.setStartDate(day);
 		s.setEndDate(day);
@@ -924,29 +928,32 @@ public class PersonnelController {
 		if(!restList.isEmpty()) {
 			s.setList(restList);
 		}
+		// 조건에맞는 근태정보 1개를 조회
 		Attendance at = pService.searchDetailAt(s);
 		at.setRestList(restList);
 		return new Gson().toJson(at);
 	}
 	
 	@RequestMapping("adjForm.in")
-	public String adhFormInsert(MultipartFile upfile,SearchAt s,HttpSession session) {
+	public String adhFormInsert(MultipartFile upfile,SearchAt s /*xml에서 조건처리를 위한객체*/,HttpSession session) {
 		String memNo = ((Member)session.getAttribute("loginUser")).getMemNo();
 		s.setUserNo(memNo);
-		System.out.println(s);
+		
+		// 동일한 날짜에 조정신청내역이 있는지 체크
 		Adjust ad = pService.checkedAdj(s);
-		System.out.println(ad);
 		if(ad!=null) {
 			session.setAttribute("alertIcon", "info");
 			session.setAttribute("alertTitle", "조정처리 진행중");
 			session.setAttribute("alertMsg", "조정처리 진행중입니다.");
 			return "redirect:AttManage.me";
 		}else {
+			// 업로드파일이 있는지 체크
 			if(!upfile.getOriginalFilename().equals("")) {
+				// 문서명변경과 업로드를 위한 FileUpload클래스에 saveFile 매소드를 미리 정의해둠
 				String filePath = FileUpload.saveFile(upfile, session, "resources/uploadFiles/personnelFiles/");
 				s.setKeyword(filePath);
 			}
-			
+			// 조정신청정보 DB에 올리기
 			int result = pService.adhFormInsert(s);
 			if(result>0) {
 				session.setAttribute("alertIcon", "success");
@@ -1006,48 +1013,58 @@ public class PersonnelController {
 	@RequestMapping(value = "submitIn.me")
 	public String submitIn(String inDate,String inTime,HttpSession session) throws ParseException {
 		String memNo = ((Member)session.getAttribute("loginUser")).getMemNo();
-		SearchAt s = new SearchAt();
+		SearchAt s = new SearchAt(); // mybatis Mapper.xml에서 사용할변수들 담겨있는 객체
 		s.setUserNo(memNo);
 		s.setStartTime(inTime);
 		s.setStartDate(inDate);
-		int count = pService.checkedCountIn(s);
-		Attendance at = null;
+		
+		// DB에 현재날짜에 해당하는 기록이 있는지 확인
+		int count = pService.checkedCountIn(s); 
+		Attendance at = null; // DB출근테이블의 속성을 담는 객체
 	    if(count>0) {
+	    	// 기록이 있으면 그정보를 DB에서 select
 	    	 at = pService.checkedIn(s);	
 	    }
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 		String a = inDate+" "+inTime;
-		String b = inDate+" 09:00";
+		String b = inDate+" 09:00"; // 기본출근시간
 		if(count>0) {
+			// DB에 해당날짜 기록이 있으면 그날의 출근해야되는 시간이랑비교
 			b = inDate+" "+at.getAttFixedin();
 		}
+		
 		Date in = format.parse(a);
 		Date fixedIn = format.parse(b);
 		long resultTime = in.getTime() - fixedIn.getTime();
 		
-		Attendance at2 = new Attendance();
-		at2.setMemNo(memNo);
-		at2.setAttDate(inDate);
-		at2.setAttIn(inTime);
+		Attendance at2 = new Attendance(); 
+		
+		// 시간비교후 정상D, 또는 지각L 
 		if(resultTime<=0) {
 			at2.setAttStatus("D");
 		}else {
 			at2.setAttStatus("L");
 		}
 		
+		at2.setMemNo(memNo);
+		at2.setAttDate(inDate);
+		at2.setAttIn(inTime);
+		
 		int result=0;
+		
+		// DB에 현재날짜에 해당하는 기록이 있으면 update 없으면 insert
 		if(count>0) {
 			if(at.getAttIn().equals("")) {
-				//출근시간비교후 update
+				// 출근한적이 없으면 update
 				at2.setAttNo(at.getAttNo());
 				result = pService.updateAttIn(at2);
 			}else {
-				//이미출근처리완료
+				// 출근시간이 찍혀있으면 이미 출근했음
 				result=100;
 			}
 		}else {
-			//출근시간비교후 insert
+			// 기록이 없으면 그대로 insert
 			result = pService.insertAttIn(at2);
 		}
 		
@@ -1067,7 +1084,11 @@ public class PersonnelController {
 		HashMap<String,String> h = new HashMap<>();
 		h.put("userNo", memNo);
 		h.put("startDate", outDate);
+		
+		// 날짜를 가지고 사용자의 퇴근시간을 조회하러감
 		String time = pService.chechOutTime(h);
+		
+		// 조회된값이 없을경우
 		if(time==null) {
 			time = "notIn";
 		}
@@ -1078,34 +1099,41 @@ public class PersonnelController {
 	@RequestMapping(value = "submitOut.me")
 	public String submitOut(String outDate,String outTime,HttpSession session) throws ParseException{
 		String memNo = ((Member)session.getAttribute("loginUser")).getMemNo();
-		SearchAt s = new SearchAt();
+		SearchAt s = new SearchAt(); // mybatis Mapper.xml에서 사용할변수들 담겨있는 객체
 		s.setUserNo(memNo);
 		s.setStartDate(outDate);
 		s.setEndTime(outTime);
 		s.setEndDate(outDate);
-		int count = pService.checkedCountIn(s);
-		if(count==0) {
+		
+		// 현재날짜에 해당하는 출근찍은데이터 조회
+		String inTime = pService.checkedCountIn2(s);
+		if(inTime==null) {
 			//출근전입니다
-			System.out.println("출근전");
 			return "none";
 		}else {
+			// DB에서 오늘날짜에 해당하는 사용자의 근태테이블 속성 조회
 			Attendance at = pService.checkedIn(s);
+			
+			// 조회된거에서 퇴근시간이 안찍혀있는경우
 			if(at.getAttOut()==null) {
-				
 				at.setAttOut(outTime);
 				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-				String a = outDate+" "+outTime;
-				String b = outDate+" "+at.getAttFixedout();
-				Date out = format.parse(a);
-				Date fixedOut = format.parse(b);
+				String userTime = outDate+" "+outTime; // 사용자 퇴근시간
+				String referenceTime = outDate+" "+at.getAttFixedout(); // 오늘날짜에 해당하는 퇴근시간
+				Date out = format.parse(userTime);
+				Date fixedOut = format.parse(referenceTime);
 				long resultTime = out.getTime() - fixedOut.getTime();
-				String c = outDate+" "+at.getAttIn();
+				
+				// 근무시간계산
+				String c = outDate+" "+at.getAttIn(); 
 				Date in = format.parse(c);
 				long resultWork = out.getTime() - in.getTime();
 				double workTime1 = resultWork/1000.0/60/60;
 				float w1 = (float) ((Math.round(workTime1*10))/10.0);
 				String workTime = w1+"";
-				at.setAttWorktime(workTime);
+				at.setAttWorktime(workTime); 
+				
+				// 결과값으로 데이터처리
 				if(resultTime<0) {
 					at.setAttStatus("E");
 				}

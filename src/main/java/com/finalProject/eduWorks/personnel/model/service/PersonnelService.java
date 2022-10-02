@@ -119,6 +119,7 @@ public interface PersonnelService {
 	
 	//출퇴근찍기
 	int checkedCountIn(SearchAt s);
+	String checkedCountIn2(SearchAt s);
 	Attendance checkedIn(SearchAt at);
 	int updateAttIn(Attendance at);
 	int insertAttIn(Attendance at);
