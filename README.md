@@ -26,7 +26,7 @@
   - 협업을 위한 하나의 플랫폼 사이트 제작 <br>
 
 - 개발 환경 <br><br>
-![image](https://user-images.githubusercontent.com/103404357/192147194-1bdabc06-698f-417e-8a9f-660d52a39d32.png) <br>
+![image](https://user-images.githubusercontent.com/103404357/194379532-305a4a73-8329-4dfd-85ca-890c3bfeaf4c.png) <br>
 
 ***
 
