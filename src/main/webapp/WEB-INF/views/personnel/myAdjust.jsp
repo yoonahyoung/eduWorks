@@ -185,11 +185,14 @@
                                       </div>
                                      
                                         <script>
+                                        	// 긱헹 클릭시 실행
                                         	$('#tab3>tr').on('click',function(){
                                         		
+                                        		// 세부내역 표시되는창 띄우면서 값 비우기
                                         		$('#tab2').css('display','')
                                         		$('.alls').val('')
                                         		
+                                        		// 클릭된 내역에 해당하는 값 채우기
                                         		$('#adjNo').val($(this).children('#sel6').text())
                                         		$('#date1').val($(this).children('#sel2').text())
                                         		$('#content1').val($(this).children('#sel3').text())
@@ -224,11 +227,13 @@
                                         		}else{
                                         			$('#inputf').css('display','none')
                                         		}
+                                        		// 기존 첨부파일이 없을경우 안보여짐
                                         		if($(this).children('#sel5').text()!=''){
                                         			$('#readf').css('display','')
                                         		}else{
                                         			$('#readf').css('display','none')
                                         		}
+                                        		// 처리상태가 처리대기중이 아니면 수정 및 삭제가 불가 
                                         		if($(this).children('#sel4').text()=='W'){
                                         			$('#rebtn').css('display','')
                                         		}else{
@@ -311,7 +316,7 @@
                                         	<td><input id="infile" name="upfile" type="file" class="alls" ></td>
                                         </tr>
                                         <tr id="readf" style="display:none;">	
-                                        	<th>첨부파일</th>
+                                        	<th>기존첨부파일</th>
                                         	<td><a id="adjFile" href="" download>첨부파일</a></td>
                                         </tr>
                                         <tr id="rebtn" style="display: none;">

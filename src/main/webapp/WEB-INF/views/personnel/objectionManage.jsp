@@ -227,6 +227,8 @@
 			                                        </c:choose>
 			                                        
 			                                        </td>
+			                                        
+			                                        <!-- 클릭시 필요한정보 미리가져오기 -->
 			                                        <td class="sel0" style="display:none;">${ list.adjObjdate }</td>
 			                                        <td class="sel1" style="display:none;">${ list.attStatus }</td>
 			                                        <td class="sel4" style="display:none;">${ list.attHstatus }</td>
@@ -243,7 +245,6 @@
                                     	</tbody>
                                     	</c:otherwise>
                                     </c:choose>
-                                    
                                 </table>
                                 <br>
                                 
@@ -251,10 +252,9 @@
                             
                             <script>
                             	$(function(){
+                            		// 요소클릭시 조정신청상세내역 보이게하기
                             		$("#table1>tbody>tr").click(function(){
-                            			
                             			$('#bigdiv').css("display",'')
-                            			
                             			$('#adjObjdate').val($(this).children('.sel0').text())
                             			
                             			if($(this).children('.sel1').text()==''){
@@ -274,9 +274,9 @@
                             				case 'E' : $('#attStatus').val('무단조퇴'); break;
                             				}
                             			}
-                            			
                             			$('#adjReason').html($(this).children('.sel2').text())
 										
+                            			// 첨부파일이 있을경우만 보이게하기
                             			if($(this).children('.sel3').text()==''){
                             				$('#listfile').css('display','none')
                             			}else{
@@ -285,6 +285,7 @@
                             				$('#listfile').css('display','')
                             			}
                             			
+                            			// 상세보기및수정하기 클릭시 이동할 주소값 만들기
                             			$('#adjNo2').val($(this).children('.sel7').text())
                             			console.log($(this).children('.sel6').text())
                             			let dcode = $(this).children('.sel5').text()
@@ -293,8 +294,8 @@
                             			let date = $(this).children('.sel0').text()
                             			let updateUrl = 'search.at?deptCode='+dcode+'&jobCode='+jcode+'&startDate='+date+'&endDate='+date+'&keyword='+memName+'&check1=on&check2=on&check3=on'
                             			$('#updateUrl').val(updateUrl)
-                            			$('#con1').val($(this).children('.sel8').text())
                             			
+                            			$('#con1').val($(this).children('.sel8').text())
                             			$('#adjIn').val($(this).children('.sel9').text())
                             			$('#adjOut').val($(this).children('.sel10').text())
                             		})
@@ -428,10 +429,11 @@
                                 </tr>
                             </table>
                             <div style="width: 1000px;" align="center">
-                                    <button style="width: 200px" type="button" class="btn su_btn_two su_btn_all" id="updateAtt" data-toggle="modal" data-target="#noContent">상세보기 및 수정하기</button>
+                                <button style="width: 200px" type="button" class="btn su_btn_two su_btn_all" id="updateAtt">상세보기 및 수정하기</button>
                             </div>
                             
                             <script>
+                            	// 상세보기및수정하기 클릭시
                             	$("#updateAtt").click(function(){
                             		if($('#con1').val()=='W'){
                             			var openNewWindow = window.open("about:blank");
@@ -448,63 +450,67 @@
                                 <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b;">
                                 <br>
                                 <form id="forms" action="" method="post">
-                                <input type="hidden" id="adjNo2" name='adjNo'>
-                                <div style="width: 1000px;" align="center">
-                                    <button type="button" class="btn su_btn_two su_btn_all" id="acceptBtn" data-toggle="modal" data-target="#noContent">승인 및 수정</button>
-                                    <button type="button" class="btn su_btn_border" id="refuseBtn" data-toggle="modal" data-target="#noContent" style="width: 13%; height: 43px;">승인거절</button>
-                                </div>
-
-                                <div class="detailInfo positionab" id="div1" style="display: none; width: 550px; height: 380px;">
-                                    <div  align="left" style="font-size: 25px; font-weight: bold; color: black;">거절사유 입력란</div>
-                                    <br>
-
-                                    <textarea name="adjDenycontent" id="adjDenycontent" style="width: 80%; height: 60%; resize: none;" ></textarea>
-
-                                    <br><br>
-                                    
-                                    <div style="width: 98%;" align="center">
-                                        <button style="width: 100px;" type="button" class="btn su_btn_two su_btn_all" id="cancelBtn1" data-toggle="modal" data-target="#noContent">취소</button>
-                                        <button style="width: 100px;" type="button" class="btn su_btn_border" id="refuse" data-toggle="modal" data-target="#noContent" style="width: 13%; height: 43px;">승인거절</button>
-                                    </div>
-                                </div>
+	                                <input type="hidden" id="adjNo2" name='adjNo'>
+	                                <div style="width: 1000px;" align="center">
+	                                    <button type="button" class="btn su_btn_two su_btn_all" id="acceptBtn" >승인 및 수정</button>
+	                                    <button type="button" class="btn su_btn_border" id="refuseBtn" style="width: 13%; height: 43px;">승인거절</button>
+	                                </div>
+	
+	                                <div class="detailInfo positionab" id="div1" style="display: none; width: 550px; height: 380px;">
+	                                    <div  align="left" style="font-size: 25px; font-weight: bold; color: black;">거절사유 입력란</div>
+	                                    <br>
+	
+	                                    <textarea name="adjDenycontent" id="adjDenycontent" style="width: 80%; height: 60%; resize: none;" ></textarea>
+	
+	                                    <br><br>
+	                                    
+	                                    <div style="width: 98%;" align="center">
+	                                        <button style="width: 100px;" type="button" class="btn su_btn_two su_btn_all" id="cancelBtn1">취소</button>
+	                                        <button style="width: 100px;" type="button" class="btn su_btn_border" id="refuse" style="width: 13%; height: 43px;">승인거절</button>
+	                                    </div>
+	                                </div>
                                 </form>
-                                </div>
+                             </div>
+                                
                                 <script>
-                                $(function(){
-                                	$("#acceptBtn").click(function(){
- 	                                	console.log($('#con1').val())
- 	                            		if($('#con1').val()=='W'){
- 	                            			$('#forms').attr('action', 'approve.ad');
- 	                            			$('#forms').submit()
- 	                            		}else if($('#con1').val()==''){
- 	                            			alert('신청내역을 선택하세요.')
- 	                            		}else{
- 	                            			alert('이미 조정신청이 완료된 건입니다.')
- 	                            		}
- 	                            	})
- 	                            	
- 	                            	$('#refuseBtn').click(function(){
- 	                            		if($('#con1').val()=='W'){
- 	                            			$('#div1').css('display','')
- 	                            		}else if($('#con1').val()==''){
- 	                            			alert('신청내역을 선택하세요.')
- 	                            		}else{
- 	                            			alert('이미 조정신청이 완료된 건입니다.')
- 	                            		}
- 	                            	})
- 	                            	
- 	                            	$('#cancelBtn1').click(function(){
- 	                            		$('#adjDenycontent').html('')
- 	                            		$('#div1').css('display','none')
- 	                            	})
- 	                            	
- 	                            	$('#refuse').click(function(){
- 	                            		$('#forms').attr('action', 'refuse.ad');
-	                            		$('#forms').submit()
- 	                            	})
-                                })
-	                                
-                                </script>
+	                                $(function(){
+	                                	// 승인버튼클릭시
+	                                	$("#acceptBtn").click(function(){
+	 	                                	console.log($('#con1').val())
+	 	                            		if($('#con1').val()=='W'){
+	 	                            			$('#forms').attr('action', 'approve.ad');
+	 	                            			$('#forms').submit()
+	 	                            		}else if($('#con1').val()==''){
+	 	                            			alert('신청내역을 선택하세요.')
+	 	                            		}else{
+	 	                            			alert('이미 조정신청이 완료된 건입니다.')
+	 	                            		}
+	 	                            	})
+	 	                            	
+	 	                            	// 거절버튼클릭시
+	 	                            	$('#refuseBtn').click(function(){
+	 	                            		if($('#con1').val()=='W'){
+	 	                            			$('#div1').css('display','')
+	 	                            		}else if($('#con1').val()==''){
+	 	                            			alert('신청내역을 선택하세요.')
+	 	                            		}else{
+	 	                            			alert('이미 조정신청이 완료된 건입니다.')
+	 	                            		}
+	 	                            	})
+	 	                            	
+	 	                            	// 거절사유 취소버튼 클릭시 거절사유입련란보임
+	 	                            	$('#cancelBtn1').click(function(){
+	 	                            		$('#adjDenycontent').html('')
+	 	                            		$('#div1').css('display','none')
+	 	                            	})
+	 	                            	
+	 	                            	// 거절사유 입력후 걸절하기 클릭시
+	 	                            	$('#refuse').click(function(){
+	 	                            		$('#forms').attr('action', 'refuse.ad');
+		                            		$('#forms').submit()
+	 	                            	})
+	                                })
+	                            </script>
                                 
                                 <br><br><br><br><br><br><br><br><br><br>
                             </div>

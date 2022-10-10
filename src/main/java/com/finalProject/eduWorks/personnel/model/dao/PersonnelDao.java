@@ -143,6 +143,7 @@ public class PersonnelDao {
 	
 	public int updateOjtDate(SqlSessionTemplate sqlSession,String[] memNos, HashMap m) {
 		int result = 1;
+		// 반복문 돌려가며 테이블에 insert
 		for(String memNo : memNos) {
 			m.put("memNo", memNo);
 			int i = sqlSession.update("personnelMapper.updateOjtDate", m);
@@ -155,6 +156,7 @@ public class PersonnelDao {
 	public int sendOjtMail(SqlSession sqlSession,HashMap m,ArrayList<MailStatus> list) {
 		int result = sqlSession.insert("personnelMapper.sendOjtMail", m);
 		if(result>0) {
+			// 정상등록시 메일 상세테이블에도 insert 하기
 			return addOjtMailStatus(sqlSession,list);
 		}else {
 			return result;
@@ -162,6 +164,7 @@ public class PersonnelDao {
 	}
 	
 	public int addOjtMailStatus(SqlSession sqlSession,ArrayList<MailStatus> list) {
+		// xml문에서 반복문 돌림
 		return sqlSession.insert("personnelMapper.addOjtMailStatus", list);
 	}
 	
@@ -308,8 +311,11 @@ public class PersonnelDao {
 		return sqlSession.selectOne("personnelMapper.adjustMeCount", memNo);
 	}
 	
-	public ArrayList<Adjust> adjustMe(SqlSessionTemplate sqlSession,String memNo){
-		return (ArrayList)sqlSession.selectList("personnelMapper.adjustMe", memNo);
+	public ArrayList<Adjust> adjustMe(SqlSessionTemplate sqlSession,PageInfo pi,String memNo){
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage()-1)*limit;
+		RowBounds rowBounds = new RowBounds(offset,limit);
+		return (ArrayList)sqlSession.selectList("personnelMapper.adjustMe", memNo,rowBounds);
 	}
 	
 	public int adjModify(SqlSessionTemplate sqlSession,SearchAt s) {
@@ -372,9 +378,11 @@ public class PersonnelDao {
 		for(int i=1;i<=enrollDate.size();i++) {
 			s.setStartDate(enrollDate.get(i-1)+"");
 			if(i==1 && s.isCheck1()) {
+				// 연차 시작날이면서 반차로 시작할경우
 				int j = sqlSession.insert("personnelMapper.updatefixout",s);
 				result=result*j;
 			}else if(i==enrollDate.size() && s.isCheck2()){
+				// 연차끝날이면서 반차로끝날경우
 				int j = sqlSession.insert("personnelMapper.updatefixin",s);
 				result=result*j;
 			}else {
@@ -383,6 +391,7 @@ public class PersonnelDao {
 			}
 		}
 		if(result>0) {
+			// 연차등록완료처리
 			return sqlSession.update("personnelMapper.updateannl", s);
 		}else {
 			return result;
@@ -392,11 +401,14 @@ public class PersonnelDao {
 	public int addHalfHoCalendar(SqlSessionTemplate sqlSession,SearchAt s, boolean radio1, boolean radio2){
 		int i=0;
 		if(radio1==true) {
+			// 오전반차일경우
 			i = sqlSession.insert("personnelMapper.updateh1", s);
 		}else {
+			// 오후반차일경우
 			i = sqlSession.insert("personnelMapper.updateh2", s);
 		}
 		if(i>0) {
+			// 반차등록완료처리
 			return sqlSession.update("personnelMapper.updateannl", s);
 		}else {
 			return i;
@@ -436,24 +448,27 @@ public class PersonnelDao {
 	public ArrayList<String> atListCount3(SqlSessionTemplate sqlSession,SearchAt s,ArrayList<String> xlist,ArrayList<String> xlist2){
 		ArrayList<String> ylist2 = new ArrayList<>();
 		for(int i=0;i<xlist.size();i++) {
-			
+			// xml에서쓸 조건세팅
 			s.setStartDate(xlist2.get(i));
 			s.setEndDate(xlist.get(i));
 			ArrayList restList = (ArrayList)sqlSession.selectList("personnelMapper.searchRestdate2", s);
 					if(!restList.isEmpty()) {
 						s.setList(restList);
 					}
-
+			
+			// 정상근무일 수
 			s.setCheck1(true);
 			s.setCheck2(false);
 			s.setCheck3(false);
 			double normal = sqlSession.selectOne("personnelMapper.AtListCount3", s);
 			
+			// 무단지각/조퇴일 수
 			s.setCheck1(false);
 			s.setCheck2(true);
 			s.setCheck3(false);
 			double leave = sqlSession.selectOne("personnelMapper.AtListCount3", s);
 			
+			// 무단결근일 수
 			s.setCheck1(false);
 			s.setCheck2(false);
 			s.setCheck3(true);
@@ -510,18 +525,25 @@ public class PersonnelDao {
 	}
 	
 	public HashMap checkHo(SqlSessionTemplate sqlSession) {
+		// 퇴직한 직원외에 직원번호와 근무일수를 연,월,일로 조회
 		ArrayList<AutoHo> memNos = (ArrayList)sqlSession.selectList("personnelMapper.memNolists");
+		
+		// 1년차미만인 직원중 해당하는 직원을 담을 리스트
 		ArrayList<String> list1 = new ArrayList<>();
 		ArrayList<String> namelist1 = new ArrayList<>();
+		
+		// 1년차이상인 직원중 해당하는 직원을 담을 리스트
 		ArrayList<String> list15 = new ArrayList<>();
 		ArrayList<String> namelist15 = new ArrayList<>();
 		for(AutoHo a : memNos) {
 			if(Double.parseDouble(a.getYear())<1) {
+				// 1년차미만일경우 조건비교
 				if(Double.parseDouble(a.getMonth())>Double.parseDouble(a.getMemCount())*20) {
 					list1.add(a.getMemNo()); 
 					namelist1.add(a.getMemName());
 				}
 			}else {
+				// 1년차이상일경우 조건비교
 				if(Double.parseDouble(a.getYear())>Double.parseDouble(a.getMemCount())) {
 					list15.add(a.getMemNo());
 					namelist15.add(a.getMemName());
@@ -536,15 +558,18 @@ public class PersonnelDao {
 		return hs;
 	}
 	
+	// 1년차미만 연차지급and업데이트
 	public int sendAutoHo1(SqlSessionTemplate session, String[] list1) {
 		int result = 1;
 		for(String no : list1) {
+			// 연차지급
 			int i = session.insert("personnelMapper.sendAutoHo1", no);
 			result = result*i;
 		}
 		if(result>0) {
 			for(String no : list1) {
-				int i = session.insert("personnelMapper.updateAutoHo1", no);
+				// 연차관련넘버 업데이트
+				int i = session.update("personnelMapper.updateAutoHo1", no);
 				result = result*i;
 			}
 			return result;
@@ -553,15 +578,18 @@ public class PersonnelDao {
 		}
 	}
 	
+	// 1년차이상 연차지급and업데이트
 	public int sendAutoHo15(SqlSessionTemplate session, String[] list15) {
 		int result = 1;
 		for(String no : list15) {
+			// 연차지급
 			int i = session.insert("personnelMapper.sendAutoHo15", no);
 			result = result*i;
 		}
 		if(result>0) {
 			for(String no : list15) {
-				int i = session.insert("personnelMapper.updateAutoHo15", no);
+				// 연차관련넘버 업데이트
+				int i = session.update("personnelMapper.updateAutoHo15", no);
 				result = result*i;
 			}
 			return result;

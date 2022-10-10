@@ -55,7 +55,7 @@
                    
                     <div class="container-fluid su_contentArea" style="padding-left: 10px;">
                         <div class="su_content_header" style="margin-left: 10px;">
-                            <h3 class="su_sub_menu_name">강사 상세정보</h3>
+                            <h3 class="su_sub_menu_name">직원 상세정보</h3>
                             <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b;">
                             <br>
                             
@@ -168,14 +168,14 @@
                                     <tr>
                                         <th style="background-color: #e6e9ec;">퇴사일</th>
                                         <c:choose>
-                                        	<c:when test="${ empty m.memResignDate }">
+                                        	<c:when test="${ m.memResignStatus eq 'N'  }">
                                         		<td>
-		                                            <input type="date" name="memResignDate">
+		                                            해당없음
 		                                        </td>
                                         	</c:when>
                                         	<c:otherwise>
                                         		<td>
-		                                            <input type="date" name="memResignDate" value="${ m.memResignDate }">
+		                                            <input type="text" name="memResignDate" value="${ m.memResignDate }" readonly="readonly">
 		                                        </td>
                                         	</c:otherwise>
                                         </c:choose>
@@ -229,11 +229,11 @@
                             <div style="width: 1000px;" align="center">
                                 <button type="submit" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">수정하기</button>
                                 <c:choose>
-                                	<c:when test="${ empty m.memResignDate }">
-                                		<button type="button" onclick=resignTeacher(${m.memNo}) class="btn su_btn_border" id="submitBtn" data-toggle="modal" data-target="#noContent" style="width: 13%; height: 43px;">퇴사처리</button>
+                                	<c:when test="${ m.memResignStatus eq 'N'  }">
+                                		<button type="button" onclick=resignTeacher(${m.memNo}) class="btn su_btn_border" id="submitBtn" style="width: 13%; height: 43px;">퇴사처리</button>
                                 	</c:when>
                                 	<c:otherwise>
-                                		<button type="button" onclick=returnTeacher(${m.memNo}) class="btn su_btn_border" id="submitBtn" data-toggle="modal" data-target="#noContent" style="width: 13%; height: 43px;">복직처리</button>
+                                		<button type="button" onclick=returnTeacher(${m.memNo}) class="btn su_btn_border" id="submitBtn" style="width: 13%; height: 43px;">복직처리</button>
                                 	</c:otherwise>
                                 </c:choose>
                                 
@@ -299,7 +299,7 @@
                             			success:function(result){
                             				if(result=="success"){
                             					alert('퇴사처리성공')
-                            					location.href="list.te"
+                            					location.href="list.em"
                             				}else{
                             					alert('퇴사처리실패')
                             					console.log('실패')
@@ -319,7 +319,7 @@
                             			success:function(result){
                             				if(result=="success"){
                             					alert('복직처리성공')
-                            					location.href="list.te"
+                            					location.href="list.em"
                             				}else{
                             					alert('복직처리실패')
                             					console.log('실패')

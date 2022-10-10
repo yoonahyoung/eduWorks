@@ -111,6 +111,7 @@
             -moz-appearance: none;
             appearance: none;
         }
+        
 </style>
 </head>
 <body>
@@ -123,7 +124,7 @@
                    
                     <div class="container-fluid su_contentArea" style="padding-left: 10px;">
                         <div class="su_content_header" style="margin-left: 10px;">
-                            <h3 class="su_sub_menu_name">직원조회</h3>
+                            <h3 class="su_sub_menu_name" style="color: black;">직원조회</h3>
                             <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b;">
                             <br>
                             <form action="search.em">
@@ -157,6 +158,8 @@
 	                            </div>
                             </form>
                             
+                            <!-- 검색내용이 있을경우 검색했던조건이 그대로 보여지게끔 처리 -->
+                            <!-- 재직,퇴사 체크박스관련 -->
                				<c:if test="${ not empty check1 and not empty check2 }">
                					<c:if test="${ check1 eq false }">
                						<script>
@@ -176,13 +179,14 @@
                					</c:if>
                				</c:if>
                				
+               				<!-- 부서 select option관련 -->
                				<script>
-	                              	$(function(){
-	                        			$("option[value='${deptCode}']").attr("selected", true);
-	                        			
-	                        		})
-	                        		
-                            </script>
+	                        	$(function(){
+	                        		$("option[value='${deptCode}']").attr("selected", true);
+	                        	})
+	                        </script>
+                            
+                            <!-- 직급 select option관련 -->
                             <c:if test="${ not empty jobCode }">
                             	<script>
 	                            	$(function(){
@@ -195,9 +199,10 @@
                             <div style="clear: both; width: 650px; margin-left: 150px;" class="checks">
                                 <table width="100%" style="border-collapse: separate; border-spacing: 0 10px; ">
                                     <tr>
+                                    	<!-- 전체선택,해제 체크박스 -->
                                         <th>
-                                            <input type="checkbox" id="c1"> 
-                                            <label for="c1" class="tblabel"></label>
+                                            <input type="checkbox" id="allcheck"> 
+                                            <label for="allcheck" class="tblabel"></label>
                                         </th>
                                         <th>강사명</th>
                                         <th>부서</th>
@@ -215,13 +220,21 @@
                                     		<c:forEach var="m" items="${ list }">
 			                                    <tr>
 			                                        <th>
+			                                        	<!-- 개인용 체크박스 -->
 			                                            <input type="checkbox" id="c${ m.memNo }" class="userNo" value="${ m.memNo }"> 
 			                                            <label for="c${ m.memNo }" class="tblabel"></label>
 			                                        </th>
-			                                        <td align="center" onclick=empDe(${m.memNo})>${ m.memName }</td>
+			                                        <td align="center" onclick=empDe(${m.memNo})>${ m.memName }</td> <!-- 이름클릭시 그 직원 상세정보 페이지이동 -->
 			                                        <td align="center">${ m.deptCode }</td>
 			                                        <td align="center">${ m.jobCode }</td>
-			                                        <td align="center">${ m.memEnrollDate }</td>
+			                                        <td align="center">
+			                                        	<c:if test="${ m.memResignStatus eq 'Y'  }"> 
+			                                        		${ m.memResignDate }
+			                                        	</c:if>
+			                                        	<c:if test="${ m.memResignStatus eq 'N'  }">
+			                                        		${ m.memEnrollDate }
+			                                        	</c:if>
+			                                        </td>
 			                                        <td align="center">
 			                                        	<c:if test="${ m.memResignStatus eq 'Y'  }"> 
 			                                        		퇴사
@@ -244,26 +257,28 @@
                             </div>
                             
                             <script>
-                            	
+                            	// 특정직원클릭시 그 직원의 상세페이지로 이동
                             	function empDe(i){
                             		location.href="detail.em?no="+i
                             	}
                             	
-                            	$('#c1').on('click',function(){
-                            		if($('#c1').prop('checked')){
+                            	// 전체선택,해제 체크박스 기능
+                            	$('#allcheck').on('click',function(){
+                            		if($('#allcheck').prop('checked')){
                             			$('.userNo').prop('checked',true)
                             		}else{
                             			$('.userNo').prop('checked',false)
                             		}
                             	})
                             	
+                            	// 퇴사버튼 클릭시 퇴사처리 ajax
                             	$('#outbtn').on('click',function(){
                             		let userNo =[]
                             		let li = $('input[class="userNo"]:checked')
                             		$(li).each(function(){
                                 		userNo.push($(this).val())
                                 	})
-                                	console.log(userNo)
+                                	// 선택한강사가 없을경우
                                 	if(userNo.length==0){
                             			alert('선택강사없음')
                             		}
@@ -289,13 +304,10 @@
                             		
                             
                             	})
-                            	
-                            	
                             </script>
                             <br>
                             <c:choose>
                             	<c:when test="${ empty list }">
-                            	
                             	</c:when>
                             	<c:otherwise>
                             		<div style="margin-top: 10px; width: 1000px; height: 40px;" align="center" id="pagebar">
@@ -335,8 +347,7 @@
 							                                </span>
 					                                	</a>
 					                            	</c:if>
-							                    	
-							                  	</c:forEach>	
+							                    </c:forEach>	
 											</c:when>
 											<c:otherwise>
 												<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
@@ -354,9 +365,7 @@
 							                                </span>
 					                                	</a>
 													</c:if>
-													
-							                    	
-							                  	</c:forEach>	
+												</c:forEach>	
 											</c:otherwise>
 							         	</c:choose>
 							         	
@@ -378,9 +387,7 @@
 				                            	</c:otherwise>
 				                            </c:choose>
 			                            </c:if>
-			                            	
-			                                
-			                            </div>
+			                        </div>
                             	</c:otherwise>
                             </c:choose>
                             

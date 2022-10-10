@@ -190,7 +190,7 @@
                                 </div>
                                 
                                 <script>
-                                		
+                                		// 월별/주별 radio버튼 변경시 변경에맞는 차트조회
                                 		$('.choose1').on('change',function(){
                                 			if($('#ra1').prop('checked')){
                                 				chart($('#notag').text())
@@ -199,107 +199,99 @@
                                 			}
                                 		})
                                 		
+                                		// 월별조회차트 실행하는 ajax
                                 		function chart(userNo){
-                                			alert('월')
-                                				$('#div1').css('display','none');
-                                				$.ajax({
-                                        			url:'chart.at',
-                                        			method:'POST',
-                                        			data:{'userNo':userNo},
-                                        			success:function(result){
-                                        				
-                                        					console.log(result)
-                                        					$('#nametag').text(result.memName+'님의 근무기록')
-                                        					$('#notag').text(userNo)
-                                        					$('#ra1').attr('checked',true)
-                                        					chart1(result)
-                                        			},error:function(){
-                                        				alert('애러')
-                                        				console.log('애러')
-                                        			}
-                                        		})
-                                			
-                                			
+                                			$('#div1').css('display','none');
+                                			$.ajax({
+                                       			url:'chart.at',
+                                       			method:'POST',
+                                       			data:{'userNo':userNo},
+                                       			success:function(result){
+                                       				console.log(result)
+                                       				$('#nametag').text(result.memName+'님의 근무기록')
+                                       				$('#notag').text(userNo)
+                                       				$('#ra1').attr('checked',true)
+                                       				chart1(result) // 차트실행
+                                       			},error:function(){
+                                       				alert('애러')
+                                       				console.log('애러')
+                                       			}
+                                       		})
                                 		}
                                 		
+                                		// 주별조회차트 실행하는 ajax
                                 		function chart2(userNo){
-                                			    alert('주')
-                                				$('#div1').css('display','none');
-                                				$.ajax({
-                                        			url:'chart.at2',
-                                        			method:'POST',
-                                        			data:{'userNo':userNo},
-                                        			success:function(result){
-                                        				
-                                        					console.log(result)
-                                        					$('#nametag').text(result.memName+'님의 근무기록')
-                                        					$('#notag').text(userNo)
-                                        					$('#ra2').attr('checked',true)
-                                        					chart1(result)
-                                        			},error:function(){
-                                        				alert('애러')
-                                        				console.log('애러')
-                                        			}
-                                        		})
-                                			
-                                			
+                                			$('#div1').css('display','none');
+                               				$.ajax({
+                                       			url:'chart.at2',
+                                       			method:'POST',
+                                       			data:{'userNo':userNo},
+                                       			success:function(result){
+                                       				console.log(result)
+                                       				$('#nametag').text(result.memName+'님의 근무기록')
+                                       				$('#notag').text(userNo)
+                                     				$('#ra2').attr('checked',true)
+                                       				chart1(result) // 차트실행
+                                        		},error:function(){
+                                        			alert('애러')
+                                       				console.log('애러')
+                                       			}
+                                       		})
                                 		}
                                 		
-                                
+                                		// 차트실행함수
                                 		function chart1(result){
-							            var ctx = document.getElementById('chart').getContext('2d');
-							            var chart = new Chart(ctx, {
-							            
-							            type: 'bar',
-							        
-							            data: {
-							                labels: [result.xlist[11],result.xlist[10],result.xlist[9],result.xlist[8],result.xlist[7],result.xlist[6],result.xlist[5],result.xlist[4],result.xlist[3],result.xlist[2],result.xlist[1],result.xlist[0]],
-							                datasets: [{
-							                    label: '근무시간',
-							                    type : 'line',         // 'line' type
-							                    fill : false,         // 채우기 없음
-							                    lineTension : 0.2,  // 0이면 꺾은선 그래프, 숫자가 높을수록 둥글해짐
-							                    pointRadius : 0,    // 각 지점에 포인트 주지 않음
-							                    backgroundColor: 'red',
-							                   
-							                    borderColor: 'red',
-							                    data: [result.ylist[11],result.ylist[10],result.ylist[9],result.ylist[8],result.ylist[7],result.ylist[6],result.ylist[5],result.ylist[4],result.ylist[3],result.ylist[2],result.ylist[1],result.ylist[0]]
-							                },{
-							                    label: '출근율',
-							                    type : 'bar', // 'bar' type, 전체 타입과 같다면 생략가능
-							                    backgroundColor: 'rgb(255, 204, 102)',
-							                    borderColor: 'rgb(255, 204, 102)',
-							                    data: [result.ylist2[11],result.ylist2[10],result.ylist2[9],result.ylist2[8],result.ylist2[7],result.ylist2[6],result.ylist2[5],result.ylist2[4],result.ylist2[3],result.ylist2[2],result.ylist2[1],result.ylist2[0]]
-							                },]
-							            },
-							        
-							            // Configuration options
-							            options: {
-							                legend: {
-							                     labels: {
-							                          fontColor: 'black' // label color
-							                         }
-							                      },
-							                scales: {
-							                    // y축
-							                    yAxes: [{
-							                        stacked: true,
-							                        ticks: {
-							                            fontColor:'black' // y축 폰트 color
-							                        }
-							                     }],
-							                     // x축
-							                     xAxes: [{
-							                         stacked: true,
-							                        ticks: {
-							                            fontColor:'black' // x축 폰트 color
-							                        }
-							                     }]
-							                }
-							            }
-							        })
-							            $('#div2').css('display','')
-                                 }
+								            var ctx = document.getElementById('chart').getContext('2d');
+								            var chart = new Chart(ctx, {
+								            	type: 'bar',
+									        	data: {
+									                labels: [result.xlist[11],result.xlist[10],result.xlist[9],result.xlist[8],result.xlist[7],result.xlist[6],result.xlist[5],result.xlist[4],result.xlist[3],result.xlist[2],result.xlist[1],result.xlist[0]],
+									                datasets: [{
+									                    label: '근무시간',
+									                    type : 'line',         // 'line' type
+									                    fill : false,         // 채우기 없음
+									                    lineTension : 0.2,  // 0이면 꺾은선 그래프, 숫자가 높을수록 둥글해짐
+									                    pointRadius : 0,    // 각 지점에 포인트 주지 않음
+									                    backgroundColor: 'red',
+									                   
+									                    borderColor: 'red',
+									                    data: [result.ylist[11],result.ylist[10],result.ylist[9],result.ylist[8],result.ylist[7],result.ylist[6],result.ylist[5],result.ylist[4],result.ylist[3],result.ylist[2],result.ylist[1],result.ylist[0]]
+									                },{
+									                    label: '출근율',
+									                    type : 'bar', // 'bar' type, 전체 타입과 같다면 생략가능
+									                    backgroundColor: 'rgb(255, 204, 102)',
+									                    borderColor: 'rgb(255, 204, 102)',
+									                    data: [result.ylist2[11],result.ylist2[10],result.ylist2[9],result.ylist2[8],result.ylist2[7],result.ylist2[6],result.ylist2[5],result.ylist2[4],result.ylist2[3],result.ylist2[2],result.ylist2[1],result.ylist2[0]]
+									                },]
+									            },
+									        
+									            // Configuration options
+									            options: {
+									                legend: {
+									                     labels: {
+									                          fontColor: 'black' // label color
+									                         }
+									                      },
+									                scales: {
+									                    // y축
+									                    yAxes: [{
+									                        stacked: true,
+									                        ticks: {
+									                            fontColor:'black' // y축 폰트 color
+									                        }
+									                     }],
+									                     // x축
+									                     xAxes: [{
+									                         stacked: true,
+									                        ticks: {
+									                            fontColor:'black' // x축 폰트 color
+									                        }
+									                     }]
+									                }
+									            }
+								        	})
+							          		$('#div2').css('display','')
+                                 		}
                                 		
                                 		
 							    </script>
@@ -372,13 +364,14 @@
                                         </table>
                                         <br>
                                         <div align="center">
-                                            <button type="submit" onclick="return test11();" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent" style="width: 180px;">근태수정하기</button>
+                                            <button type="submit" onclick="return checking1();" class="btn su_btn_two su_btn_all" id="submitBtn" style="width: 180px;">근태수정하기</button>
                                         </div>
                                         
                                     </form>
                                 </div>
                                 
                                 <script>
+                                	// X버튼클릭시 세부수정창 닫히면서 값비우기
 	                                $(".close").on('click',function(){
 	            		        		$('#div1').css('display','none');
 	            		        		$('#div2').css('display','none');
@@ -393,6 +386,7 @@
 	            		        		$('#ra1').prop('checked',true)
 	            		        	})
 	            		        	
+	            		        	// 출퇴근시간 변경시 자동으로 근무시간계산해서 출력
 	            		        	$("#attIn2").on('change',function(){
 	            		        		let t = (new Date('2022-01-01T'+$("#attOut2").val())-new Date('2022-01-01T'+$("#attIn2").val()))
 	            		        		let ti = t/1000/60/60
@@ -409,6 +403,8 @@
 	            		        			$('#attWorktime').val(ti2)
 	            		        		}
 	            		        	})
+	            		        	
+	            		        	// 무단결근이나 종일연차일경우 근무시간값과 출퇴근시간값 비우기
 	            		        	$("#radio7").on('change',function(){
 	            		        		if($("#radio7").prop('checked')){
 	            		        			$("#attIn2").val('')
@@ -423,7 +419,9 @@
 	            		        			$("#attWorktime").val('')
 	            		        		}
 	            		        	})
-	            		        	function test11(){
+	            		        	
+	            		        	// 수정하기 클릭시 무단결근이나 종일연차가 아닐시 반듯이 출퇴근시간값을 기입하게 조건
+	            		        	function checking1(){
 	                                	if(!( ($('#radio4').prop('checked')) || ($('#radio7').prop('checked'))  ) && ($('#attIn2').val()=='' || $('#attOut2').val()=='') ){
 	                                		alert('출퇴근시간선택을 해주세요')
 	                                		return false
@@ -435,8 +433,7 @@
                                 
                                 <form action="search.at">
                                 <table width="100%" class="tb3">
-                                    
-                                    <tr>
+                                     <tr>
                                         <th>조회부서</th>
                                         <td>
                                             <select name="deptCode" id="select1" name="select1">
@@ -536,19 +533,16 @@
 	                                	    console.log(new Date(kr.setDate(1)).toISOString())
 	                                        console.log(currentdate)
 	                                        console.log(lastdate) */
+	                                        // 시작날짜 만들기
 	                                        var date = new Date()
 	                                        date.setHours(date.getHours() + 9)
 	                                        currentdate = date.toISOString().replace('T', ' ').substring(0, 10)
+	                                        
+	                                        // 끝날짜 만들기
 	                                        var date2 = new Date()
-	                                	    console.log(date2)
 	                                	    date2.setDate(1)
 	                                	    date2.setHours(date2.getHours() + 9)
-	                                        
-	                                        console.log(date2)
 	                                        lastdate = date2.toISOString().replace('T', ' ').substring(0, 10)
-	                                        console.log(lastdate)
-	                                        console.log(currentdate)
-	                                        console.log(lastdate)
 	                                        $('#startDate').val(lastdate)
 	                                        $('#endDate').val(currentdate)
 	                                	})
@@ -605,49 +599,48 @@
                                     		</tr>
                                     	</c:when>
                                     	<c:otherwise>
-                                    	<tbody>
-                                    		<c:forEach var="list" items="${ list }">
-                                    			<tr>
-                                    				<td class="sel0" style="display:none;">${ list.attNo }</td>
-                                    				<td class="sel1" style="display:none;">${ list.memNo }</td>
-			                                        <td class="sel2" align="center">${ list.attDate }</td>
-			                                        <td class="sel3" align="center" onclick="chartpage(${ list.memNo })">${ list.memName }</td>
-			                                        <td  align="center">
-			                                        	<c:if test="${ list.attStatus eq 'D' }">정상출근</c:if>
-			                                        	<c:if test="${ list.attStatus eq 'E' }">무단조퇴</c:if>
-			                                        	<c:if test="${ list.attStatus eq 'L' }">무단지각</c:if>
-			                                        	<c:if test="${ list.attStatus eq 'H' }">연차(정상)</c:if>
-			                                        	<c:if test="${ list.attStatus eq 'F' }">
-				                                        	<c:choose>
-				                                        		<c:when test="${list.attDate lt list.memEnrollDate}">
-				                                        			입사전
-				                                        		</c:when>
-				                                        		<c:otherwise>무단결근</c:otherwise>
-				                                        	</c:choose>
-			                                        	</c:if>
-			                                        </td>
-			                                        <td class="sel4"" align="center" style="display:none;">${ list.attStatus }</td>
-			                                        <td align="center"><c:out value="${ list.attIn }" default="--"/></td>
-			                                        <td align="center"><c:out value="${ list.attOut }" default="--"/></td>
-			                                        <td class="sel5" align="center" style="display:none;">${ list.attIn }</td>
-			                                        <td class="sel6" align="center" style="display:none;">${ list.attOut }</td>
-			                                        <td class="sel7" align="center" style="display:none;">${ list.attHstatus }</td>
-			                                        <td class="sel8" align="center" style="display:none;">${ list.attDate }</td>
-			                                        <td class="sel9" align="center" style="display:none;">${ list.memEnrollDate }</td>
-			                                    </tr>
-                                    		</c:forEach>
-                                    	</tbody>
+	                                    	<tbody>
+	                                    		<c:forEach var="list" items="${ list }">
+	                                    			<tr>
+	                                    				<td class="sel0" style="display:none;">${ list.attNo }</td>
+	                                    				<td class="sel1" style="display:none;">${ list.memNo }</td>
+				                                        <td class="sel2" align="center">${ list.attDate }</td>
+				                                        <td class="sel3" align="center" onclick="chart(${ list.memNo })">${ list.memName }</td>
+				                                        <td  align="center">
+				                                        	<c:if test="${ list.attStatus eq 'D' }">정상출근</c:if>
+				                                        	<c:if test="${ list.attStatus eq 'E' }">무단조퇴</c:if>
+				                                        	<c:if test="${ list.attStatus eq 'L' }">무단지각</c:if>
+				                                        	<c:if test="${ list.attStatus eq 'H' }">연차(정상)</c:if>
+				                                        	<c:if test="${ list.attStatus eq 'F' }">
+					                                        	<c:choose>
+					                                        		<c:when test="${list.attDate lt list.memEnrollDate}">
+					                                        			입사전
+					                                        		</c:when>
+					                                        		<c:otherwise>무단결근</c:otherwise>
+					                                        	</c:choose>
+				                                        	</c:if>
+				                                        </td>
+				                                        <!-- 필요한정보들 테이블 행에 숨겨서 기록 -->
+				                                        <td class="sel4"" align="center" style="display:none;">${ list.attStatus }</td>
+				                                        <td align="center"><c:out value="${ list.attIn }" default="--"/></td>
+				                                        <td align="center"><c:out value="${ list.attOut }" default="--"/></td>
+				                                        <td class="sel5" align="center" style="display:none;">${ list.attIn }</td>
+				                                        <td class="sel6" align="center" style="display:none;">${ list.attOut }</td>
+				                                        <td class="sel7" align="center" style="display:none;">${ list.attHstatus }</td>
+				                                        <td class="sel8" align="center" style="display:none;">${ list.attDate }</td>
+				                                        <td class="sel9" align="center" style="display:none;">${ list.memEnrollDate }</td>
+				                                    </tr>
+	                                    		</c:forEach>
+	                                    	</tbody>
                                     	</c:otherwise>
-                                    	
                                     </c:choose>
-                                    
-                                </table>
+                                 </table>
+                            
                             <script>
-                            	
                             	$(function(){
                             		$("#table1>tbody>tr").click(function(){
-                            			
-                            			$('#div1').css('display','none');
+                            			// 클릭시 기존에 열려있던 세부수정가능창을 닫고 값비우기
+                            			$('#div1').css('display','none'); 
 	            		        		$('#memName2').val('')
 	            		        		$('#attDate2').val('')
 	            		        		$('#testCheck').val('')
@@ -656,6 +649,7 @@
 	            		        		$('#attWorktime').val('')
 	            		        		$('.rr1').prop('checked',false)
                             			
+	            		        		// 클릭한 항목에 해당하는값으로 채우기
                             			$('#attNo2').val($(this).children('.sel0').text())
                             			$('#memNo2').val($(this).children('.sel1').text())
 										$('#memName2').val($(this).children('.sel3').text())
@@ -695,17 +689,16 @@
                             			$('#attIn2').val($(this).children('.sel5').text())
                             			$('#attOut2').val($(this).children('.sel6').text())
                             			
+                            			// 근무시간 계산하기
                             			let t = (new Date('2022-01-01T'+$("#attOut2").val())-new Date('2022-01-01T'+$("#attIn2").val()))
 	            		        		let ti = t/1000/60/60
-	            		        		let ti2 = ti.toFixed(1)
+	            		        		let ti2 = ti.toFixed(1) // 근무시간 소숫점한자리까지만 표기
 	            		        		if(ti2!='NaN'){
 	            		        			$('#attWorktime').val(ti2)
 	            		        		}
-                            			
+                            			// 세부수정가능창 열기
                             			$('#div1').css('display','')
                             		})
-                            		
-                            	
                             	})
                             	
                             	function chartpage(a){

@@ -77,7 +77,6 @@
     	                            }
     	                            
     	                            dateClock();
-    	                            setInterval(dateClock, 1000);
                             	})
                             	</script>
                                 

@@ -176,6 +176,7 @@
                             <h3 class="su_sub_menu_name">수료여부조회</h3>
                             <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b;">
                             <br>
+                            <!-- 검색기능 -->
                             <form action="search.oj">
 	                            <div style="width: 1000px; height: 60px;" class="checks" align="right" >
 	                                <div style="float: right;  height: 70px;">
@@ -197,6 +198,7 @@
 	                            </div>
                             </form>
                             
+                            <!-- 검색조건 사용했을시 실행 -->
                             <c:if test="${ not empty searchck}">
                					<c:if test="${ check1 eq false }">
                						<script>
@@ -302,8 +304,8 @@
                             </script>
                             
                             <div style="width: 650px; margin-left: 140px;">
-                                <button type="button" onclick="complete()" style="width: 120px; height: 40px; font-size: 14.5px;" type="button" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">수료완료처리</button>
-                                <button type="button" onclick="cancel()" style="width: 170px; height: 40px; font-size: 14.5px;" type="button" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">취소 및 취소메일 보내기</button>
+                                <button type="button" onclick="complete()" style="width: 120px; height: 40px; font-size: 14.5px;" type="button" class="btn su_btn_two su_btn_all" id="submitBtn">수료완료처리</button>
+                                <button type="button" onclick="cancel()" style="width: 170px; height: 40px; font-size: 14.5px;" type="button" class="btn su_btn_two su_btn_all" id="submitBtn">취소 및 취소메일 보내기</button>
                             </div>
                             
                             <script>
@@ -318,22 +320,23 @@
                             	}
                             	
                             	function cancel(){
-                            		let userNo =[]
-                            		let userEamil =[]
+                            		let userNo =[] // user번호담음 
+                            		let userEamil =[] // userEmail담음
+                            		let result = 1
                             		let li = $('input[class="userNo"]:checked')
                             		if($(li).length==0){
-                            			alert('지정된 직원이 없습니다.')
+                            			result = -1
                             		}
-                            		let result = 1
                             		$(li).each(function(){
+                            			// 체크된 직원이 수료예정자인지 아닌지 판단
                             			if($(this).parent().siblings('.status').children('.status2').val()!='W'){
                             				result = 0
                             			}
                                 		userNo.push($(this).val())
                                 		userEamil.push($(this).siblings('.userNo2').val())
                                 	})
-                                	console.log(userNo)
-                                	console.log(userEamil)
+                                	
+                                	// 수료예정자들만 잘 선택했을경우
                                 	if(result>0){
                                 		$.ajax({
                                 			url:'cancel.oj',
@@ -355,7 +358,9 @@
                                 				console.log('애러')
                                 			}
                                 		})
-                                	}else{
+                                	}else if(result==-1){ // 지정된직원이 없을경우
+                                		alert('지정된 직원이 없습니다.')
+                                	}else{ // 수료예정자들외 다른직원이 포함되어있을경우
                                 		alert('수료예정이 아닌 직원이 포함되어 있습니다.')
                                 	}
                             	}
@@ -363,17 +368,19 @@
                             	function complete(){
                             		let userNo =[]
                             		let li = $('input[class="userNo"]:checked')
-                            		if($(li).length==0){
-                            			alert('지정된 직원이 없습니다.')
-                            		}
                             		let result = 1
+                            		if($(li).length==0){
+                            			result = -1
+                            		}
                             		$(li).each(function(){
+                            			// 체크된 직원이 수료예정자인지 아닌지 판단
                             			if($(this).parent().siblings('.status').children('.status2').val()!='W'){
                             				result = 0
                             			}
                                 		userNo.push($(this).val())
                                 	})
-                                	console.log(userNo)
+                                	
+                                	// 수료예정자들만 잘 선택했을경우
                                 	if(result>0){
                                 		$.ajax({
                                 			url:'complete.oj',
@@ -392,7 +399,9 @@
                                 				console.log('애러')
                                 			}
                                 		})
-                                	}else{
+                                	}else if(result==-1){ // 지정된직원이 없을경우
+                                		alert('지정된 직원이 없습니다.')
+                                	}else{ // 수료예정자들외 다른직원이 포함되어있을경우
                                 		alert('수료예정이 아닌 직원이 포함되어 있습니다.')
                                 	}
                             	}
@@ -505,8 +514,9 @@
 	                                        <td>&nbsp;<input type="text" style="width: 70%;" name="sendTitle" value="OJT일정 안내입니다."></td>
 	                                    </tr>
 	                                    <tr>
-	                                        
-	                                        <td colspan="2">&nbsp;<textarea name="sendContent" id="contents" cols="60" rows="10" style="resize: none;">OJT일정을 다음과같이 알려드립니다. 반드시 참석부탁드립니다.</textarea></td>
+	                                        <td colspan="2">
+	                                        	&nbsp; <textarea name="sendContent" id="contents" cols="60" rows="10" style="resize: none;">OJT일정을 다음과같이 알려드립니다. 반드시 참석부탁드립니다.</textarea>
+	                                        </td>
 	                                    </tr>
 	                                    <tr>
 	                                        <td >&nbsp;OJT 요일</td>
@@ -516,12 +526,14 @@
 	                            </div>
 	                            <br>
 	                            <div style="width: 1000px;" align="center">
-	                                <button type="submit" onclick="return test();" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent" style="width: 220px;">메일보내기 및 일정등록</button>
+	                                <button type="submit" onclick="return test();" class="btn su_btn_two su_btn_all" id="submitBtn" style="width: 220px;">
+	                                	메일보내기 및 일정등록
+	                                </button>
 	                            </div>
                             </form>
                             <script>
+                            	// OJT요일 변경시마다 메일에 내용 자동기입
                             	$('#ojtdate').on('change',function(){
-                            		console.log($(this).val())
                             		let date1 = $(this).val()
                             		let str = date1.slice(0,4)+'년 '+date1.slice(5,7)+'월 '+date1.slice(8,10)+'일'
                             		console.log(str)
@@ -529,8 +541,7 @@
                             		$("#contents").val('OJT일정을 다음과같이 알려드립니다. 반드시 참석부탁드립니다.\r일시 : '+str)
                             	})
                             	
-                            	
-                            	
+                            	// 일정등록 버튼클릭시 유효한 날짜인지 and 유효한 직원이 선택되어있는지 확인
                             	function test(){
                             		let userNo =[]
                             		let userEmail =[]
@@ -541,15 +552,14 @@
                             		}
                             		let result = 1
                             		$(li).each(function(){
-                            			console.log($(this).parent().siblings('.status').children('.status2').val())
-                            			if($(this).parent().siblings('.status').children('.status2').val()=='Y'){
+                            			// 
+                            			if($(this).parent().siblings('.status').children('.status2').val()!='N'){
                             				result = 0
                             			}
                                 		userNo.push($(this).val())
                                 		userEmail.push($(this).siblings('.userNo2').val())
                                 	})
-                                	console.log(userNo)
-                                	console.log(userEmail)
+                                	
                                 	if(result>0){
                                 		if(new Date($('#ojtdate').val())<new Date()){
                                 			alert('오늘날짜보다 뒤로입력해주세요')
@@ -560,7 +570,7 @@
                                 			return true;
                                 		}
                                 	}else{
-                                		alert('이미 수료한 직원이 포함되어 있습니다.')
+                                		alert('이미 수료한 직원또는 예정직원이 포함되어 있습니다.')
                                 		return false;
                                 	}
                             	}

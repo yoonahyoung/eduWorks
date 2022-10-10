@@ -23,7 +23,7 @@
                             <h3 class="su_sub_menu_name">개인정보관리</h3>
                             <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b;">
                             <br>
-                            
+                            <!-- 이미지선택버튼 숨겨두기 -->
                             <form style="display: none;">
                             	<input type="file" id="profileImgFile" >
                             	<button type="reset" id=fileReset></button>
@@ -32,6 +32,7 @@
                             <form action="updateMyInfo.me">
                             <div  style="margin-left: 10px; padding: 10px;  width: 600px; height: 250px;">
                                 <div style="width: 40%; height: 100%; float: left; padding-top: 25px;"  align="center">
+                                	<!-- 이미지 클릭스 숨겨둔 선택버튼 실행되게하기 & DB에 프로필정보없으면 기본프로필뜨게하기 -->
                                     <c:choose>
 	                            		<c:when test="${ empty m.memProfile }">
 	                            			<img id="Profile" name="Profile" src="resources/profile_images/defaultProfile.png" width="80%" height="80%" onclick="$('#profileImgFile').click();">
@@ -41,12 +42,14 @@
 	                            		</c:otherwise>
                             		</c:choose>
                             		<br>
+                            		<!-- ajax실행후 이미지변경된 주소가 숨겨진 text에 기입 -->
                             		<input type="text" id="memProfile" name="memProfile" value="${ m.memProfile }" style="display: none;" >    
                             		<button type="button" class="btn su_btn_border" style="height: 30px; padding-left: 12; padding-right: 12; padding-top: 0; padding-bottom: 0;" onclick=defaultProfile(${m.memNo})>기본사진</button>   
                                 </div>
                                 
                                 <script>
 					            	$(function(){
+					            		// 프로필이미지 변경되었을때 ajax
 					            		$("#profileImgFile").change(function(){
 					            			
 					            			let formData = new FormData();
@@ -79,13 +82,10 @@
 					            		})
 					            	})
 					            	
-					            	$(function(){
-					            		console.log("주소"+"${memProfile}")
-					            	})
-					            	
+					            	// 기본이미지로변경
 					            	function defaultProfile(memNo){
-					            		$('#Profile').attr("src","resources/profile_images/defaultProfile.png")
-	            						$('#memProfile').attr("value","")
+					            		$('#Profile').attr("src","resources/profile_images/defaultProfile.png") // 기본이미지주소
+	            						$('#memProfile').attr("value","") 
 	            						$("#fileReset").click()
 					            	}
 				            	
@@ -145,19 +145,19 @@
                                 <table style="width: 100%; height: 100%;" align="center" border="1px solid ">
                                     <tr>
                                         <th style="background-color: #e6e9ec;">아이디</th>
-                                        <td>&nbsp;<input type="text" name="memId" style="width: 70%;" value="${ m.memId }"></td>
+                                        <td>&nbsp;<input type="text" name="memId" style="width: 70%;" value="${ m.memId }" required="required"></td>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">전화번호</th>
-                                        <td>&nbsp;<input type="text" name="memPhone" style="width: 70%;" value="${ m.memPhone }"></td>
+                                        <td>&nbsp;<input type="text" name="memPhone" style="width: 70%;" value="${ m.memPhone }" required="required"></td>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">이메일</th>
-                                        <td>&nbsp;<input type="text" name="memEmail" style="width: 70%;" value="${ m.memEmail }" readonly></td>
+                                        <td>&nbsp;<input type="text" name="memEmail" style="width: 70%;" value="${ m.memEmail }" readonly ></td>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">생년월일</th>
-                                        <td>&nbsp;<input type="text" name="memBirth" style="width: 35%;" value="${ m.memBirth }"></td>
+                                        <td>&nbsp;<input type="text" name="memBirth" style="width: 35%;" value="${ m.memBirth }" required="required"></td>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">우편번호</th>
@@ -169,7 +169,7 @@
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">상세주소</th>
-                                        <td>&nbsp;<input type="text" style="width: 60%;" id="sample6_detailAddress" name="memPostalDetail" value="${ m.memPostalDetail }" >&nbsp;<input type="text" style="width: 35%;" id="sample6_extraAddress" readonly name="memPostalRefer" value="${ m.memPostalRefer }"></td>
+                                        <td>&nbsp;<input type="text" required="required" style="width: 60%;" id="sample6_detailAddress" name="memPostalDetail" value="${ m.memPostalDetail }" >&nbsp;<input type="text" style="width: 35%;" id="sample6_extraAddress" readonly name="memPostalRefer" value="${ m.memPostalRefer }"></td>
                                     </tr>
                                     
                                 </table>
@@ -238,15 +238,15 @@
                                 <table style="width: 100%; height: 100%;" align="center" border="1px solid ">
                                     <tr>
                                         <th style="background-color: #e6e9ec;">현재비밀번호</th>
-                                        <td>&nbsp;<input type="password" name="a" id="aa" style="width: 90%;"></td>
+                                        <td>&nbsp;<input type="password" name="a" id="pwd1" style="width: 90%;"></td>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">변경할 비밀번호</th>
-                                        <td>&nbsp;<input type="password" name="pwd" id="bb" style="width: 90%;"></td>
+                                        <td>&nbsp;<input type="password" name="pwd" id="pwd2" style="width: 90%;"></td>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">변경할 비밀번호확인</th>
-                                        <td>&nbsp;<input type="password" name="c" id="cc" style="width: 90%;"></td>
+                                        <td>&nbsp;<input type="password" name="c" id="pwd3" style="width: 90%;"></td>
                                     </tr>
                                 </table>
                             </div>
@@ -257,10 +257,11 @@
                             </form>
 							
                             <script>
+                            	// 현재 비밀번호가 일치하고 변경할 두비밀번호가 서로 일치하는지 확인
                             	function test1(){
-                            		let a = $('#aa').val()
-                            		let b = $('#bb').val()
-                            		let c = $('#cc').val()
+                            		let a = $('#pwd1').val()
+                            		let b = $('#pwd2').val()
+                            		let c = $('#pwd3').val()
                             		let pwd = '${loginUser.memPwd}'
                             		if(a!=pwd){
                             			alert('현재비밀번호가 다릅니다.')

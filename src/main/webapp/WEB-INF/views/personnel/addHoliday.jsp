@@ -38,12 +38,12 @@
                             <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b;">
                             <br>
                             <div>
-                                <h4 style="font-weight: bold;">연차일괄지급 대상자 : 1년차미만인직원(매월 만근시 연차1일지급)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <h4 style="font-weight: bold;">연차일괄지급 대상자 : 1년차미만인직원(매월연차1일지급)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1년차이상직원(1년갱신마다 연차15일지급)</h4>
                             </div>
                             <br>
                             <div style="width: 1000px; padding-left: 250px;" >
-                                <button type="button" onclick='checksho()' class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent" style="width: 150px;">일괄지급</button>
+                                <button type="button" onclick='checksho()' class="btn su_btn_two su_btn_all" id="submitBtn" style="width: 150px;">일괄지급</button>
                             </div>
                             
                             <script type="text/javascript">
@@ -62,7 +62,7 @@
                             						
                             						if(count==-1){
                             							if(confirm('1년차이상 : '+result.namelist15[0]+'외 '+count2+'명\n지급하시겠습니까?')){
-                            								sendAutoho(result)
+                            								sendAutoho3(result)
                             							}
                             						}else if(count2==-1){
                             							if(confirm('1년차미만 : '+result.namelist1[0]+'외 '+count+'명\n지급하시겠습니까?')){
@@ -207,6 +207,7 @@
                                 </div>
 
                                 <script>
+                                 	// 전체체크관련 스크립트
 					                $('#ch1').on('click',function(){
 					                	if($('#ch1').prop('checked')){
 					                		$('.userNo').prop('checked',true)
@@ -227,30 +228,32 @@
 				               
                                 
                                 <form id="forms" action="" method="post">
-                                <div class="sendbtn">
-                                    <br>
-                                    <div style="padding-left:20px ; text-align: left;">
-                                        <select name="dateCount" id="select1">
-                                            <option value="all">연차일수</option>
-                                            <option style="padding-left:30px ;" value="0.5">0.5일</option>
-                                            <option style="padding-left:30px ;" value="1">1일</option>
-                                            <option style="padding-left:30px ;" value="2">2일</option>
-                                            <option style="padding-left:30px ;" value="3">3일</option>
-                                            <option style="padding-left:30px ;" value="15">15일</option>
-                                        </select>  
-                                        <input type="text" id="comment" name="comment" style="height: 37px" placeholder="지급/회수 사유입력">
-                                    </div>
-                                    <br>  
-                                    <button type="button" id="add1" class="button1">연차지금</button> 
-                                    &nbsp;&nbsp;&nbsp;
-                                    <button type="button" id="delete1" class="button2" >연차회수</button>
-                                    <br><input id="memNo" name="memNos" type="hidden" style="width: 800px" value="">
-                                </div>
+	                                <div class="sendbtn">
+	                                    <br>
+	                                    <div style="padding-left:20px ; text-align: left;">
+	                                        <select name="dateCount" id="select1">
+	                                            <option value="all">연차일수</option>
+	                                            <option style="padding-left:30px ;" value="0.5">0.5일</option>
+	                                            <option style="padding-left:30px ;" value="1">1일</option>
+	                                            <option style="padding-left:30px ;" value="2">2일</option>
+	                                            <option style="padding-left:30px ;" value="3">3일</option>
+	                                            <option style="padding-left:30px ;" value="15">15일</option>
+	                                        </select>  
+	                                        <input type="text" id="comment" name="comment" style="height: 37px" placeholder="지급/회수 사유입력">
+	                                    </div>
+	                                    <br>  
+	                                    <button type="button" id="add1" class="button1">연차지금</button> 
+	                                    &nbsp;&nbsp;&nbsp;
+	                                    <button type="button" id="delete1" class="button2" >연차회수</button>
+	                                    <br><input id="memNo" name="memNos" type="hidden" style="width: 800px" value="">
+	                                </div>
                                 </form>
                                 
                                 <script>
+                                // 개별지급할회원 저장배열
                                 let rNo=[];
 			               		
+                                // 오른쪽버튼클릭시
 			               		$('.rbtn').on('click',function(){
 			               			$('#ch1').prop('checked',false)
 			               			$('#ch2').prop('checked',false)
@@ -271,13 +274,13 @@
 			               					}
 			               				}
 									})
-									console.log(rNo)
 									$('.userNo').prop('checked',false)
 			               			$('.selectNo').prop('checked',false)
 			               			
 			               			$('#memNo').val(rNo)
 			               		})
 			               		
+			               		// 왼쪽버튼클릭시
 			               		$('.lbtn').on('click',function(){
 			               			$('#ch2').prop('checked',false)
 			               			$('#ch1').prop('checked',false)
@@ -290,23 +293,20 @@
 										$(this).prop('checked',false)
 									})
 									
-									
 									for(let i=0;i<arr.length;i++){
 										for(let j=0;j<rNo.length;j++){
 											if(arr[i]==rNo[j]){
-												
 												$('#a'+rNo[j]).parent().parent().css('display','')
 												console.log('제거수:'+rNo.splice(j,1))
-												
 											}
 										}
 									}
-									console.log(rNo)
 									$('.userNo').prop('checked',false)
 			               			$('.selectNo').prop('checked',false)
 			               			$('#memNo').val(rNo)
 			               		})
 			               		
+			               		// 검색버튼 클릭시
 			               		$('#searchbtn').on('click',function(){
 			               			$.ajax({
                             			url:'searchSelectMem.ho',
@@ -333,6 +333,7 @@
                             		})
 			               		})
 			               		
+			               		// 지급버튼클릭시
 			               		$('#add1').click(function(){
                             		if(rNo.length == 0){
                             			alert('지급회원을 선택해주세요')
@@ -350,6 +351,7 @@
                             		}
                             	})
                             	
+                            	// 회수버튼클릭시
                             	$('#delete1').click(function(){
                             		if(rNo.length == 0){
                             			alert('회수할회원을 선택해주세요')

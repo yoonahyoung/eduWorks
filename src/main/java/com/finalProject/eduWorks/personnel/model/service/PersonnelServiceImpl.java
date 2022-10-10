@@ -318,7 +318,7 @@ public class PersonnelServiceImpl implements PersonnelService {
 
 	@Override
 	public ArrayList<Adjust> adjustMe(PageInfo pi,String memNo) {
-		return pDao.adjustMe(sqlSession, memNo);
+		return pDao.adjustMe(sqlSession,pi, memNo);
 	}
 
 	@Override

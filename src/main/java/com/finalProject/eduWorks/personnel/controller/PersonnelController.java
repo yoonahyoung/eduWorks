@@ -149,10 +149,8 @@ public class PersonnelController {
 	public String ajaxPreviewProfile(MultipartFile uploadFile, HttpSession session) {
 	
 		if(uploadFile != null) { 
-			
+			// 미리 파일명 바꿔서 저장하는 템플릿 만들어둠
 			String saveFilePath = FileUpload.saveFile(uploadFile, session, "resources/profile_images/");
-			System.out.println(saveFilePath);
-			
 			return saveFilePath;
 		}else {
 			return "none";
@@ -221,10 +219,14 @@ public class PersonnelController {
 	
 	@RequestMapping("list.em")
 	public String selectEmployeeList(@RequestParam(value="p",defaultValue = "1")int currentPage, Model model) {
-		
+		// 페이징처리
 		int listCount = pService.employeeListCount();
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 5, 10);
+		
+		// 페이지에맞는 사원리스트 조회
 		ArrayList<Member> list = pService.employeeList(pi);
+		
+		// 부서,직급리스트 조회
 		ArrayList<Department> dlist = pService.selectDept();
 		ArrayList<Job> jlist = pService.selectJob();
 		dlist.remove(0);
@@ -237,7 +239,9 @@ public class PersonnelController {
 	}
 	
 	@RequestMapping("search.em")
-	public String selectEmployeeList(boolean check1,boolean check2, String keyword, String deptCode, String jobCode, @RequestParam(value="p",defaultValue = "1")int currentPage, Model model) {
+	public String selectEmployeeList(boolean check1,boolean check2, String keyword, String deptCode, String jobCode, 
+									 @RequestParam(value="p",defaultValue = "1")int currentPage, Model model) {
+		// 검색조건을 담아서 xml문에서 조건으로 사용
 		HashMap m = new HashMap();
 		m.put("check1", check1);
 		m.put("check2", check2);
@@ -245,10 +249,14 @@ public class PersonnelController {
 		m.put("deptCode", deptCode);
 		m.put("jobCode", jobCode);
 		
+		// 페이징처리
 		int listCount = pService.searchEmployeeListCount(m);
 		PageInfo pi = Pagination.getInfo(listCount, currentPage , 5, 10);
+
+		// 페이지에맞는 리스트 조회
 		ArrayList<Member> list = pService.searchEmployeeList(pi, m);
 		
+		// 부서,직급리스트 조회
 		ArrayList<Department> dlist = pService.selectDept();
 		ArrayList<Job> jlist = pService.selectJob();
 		model.addAttribute("list", list);
@@ -266,7 +274,10 @@ public class PersonnelController {
 	
 	@RequestMapping("detail.em")
 	public String detailEmployeeInfo(String no,Model model) {
+		// 특정사원의 개인정보를 조회
 		Member m = pService.detailTeacherInfo(no);
+		
+		// 부서,직급목록 조회
 		ArrayList<Department> dlist = pService.selectDept();
 		ArrayList<Job> jlist = pService.selectJob();
 		
@@ -336,12 +347,18 @@ public class PersonnelController {
 	
 	// 메일기능추가!!
 	@RequestMapping("sendOjt.oj")
-	public String sendOjt(String[] memNos,String[] memEmail,String sendTitle,String sendContent,String sendDate,HttpSession session) {
+	public String sendOjt(String[] memNos,String[] memEmail,String sendTitle,
+			              String sendContent,String sendDate,HttpSession session) {
 		HashMap m = new HashMap();
 		m.put("sendDate", sendDate);
+		
+		// ojt테이블에 예정일 등록
+		
 		int result = pService.updateOjtDate(memNos, m);
 		
+		// 일정등록 성공시 메일보내기(메일테이블에등록)
 		if(result>0) {
+			// 보내는사람의 정보와 받는사람 이메일 hashMap에 담기
 			Member loginUser = (Member)session.getAttribute("loginUser");
 			String sendUserNo = loginUser.getMemNo();
 			String sendUserEmail = loginUser.getMemEmail();
@@ -351,12 +368,17 @@ public class PersonnelController {
 			m2.put("sendContent", sendContent);
 			m2.put("sendTitle", sendTitle);
 			m2.put("sendUserNo", sendUserNo);
+			
 			ArrayList<MailStatus> list = new ArrayList<>();
+			
+			// MailStatus객체에 보내는사람의 정보담기
 			MailStatus ms = new MailStatus();
 			ms.setSendMail(sendUserEmail);
 			ms.setReceiveMail(memEmailStr);
 			ms.setMailFolder(1);
 			list.add(ms);
+			
+			// MailStatus객체에 받는사람의 정보담기
 			for(String e : memEmail) {
 				MailStatus ms1 = new MailStatus();
 				ms1.setSendMail(sendUserEmail);
@@ -364,6 +386,9 @@ public class PersonnelController {
 				ms1.setMailFolder(2);
 				list.add(ms1);
 			}
+			
+			// 메일테이블에 insert하기
+			
 			int result2 = pService.sendOjtMail(m2, list);
 			if(result2>0) {
 				session.setAttribute("alertMsg", "등록성공");
@@ -391,8 +416,12 @@ public class PersonnelController {
 	@RequestMapping("cancel.oj")
 	public String cancelOjt(@RequestParam(value="memNo[]")ArrayList<String> list,@RequestParam(value="memEmail[]")ArrayList<String> list2,
 							String title,String content,HttpSession session) {
+		// OJT테이블에 수료예정자->미수료자로 업데이트
 		int result = pService.cancelOjt(list);
+		
+		// 성공시 취소메일보내기(등록메일 보내기와 과정동일)
 		if(result>0) {
+			// 보내는사람의 정보와 받는사람 이메일 hashMap에 담기
 			Member loginUser = (Member)session.getAttribute("loginUser");
 			String sendUserNo = loginUser.getMemNo();
 			String sendUserEmail = loginUser.getMemEmail();
@@ -402,12 +431,17 @@ public class PersonnelController {
 			m2.put("sendContent", content);
 			m2.put("sendTitle", title);
 			m2.put("sendUserNo", sendUserNo);
+			
 			ArrayList<MailStatus> alist = new ArrayList<>();
+			
+			// MailStatus객체에 보내는사람의 정보담기
 			MailStatus ms = new MailStatus();
 			ms.setSendMail(sendUserEmail);
 			ms.setReceiveMail(memEmailStr);
 			ms.setMailFolder(1);
 			alist.add(ms);
+			
+			// MailStatus객체에 받는사람의 정보담기
 			for(String e : list2) {
 				MailStatus ms1 = new MailStatus();
 				ms1.setSendMail(sendUserEmail);
@@ -415,6 +449,8 @@ public class PersonnelController {
 				ms1.setMailFolder(2);
 				alist.add(ms1);
 			}
+			
+			// 메일테이블에 insert하기
 			int result2 = pService.sendOjtMail(m2, alist);
 			if(result2>0) {
 				return "success";
@@ -428,6 +464,7 @@ public class PersonnelController {
 	
 	@RequestMapping("select.at")
 	public String selectAttendance(Model model) {
+		// 부서와직급리스트 조회
 		ArrayList<Department> dlist = pService.selectDept();
 		ArrayList<Job> jlist = pService.selectJob();
 		model.addAttribute("jlist", jlist);
@@ -437,19 +474,20 @@ public class PersonnelController {
 	
 	@RequestMapping("search.at")
 	public String searchAttendance(SearchAt s,@RequestParam(value="p",defaultValue = "1")int currentPage,Model model) {
-		
+		// 기간에 맞는 공휴일 및 주말 불러오기
 		ArrayList<Restdate> restList = pService.searchRestdate(s);
-		System.out.println(restList);
 		if(!restList.isEmpty()) {
-			s.setList(restList);
+			s.setList(restList); // SearchAt => xml문에서쓸 여러조건저장
 		}
 		
+		// 페이징처리
 		int listCount = pService.atListCount(s);
-		
 		PageInfo pi = Pagination.getInfo(listCount, currentPage, 5, 10);
 		
+		// 페이지와 조건에맞는 근태내역 조회
 		ArrayList<Attendance> list = pService.searchAtList(pi, s);
 		
+		// 조회되는 근태내역수(정상,무단지각/조퇴,무단결근)를 찾기위해 조건 재설정
 		SearchAt count = new SearchAt();
 		count.setDeptCode(s.getDeptCode());
 		count.setJobCode(s.getJobCode());
@@ -458,16 +496,19 @@ public class PersonnelController {
 		count.setEndDate(s.getEndDate());
 		count.setList(s.getList());
 		
+		// 조회내역중 정상일 수 카운트
 		count.setCheck1(true);
 		count.setCheck2(false);
 		count.setCheck3(false);
 		int normal = pService.atListCount(count);
 		
+		// 조회내역중 무단지각/조퇴일 수 카운트
 		count.setCheck1(false);
 		count.setCheck2(true);
 		count.setCheck3(false);
 		int leave = pService.atListCount(count);
 		
+		// 조회내역중 무단결근일 수 카운트
 		count.setCheck1(false);
 		count.setCheck2(false);
 		count.setCheck3(true);
@@ -489,8 +530,7 @@ public class PersonnelController {
 	
 	@RequestMapping("changeData.At")
 	public String changeAtData(Attendance at, String testCheck, HttpSession session) {
-		System.out.println(at);
-		System.out.println(testCheck);
+		// 근무상태에 따른 DB에저장할 연차관련코드조정
 		if(at.getAttStatus().equals("D") || at.getAttStatus().equals("E") || at.getAttStatus().equals("L") || at.getAttStatus().equals("F")) {
 			at.setAttHstatus("N");
 		}else if(at.getAttStatus().equals("H0")) {
@@ -504,9 +544,12 @@ public class PersonnelController {
 			at.setAttStatus("H");
 			at.setAttHstatus("H2");
 		}
-		System.out.println(at);
+		
 		int result;
+		
+		// 기존근태상태가 무단결근이었을경우
 		if(testCheck.equals("무단결근")) {
+			// 변경근태상태가 무단결근이 아닐경우 insert
 			if(!at.getAttStatus().equals("F")) {
 				// insertAtData
 				result = pService.insertAtDate(at);
@@ -514,11 +557,14 @@ public class PersonnelController {
 				// 무단결근에서 바꿀 근태상태를 다시정해주세요
 				result = 100;
 			}
-		}else {
+		}else { // 기존근태상태가 무단결근이 아니었을경우
+			
+			// 변경근태상태가 무단결근일경우 delete
 			if(at.getAttStatus().equals("F")) {
 				// deleteAtData
 				result = pService.deleteAtData(at);
-			}else {
+			}else { // 변경근태상태가 무단결근이 아닐경우 update
+				
 				// updateAtData
 				result = pService.updateAtData(at);
 			}
@@ -661,6 +707,7 @@ public class PersonnelController {
 	public String updateMyInfo(Member m,HttpSession session) {
 		int result = pService.updateMyInfo(m);
 		if(result>0) {
+			// 업데이트 성공시 로그인한 사원의정보를 session에 다시저장
 			session.setAttribute("alertIcon", "success");
 			session.setAttribute("alertTitle", "정보수정성공");
 			session.setAttribute("alertMsg", "내정보 수정에 성공했습니다.");
@@ -974,7 +1021,7 @@ public class PersonnelController {
 	
 	@RequestMapping("modifyAdj.me")
 	public String adjModify(MultipartFile upfile,SearchAt s,HttpSession session) {
-			
+		// 파일수정이 있엇을경우	
 		if(!upfile.getOriginalFilename().equals("")) {
 				String filePath = FileUpload.saveFile(upfile, session, "resources/uploadFiles/personnelFiles/");
 				s.setKeyword(filePath);
@@ -1156,7 +1203,7 @@ public class PersonnelController {
 	public String adjustMe(Model model,HttpSession session,@RequestParam(value="p",defaultValue = "1")int currentPage) {
 		String memNo = ((Member)session.getAttribute("loginUser")).getMemNo();
 		int listCount = pService.adjustMeCount(memNo);
-		PageInfo pi = Pagination.getInfo(listCount, currentPage, 3, 10);
+		PageInfo pi = Pagination.getInfo(listCount, currentPage, 3, 10); // 페이징처리를위한 페이지정보처리 메소드 미리정의
 		ArrayList<Adjust> list = pService.adjustMe(pi, memNo);
 		model.addAttribute("list", list);
 		model.addAttribute("pi", pi);
@@ -1168,42 +1215,48 @@ public class PersonnelController {
 			                @RequestParam(value="p2",defaultValue = "1")int currentPage2,String selectY1,String selectY2) {
 		//select 목록 자동화
 		int start = 2021; //시작연도설정
-		String now = LocalDate.now()+"";
-		String year = now.substring(0, 4);
-		ArrayList<String> selectlist = new ArrayList<>();
+		String now = LocalDate.now()+""; 
+		String year = now.substring(0, 4); //현재연도
+		ArrayList<String> selectlist = new ArrayList<>(); //select option값 리스트
 		int r = Integer.parseInt(year)-start;
 		for(int i=0;i<=r;i++) {
-			int year1 = start+i;
-			String option = year1+"-01-01 ~ "+year1+"-12-31";
+			int yearList = start+i;
+			String option = yearList+"-01-01 ~ "+yearList+"-12-31";
 			selectlist.add(option);
 		}
 		model.addAttribute("selectlist",selectlist);
 		
 		String memNo = ((Member)session.getAttribute("loginUser")).getMemNo();
+		// 연차승인내역 관련 범위설정
 		if(selectY1==null) {
 			selectY1=year;
 		}
+		// 연차지급내역 관련 범위설정
 		if(selectY2==null) {
 			selectY2=year;
 		}
 		
-		HashMap<String,String> m1 = new HashMap<String, String>();
-		m1.put("memNo", memNo); m1.put("year", selectY1);
+		// 연차승인내역관련 전자결제 테이블에서 조회해오기
+		HashMap<String,String> m1 = new HashMap<String, String>(); // xml문에서 사용할 조건담기
+		m1.put("memNo", memNo); 
+		m1.put("year", selectY1);
 		int listCount1 = pService.hoApproveCount(m1);
 		PageInfo pi1 = Pagination.getInfo(listCount1, currentPage1 , 3, 5);
 		ArrayList<HolidayForm> list1 = pService.hoApproveList(pi1,m1);
 		model.addAttribute("list1", list1);
 		model.addAttribute("pi1", pi1);
-		System.out.println(list1);
 		
-		HashMap<String,String> m2 = new HashMap<>();
-		m2.put("memNo", memNo); m2.put("year", selectY2);
+		// 연차지급내역관련 조회해오기
+		HashMap<String,String> m2 = new HashMap<>();// xml문에서 사용할 조건담기
+		m2.put("memNo", memNo); 
+		m2.put("year", selectY2);
 		int listCount2= pService.hoCount(m2);
 		PageInfo pi2 = Pagination.getInfo(listCount2, currentPage2 , 3, 5);
 		ArrayList<Holiday> list2 = pService.hoList(pi2,m2);
 		model.addAttribute("list2", list2);
 		model.addAttribute("pi2", pi2);
 		
+		// 올해 연차사용수치 가져오기
 		String totalHo = pService.totalHo(memNo);
 		String useHo = pService.useHo(memNo);
 		if(totalHo==null) {
@@ -1225,7 +1278,7 @@ public class PersonnelController {
 	@RequestMapping("selectManage.ho")
 	public String selectManageHo(Model model,HttpSession session,@RequestParam(value="p1",defaultValue = "1")int currentPage1,
             					 @RequestParam(value="p2",defaultValue = "1")int currentPage2, SearchAt s) {
-		
+		// 첫화면일경우 날짜세팅
 		if(s.getStartDate()==null) {
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			LocalDateTime now = LocalDateTime.now();
@@ -1239,17 +1292,18 @@ public class PersonnelController {
 		if(s.getDeptCode()==null) {
 			s.setDeptCode("all");
 		}
-		
 		if(s.getJobCode()==null) {
 			s.setJobCode("all");
 		}
 		
+		// 연차승인내역관련 리스트조회
 		int listCount1 = pService.holidayMgCount(s);
 		PageInfo pi1 = Pagination.getInfo(listCount1, currentPage1, 3, 5);
 		ArrayList<HolidayForm> list1 = pService.holidayMgList(pi1,s);
 		model.addAttribute("list1", list1);
 		model.addAttribute("pi1",pi1);
 		
+		// 연차지급내역관련 리스트조회
 		int listCount2 = pService.holidayAddCount(s);
 		PageInfo pi2 = Pagination.getInfo(listCount2, currentPage2, 3, 5);
 		ArrayList<Holiday> list2 = pService.holidayAddList(pi2,s);
@@ -1257,6 +1311,7 @@ public class PersonnelController {
 		model.addAttribute("pi2",pi2);
 		model.addAttribute("condition", s);
 		
+		// 부서/직급 리스트조회
 		ArrayList<Department> dlist = pService.selectDept();
 		ArrayList<Job> jlist = pService.selectJob();
 		model.addAttribute("jlist", jlist);
@@ -1266,11 +1321,13 @@ public class PersonnelController {
 	
 	@RequestMapping("addCal.ho")
 	public String addHoCalendar(SearchAt s,HttpSession session) {
+		// 날짜 시작값과 끝값 사이날짜 구하기
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate startDate = LocalDate.parse(s.getStartDate(), formatter);
 		LocalDate endDate = LocalDate.parse(s.getEndDate(), formatter);
 		List enrollDate = startDate.datesUntil(endDate).collect(Collectors.toList());
 		enrollDate.add(endDate);
+		
 		int result = pService.addHoCalendar(s,enrollDate);
 		if(result>0) {
 			session.setAttribute("alertIcon", "success");
@@ -1321,10 +1378,11 @@ public class PersonnelController {
 	
 	@ResponseBody
 	@RequestMapping(value="chart.at",produces="application/json; charset=utf-8")
+	// 월별차트 만들기
 	public String chart(String userNo) {
 		LocalDateTime now = LocalDateTime.now();
-		ArrayList<String> xlist = new ArrayList<>();
-		ArrayList<String> xlist2 = new ArrayList<>();
+		ArrayList<String> xlist = new ArrayList<>(); // 표에출력될 x축 및 xml조건용
+		ArrayList<String> xlist2 = new ArrayList<>(); // xml조건용2
 		int y = now.getYear();
 		int m = now.getMonthValue()+1;
 		for(int i=0;i<12;i++) {
@@ -1344,16 +1402,14 @@ public class PersonnelController {
 			xlist.add(date);
 			xlist2.add(date2);
 		}
+		// 근무시간 구하기
 		ArrayList<String> ylist = pService.countWorktime(xlist,userNo);
-		System.out.println(ylist);
 		
-		// ylist2 구하기
-		SearchAt s = new SearchAt();
-		
+		// 출근율 구하기
+		SearchAt s = new SearchAt(); // xml에서 사용할 조건들을 담은객체
 		s.setUserNo(userNo);
-		
 		ArrayList<String> ylist2 = pService.atListCount3(s, xlist, xlist2);
-		System.out.println(ylist2);
+		
 		HashMap hs = new HashMap();
 		Member mb = pService.detailTeacherInfo(userNo);
 		hs.put("memName", mb.getMemName());
@@ -1365,13 +1421,14 @@ public class PersonnelController {
 	
 	@ResponseBody
 	@RequestMapping(value="chart.at2",produces="application/json; charset=utf-8")
+	// 주별차트만들기
 	public String chart2(String userNo) {
-		System.out.println(userNo);
 		LocalDate currentDate = LocalDate.now();
 	    int weekOfYear = currentDate.get(WeekFields.ISO.weekOfYear());
 	    LocalDate dayStart = LocalDate.now()
 	            .with(IsoFields.WEEK_OF_WEEK_BASED_YEAR, weekOfYear)
 	            .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+	    System.out.println(dayStart);
 	    ArrayList<String> xlist = new ArrayList<>();
 		ArrayList<String> xlist2 = new ArrayList<>();
 	    for(int i=0;i<12;i++) {
@@ -1379,14 +1436,14 @@ public class PersonnelController {
 	    	String end = dayStart.plusDays(4).minusDays(7*i)+"";
 	    	xlist.add(start); xlist2.add(end);
 	    }
+	    // 근무시간 구하기
 	    ArrayList<String> ylist = pService.countWeekWorktime(xlist,xlist2,userNo);
-	    System.out.println(ylist);
 	    
-	    //ylist2구하기
+	    // 출근율 구하기
 	    SearchAt s = new SearchAt();
 		s.setUserNo(userNo);
 		ArrayList<String> ylist2 = pService.atListWeekCount(s, xlist, xlist2);
-		System.out.println(ylist2);
+		
 		HashMap hs = new HashMap();
 		Member mb = pService.detailTeacherInfo(userNo);
 		hs.put("memName", mb.getMemName());
@@ -1408,8 +1465,6 @@ public class PersonnelController {
 	@ResponseBody
 	@RequestMapping(value="sendAuto1.ho")
 	public String sendAuto1(@RequestParam(value="list1[]")String[] list1,@RequestParam(value="list15[]")String[] list15,HttpSession session) {
-		System.out.println(list1);
-		System.out.println(list15);
 		int result1 = pService.sendAutoHo1(list1);
 		int result2 = pService.sendAutoHo15(list15);
 		if(result1*result2>0) {
@@ -1427,7 +1482,6 @@ public class PersonnelController {
 	@ResponseBody
 	@RequestMapping(value="sendAuto2.ho")
 	public String sendAuto2(@RequestParam(value="list1[]")String[] list1,HttpSession session) {
-		System.out.println(list1);
 		int result1 = pService.sendAutoHo1(list1);
 		if(result1>0) {
 			session.setAttribute("alertIcon", "success");
@@ -1444,7 +1498,6 @@ public class PersonnelController {
 	@ResponseBody
 	@RequestMapping(value="sendAuto3.ho")
 	public String sendAuto3(@RequestParam(value="list15[]")String[] list15,HttpSession session) {
-		System.out.println(list15);
 		int result2 = pService.sendAutoHo15(list15);
 		if(result2>0) {
 			session.setAttribute("alertIcon", "success");
@@ -1464,13 +1517,14 @@ public class PersonnelController {
 		mb.setMemPwd(pwd);
 		int result = pService.changePwd(mb);
 		if(result>0) {
+			// 변경성공시 session에 로그인정보 다시 업데이트
 			session.setAttribute("alertIcon", "success");
 			session.setAttribute("alertTitle", "변경성공");
 			session.setAttribute("alertMsg", "비밀번호 변경에 성공했습니다.");
 			
 			Member loginUser = mService.loginMember((Member)session.getAttribute("loginUser"));
 			
-			if(loginUser != null /*&& bcryptPasswordEncoder.matches(m.getMemId(), loginUser.getMemPwd())*/) {
+			if(loginUser != null) {
 				
 				switch(loginUser.getJobCode()){
 				case "J0": loginUser.setJobName("강사"); break;
@@ -1486,7 +1540,6 @@ public class PersonnelController {
 				case "D2" : session.setAttribute("deptName", "행정팀"); break;
 				case "D3" : session.setAttribute("deptName", "홍보팀"); break;
 				case "DN" : session.setAttribute("deptName", "대표"); break;
-				// 대표일 경우 게시판 고를 수 있도록 처리할 예정
 				}
 				session.setAttribute("loginUser", loginUser);;
 			}else {

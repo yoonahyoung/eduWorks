@@ -68,6 +68,7 @@
                             </div>
                             
                             <script>
+                            	// 프로필 이미지 변경시 ajax
 				            	$(function(){
 				            		$("#profileImgFile").change(function(){
 				            			
@@ -100,14 +101,12 @@
 				            			})	
 				            		})
 				            	})
-				            	
-				            	$(function(){
-				            		console.log("주소"+"${memProfile}")
-				            	})
-				            	
+                            	
+				            	// 프로필 기본이미지로변경
 				            	function defaultProfile(memNo){
-				            		$('#Profile').attr("src","resources/profile_images/defaultProfile.png")
-            						$('#memProfile').attr("value","")
+				            		$('#Profile').attr("src","resources/profile_images/defaultProfile.png") // 기본이미지주소
+            						// 등록버튼 클릭시 보내질 프로필사진경로값 비우기
+				            		$('#memProfile').attr("value","")
             						$("#fileReset").click()
 				            	}
 				            	
