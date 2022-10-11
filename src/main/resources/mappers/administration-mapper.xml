@@ -100,7 +100,7 @@
 		     , class_title
 		     , class_start_date
 		     , class_end_date
-		     , to_char(class_fee, 'FM999,999,999') as "class_fee"
+		     , class_fee
 		  from tb_reg_class r
 		  join tb_class c using(class_no)
 		 where student_no = #{studentNo}

@@ -158,7 +158,7 @@
 		                                <td>${ c.classTitle }</td>
 		                                <td>${ c.classStartDate }</td>
 		                                <td>${ c.classEndDate }</td>
-		                                <td><span class="classFee${ status.index }" style="border:0px">${ c.classFee }</span> 원</td>
+		                                <td><span class="classFee${ status.index }" style="border:0px">${ c.classFee }</span></td>
 		                            </tr>
 		                		</c:forEach>
 	                            <tr>
