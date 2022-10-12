@@ -28,11 +28,9 @@
 						data-target="#mail-preview">
 					<i class="fas fa-desktop"></i>&nbsp;&nbsp;미리보기
 				</button>
-				<!-- 
-				<button type="button" class="sub-btn" id="propertyMail">
+				<button type="button" class="sub-btn" id="propertyMail" onclick="saveMail();">
 					<i class="far fa-save"></i>&nbsp;&nbsp;임시저장
 				</button>
-				 -->
 				<button type="button" class="sub-btn" onclick="history.go(-1);">
 					<i class="fas fa-undo"></i>&nbsp;&nbsp;취소
 				</button>
@@ -65,30 +63,37 @@
 				}
 				
 				// 메일 '임시저장'시 실행하는 함수
-				/*
-				$(function(){
-					$("#propertyMail").click(function(){
-						$.ajax({
-							url :"insertTemporaryMail.ma",
-							data : {
-								memNo : ${loginUser.memNo},
-								receiverMem : $("#receive").val(),
-								ccMem : $("#cc").val(),
-								mailType : $("#mailType").val(),
-								mailTitle : $("#title").val(),
-								upfile : $("#upfile").val(),
-								mailContent : $("#summernote").val()
-							},
-							success : function(result){
-								console.log("임시저장 성공");
-							},
-							error : function(){
-								console.log("임시저장 실패");
+				function saveMail(){
+					
+					let formData = new FormData(document.getElementById("mailForm"));
+					
+					// 임시저장 값 전달
+					formData.append("mailTemporary", "N");
+
+					$.ajax({
+						url : "save.ma",
+						processData : false,
+						contentType : false,
+						type : "POST",
+						data : formData,
+						success : function(result){
+
+							if(result == 'success'){
+								location.href="sendMailList.ma";
+								alert("메일을 임시보관함에 저장하였습니다.");
+								
+							} else {
+								alert("메일을 임시보관함에 저장하는데 실패했습니다.");
 							}
-						})
+
+							console.log("임시저장 ajax 성공");
+						},
+						error : function(){
+							console.log("임시저장 ajax 실패");
+						}
 					})
-				})
-				*/
+
+				}
 				
 			</script>
 
@@ -100,8 +105,9 @@
 
 					<tr>
 						<th>받는사람</th>
-						<td style="width: 75%;"><input type="text" name="receiverMem"
-							class="input-mail" id="receive"></td>
+						<td style="width: 75%;">
+							<input type="text" name="receiverMem" class="input-mail" id="receive">
+						</td>
 						<td><button type="button" class="address-btn"
 								onclick="publicAdd();" data-toggle="modal"
 								data-target="#findAdd">주소록에서 찾기
@@ -256,9 +262,8 @@
 						
 						// 목록 추가
 						htmlData += '<div id="file' + i + '" class="filebox">';
-						htmlData += '   <span class="name">'+ filesArr[i].name + '</span>';
-						htmlData += '   <a class="delete" onclick="deleteFile('+ i + 
-									');"><i class="far fa-minus-square"></i></a>';
+						htmlData += '<span class="name">'+ filesArr[i].name + '</span>';
+						htmlData += '<a class="delete" onclick="deleteFile('+ i + ');"><i class="far fa-minus-square"></i></a>';
 						htmlData += '</div>';
 					}
 					

@@ -391,8 +391,8 @@ public class MailDao {
 	 * @param ms 메일 번호
 	 * @return : 메일 상세조회시 첨부된 파일 목록
 	 */
-	public ArrayList<Attachment> selectAttachment(SqlSessionTemplate sqlSession, MailStatus ms){
-		return (ArrayList)sqlSession.selectList("mailMapper.selectAttachment", ms);
+	public ArrayList<Attachment> selectAttachment(SqlSessionTemplate sqlSession, String mailNo){
+		return (ArrayList)sqlSession.selectList("mailMapper.selectAttachment", mailNo);
 	}
 	
 	/**
@@ -507,6 +507,23 @@ public class MailDao {
 	 */
 	public Mail replyMailForm(SqlSessionTemplate sqlSession, String mailNo) {
 		return sqlSession.selectOne("mailMapper.replyMailForm", mailNo);
+	}
+	
+	/**
+	 * 20. 임시저장된 메일에서 첨부파일 수정시 삭제처리
+	 * @param mailNo : 수정하고자하는 메일 번호
+	 * @return : 첨부파일 삭제 성공 여부가 담긴 int형 변수(성공 : 1 | 실패 : 0)
+	 */
+	public int deleteAttachment(SqlSessionTemplate sqlSession, String mailNo) {
+		return sqlSession.delete("mailMapper.deleteAttachment", mailNo);
+	}
+	
+	public int updateSaveMail(SqlSessionTemplate sqlSession, Mail m) {
+		return sqlSession.update("mailMapper.updateSaveMail", m);
+	}
+	
+	public int updateSaveMailAttachment(SqlSessionTemplate sqlSession, Attachment at) {
+		return sqlSession.insert("mailMapper.updateSaveMailAttachment", at);
 	}
 
 }

@@ -18,8 +18,9 @@ public interface MailService {
 	int insertMailStatus(ArrayList<MailStatus> list); // 메일 상태 보내기
 	int insertAttachment(ArrayList<Attachment> atList); // 첨부파일 보내기
 	
-	// 2. 임시저장
-	// int insertTemporaryMail(Mail m); // 임시저장 보내기
+	// 2. 임시저장한 메일 수정
+	int updateSaveMail(Mail m, ArrayList<Attachment> atList);
+	// int insertSaveMail(Mail m); // 임시저장 보내기
 	
 	// 3. 보낸 메일 조회
 	int sendListCount(Mail m); // 보낸 메일 개수 조회
@@ -79,7 +80,7 @@ public interface MailService {
 	// 14. 메일 상세 조회
 	Mail selectMailDetail(MailStatus ms);
 	int updateReadMail(MailStatus ms);
-	ArrayList<Attachment> selectAttachment(MailStatus ms);
+	ArrayList<Attachment> selectAttachment(String mailNo);
 	
 	// 15_1. 메일 태그 추가
  	int insertTag(Tag t);
@@ -111,4 +112,8 @@ public interface MailService {
 
  	// 18. 메일 답장 폼으로 이동
  	Mail replyMailForm(String mailNo);
+ 	
+ 	// 19. 임시저장 첨부파일 삭제
+ 	int deleteAttachment(String mailNo);
+
 }

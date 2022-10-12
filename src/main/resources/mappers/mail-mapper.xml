@@ -1112,7 +1112,47 @@
 		from tb_mail
 		where mail_no = #{mailNo}
 	</select>
-
 	
+	<!-- 첨부파일 삭제 -->
+	<delete id="deleteAttachment">
+		delete
+			from attachment
+		  where at_ref_bno = #{mailNo}
+		    and at_category  2;
+	</delete>
+
+	<!-- 임시저장 메일 수정 -->
+	<update id="updateSaveMail">
+		update
+			tb_mail
+		set receiver_mem = #{receiverMem}
+		  , cc_mem = #{ccMem}
+		  , mail_title = #{mailTitle}
+		  , mail_content = #{mailContent}
+		  , mail_type = #{mailType}
+		 where mail_no = #{mailNo}
+		   and mail_temporary = 'n
+	</update>
+	
+	<!-- 임시저장 첨부파일 수정 -->
+	<insert id="updateSaveAttachment">
+		  		insert
+  		  into tb_attachment
+  		  (
+  		  	at_no
+  		  , at_ref_bno
+  		  , at_category
+  		  , at_origin_name
+  		  , at_change_name
+  		  )
+  		  values
+  		  (
+  		  	seq_atno.nextval
+  		  , #{atRefBno}
+  		  , 2
+  		  , #{atOriginName}
+  		  , #{atChangeName}
+  		  )
+	</insert>
 
 </mapper>

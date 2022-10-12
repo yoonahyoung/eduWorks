@@ -371,8 +371,8 @@ public class MailServiceImpl implements MailService {
 	 * @return : 메일 상세조회시 첨부된 파일 목록
 	 */
 	@Override
-	public ArrayList<Attachment> selectAttachment(MailStatus ms) {
-		return mDao.selectAttachment(sqlSession, ms);
+	public ArrayList<Attachment> selectAttachment(String mailNo) {
+		return mDao.selectAttachment(sqlSession, mailNo);
 	}
 	
 	/**
@@ -491,12 +491,25 @@ public class MailServiceImpl implements MailService {
 		return mDao.replyMailForm(sqlSession, mailNo);
 	}
 
+	@Override
+	public int deleteAttachment(String mailNo) {
+		return mDao.deleteAttachment(sqlSession, mailNo);
+	}
 
+	@Override
+	public int updateSaveMail(Mail m, ArrayList<Attachment> atList) {
+		int result1 = mDao.updateSaveMail(sqlSession, m);
+		
+		int result2 = 1;
+		if(!atList.isEmpty()) {
+			for(Attachment at : atList) {
+				result2 = mDao.updateSaveMailAttachment(sqlSession, at);
+			}
+		}
+		
+		return result1 * result2;
+	}
 	
-
-
-
-
-
+	
 
 }
