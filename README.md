@@ -129,7 +129,13 @@
 <details><summary><h3>3. 서주원</h3></summary>
 
 ### 📌 
-### 📌 
+### 📌 직원 연차조회
+![사용자연차확인](https://user-images.githubusercontent.com/103404713/195556598-b56380d1-d0e8-4b18-9aa4-f331245523ab.gif) <br>
+
+- 구현기능 설명
+    - 21년기준으로 연단위 select option 자동생성
+    - 연차승인내역 및 지급내역 조회
+    
 ### 📌 
 ### 📌 
 ### 📌 
