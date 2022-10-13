@@ -119,7 +119,7 @@
                                     <tr>
                                         <th style="background-color: #e6e9ec;">이름</th>
                                         <td>
-                                            <input type="text" name="memName" style="width: 40%;">
+                                            <input type="text" name="memName" style="width: 40%;" required="required">
                                         </td>
                                     </tr>
                                     <tr>
@@ -146,7 +146,7 @@
                                     <tr>
                                         <th style="background-color: #e6e9ec;">입사일</th>
                                         <td>
-                                            <input type="date" name="memEnrollDate">  
+                                            <input type="date" name="memEnrollDate" required="required">  
                                         </td>
                                     </tr>
                                     
@@ -156,45 +156,63 @@
                                 <table>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">아이디</th>
-                                        <td>&nbsp;<input type="text" name="memId" style="width: 70%;"></td>
+                                        <td>&nbsp;<input type="text" name="memId" style="width: 70%;" required="required"></td>
                                         <td style="display: none;">&nbsp;<input type="text" name="memPwd" value="1111" ></td>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">전화번호</th>
-                                        <td>&nbsp;<input type="text" name="memPhone"  style="width: 70%;"></td>
+                                        <td>&nbsp;<input type="text" id="memPhone" name="memPhone"  style="width: 70%;" required="required"></td>
                                         <td style="display: none;">&nbsp;<input type="text" name="memBusinessnum"   value="1111"></td>
                                     </tr>
                                     <tr>
-                                        <th style="background-color: #e6e9ec;">이메일</th>
-                                        <td>&nbsp;<input type="text" name="memEmail"  style="width: 70%;"></td>
+                                        <th style="background-color: #e6e9ec;" >이메일</th>
+                                        <td>&nbsp;<input type="text" id="memEmail" name="memEmail"  style="width: 70%;" required="required"></td>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">생년월일</th>
-                                        <td>&nbsp;<input type="date" name="memBirth" ></td>
+                                        <td>&nbsp;<input type="date" name="memBirth" required="required"></td>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">우편번호</th>
-                                        <td>&nbsp;<input type="text" id="sample6_postcode" name="memPostalCode" style="width: 40%;">&nbsp;&nbsp;<button type="button" class="btn su_btn_border" style="height: 30px; padding-left: 12; padding-right: 12; padding-top: 0; padding-bottom: 0;" onclick=address();>우편번호검색</button></td>
+                                        <td>&nbsp;<input type="text" id="sample6_postcode" name="memPostalCode" style="width: 40%;" required="required">&nbsp;&nbsp;<button type="button" class="btn su_btn_border" style="height: 30px; padding-left: 12; padding-right: 12; padding-top: 0; padding-bottom: 0;" onclick=address();>우편번호검색</button></td>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">주소</th>
                                         <td>
-                                        	&nbsp;<input type="text" id="sample6_address" name="memPostalAd"  style="width: 70%;">
+                                        	&nbsp;<input type="text" id="sample6_address" name="memPostalAd"  style="width: 70%;" required="required">
                                         </td>
                                     </tr>
                                     <tr>
                                         <th style="background-color: #e6e9ec;">상세주소</th>
                                         <td> 
-                                        	&nbsp;<input type="text" id="sample6_detailAddress" name="memPostalDetail"style="width: 50%;">&nbsp;<input type="text" id="sample6_extraAddress" name="memPostalRefer" value="${ m.memPostalRefer }" style="width: 40%;">
+                                        	&nbsp;<input type="text" id="sample6_detailAddress" name="memPostalDetail"style="width: 50%;" required="required">&nbsp;<input type="text" required="required" id="sample6_extraAddress" name="memPostalRefer" value="${ m.memPostalRefer }" style="width: 40%;">
                                         </td>
                                     </tr>
                                 </table>
                             </div>
                             <br>
                             <div style="width: 1000px;" align="center">
-                                <button type="submit" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">등록하기</button>
+                                <button type="submit" class="btn su_btn_two su_btn_all" id="submitBtn" onclick="return test01();">등록하기</button>
                             </div>
                             </form>
+                            
+                            <script>
+                            	function test01(){
+                            		const phone = document.getElementById('memPhone').value;
+                            		const email = document.getElementById('memEmail').value;
+                            		
+                            		// 전화번호 형식과 이메일 형식을 구분할 정규식
+                            		let regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+                            		let regEmail = /^[0-9a-zA-z]([0-9a-zA-z])*@[0-9a-zA-z]([0-9a-zA-z])*\.[a-zA-z]{2,3}$/;
+                            		
+                            		if(regPhone.test(phone) && regEmail.test(email)){
+                            			return true;
+                            		}else{
+                            			alert('유효한 전화번호와 이메일을 입력해주세요.')
+                            			return false;
+                            		}
+                            	}
+                            </script>
                             
                             <script>
 	                            function address(){

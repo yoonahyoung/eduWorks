@@ -1359,12 +1359,9 @@ public class PersonnelController {
 	@ResponseBody
 	@RequestMapping(value="count.ho")
 	public String countHoli(@RequestParam(value="userNo[]")ArrayList<String> list) {
-		System.out.println(list);
-		SearchAt s = new SearchAt();
-//		s.setUserNo(list.get(0));
-//		s.setStartDate(list.get(1).substring(0, 4)+"-01-01");
-//		s.setEndDate(list.get(1).substring(0, 4)+"-12-31");
+		// 총연지급일수 찾기
 		String totalho = pService.totalHo(list.get(0));
+		// 사용한 연차일수 찾기
 		String useho = pService.useHo(list.get(0));
 		if(totalho==null) {
 			totalho="0";
@@ -1372,6 +1369,7 @@ public class PersonnelController {
 		if(useho==null) {
 			useho="0";
 		}
+		// 남은연차일수 계산
 		Double re = Double.parseDouble(totalho)-Double.parseDouble(useho);
 		return totalho+","+useho+","+re;
 	}

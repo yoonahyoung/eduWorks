@@ -605,7 +605,7 @@
 	                                    				<td class="sel0" style="display:none;">${ list.attNo }</td>
 	                                    				<td class="sel1" style="display:none;">${ list.memNo }</td>
 				                                        <td class="sel2" align="center">${ list.attDate }</td>
-				                                        <td class="sel3" align="center" onclick="chart(${ list.memNo })">${ list.memName }</td>
+				                                        <td class="sel3" align="center" style="cursor: pointer;" onclick="chart(${ list.memNo })">${ list.memName }</td>
 				                                        <td  align="center">
 				                                        	<c:if test="${ list.attStatus eq 'D' }">정상출근</c:if>
 				                                        	<c:if test="${ list.attStatus eq 'E' }">무단조퇴</c:if>

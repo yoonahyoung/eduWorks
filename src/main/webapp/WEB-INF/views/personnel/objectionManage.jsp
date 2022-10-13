@@ -214,7 +214,7 @@
                                     	<c:otherwise>
                                     	<tbody>
                                     		<c:forEach var="list" items="${ list }">
-                                    			<tr>
+                                    			<tr style="cursor: pointer;">
 			                                        <td align="center">${ list.adjDate }</td>
 			                                        <td class="memName" align="center">${ list.memName }</td>
 			                                        <td align="center">${ list.deptName }</td>
@@ -420,7 +420,7 @@
                                 </tr>
                                 <tr>
                                     <th style="background-color: #e6e9ec; width:200px ;">&nbsp;첨부파일</th>
-                                    <td id="listfile" style="display: none">&nbsp;<a id="adjFile" href="" >첨부파일</a></td>
+                                    <td id="listfile" style="display: none">&nbsp;<a id="adjFile" href="" download>첨부파일</a></td>
                                 </tr>
                                 <tr id="" style="display: none;">
                                     <td><input type="hidden" id="updateUrl"></td>

@@ -1728,6 +1728,65 @@
 			 )
 	</select>
 	
+	<select id="AtListCount4" resultType="_double">
+	SELECT COUNT(*)
+	FROM(
+		SELECT *
+		FROM(
+			SELECT 
+			       A.ATT_NO 
+			     , C.MEM_NO
+			     , M.MEM_NAME
+			     , NVL(ATT_DATE, TO_CHAR(WORKING_DAY, 'YYYY-MM-DD')) att_date
+			     , ATT_FIXEDIN
+			     , ATT_FIXEDOUT
+			     , ATT_IN
+			     , ATT_OUT
+			     , ATT_WORKOFF
+			     , ATT_WORKTIME
+			     , NVL(ATT_STATUS, 'F') att_status
+			     , ATT_HSTATUS
+			FROM TB_ATTENDANCE A
+			right JOIN (
+			                SELECT WORKING_DAY, MEM_NO
+			                FROM (
+			                            SELECT TO_DATE(#{startDate}) + LEVEL - 1 working_day
+			                            FROM DUAL
+			                        CONNECT BY LEVEL &lt;= 1000
+			                    ), (SELECT * FROM TB_MEMBER)
+			            ) C ON (ATT_DATE = WORKING_DAY AND A.MEM_NO = C.MEM_NO)
+			JOIN TB_MEMBER M ON (C.MEM_NO=M.MEM_NO)
+			WHERE TO_CHAR(WORKING_DAY,'YYYY-MM-DD') &lt;= TO_CHAR(SYSDATE,'YYYY-MM-DD')
+			ORDER BY 4 DESC, 2)
+		WHERE 
+			<choose>
+			 	<when test="check1==true and check2==false and check3==false">
+			 		(ATT_STATUS = 'D' OR ATT_STATUS = 'H')
+			 	</when>
+			 	<when test="check1==false and check2==true and check3==false">
+			 		(ATT_STATUS = 'L' OR ATT_STATUS = 'E')
+			 	</when>
+			 	<when test="check1==false and check2==false and check3==true">
+			 		(ATT_STATUS = 'F')
+			 	</when>
+			 	<otherwise>
+			 		1=1
+			 	</otherwise>
+			 </choose>
+			 AND MEM_NO = #{userNo}
+			 <choose>
+			 	<when test="list == null">
+			 	
+			 	</when>
+			 	<otherwise>
+			 		<foreach collection="list" item="date">
+			 			AND ATT_DATE != #{date.reRestdate}
+			 		</foreach>
+			 	</otherwise>
+			 </choose>
+			 )
+	</select>
+	
 	<select id="searchRestdate2" resultMap="resultRestDate">
 		SELECT RE_RESTDATE
 		     , RE_DATENAME

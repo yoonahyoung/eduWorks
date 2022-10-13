@@ -443,7 +443,7 @@ select {
                                     	</c:when>
                                     	<c:otherwise>
                                     		<c:forEach var="l1" items="${ list1 }">
-                                    		<tr class="list1">
+                                    		<tr class="list1" style="cursor: pointer;">
 		                                    	<td id="name1" align="center">${ l1.memName }</td>
 		                                    	<td align="center">${ l1.deptName }</td>
 		                                    	<td align="center">${ l1.jobName }</td>
@@ -579,26 +579,25 @@ select {
                             </c:if>
 
                             <br><br>
-                                <h3 class="su_sub_menu_name">연차지급내역</h3>
-                                <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b;">
+                            <h3 class="su_sub_menu_name">연차지급내역</h3>
+                            <hr class="hr_line" style="border: 0px; height: 3px; width: 1000px; background-color: #5e7e9b;">
                             <div>    
                                 <br>
-                                 <table width="90%" class="tb4" id="da" style="display:none ;">
-                                    <tr>
-                                    	<th class="d0" id="d4" colspan="3"></th>
-                                    </tr>
-                                    <tr>
-                                        <th>연차지급일수</th>
-                                        <th>연차사용일수</th>
-                                        <th>남은연차일수</th>
-                                    </tr>
-                                    <tr>
-                                        <th class="d0" id="d1">--</th>
-                                        <th class="d0" id="d2">--</th>
-                                        <th class="d0" id="d3">--</th>
-                                    </tr>
-                                    
-                                </table>
+                                  <table width="90%" class="tb4" id="da" style="display:none ;">
+	                                    <tr>
+	                                    	<th class="d0" id="d4" colspan="3"></th>
+	                                    </tr>
+	                                    <tr>
+	                                        <th>연차지급일수</th>
+	                                        <th>연차사용일수</th>
+	                                        <th>남은연차일수</th>
+	                                    </tr>
+	                                    <tr>
+	                                        <th class="d0" id="d1">--</th>
+	                                        <th class="d0" id="d2">--</th>
+	                                        <th class="d0" id="d3">--</th>
+	                                    </tr>
+	                               </table>
                                 <br>
                                 <table class="tb5" width="95%" style="border-collapse: separate; border-spacing: 0 10px; ">
                                     <tr>
@@ -616,7 +615,7 @@ select {
                                     	</c:when>
                                     	<c:otherwise>
                                     		<c:forEach var="l2" items="${ list2 }">
-                                    		<tr class="list2" onclick="holidayDetail('${ l2.memNo },${ l2.hoDate },${ l2.memName }')">
+                                    		<tr class="list2" style="cursor: pointer;" onclick="holidayDetail('${ l2.memNo },${ l2.hoDate },${ l2.memName }')">
 		                                    	<td align="center">${ l2.memName }</td>
 		                                    	<td align="center">${ l2.deptName }</td>
 		                                    	<td align="center">${ l2.jobName }</td>
@@ -649,8 +648,8 @@ select {
                             
                             <script type="text/javascript">
                             	function holidayDetail(memNo){
-                            		console.log(memNo)
-                            		let arr = memNo.split(',')
+                            		// 사원번호/날짜/이름 각각 배열에 넣기
+                            		let arr = memNo.split(',') 
                             		$('.d0').text('--')
                             		$.ajax({
                             			url:'count.ho',

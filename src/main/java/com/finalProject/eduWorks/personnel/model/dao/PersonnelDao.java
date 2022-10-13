@@ -455,24 +455,38 @@ public class PersonnelDao {
 					if(!restList.isEmpty()) {
 						s.setList(restList);
 					}
-			
+			double normal = 0;
+			double leave = 0;
+			double absent = 0;
 			// 정상근무일 수
 			s.setCheck1(true);
 			s.setCheck2(false);
 			s.setCheck3(false);
-			double normal = sqlSession.selectOne("personnelMapper.AtListCount3", s);
+			if(i==0) {
+				normal = sqlSession.selectOne("personnelMapper.AtListCount4", s);
+			}else {
+				normal = sqlSession.selectOne("personnelMapper.AtListCount3", s);
+			}
 			
 			// 무단지각/조퇴일 수
 			s.setCheck1(false);
 			s.setCheck2(true);
 			s.setCheck3(false);
-			double leave = sqlSession.selectOne("personnelMapper.AtListCount3", s);
+			if(i==0) {
+				leave = sqlSession.selectOne("personnelMapper.AtListCount4", s);
+			}else {
+				leave = sqlSession.selectOne("personnelMapper.AtListCount3", s);
+			}
 			
 			// 무단결근일 수
 			s.setCheck1(false);
 			s.setCheck2(false);
 			s.setCheck3(true);
-			double absent = sqlSession.selectOne("personnelMapper.AtListCount3", s);
+			if(i==0) {
+				absent = sqlSession.selectOne("personnelMapper.AtListCount4", s);
+			}else {
+				absent = sqlSession.selectOne("personnelMapper.AtListCount3", s);
+			}
 			
 			double result;
 			if(normal==0) {

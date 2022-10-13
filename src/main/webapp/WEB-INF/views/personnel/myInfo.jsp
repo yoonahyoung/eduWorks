@@ -176,10 +176,30 @@
                             </div>
                             <br>
                             <div style="width: 1000px;" align="center">
-                                <button type="submit" class="btn su_btn_two su_btn_all" id="submitBtn" data-toggle="modal" data-target="#noContent">수정하기</button>
+                                <button type="submit" class="btn su_btn_two su_btn_all" id="submitBtn" onclick="return test01();">수정하기</button>
                             </div>
                             <br><br>
                             </form>
+                            
+                            <script>
+                            	function test01(){
+                            		// 입력된 전화번호와 이메일주소 변수지정
+                            		const phone = document.getElementById('memPhone').value;
+                            		const email = document.getElementById('memEmail').value;
+                            		
+                            		// 전화번호 형식과 이메일 형식을 구분할 정규식
+                            		let regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+                            		let regEmail = /^[0-9a-zA-z]([0-9a-zA-z])*@[0-9a-zA-z]([0-9a-zA-z])*\.[a-zA-z]{2,3}$/;
+                            		
+                            		if(regPhone.test(phone) && regEmail.test(email)){
+                            			return true;
+                            		}else{
+                            			alert('유효한 전화번호와 이메일을 입력해주세요.')
+                            			return false;
+                            		}
+                            	}
+                            </script>
+                            
                             <script>
 	                            function address(){
 								    new daum.Postcode({
