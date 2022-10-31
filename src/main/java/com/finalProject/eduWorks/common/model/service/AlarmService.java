@@ -20,6 +20,6 @@ public interface AlarmService {
 	int readAlarm(String alNo);
 
 	// 원댓글 단 유저 번호 알아내기
-	int selectRWriter(String replyParentNo);
+	String selectRWriter(String replyParentNo);
 	
 }

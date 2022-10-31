@@ -168,10 +168,10 @@ public class NoticeController {
 					targetClient.sendMessage(new TextMessage(alarmContent));
 				}
 			}
-			
+			System.out.println(r.getReplyParent()+"");
 			// 내가 쓴 글이든, 아니든 원댓글 작성자한테 알람
 			// 2. 원댓글 작성자한테 알람
-			String rWriter = String.valueOf(aService.selectRWriter(r.getReplyParent()+""));
+			String rWriter = aService.selectRWriter(r.getReplyParent()+"");
 			alarm.setBoardWriter(rWriter); // 글작성자 -> 댓글 작성자로 바꿔치기
 			aService.insertAlarm(alarm);
 			targetClient = userSessions.get(rWriter); // 타겟 : 원댓글작성자

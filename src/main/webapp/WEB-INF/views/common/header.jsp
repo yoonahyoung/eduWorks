@@ -507,7 +507,7 @@
 				    $("#socket-alert").css("display", "block");
 				    
 				    selectAlarmList(); // 알람 리스트 조회
-				    //setTimeout(function(){ $("#socket-alert").css("display", "none"); }, 3000);
+				    setTimeout(function(){ $("#socket-alert").css("display", "none"); }, 3000);
 			    };
 					
 			    ws.onclose = function(event) {

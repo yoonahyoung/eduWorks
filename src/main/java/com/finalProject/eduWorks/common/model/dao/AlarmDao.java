@@ -33,7 +33,7 @@ public class AlarmDao {
 	}
 
 	// 원댓글 단 유저 번호 알아내기
-	public int selectRWriter(SqlSessionTemplate sqlSession, String replyParentNo) {
+	public String selectRWriter(SqlSessionTemplate sqlSession, String replyParentNo) {
 		return sqlSession.selectOne("alarmMapper.selectRWriter", replyParentNo);
 	}
 

@@ -35,13 +35,12 @@
 				
 	            <div class="tableOption">
 	                <div class="btn_two_spacing">
-	                <!-- 대리 or 팀장 or 대표만 보여지는 공지 등록/해제 버튼 -->
+	                	<!-- 대리 or 팀장 or 대표만 보여지는 공지 등록/해제 버튼 -->
 	                	<c:if test="${ loginUser.jobCode eq 'J2' || loginUser.jobCode eq 'J3' || loginUser.jobCode eq 'J4'}">
-		                    <button id="importantNotice" type="button" onclick="goTop(1);">공지등록</button><i class="fas fa-flag"></i>
-		                    <button id="importantNotice" type="button" onclick="goTop(2);">공지해제</button><i class="fas fa-font-awesome"></i>
+		                    <button type="button" onclick="goTop(1);">공지등록</button><i class="fas fa-flag"></i>
+		                    <button type="button" onclick="goTop(2);">공지해제</button><i class="fas fa-font-awesome"></i>
 	                    </c:if>
 	                </div>
-	                
 	            </div>
 	            
 	            <div class="main_width">

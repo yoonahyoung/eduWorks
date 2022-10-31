@@ -223,28 +223,29 @@
        				
        				if(list == null){
        					sValue += '<tr>'
-               						+ '<td colspan="6">검색 결과가 없습니다</td>'
-       							+ '</tr>';
+               				   + 	'<td colspan="6">검색 결과가 없습니다</td>'
+       						   +  '</tr>';
        				}else{
        					for(let i=0; i<list.length; i++){
        						// 공지글 먼저 담기
        						if(list[i].boardTop == 'Y'){
        							sValue += '<tr style="background:rgb(250, 232, 232)">'
-       										+ '<td onclick="event.stopPropagation()"><input type="checkbox" id="checkNo' + list[i].boardNo + '" name="chkBoardNo" value="${n.boardNo}"></td>'
-       										+ '<td class="no">' + list[i].boardNo + '</td>'
-       										+ '<td>';
-       										switch(list[i].deptCode){
-       										case "D0" : sValue += '강사'; break;
-       										case "D1" : sValue += '인사팀'; break;
-       										case "D2" : sValue += '행정팀'; break;
-       										case "D3" : sValue += '홍보팀'; break;
-       										}
-       							    sValue += '</td>'
-       										+ '<td>' + list[i].boardTitle + '</td>'
-       										+ '<td>' + list[i].boWriter + '</td>'
-       										+ '<td>' + list[i].boardEnDate + '</td>'
-       										+ '<td>' + list[i].boardCount + '</td>'
-       									+ '</tr>';
+  									   + 		'<td onclick="event.stopPropagation()"><input type="checkbox" id="checkNo' 
+  																  + list[i].boardNo + '" name="chkBoardNo" value="${n.boardNo}"></td>'
+  									   + 		'<td class="no">' + list[i].boardNo + '</td>'
+  									   + 		'<td>';
+ 										switch(list[i].deptCode){
+ 										case "D0" : sValue += '강사'; break;
+ 										case "D1" : sValue += '인사팀'; break;
+ 										case "D2" : sValue += '행정팀'; break;
+ 										case "D3" : sValue += '홍보팀'; break;
+ 										}
+  							    sValue += 		'</td>'
+  									   + 		'<td>' + list[i].boardTitle + '</td>'
+  									   + 		'<td>' + list[i].boWriter + '</td>'
+  									   + 		'<td>' + list[i].boardEnDate + '</td>'
+  									   + 		'<td>' + list[i].boardCount + '</td>'
+  									   + '</tr>';
        						}
        					}
        					

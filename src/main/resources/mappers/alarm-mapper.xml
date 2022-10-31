@@ -85,9 +85,9 @@
 	</update>
 	
 	<!-- 원댓글 단 유저 번호 알아내기 -->
-	<select id="selectRWriter" resultType="_int">
+	<select id="selectRWriter" resultType="string">
 		select reply_wno
 		  from tb_reply r
-		 where reply_no = #{replyParentNo}
+		 where reply_no = ${replyParentNo}
 	</select>
 </mapper>

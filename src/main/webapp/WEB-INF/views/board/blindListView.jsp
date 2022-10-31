@@ -178,7 +178,6 @@
 	           			success(map){
 	           				// 메인 게시판에 갯수 뿌려주기
 	           				for(let i=0; i<map.like.length; i++){
-	           					
 			           			if($("#no"+map.like[i].boardNo).text() == map.like[i].boardNo){
 			           				$(".likeCountSpan"+map.like[i].boardNo).html("[" + map.like[i].likeCount + "]");
 			           			}
@@ -187,38 +186,39 @@
 	           				// 추천 게시판에 리스트 뿌려주기
 	           				let value="";
 	           				let count = 0;
-      							for(let i=0; i<map.list.length; i++){ // 상위 다섯개 게시판만 불러오도록
-      								if(count==5){
-  										break;
-  									}else
-      								if(map.like[i] == undefined || map.like[i] == null || map.like[i] == ""){
-      									value += '<tr>'
-           				                      + '<td align="center"><a>-</a></td>'
-           				                      + '<td align="right"></td>'
-           				                   + '</tr>';
-          				                count++;
-      								}else {
-       								for(let j=0; j<map.list.length; j++){
-       									if(count==5){
-       										break;
-       									}else
-       									if(map.like[i].boardNo == map.list[j].boardNo){
-	       									value += '<tr>'
-		           				                      + '<td><a href="detail.bl?no=' + map.list[j].boardNo + '">';
-		           				                      if(map.list[j].boardTitle.length > 12){
-		           				                    	value += (map.list[j].boardTitle).substr(0, 12) + txt;
-		           				                      }else{
-		           				                    	value += map.list[j].boardTitle;
-		           				                      }
-		           				               value += '</a></td><td align="right">' + (map.list[j].boardEnDate).substr(5) + '</td>'
-		           				                   + '</tr>';
-	       									count++;
-	       								}
-       								}
-      								}
-      							}
-      							
-      							$("#thumbsHotArea").html(value);
+   							for(let i=0; i<map.list.length; i++){ // 상위 다섯개 게시판만 불러오도록
+   								if(count==5){
+									break;
+								}else
+   								if(map.like[i] == undefined || map.like[i] == null || map.like[i] == ""){
+   									// 추천 게시글이 없을 시
+   									value += '<tr>'
+        				                  + 	'<td align="center"><a>-</a></td>'
+        				                  + 	'<td align="right"></td>'
+        				                  + '</tr>';
+       				                count++;
+   								}else {
+    								for(let j=0; j<map.list.length; j++){
+    									if(count==5){
+    										break;
+    									}else
+    									if(map.like[i].boardNo == map.list[j].boardNo){
+     									value += '<tr>'
+          				                      + 	'<td><a href="detail.bl?no=' + map.list[j].boardNo + '">';
+          				                      // 11글자 이상일 시 뒷 부분 '...'으로 처리
+          				                      if(map.list[j].boardTitle.length > 12){
+          				                    	value += (map.list[j].boardTitle).substr(0, 12) + txt;
+          				                      }else{
+          				                    	value += map.list[j].boardTitle;
+          				                      }
+          				               value += 	'</a></td><td align="right">' + (map.list[j].boardEnDate).substr(5) + '</td>'
+          				                     + '</tr>';
+     									count++;
+     									}
+    								}
+   								}
+   							}
+      						$("#thumbsHotArea").html(value);
 	           			},
 	           			error(){
 	           				console.log("ajax통신 실패");
