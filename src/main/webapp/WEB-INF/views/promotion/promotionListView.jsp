@@ -31,7 +31,7 @@
 	            <br><br><br><br><br>
 	
 	            <div style="text-align: center;">
-	                <input type="text" style="width: 300px;" id="promoKeyword" placeholder="제목/작성자 입력">
+	                <input type="text" style="width: 300px;" id="promoKeyword" placeholder="제목/작성자/직책 입력">
 	                <button type="button" class="su_btn_border btn-sm su_btn_search" onclick="searchList(1);">검색</button>
 	            </div>
 	
