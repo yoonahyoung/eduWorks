@@ -240,7 +240,7 @@
 																value += '<a id="pReplyEvent' + rList[i].replyNo + '" style="cursor: pointer;" onclick="rReply(' + rList[i].replyNo + ');"><i class="fas fa-reply" style="transform: rotate(180deg);"></i> 댓글</a>';
 															}
 												 value += '</div>'
-														+ '<div class="su_reply_Bcontent conNo' + rList[i].replyNo + '" style="width:95%;">'
+														+ '<div class="su_reply_Bcontent conNo' + rList[i].replyNo + '" style="width:100%;">'
 															+ '<p style="width:100%">' + rList[i].replyContent +'</p>'
 														+ '</div>'
 													+ '</div>'

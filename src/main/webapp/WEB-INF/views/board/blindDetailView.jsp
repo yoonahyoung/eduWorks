@@ -333,7 +333,7 @@
 				                                            			+ '</a>';
 															}
 												  value += '</div>'
-														+ '<div class="su_reply_Bcontent conNo' + rList[i].replyNo + '" style="width:95%;">'
+														+ '<div class="su_reply_Bcontent conNo' + rList[i].replyNo + '" style="width:100%;">'
 															+ '<p style="width:100%">' + rList[i].replyContent +'</p>'
 														+ '</div>'
 													+ '</div>'
@@ -366,25 +366,23 @@
 											   + '<div class="pReply' + rList[i].replyNo + '">'
 											   + '</div>';
 										replyCount += 1;
-									}else if(rList[i].replyStatus == 'B'){
+									}else if(rList[i].replyStatus == 'B'){ // 블라인드 처리된 댓글
 										value += '<div class="su_reply">'
 		                							+'<div style="height:48px; line-height:48px">관리자에 의해 규제된 댓글입니다.</div>'
 		                						+'</div></div>';
 									}else
-										if(i < (rList.length - 1)){ // 블라인드 처리된 댓글
-											if((rList[i].replyParent == 0) && (rList[i+1].replyParent != 0) && (rList[i+1].replyStatus == 'Y')){ // 대댓글 있는 원댓글이면서 삭제됐을 경우
-												value += '<div class="su_reply">'
-				                							+'<div style="height:48px; line-height:48px">삭제된 댓글입니다.</div>'
-				                						+'</div></div>';
-											}
+									if(i < (rList.length - 1)){ 
+										if((rList[i].replyParent == 0) && (rList[i+1].replyParent != 0) && (rList[i+1].replyStatus == 'Y')){ // 대댓글 있는 원댓글이면서 삭제됐을 경우
+											value += '<div class="su_reply">'
+			                							+'<div style="height:48px; line-height:48px">삭제된 댓글입니다.</div>'
+			                						+'</div></div>';
+										}
 									}
-									
-									
 									
 									// 댓글 작성 시 익명 아이디 뿌려주기
 									if(rList[i].replyWriter == user){ // 댓글 작성자가 로그인한 유저와 같다 == 즉, 댓글 작성한 익명 아이디가 있다
 										idArea = '<input type="text" value="' + rList[i].replyBlind + '" id="blindId" disabled>&ensp;'
-													+ '<button type="button" class="n-btn su_btn_border btn-sm" id="blindBtn" disabled>등록</button>';
+											   + '<button type="button" class="n-btn su_btn_border btn-sm" id="blindBtn" disabled>등록</button>';
 									}
 								}
 								
@@ -469,7 +467,6 @@
                  				console.log("ajax통신 실패");
                  			}
                  		})
-                 		
                  	}
 					
                  	// 댓글 insert 
@@ -502,7 +499,6 @@
 								error(){
 									console.log("댓글 등록 실패");
 								}
-								
 							}) 
                  		}
 					}

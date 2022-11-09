@@ -44,7 +44,7 @@ public class AlarmServiceImpl implements AlarmService{
 
 	// 원댓글 단 유저 번호 알아내기
 	@Override
-	public int selectRWriter(String replyParentNo) {
+	public String selectRWriter(String replyParentNo) {
 		return aDao.selectRWriter(sqlSession, replyParentNo);
 	}
 

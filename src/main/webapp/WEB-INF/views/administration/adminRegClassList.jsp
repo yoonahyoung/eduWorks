@@ -43,7 +43,8 @@
 	                    <c:if test="${ regStatus eq 3 }">
 	                    	반려
 	                    </c:if>
-                    목록</h2>
+	                    목록
+                    </h2>
                 </div>
                 
                 <br><br>

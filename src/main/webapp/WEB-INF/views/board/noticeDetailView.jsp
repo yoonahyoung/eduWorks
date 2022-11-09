@@ -224,43 +224,49 @@
 									
 									if(rList[i].replyStatus == 'Y'){
 										value += '<div class="su_reply">'
-													+ '<div>' 
-														+'<img src="' + root + '/resources/profile_images/defaultProfile.png" alt="">'
-													+ '</div>'
-													+ '<div id="reUpdateArea' + rList[i].replyNo + '">'
-														+ '<div class="su_reply_writer">'
-															+ '<span class="font-weight-bold">' + rList[i].replyWriter + '</span>'
-															+ '<span class="font-weight-bold"> ' + rList[i].replyJob+ '</span>'
-															+ '<span style="margin-right:10px"> | ' + rList[i].replyDate + '</span>';
-															// 원댓글만 댓글 추가 버튼 보이게끔 (댓글 작성자 본인 또한 본인 댓글에 대댓글 가능)
-															if(rList[i].replyParent == 0){
-																value += '<a id="pReplyEvent' + rList[i].replyNo + '" style="cursor: pointer;" onclick="rReply(' + rList[i].replyNo + ');"><i class="fas fa-reply" style="transform: rotate(180deg);"></i> 댓글</a>';
-															}
-												 value += '</div>'
-														+ '<div class="su_reply_Bcontent conNo' + rList[i].replyNo + '" style="width:95%;">'
-															+ '<p style="width:100%">' + rList[i].replyContent +'</p>'
-														+ '</div>'
-													+ '</div>'
-												+ '</div>';
+											  + 	'<div>' 
+											  +			'<img src="' + root + '/resources/profile_images/defaultProfile.png" alt="">'
+											  + 	'</div>'
+											  + 	'<div id="reUpdateArea' + rList[i].replyNo + '">'
+											  + 		'<div class="su_reply_writer">'
+											  + 			'<span class="font-weight-bold">' + rList[i].replyWriter + '</span>'
+											  + 			'<span class="font-weight-bold"> ' + rList[i].replyJob+ '</span>'
+											  + 			'<span style="margin-right:10px"> | ' + rList[i].replyDate + '</span>';
+											  
+										// 원댓글만 댓글 추가 버튼 보이게끔 (댓글 작성자 본인 또한 본인 댓글에 대댓글 가능)
+										if(rList[i].replyParent == 0){
+											value += '<a id="pReplyEvent' + rList[i].replyNo + '" style="cursor: pointer;" onclick="rReply(' 
+																		  + rList[i].replyNo + ');"><i class="fas fa-reply" style="transform: rotate(180deg);"></i> 댓글</a>';
+										}
+										
+										value += 		'</div>'
+											  + 		'<div class="su_reply_Bcontent conNo' + rList[i].replyNo + '" style="width:100%;">'
+											  + 			'<p style="width:100%">' + rList[i].replyContent +'</p>'
+											  + 		'</div>'
+											  + 	'</div>'
+											  + '</div>';
+											  
 										// 댓글 작성자만 수정, 삭제 버튼 보이게끔
 										if(rList[i].replyWriter == user){
 											 value += '<div class="su_reply_btn">'
-														+ '<button type="button" class="btn btn-sm su_btn_border" style="border:0px" onclick="updateReBtn(' + rList[i].replyNo + ');">수정</button>|'
-														+ '<button type="button" class="btn btn-sm su_btn_border" style="border:0px" onclick="deleteReBtn(' + rList[i].replyNo + ');">삭제</button>'
-												   + '</div>';
+												   + 	'<button type="button" class="btn btn-sm su_btn_border" style="border:0px" onclick="updateReBtn(' + rList[i].replyNo + ');">수정</button>|'
+												   + 	'<button type="button" class="btn btn-sm su_btn_border" style="border:0px" onclick="deleteReBtn(' + rList[i].replyNo + ');">삭제</button>'
+												   +  '</div>';
 										}
+										
 										value += '</div>'
-											   + '<div class="pReply' + rList[i].replyNo + '">'
-											   + '</div>';
+											  +  '<div class="pReply' + rList[i].replyNo + '">'
+											  +  '</div>';
 										replyCount += 1;
-									}else if(i < (rList.length - 1)){
-										if((rList[i].replyParent == 0) && (rList[i+1].replyParent != 0) && (rList[i+1].replyStatus == 'Y')){ // 대댓글 있는 원댓글이면서 삭제됐을 경우
+										
+									}else if(i < (rList.length - 1)){ // 대댓글 있는 원댓글이면서 삭제됐을 경우
+										if((rList[i].replyParent == 0) && (rList[i+1].replyParent != 0) && (rList[i+1].replyStatus == 'Y')){ 
 											value += '<div class="su_reply">'
-			                							+'<div style="height:48px; line-height:48px">삭제된 댓글입니다.</div>'
-			                						+'</div></div>';
+			                					  +		'<div style="height:48px; line-height:48px">삭제된 댓글입니다.</div>'
+			                					  +		'</div>'
+			                					  +	 '</div>';
 										}
 									}
-									
 								}
 								
 								$(".ajaxReply").html(value);
@@ -274,20 +280,17 @@
 					
 					function rReply(rNo){ // 대댓글 버튼 클릭 시 실행
                         const rReplyDiv = '<div class="su_reply_Barea su_rreply_Barea selNo' + rNo + '" id="clickRR' + rNo + '">'
-                                            + '<div class="su_reply" style="width: 100%;">'
-                                                + '<div>'
-                                                    + '<img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">'                                        
-                                                + '</div>'
-                        
-                                                + '<div style="width: 100%">'
-                                                    + '<input style="width: 100%;" type="text" placeholder="댓글 입력" id="replyContent">'
-                                                + '</div>'
-
-                                            + '</div>'
-                                            + '<div class="su_reply_btn" id="su_reply_btn1" style="display:flex">'
-                                                + '<button type="button" class="n-btn su_btn_border btn-sm writeReplyBtn" id="writeReplyBtn" onclick="insertReply(' + rNo + ');">댓글 작성</button>'
-                                            + '</div>'
-
+                                        + 		'<div class="su_reply" style="width: 100%;">'
+                                        + 			'<div>'
+                                        + 				'<img src="${pageContext.request.contextPath}/resources/profile_images/defaultProfile.png" alt="">'                                        
+                                        + 			'</div>'
+                                        + 			'<div style="width: 100%">'
+                                        + 				'<input style="width: 100%;" type="text" placeholder="댓글 입력" id="replyContent">'
+                                        + 			'</div>'
+                                        + 		'</div>'
+                                        + 		'<div class="su_reply_btn" id="su_reply_btn1" style="display:flex">'
+                                        + 			'<button type="button" class="n-btn su_btn_border btn-sm writeReplyBtn" id="writeReplyBtn" onclick="insertReply(' + rNo + ');">댓글 작성</button>'
+                                        + 		'</div>'
                                         + '</div>';
 
                         $('.pReply' + rNo).html(rReplyDiv);
